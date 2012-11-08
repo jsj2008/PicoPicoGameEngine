@@ -1,0 +1,114 @@
+<!DOCTYPE html> 
+<html> 
+	<head> 
+	<title>PicoPicoGameEngine</title> 
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=no"> 
+	<link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
+	<link rel="stylesheet" href="../picoapi.css" />
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js"></script>
+</head> 
+<body> 
+
+
+<div data-role="page" id="ppscreen">
+	<div data-role="header" data-theme="d">
+		<h1>ppscreen</h1>
+		<a href="#" data-role="button" data-rel="back" data-icon="arrow-l" class="ui-btn-left">Back</a>
+		<a href="../index.html" class="ui-btn-right">TOP</a>
+	</div><!-- /header -->
+
+	<div data-role="content">
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppscreen:viewport({x,y, width,height})</h3>
+<p class="pico-desc">描画領域を指定します。引数がない場合は設定値を返します。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppscreen:size()</h3>
+<p class="pico-desc">画面サイズを返します。引数がない場合は設定値を返します。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppscreen:offset(x,y)</h3>
+<p class="pico-desc">表示位置を移動させます。引数がない場合は設定値を返します。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppscreen:rotate(r)</h3>
+<p class="pico-desc">画面を回転させます。引数がない場合は設定値を返します。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppscreen:pivot(x,y)</h3>
+<p class="pico-desc">回転やスケールの中心を指定します。引数がない場合は設定値を返します。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppscreen:scale(x,y)</h3>
+<p class="pico-desc">画面を拡大縮小させます。引数がない場合は設定値を返します。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppscreen:from(t)</h3>
+<p class="pico-desc">スクリーン座標からウインドウ座標へ変換します。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppscreen:to(t)</h3>
+<p class="pico-desc">ウインドウ座標からスクリーン座標へ変換します。</p>
+
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--仮想スクリーンサイズを320x320で処理します
+base = {0,0,320,320}
+function start()
+  ppscreen:viewport(ppscreen:layout(base))
+  ppgraph:fill(base,ppgraph.blue)
+  local t = pptouch()
+  if #t > 0 then
+    p = ppscreen:to(t[1])
+    --pには{0,0,320,320}の座標に変換された座標が入ります
+    ppgraph:print(math.floor(p.x)..","..math.floor(p.y))
+  end
+end</code></pre></div></div>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppscreen:arrayfrom({t,...})</h3>
+<p class="pico-desc">スクリーン座標からウインドウ座標へ変換します。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppscreen:arrayto({t,...})</h3>
+<p class="pico-desc">ウインドウ座標からスクリーン座標へ変換します。</p>
+
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--仮想スクリーンサイズを320x320で動作させます
+base = {0,0,320,320}
+function start()
+  ppscreen:viewport(ppscreen:layout(base))
+  ppgraph:fill(base,ppgraph.blue)
+  local t = pptouch()
+  if #t > 0 then
+    p = ppscreen:arrayto(t)
+    --pには{0,0,320,320}の座標に変換された座標のテーブルが入ります
+    ppgraph:print(math.floor(p[1].x)..","..math.floor(p[1].y))
+  end
+end</code></pre></div></div>
+</div>
+
+	</div>
+
+	<div data-role="footer" data-theme="d">
+		<h4>PicoPicoGameEngine</h4> 
+		<a href="#" data-role="button" data-rel="back" data-icon="arrow-l" class="ui-btn-left">Back</a>
+		<a href="../index.html" class="ui-btn-right">TOP</a>
+	</div>
+</div>
+
+
+</body>
+</html>

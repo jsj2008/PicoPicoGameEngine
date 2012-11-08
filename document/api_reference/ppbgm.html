@@ -1,0 +1,76 @@
+<!DOCTYPE html> 
+<html> 
+	<head> 
+	<title>PicoPicoGameEngine</title> 
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=no"> 
+	<link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
+	<link rel="stylesheet" href="../picoapi.css" />
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js"></script>
+</head> 
+<body> 
+
+<div data-role="page" id="ppbgm">
+	<div data-role="header" data-theme="d">
+		<h1>ppbgm</h1>
+		<a href="#" data-role="button" data-rel="back" data-icon="arrow-l" class="ui-btn-left">Back</a>
+		<a href="../index.html" class="ui-btn-right">TOP</a>
+	</div><!-- /header -->
+
+	<div data-role="content">	
+	CocosDenshionを使ったBGM再生を行います。
+	DotEDITORでは使用できません。
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppbgm.preload(filename)</h3>
+<p class="pico-desc">BGMデータを先読みします。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppbgm.play(filename)</h3>
+<p class="pico-desc">BGMを再生します。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppbgm.stop(close)</h3>
+<p class="pico-desc">BGMを止めます。closeにtrueにするとBGMデータを破棄します。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppbgm.pause()</h3>
+<p class="pico-desc">BGMの再生を一時停止します。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppbgm.resume()</h3>
+<p class="pico-desc">BGMの再生を再開します。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppbgm.rewind()</h3>
+<p class="pico-desc">BGMを巻き戻します。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppbgm.isPlaying()</h3>
+<p class="pico-desc">BGM再生中かどうかを返します。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppbgm.volume(vol)</h3>
+<p class="pico-desc">ボリュームを設定します。引数がない場合は設定値を返します。</p>
+</div>
+
+	</div>
+
+	<div data-role="footer" data-theme="d">
+		<h4>PicoPicoGameEngine</h4> 
+		<a href="#" data-role="button" data-rel="back" data-icon="arrow-l" class="ui-btn-left">Back</a>
+		<a href="../index.html" class="ui-btn-right">TOP</a>
+	</div>
+</div>
+
+</body>
+</html>

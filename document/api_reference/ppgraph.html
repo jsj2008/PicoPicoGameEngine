@@ -1,0 +1,353 @@
+<!DOCTYPE html> 
+<html> 
+	<head> 
+	<title>PicoPicoGameEngine</title> 
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=no"> 
+	<link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
+	<link rel="stylesheet" href="../picoapi.css" />
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js"></script>
+</head> 
+<body> 
+
+
+<div data-role="page" id="ppgraph">
+	<div data-role="header" data-theme="d">
+		<h1>ppgraph</h1>
+		<a href="#" data-role="button" data-rel="back" data-icon="arrow-l" class="ui-btn-left">Back</a>
+		<a href="../index.html" class="ui-btn-right">TOP</a>
+	</div><!-- /header -->
+
+	<div data-role="content">
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppgraph:tileInfo({tile info})</h3>
+<p class="pico-desc">テクスチャのタイル位置を{tile info}テーブルで設定します。引数がないときは設定値を取り出せます。
+    この関数を使用することでテクスチャの好きな位置を切り出して表示することができます。
+    {tile info}テーブルの構造は次のようになっています。</p>
+
+<pre><code>{
+  size={width=タイル横幅,height=タイル高さ},
+  stride={x=タイルの横間隔,y=タイルの縦間隔},
+  offset={x=タイルの横開始位置,y=タイルの縦開始位置}
+}</code></pre>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppgraph:put({x,y},tile,name,{texture option},{r,g,b,a})<br/>
+ppgraph:put({x,y},tile,{texture},{r,g,b,a})</h3>
+<p class="pico-desc">タイル番号を指定してキャラクタを描画します。
+	タイル番号とはテクスチャをタイルサイズ(デフォルトは32x32ドット)で分割したものを左上から右に向かって１、２、３と割ふられた番号になります。</p>
+	
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--タイル番号を指定してキャラを描画します。
+function start()
+  ppgraph:tileInfo({size={width=32,height=32}})
+  --座標の指定は以下の３つの方法があります
+  ppgraph:put(0,0,1,"main.png")	--剣士
+  ppgraph:put({0,32},2,"main.png")	--おじいさん
+  ppgraph:put({x=0,y=64},3,"main.png")	--商人
+  ppgraph:tileInfo({size={width=64,height=64}})
+  ppgraph:put(32,0,4,"main.png")	--大魔王
+end
+
+<img src="./image/screen-shot 2012-06-28 17.00.26.png"/>
+
+--pptex:load()関数などと併用する事でテクスチャを指定することもできます
+tex = pptex:load("main.png")
+function start()
+  ppgraph:tileInfo({size={width=32,height=32}})
+  ppgraph:put(0, 0,1,tex)	--剣士
+  ppgraph:put({0,32},2,tex)	--おじいさん
+  ppgraph:put({x=0,y=64},3,tex)	--商人
+  ppgraph:tileInfo({size={width=64,height=64}})
+  ppgraph:put(32,0,4,tex)	--大魔王
+end</code></pre></div></div>
+	
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppgraph:pos({x,y})<br/>
+ppgraph:locate({x,y})</h3>
+<p class="pico-desc">文字列の表示位置を指定します。引数を省略すると設定値を返します。</p>
+
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>function start()
+  ppgraph:pos(100,100)
+  ppgraph:print("HELLO1")
+  ppgraph:pos({100,116})
+  ppgraph:print("HELLO2")
+  ppgraph:pos({x=100,y=132})
+  ppgraph:print("HELLO3")
+end</code></pre></div></div>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppgraph:move({x,y})</h3>
+<p class="pico-desc">文字列の表示位置を移動させます。</p>
+
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>function start()
+  ppgraph:pos(100,100)
+  ppgraph:print("HELLO1")
+  ppgraph:move(0,16)	--16ドット下へ移動
+  ppgraph:print("HELLO2")
+  ppgraph:move(0,16)	--16ドット下へ移動
+  ppgraph:print("HELLO3")
+end</code></pre></div></div>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppgraph:print(string,{r,g,b,a})</h3>
+<p class="pico-desc">文字列を表示します。ビットマップフォントでは英数、ひらがな、カタカナのみです。
+    描画色を省略した場合はppgraph:color()で指定した色で描画します。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppgraph:color({r,g,b,a})</h3>
+<p class="pico-desc">文字やキャラクタの描画の色を指定します。引数を省略すると設定値を返します。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppgraph:scale({x,y})</h3>
+<p class="pico-desc">文字やキャラクタの描画時のスケールを変更します。引数を省略すると設定値を返します。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppgraph:flip(hflip,vflip,rot90)</h3>
+<p class="pico-desc">垂直水平反転、９０度回転の指定を行います。引数を省略すると設定値を返します。</p>
+
+<ul>
+<li class="pico-desc">hflip 水平反転</li>
+<li class="pico-desc">vflip 垂直反転</li>
+<li class="pico-desc">rot90 0〜3 反時計回り</li>
+</ul>
+    
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>pptex:default(pptex:load("main.png"))
+function start()
+  ppgraph:flip(false,false,0)	--回転４パターン
+  ppgraph:put(0,0,1)
+  ppgraph:flip(false,false,1)
+  ppgraph:put(32,0,1)
+  ppgraph:flip(false,false,2)
+  ppgraph:put(64,0,1)
+  ppgraph:flip(false,false,3)
+  ppgraph:put(96,0,1)
+
+  ppgraph:flip(true,false,0)	--水平反転で回転
+  ppgraph:put(0,32,1)
+  ppgraph:flip(true,false,1)
+  ppgraph:put(32,32,1)
+  ppgraph:flip(true,false,2)
+  ppgraph:put(64,32,1)
+  ppgraph:flip(true,false,3)
+  ppgraph:put(96,32,1)
+
+  ppgraph:flip(false,true,0)	--垂直反転で回転
+  ppgraph:put(0,64,1)
+  ppgraph:flip(false,true,1)
+  ppgraph:put(32,64,1)
+  ppgraph:flip(false,true,2)
+  ppgraph:put(64,64,1)
+  ppgraph:flip(false,true,3)
+  ppgraph:put(96,64,1)
+
+  hflip,vflip,rot90 = ppgraph:flip()	--取り出し例
+  ppgraph:flip(false,false,0)
+  ppgraph:locate(0,96)
+  if hflip then hflip = "true" else hflip = "false" end
+  if vflip then vflip = "true" else vflip = "false" end
+  ppgraph:print(hflip..","..vflip..","..rot90)
+end
+
+<img = src="./image/screen-shot 2012-06-28 17.03.55.png"/></code></pre></div></div>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppgraph:rotate(r)</h3>
+<p class="pico-desc">文字やキャラクタの描画時の回転値を変更します。引数を省略すると設定値を返します。
+	rの単位はラジアンです。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppgraph:alpha(a)</h3>
+<p class="pico-desc">文字やキャラクタの描画時の透明度を変更します。引数を省略すると設定値を返します。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppgraph:fill({x,y,width,height},{r,g,b,a})</h3>
+<p class="pico-desc">塗りつぶしの四角を描画します。描画色を省略した場合はppgraph:color()で指定した色で描画します。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppgraph:box({x,y,width,height},{r,g,b,a})</h3>
+<p class="pico-desc">中抜きの四角を描画します。描画色を省略した場合はppgraph:color()で指定した色で描画します。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppgraph:line({x,y},{x,y},{r,g,b,a})</h3>
+<p class="pico-desc">線を描画します。描画色を省略した場合はppgraph:color()で指定した色で描画します。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppgraph:layout({x,y,width,height} ,centerx,centery,area)</h3>
+<p class="pico-desc">レイアウトされた座標を計算します。</p>
+
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--画面中央に配置
+function start()
+  local p = ppgraph:layout({x=0,y=0,width=32,height=32},true,true)
+  ppgraph:put(p,1,"main.png")
+end
+
+--画面右端に配置
+function start()
+  local p = ppgraph:layout({x=-1,y=0,width=32,height=32},false,true)
+  ppgraph:put(p,1,"main.png")
+end
+
+--画面右下から32x32ドットの位置に配置
+function start()
+  local p = ppgraph:layout({x=-33,y=-33,width=32,height=32},false,false)
+  ppgraph:put(p,1,"main.png")
+end
+
+--画面{0,0,100,100}のエリアの右下から16x16ドットの位置に配置
+function start()
+  local area = {0,0,100,100}
+  local p = ppgraph:layout({x=-17,y=-17,width=32,height=32},false,false,area)
+  ppgraph:fill(area,ppgraph.cyan)
+  ppgraph:put(p,1,"main.png")
+end</code></pre></div></div>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppgraph:update()</h3>
+<p class="pico-desc">ゲームループを抜けて描画処理を行います。</p>
+
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--1秒毎に表示非表示を繰り返します
+function start()
+  for i=0,60 do
+    ppgraph:put(0,0,1,"main.png")
+    ppgraph:update()
+  end
+  for i=0,60 do
+    ppgraph:update()
+  end
+end</code></pre></div></div>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppgraph:pivot({x,y,})</h3>
+<p class="pico-desc">回転や拡大縮小の中心位置を指定します。引数を省略すると設定値を返します。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c">     
+<h3>ppgraph:lineWrap(flag)</h3>
+<p class="pico-desc">文字列が画面外に出た場合に折り返すかどうかを指定します。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c">     
+<h3>ppgraph:append({display object})</h3>
+<p class="pico-desc">{display object}を描画リストに登録します。{display object}は:draw()メソッドを実装したテーブルです。ゲームループを抜けると登録された{display object}のdraw()メソッドが自動的に実行され描画処理を行います。</p>
+
+				<div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+					<pre><code>--１秒毎にスプライトの表示、非表示を繰り返します
+sp = ppsprite.new()
+sp:texture("main.png")
+sp:tile(1)
+ppgraph:append(sp)	--描画リストに登録
+
+local t=0
+
+function show()
+  t=t+1
+  if t > 60 then 
+    ppgraph:remove(sp)	--描画リストから削除
+    ppgame:start(hide)
+    t=0
+  end
+end
+
+function hide()
+  t=t+1
+  if t > 60 then 
+    ppgraph:append(sp)	--描画リストに登録
+    ppgame:start(show)
+    t=0
+  end
+end
+
+ppgame:start(show)</code></pre></div></div>
+
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppgraph:remove({display object})</h3>
+<p class="pico-desc">{display object}を描画リストから取り除きます。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppgraph:tileRect(tile,{texture})</h3>
+<p class="pico-desc">タイルのテクスチャ座標位置を計算します。</p>
+
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>pptex:default(pptex:load("main.png"))
+r02=ppgraph:tileRect(2)
+r35=ppgraph:tileRect(35)
+function start()
+  ppgraph:print(r02.x..","..r02.y..","..r02.width..","..r02.height)
+  ppgraph:move(0,16)
+  ppgraph:print(r35.x..","..r35.y..","..r35.width..","..r35.height)
+end</code></pre></div></div>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppgraph:stretch(rect,tile,{edge},{texture})</h3>
+<p class="pico-desc">タイルをrect位置に引き伸ばして表示します。edgeで引き伸ばす範囲を指定できます。</p>
+
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>pptex:default(pptex:load("main.png"))
+function start()
+  --3番のタイルを{64,32,128,64}に引き伸ばして表示します
+  ppgraph:stretch({64,32,128,64},3)
+  --pprectを使って指定することもできます
+  ppgraph:stretch(pprect(64,96+64,128,64),3)
+  --外周８ドットは引き伸ばされません
+  ppgraph:stretch(pprect(64,96+64*2,128,64),3,8)
+end</code></pre></div></div>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppgraph.white={255,255,255}<br/>
+ppgraph.red={255,0,0}<br/>
+ppgraph.green={0,255,0}<br/>
+ppgraph.blue={0,0,255}<br/>
+ppgraph.yellow={255,255,0}<br/>
+ppgraph.cyan={0,255,255}<br/>
+ppgraph.magenta={255,0,255}<br/>
+ppgraph.black={0,0,0}<br/>
+ppgraph.gray={96,96,96}<br/>
+ppgraph.lightgray={188,188,188}<br/>
+ppgraph.orange={255,128,0}<br/>
+ppgraph.skin={255,216,160}<br/>
+ppgraph.darkgreen={56,104,0}<br/>
+ppgraph.lightgreen={152,232,0}<br/>
+ppgraph.brown={120,64,0}</h3>
+<p class="pico-desc">15色の定数があらかじめ定義されています。</p>
+</div>
+
+	</div>
+
+	<div data-role="footer" data-theme="d">
+		<h4>PicoPicoGameEngine</h4> 
+		<a href="#" data-role="button" data-rel="back" data-icon="arrow-l" class="ui-btn-left">Back</a>
+		<a href="../index.html" class="ui-btn-right">TOP</a>
+	</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html> 
+<html> 
+	<head> 
+	<title>PicoPicoGameEngine</title> 
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=no"> 
+	<link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
+	<link rel="stylesheet" href="../picoapi.css" />
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js"></script>
+</head> 
+<body> 
+
+
+<div data-role="page" id="ppoffscreen">
+	<div data-role="header" data-theme="d">
+		<h1>ppoffscreen</h1>
+		<a href="#" data-role="button" data-rel="back" data-icon="arrow-l" class="ui-btn-left">Back</a>
+		<a href="../index.html" class="ui-btn-right">TOP</a>
+	</div><!-- /header -->
+
+	<div data-role="content">	
+	オフスクリーンを管理するクラスです。
+	ppspriteを継承しています。
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppoffscreen.new(n)<br/>
+ppoffscreen:create(w,h,linear)</h3>
+<p class="pico-desc">オフスクリーンを作成します。</p>
+
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>o=ppoffscreen.new()
+o:create(100,100)
+o:fill({10,10,32,32},ppgraph.red)
+o:box({0,0,100,100},ppgraph.red)
+o:circle({50,50},30,ppgraph.yellow)
+o:paint({1,1},ppgraph.cyan)
+o:paint({50,50},ppgraph.blue)
+function start()
+	o:draw()
+end</code></pre>
+<img src="./image/screen-shot 2012-06-28 17.42.14.png"/></div></div>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:bind()</h3>
+<p class="pico-desc">オフスクリーンをテクスチャとして使用するためにバインドします。</p>
+
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--バインドすることでオフスクリーンをテクスチャとして使用できます
+o=ppoffscreen.new()
+o:create(100,100)
+o:fill({10,10,32,32},ppgraph.red)
+o:box({0,0,100,100},ppgraph.red)
+o:circle({50,50},30,ppgraph.yellow)
+o:paint({1,1},ppgraph.cyan)
+o:paint({50,50},ppgraph.blue)
+o:hflip()
+o:bind()
+
+s=ppsprite.new()
+s:texture(o:texture())
+s:tile(1)
+s:tileSize(100,100)
+
+function start()
+	s:draw()
+end</code></pre>
+<img src="./image/screen-shot 2012-06-28 17.42.14.png"/></div></div>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:lock()<br/>
+:unlock(hold)</h3>
+<p class="pico-desc">ppgraphやppspriteなどの描画関数をオフスクリーンに対して使用できます。
+	holdをfalseにするとテクスチャメモリからメインメモリへの転送を行いません。
+	高速に処理できますがlock()/unlock()中に描画した画像はbind()などの描画処理を行うとキャンセルされます。</p>
+	
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--タイル番号２のキャラクタをオフスクリーンに描画します
+pptex:default(pptex:load("sample.png"))
+o=ppoffscreen.new()
+o:create(100,100)
+o:circle({50,50},30,ppgraph.yellow)
+o:lock() --描画開始(テクスチャメモリへ転送)
+ppgraph:put(0,0,2) --ここで２番のタイルを描画
+o:unlock() --描画終了(メインメモリへ転送)
+o:paint({50,50},ppgraph.yellow)
+o:hflip()
+o:bind()
+
+s=ppsprite.new()
+s:texture(o:texture())
+s:tile(1)
+s:tileSize(100,100)
+s:scale(2)
+
+function start()
+	s:draw()
+end</code></pre>
+<img src="./image/screen-shot 2012-06-28 17.44.58.png"/></div></div>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:pixel({x,y},{r,g,b,a}) {r,g,b,a}</h3>
+<p class="pico-desc">オフスクリーンに指定した色で点を描きます。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:line({x1,y1},{x2,y2},{r,g,b,a})</h3>
+<p class="pico-desc">オフスクリーンに指定した色で線を描きます。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:box({x,y,w,h},{r,g,b,a})</h3>
+<p class="pico-desc">オフスクリーンに指定した色で四角を描きます。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:fill({x,y,w,h},{r,g,b,a})</h3>
+<p class="pico-desc">オフスクリーンに指定した色で四角く塗りつぶします。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:clear({r,g,b,a})</h3>
+<p class="pico-desc">オフスクリーンを指定した色で塗りつぶします。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:paint({x,y},{r,g,b,a})</h3>
+<p class="pico-desc">オフスクリーンをペイントします。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:circle({x,y},r,{r,g,b,a},start=0,end=360)</h3>
+<p class="pico-desc">オフスクリーンに円を描きます。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:texture()</h3>
+<p class="pico-desc">オフスクリーンのテクスチャを返します。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:hflip()</h3>
+<p class="pico-desc">上下反転します。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:vflip()</h3>
+<p class="pico-desc">垂直反転します。</p>
+</div>
+
+	</div>
+
+	<div data-role="footer" data-theme="d">
+		<h4>PicoPicoGameEngine</h4> 
+		<a href="#" data-role="button" data-rel="back" data-icon="arrow-l" class="ui-btn-left">Back</a>
+		<a href="../index.html" class="ui-btn-right">TOP</a>
+	</div>
+</div>
+
+</body>
+</html>

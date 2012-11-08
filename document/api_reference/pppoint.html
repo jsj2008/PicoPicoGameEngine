@@ -1,0 +1,58 @@
+<!DOCTYPE html> 
+<html> 
+	<head> 
+	<title>PicoPicoGameEngine</title> 
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=no"> 
+	<link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
+	<link rel="stylesheet" href="../picoapi.css" />
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js"></script>
+</head> 
+<body> 
+
+<div data-role="page" id="pppoint">
+	<div data-role="header" data-theme="d">
+		<h1>pppoint</h1>
+		<a href="#" data-role="button" data-rel="back" data-icon="arrow-l" class="ui-btn-left">Back</a>
+		<a href="../index.html" class="ui-btn-right">TOP</a>
+	</div><!-- /header -->
+
+	<div data-role="content">	
+	座標を管理するクラスです。
+	pppoint同士は四則演算(+,-,/.*)が可能です。
+	pprectとの演算も可能です。
+	
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>pppoint(x,y)</h3>
+<p class="pico-desc">pppointオブジェクトを作成します。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>.x<br/>
+	.y</h3>
+<p class="pico-desc">X座標、Y座標です。</p>
+</div>
+	
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:length()</h3>
+<p class="pico-desc">原点(0,0)からの距離を求めます。</p>
+</div>
+	
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:length({point})</h3>
+<p class="pico-desc">2点間の距離を求めます。</p>
+</div>
+
+	</div>
+
+	<div data-role="footer" data-theme="d">
+		<h4>PicoPicoGameEngine</h4> 
+		<a href="#" data-role="button" data-rel="back" data-icon="arrow-l" class="ui-btn-left">Back</a>
+		<a href="../index.html" class="ui-btn-right">TOP</a>
+	</div>
+</div>
+
+</body>
+</html>

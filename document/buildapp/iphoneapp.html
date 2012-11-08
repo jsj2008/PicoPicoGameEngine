@@ -1,0 +1,66 @@
+<!DOCTYPE html> 
+<html> 
+	<head> 
+	<title>PicoPicoGameEngine</title> 
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=no"> 
+	<link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+
+<!--
+	<link rel="stylesheet" href="./js/default/jquery.mobile-1.1.0.min.css" />
+	<link rel="stylesheet" href="./picoapi.css" />
+	<script type="text/javascript" src="./js/jquery.js"></script>
+	<script type="text/javascript" src="./js/jquery.mobile-1.1.0.min.js"></script>
+-->
+
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
+	<link rel="stylesheet" href="./picoapi.css" />
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js"></script>
+</head>
+<body> 
+
+
+<div data-role="page" id="reference">
+	<div data-role="header" data-theme="d">
+		<h1>iOSアプリ化する</h1>
+		<a href="#" data-role="button" data-rel="back" data-icon="arrow-l" class="ui-btn-left">Back</a>
+		<a href="../index.html" class="ui-btn-right">TOP</a>
+	</div><!-- /header -->
+	<div data-role="content">
+
+			<h3>iOSアプリにする</h3>
+			<p>下のリンクから「ピコピコゲームiOSアプリ化プロジェクト(PicoPicoGamesiOS.zip)」をダウンロードします。</p>
+			<a href="http://yamagame.secret.jp/picopicoengine/PicoPicoGamesiOS.zip" data-role="button" data-ajax="false">「ピコピコゲームiOSアプリ化プロジェクト(PicoPicoGamesiOS.zip)」をダウンロード</a>
+			<p>PicoPicoGamesiOS.zip を解凍すると、中身は次のようになっています。</p>
+			<img class="pico-imagex2" src="./image/screen-shot 2012-08-19 17.41.19.png">
+			<p>PicoGame.xcodeproj をダブルクリックして、Xcodeを開きます。</p>
+			<img class="pico-imagex2" src="./image/screen-shot 2012-08-19 17.44.05.png">
+			<p>PicoGame.xcodeproj の GameData フォルダの中身を一旦削除します。</p>
+			<img class="pico-imagex2" src="./image/screen-shot 2012-08-19 17.44.05-2.png">
+			<p>SHIFTキーを押しながらクリックで選択して、</p>
+			<img class="pico-imagex2" src="./image/screen-shot 2012-08-19 17.54.12.png">
+			<p>右クリック(またはControlキー+クリック)から Delete を選択します。</p>
+			<img class="pico-imagex2" src="./image/screen-shot 2012-08-19 17.54.12-2.png">
+			<p>Move to Trash をクリックして完全に削除します。</p>
+			<img class="pico-imagex2" src="./image/screen-shot 2012-08-19 17.54.27.png">
+			<p>DotEDITOR から書き出したプロジェクトの ZIP ファイルの中身をすべてプロジェクトの GameData フォルダにコピーします。</p>
+			<img class="pico-imagex2" src="./image/screen-shot 2012-08-19 17.55.06.png">
+			<p>コピーするときに、「Copy items into destination group's folder」にチェックを入れてください。</p>
+			<img class="pico-imagex2" src="./image/screen-shot 2012-08-19 17.55.12.png">
+			<p>これで準備ができました。ビルド＆実行するとピコピコゲームが動きます。</p>
+			<img class="pico-imagex2" src="./image/screen-shot 2012-08-19 17.55.16.png">
+			<p>作ったアプリを AppStore で公開するには、Info.plist の設定や Default.png などのリソースを準備する必要があります。詳しくは iOSアプリ関係の資料や Apple のデベロッパーページ等をご覧下さい。</p>
+
+	</div>
+	<div data-role="footer" data-theme="d">
+		<h4>PicoPicoGameEngine</h4> 
+		<a href="#" data-role="button" data-rel="back" data-icon="arrow-l" class="ui-btn-left">Back</a>
+		<a href="./index.html" class="ui-btn-right">TOP</a>
+	</div>
+</div>
+
+
+
+</body>
+</html>

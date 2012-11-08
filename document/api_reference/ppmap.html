@@ -1,0 +1,323 @@
+<!DOCTYPE html> 
+<html> 
+	<head> 
+	<title>PicoPicoGameEngine</title> 
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=no"> 
+	<link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
+	<link rel="stylesheet" href="../picoapi.css" />
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js"></script>
+</head> 
+<body> 
+
+
+<div data-role="page" id="ppmap">
+	<div data-role="header" data-theme="d">
+		<h1>ppmap</h1>
+		<a href="#" data-role="button" data-rel="back" data-icon="arrow-l" class="ui-btn-left">Back</a>
+		<a href="../index.html" class="ui-btn-right">TOP</a>
+	</div><!-- /header -->
+
+	<div data-role="content">	
+	タイルマップを表示する事ができるクラスです。
+	ppspriteを継承しています。
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppmap.new()<br/>
+ppmap.new(n)</h3>
+<p class="pico-desc">ppmapオブジェクトを作成します。引数nを指定すると指定した数だけppmapオブジェクトが入ったテーブルを返します。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:load(name)<br/>
+:load(name,{texture option})</h3>
+<p class="pico-desc">tmxファイルを読み込みます。
+    DotEDITORではマップデータとして設定したファイルと、現在編集中のマップデータを
+    current.tmxというファイル名で読み込むことができます。
+    テクスチャの指定がある場合は自動的に読み込まれます。読み込みできるテキスチャは１つだけです。</p>
+
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--タイルマップを表示します
+pptex:default(pptex:load("main.png"))
+map = ppmap.new()
+map:load("map1.tmx")
+function start()
+  map:draw()
+end</code></pre></div></div>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:check(tile,{char_a,char_b,...})<br/>
+:check(tile,char_from,char_to)</h3>
+<p class="pico-desc">DotEDITORで</p>
+<pre><code>ti=require("tileinfo")</code></pre>
+<p class="pico-desc">の一行を加える事で使用できるようになります。<br/>
+	主にBGとのキャラクタの当たり判定用に使用します。<br/>
+	tileが{char_a,char_b,...}の仲間かどうかを調べます。<br/><br/>
+	※DotEDITORの書き出し機能を使って書き出すと tileinfo.lua の実装を見る事ができます。</p>
+</div>
+	
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:tileInfo()</h3>
+<p class="pico-desc">DotEDITORで</p>
+<pre><code>ti=require("tileinfo")</code></pre>
+<p class="pico-desc">の一行を加える事で使用できるようになります。<br/>
+	主にBGとキャラクタの当たり判定用に使用します。<br/>
+	キャラクタ情報を管理してるテーブルを返します。<br/><br/>
+	※DotEDITORの書き出し機能を使って書き出すと tileinfo.lua の実装を見る事ができます。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:area({x,y,width,height})</h3>
+<p class="pico-desc">描画するエリアを指定します。マップの一部だけを切り取って描画することができます。</p>
+
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>pptex:default(pptex:load("main.png"))
+map = ppmap.new()
+map:load("map1.tmx")
+map:area(4,4,10,10)  --{x=4,y=4,width=10,height=10}の部分を切り抜き
+function start()
+  map:draw()
+end</code></pre></div></div>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:reset()</h3>
+<p class="pico-desc">マップデータを初期化します。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:layerList()</h3>
+<p class="pico-desc">管理しているレイヤー名の一覧を文字列の配列テーブルで返します。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:addLayer(name,{width,height})</h3>
+<p class="pico-desc">レイヤーを追加します。同名のレイヤーがすでにあった場合はリサイズします。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:tileset()</h3>
+<p class="pico-desc">tmxファイル内のtilesetをテーブルで返します。</p>
+
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>pptex:default(pptex:load("main.png"))
+map = ppmap.new()
+map:load("map1.tmx")
+
+function start()
+  map:draw()
+  for k,v in pairs(map:tileset()) do
+  	ppgraph:print(v.firstgid..","..v.name
+  	       ..","..v.tilewidth..","..v.tileheight)
+  	ppgraph:move(0,16)
+  end
+end</code></pre></div></div>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:layer(name)</h3>
+<p class="pico-desc">参照するレイヤーを選択します。DotEDITORでは layer1 と layer2 の２つを指定できます。
+	引数を省略した場合は、選択中のレイヤー番号を返します。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:show(layer)<br/>
+:hide(layer)</h3>
+<p class="pico-desc">レイヤー番号を指定してレイヤーの表示、非表示を設定します。layerを省略した場合はマップ全体を表示、非表示します。</p>
+
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--レイヤー２を非表示に、レイヤー１を表示にしています
+pptex:default(pptex:load("main.png"))
+map = ppmap.new()
+map:load("map1.tmx")
+
+map:layer("layer2")
+map:hide(map:layer())
+
+map:layer("layer1")
+map:show(map:layer())
+
+function start()
+  map:draw()
+end</code></pre></div></div>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:locate({x,y})</h3>
+<p class="pico-desc">参照する位置を変更します。tile()やtile(gid)とともに使用します。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:tile({x,y})</h3>
+<p class="pico-desc">選択レイヤーの指定した位置のタイル番号を返します。</p>
+
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--タップした場所のタイル番号を表示します
+pptex:default(pptex:load("main.png"))
+map = ppmap.new()
+map:load("map1.tmx")
+map:layer("layer2")  --layer2を参照
+
+function start()
+  map:draw()
+  local p = pptouch()[1]
+  if p==nil then p=pppoint(0,0) end
+  ppgraph:print(map:tile(p/32))  --表示
+end</code></pre></div></div>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:tile({x,y},gid)</h3>
+<p class="pico-desc">選択レイヤーの指定した位置にタイル番号を設定します。</p>
+
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--5番のタイルをタップした位置に配置します
+pptex:default(pptex:load("main.png"))
+map = ppmap.new()
+map:load("map1.tmx")
+map:layer("layer2")
+
+function start()
+  map:draw()
+  local p = pptouch()[1]
+  if p~=nil then
+  	map:tile(p/32,5)
+  end
+end</code></pre></div></div>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:tile(gid)</h3>
+<p class="pico-desc">:tile({x,y},gid)と同様です。位置は:locate({x,y})で指定します。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:tile()</h3>
+<p class="pico-desc">:tile({x,y})と同様です。位置は:locate({x,y})で指定します。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:clear(tile)</h3>
+<p class="pico-desc">選択レイヤーを指定したタイル番号で塗りつぶします。tileを省略すると0で塗りつぶします。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:mapSize({width,height})</h3>
+<p class="pico-desc">選択レイヤーのマップサイズを変更します。引数がない場合はマップサイズを返します。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:print(string)</h3>
+<p class="pico-desc">選択レイヤーにテキストVRAMと同様の使い方で文字やキャラクタを表示します。
+	表示位置は :locate({x,y}) を使用します。</p>
+
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>pptex:default(pptex:load("main.png"))
+map = ppmap.new()
+map:load("map1.tmx")
+
+--テクスチャをフォントテクスチャに変更
+map:texture(ppfont:texture())
+map:tileSize(8,8)
+map:scale(2)
+
+--layer2をクリア
+map:layer("layer2")
+map:clear()
+
+--layer1をクリア
+map:layer("layer1")
+map:clear()
+
+--layer1のマップサイズを変更
+map:mapSize(20,20)
+map:area(0,0,20,20)
+
+--HELLO WORLDを表示
+map:locate(1,1)
+map:print("HELLO WORLD")
+
+function start()
+  map:draw()
+end</code></pre></div></div>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:fill({x,y,width,height},tile)</h3>
+<p class="pico-desc">選択レイヤーにtileで指定したタイル番号で四角に塗りつぶします。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:box({x,y,width,height},tile)</h3>
+<p class="pico-desc">選択レイヤーにtileで指定したタイル番号で四角を描きます。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:circle({x,y},r,tile,start,end)</h3>
+<p class="pico-desc">選択レイヤーにtileで指定したタイル番号で円を描きます。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:line({x,y},{x,y},tile)</h3>
+<p class="pico-desc">選択レイヤーにtileで指定したタイル番号で線を描きます。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:paint({x,y},tile)</h3>
+<p class="pico-desc">選択レイヤーにtileで指定したタイル番号で塗りつぶします。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:swap(tile1,tile2)</h3>
+<p class="pico-desc">選択レイヤーのtile1とtile2を入れ替えます。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:scroll({dx,dy})</h3>
+<p class="pico-desc">選択レイヤーのタイルを指定した方向にスクロールさせます。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:copy({x,y,width,height},{x,y})</h3>
+<p class="pico-desc">選択レイヤーの指定位置のタイルをコピーします。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:attribute({hflip=水平反転,vflip=垂直反転,rotate90=90回転,color={r,g,b,a}})</h3>
+<p class="pico-desc">描画タイルのアトリビュートを変更します。</p>
+	
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--layer1をすべて時計回りに90度回転させます
+pptex:default(pptex:load("main.png"))
+map = ppmap.new()
+map:load("map1.tmx")
+map:layer("layer1")
+map:attribute({rotate90=3})
+for y=0,map:mapSize().height-1 do
+	for x=0,map:mapSize().width-1 do
+		map:tile({x,y},map:tile({x,y}))
+	end
+end
+function start()
+  map:draw()
+end</code></pre></div></div>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:resetAttribute()</h3>
+<p class="pico-desc">描画タイルのアトリビュートを初期化します。</p>
+</div>
+	</div>
+
+	<div data-role="footer" data-theme="d">
+		<h4>PicoPicoGameEngine</h4> 
+		<a href="#" data-role="button" data-rel="back" data-icon="arrow-l" class="ui-btn-left">Back</a>
+		<a href="../index.html" class="ui-btn-right">TOP</a>
+	</div>
+</div>
+
+</body>
+</html>

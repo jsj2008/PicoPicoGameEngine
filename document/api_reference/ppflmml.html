@@ -1,0 +1,115 @@
+<!DOCTYPE html> 
+<html> 
+	<head> 
+	<title>PicoPicoGameEngine</title> 
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=no"> 
+	<link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
+	<link rel="stylesheet" href="../picoapi.css" />
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js"></script>
+</head> 
+<body> 
+
+
+<div data-role="page" id="ppflmml">
+	<div data-role="header" data-theme="d">
+		<h1>ppflmml[n]</h1>
+		<a href="#" data-role="button" data-rel="back" data-icon="arrow-l" class="ui-btn-left">Back</a>
+		<a href="../index.html" class="ui-btn-right">TOP</a>
+	</div><!-- /header -->
+
+	<div data-role="content">	
+MMLを再生します。nは1から3までです。
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppflmml[n]:play(mml)</h3>
+<p class="pico-desc">MMLを再生します。引数を省略した場合はpreload()したMMLを再生します。
+		MMLはFlMMLと互換性があります。</p>
+
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--画面をタッチでドレミファソラシドを再生
+function start()
+  if #pptouch() &gt; 0 then
+    ppflmml[1]:play(mml)
+  end
+end
+
+mml=&quot;t120o5l4cdefgab&lt;c&quot;</code></pre></div></div>
+
+</div>
+	
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppflmml[n]:stop()</h3>
+<p class="pico-desc">MMLの再生を止めます。</p>
+</div>
+	
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppflmml[n]:pause()</h3>
+<p class="pico-desc">MMLの再生を一時停止します。</p>
+</div>
+	
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppflmml[n]:preload(mml)</h3>
+<p class="pico-desc">MMLの事前読み込みを行います。</p>
+</div>
+	
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppflmml[n]:resume()</h3>
+<p class="pico-desc">一時停止したMMLの再生を再開します。</p>
+</div>
+	
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppflmml[n]:isPlaying()</h3>
+<p class="pico-desc">再生しているかどうかを調べます。</p>
+</div>
+	
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppflmml[n]:isPaused()</h3>
+<p class="pico-desc">一時停止しているかどうかを調べます。</p>
+</div>
+	
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppflmml[n]:volume(vol)</h3>
+<p class="pico-desc">ボリュームを指定します。引数が省略された場合は設定値を取得します。</p>
+</div>
+	
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppflmml[n]:noteOn(track, noteNo, volume)</h3>
+<p class="pico-desc">トラックを発音させます。noteNo は 0〜8オクターブx12の整数値です。例えば &quot;o5c&quot; の noteNo は 60 になります。</p>
+
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--画面をタッチで発音
+ppflmml[1]:play(&quot;@3&quot;)
+note=false
+
+function start()
+  if #pptouch() &gt; 0 then
+    if not note then
+      ppflmml[1]:noteOn(1,67,1)
+      note=true
+    end
+  else
+    ppflmml[1]:noteOff(1)
+    note=false
+  end
+end</code></pre></div></div>
+
+</div>
+		
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppflmml[n]:noteOff(track)</h3>
+<p class="pico-desc">トラックの発音を停止します。</p>
+</div>
+	</div>
+
+	<div data-role="footer" data-theme="d">
+		<h4>PicoPicoGameEngine</h4> 
+		<a href="#" data-role="button" data-rel="back" data-icon="arrow-l" class="ui-btn-left">Back</a>
+		<a href="../index.html" class="ui-btn-right">TOP</a>
+	</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html> 
+<html> 
+	<head> 
+	<title>PicoPicoGameEngine</title> 
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=no"> 
+	<link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
+	<link rel="stylesheet" href="./picoapi.css" />
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js"></script>
+</head> 
+<body> 
+
+
+
+<div data-role="page" id="ppgame">
+
+	<div data-role="header" data-theme="d">
+		<h1>ppgame</h1>
+		<a href="#" data-role="button" data-rel="back" data-icon="arrow-l" class="ui-btn-left">Back</a>
+		<a href="../index.html" class="ui-btn-right">TOP</a>
+	</div><!-- /header -->
+
+	<div data-role="content">	
+
+<!-- 		<div data-role="collapsible-set">  -->
+	
+			<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+				<h3>ppgame:start(func)</h3>
+				<p class="pico-desc">ゲームループとなる関数を変更します。funcはゲームループとなる関数(クロージャ)です。
+					ゲームループ関数はデフォルトではstart()ですが、別の関数に変更することができます。</p>
+		
+				<div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+					<pre><code>--１秒後にtitle()がゲームループになります。
+local t=0
+function start()
+  ppgraph:print("start loop");
+  t=t+1
+  if t>60 then
+    ppgame:start(title)
+  end
+end
+function title()
+  ppgraph:print("title loop");
+end</code></pre>
+					<img src="./image/screen-shot-2012-06-17-9.57.40.gif"/>
+				</div></div>
+			</div>
+	    
+			<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+				<h3>ppgame:platform()</h3>
+				<p class="pico-desc">実行中のプラトフォームを文字列で返します。</p>
+				<ul>
+				<li class="pico-desc">mac</li>
+				<li class="pico-desc">ios</li>
+				<li class="pico-desc">win</li>
+<!--
+				<li class="pico-desc">android</li>
+-->
+				</ul>
+		
+				<div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+					<pre><code>--platform()の戻り値を表示します。
+function start()
+  ppgraph:print(ppgame:platform())
+end</code></pre>
+				</div></div>
+			</div>
+	
+	
+			<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+				<h3>ppgame:fps()</h3>
+				<p class="pico-desc">フレームレートを返します。</p>
+
+				<div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+					<pre><code>--fps()の戻り値を表示します。
+function start()
+  ppgraph:print(ppgame:fps())
+end</code></pre>
+				</div></div>
+			</div>
+
+			<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppgame:deltaTime()</h3>
+<p class="pico-desc">前回のゲームループからの経過時間を返します。</p>
+
+				<div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+					<pre><code>--deltaTime()の戻り値を表示します。
+function start()
+  ppgraph:print(ppgame:fps())
+end</code></pre>
+				</div></div>
+			</div>
+
+			<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppgame:mouse()</h3>
+<!-- <p class="pico-desc">マウスポインタの位置を返します。(Mac,Windowsのみ)</p> -->
+<p class="pico-desc">マウスポインタの位置を返します。(DotEDITORでは機能しません。)</p>
+
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+					<pre><code>--mouse()の戻り値を表示します。
+function start()
+  ppgraph:print(ppgame:mouse().x..","..ppgame:mouse().y)
+end</code></pre>
+				</div></div>
+			</div>
+
+			<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppgame:volume(vol)</h3>
+<p class="pico-desc">MMLエンジンのマスターボリュームを設定します。引数がない場合は設定値を返します。</p>
+		
+<ul>
+<li class="pico-desc">vol 音量 0〜1</li>
+</ul>
+			</div>
+
+			<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppgame:setNumber(name, value)<br/>ppgame:setInteger(name, value)<br/>ppgame:setString(name, string)</h3>
+<p class="pico-desc">ゲームのスコアなどの値を保存します。</p>
+<ul>
+<li class="pico-desc">name 保存する値のキー文字列</li>
+<li class="pico-desc">value 保存する値</li>
+</ul>
+			</div>
+
+			<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppgame:getNumber(name, default)<br/>ppgame:getInteger(name, default)<br/>ppgame:getString(name, default)</h3>
+<p class="pico-desc">保存しているゲームのスコアなどの値を取得します。</p>
+<ul>
+<li class="pico-desc">name 取り出す値のキー文字列</li>
+<li class="pico-desc">default 取り出す値のデフォルト値</li>
+</ul>
+
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+					<pre><code>--１回目の実行ではscoreは100ですが、２回目の実行でscoreは200になります。
+local score = ppgame:getInteger("score",100)
+ppgame:setInteger("score",200)
+function start()
+  ppgraph:print(score)
+end</code></pre>
+				</div></div>
+			</div>
+	
+	</div><!-- /content -->
+
+	<div data-role="footer" data-theme="d">
+		<h4>PicoPicoGameEngine</h4> 
+		<a href="#" data-role="button" data-rel="back" data-icon="arrow-l" class="ui-btn-left">Back</a>
+		<a href="../index.html" class="ui-btn-right">TOP</a>
+	</div>
+
+</div><!-- /page -->
+
+</body>
+</html>

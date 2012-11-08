@@ -1,0 +1,203 @@
+<!DOCTYPE html> 
+<html> 
+	<head> 
+	<title>PicoPicoGameEngine</title> 
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=no"> 
+	<link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
+	<link rel="stylesheet" href="../picoapi.css" />
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js"></script>
+</head> 
+<body> 
+
+
+<div data-role="page" id="ppparticle">
+	<div data-role="header" data-theme="d">
+		<h1>ppparticle</h1>
+		<a href="#" data-role="button" data-rel="back" data-icon="arrow-l" class="ui-btn-left">Back</a>
+		<a href="../index.html" class="ui-btn-right">TOP</a>
+	</div><!-- /header -->
+
+	<div data-role="content">	
+	パーティクルオブジェクトです。
+	ppspriteを継承しています。
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppparticle.new()<br/>
+ppparticle.new(n)</h3>
+<p class="pico-desc">ppparticleオブジェクトを作成します。引数nを指定すると指定した数だけppparticleオブジェクトが入ったテーブルを返します。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:load(pex)</h3>
+<p class="pico-desc">パーティクルの設定データを読み込みます。DotEDITORでは使用できません。</p>
+</div>
+	
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:set({})</h3>
+
+<p class="pico-desc">パーティクルのパラメータをセットします。</p>
+<p class="pico-desc">デフォルト値は次のようになっています。</p>
+	    
+
+<pre><code>	emitterType=0
+	speed=50
+	speedVariance=11
+	particleLifeSpan=0.5
+	particleLifeSpanVariance=0
+	angle=0
+	angleVariance=360
+	radialAcceleration=0
+	tangentialAcceleration=0
+	radialAccelVariance=0
+	tangentialAccelVariance=0
+	maxParticles=100
+	startParticleSize=32
+	startParticleSizeVariance=0
+	finishParticleSize=32
+	finishParticleSizeVariance=0
+	duration=0.1
+	blendFuncSource=770
+	blendFuncDestination=771
+	maxRadius=10
+	maxRadiusVariance=0
+	radiusSpeed=0
+	minRadius=10
+	rotatePerSecond=0
+	rotatePerSecondVariance=0
+	rotationStart=0
+	rotationStartVariance=0
+	rotationEnd=0
+	rotationEndVariance=0
+	sourcePosition=PPPoint(160,160)
+	sourcePositionVariance=PPPoint(7,7)
+	gravity=PPPoint(0,0)
+	startColor=PPFColor(255,255,255,255)
+	startColorVariance=PPFColor(0,0,0,0)
+	finishColor=PPFColor(255,255,255,0)
+	finishColorVariance=PPFColor(0,0,0,0)
+	animationTime=1/60.0
+	animationData=nil
+	animationLoopPoint=1</code></pre>
+
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>pptex:default(pptex:load("sample.png"))
+		
+p=ppparticle.new()
+p:property({
+  startColor={r=240,g=240,b=0,a=255},
+  startColorVariance={r=20,g=20,b=0,a=0},
+  finishColor={r=250,g=0,b=0,a=0},
+  finishColorVariance={r=0,g=0,b=0,a=0},
+  animationTime=0.5,
+  animationData={10},
+  animationLoopPoint=1
+})
+
+function start()
+  if #pptouch()>0 then
+    p:property({sourcePosition=pptouch()[1]})
+    p:fire()
+  end
+  p:idle()
+  p:draw()
+end</code></pre>
+<img src="./image/screen-shot 2012-06-28 17.51.02.png"/></div></div>
+
+<!--
+	ppparticle:set({emitterType,
+	     speed,
+	     speedVariance,
+	     particleLifeSpan,
+	     particleLifeSpanVariance,
+	     angle,
+	     angleVariance,
+	     radialAcceleration,
+	     tangentialAcceleration,
+	     radialAccelVariance,
+	     tangentialAccelVariance,
+	     maxParticles,
+	     startParticleSize,
+	     startParticleSizeVariance,
+	     finishParticleSize,
+	     finishParticleSizeVariance,
+	     duration,
+	     blendFuncSource,
+	     blendFuncDestination,
+	     maxRadius,
+	     maxRadiusVariance,
+	     radiusSpeed,
+	     minRadius,
+	     rotatePerSecond,
+	     rotatePerSecondVariance,
+	     rotationStart,
+	     rotationStartVariance,
+	     rotationEnd,
+	     rotationEndVariance,
+	     sourcePosition={x,y},
+	     sourcePositionVariance={x,y},
+	     gravity={x,y},
+	     startColor={r,g,b,a},
+	     startColorVariance={r,g,b,a},
+	     finishColor={r,g,b,a},
+	     finishColorVariance={r,g,b,a},
+	     animationTime=1/60.0,
+	     animationData=nil,
+	     animationLoopPoint=1})
+-->
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:fire()</h3>
+<p class="pico-desc">パーティクルを発生させます。</p>
+		
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>pptex:default(pptex:load("sample.png"))
+		
+p=ppparticle.new()
+p:property({
+  animationTime=0.5,
+  animationData={10},
+  animationLoopPoint=1
+})
+
+function start()
+ if #pptouch()>0 then
+   p:property({sourcePosition=pptouch()[1]})
+   p:fire()
+ end
+ p:idle()
+ p:draw()
+end</code></pre>
+<img src="./image/screen-shot 2012-06-28 17.52.21.png"/></div></div>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:elapsedTime(time)</h3>
+<p class="pico-desc">経過時間を設定します。引数がない場合は経過時間を返します。</p>
+</div>
+	
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:count()</h3>
+<p class="pico-desc">現在発生中のパーティクルの数を返します。</p>
+</div>
+		
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:stop()</h3>
+<p class="pico-desc">パーティクル処理を止めます。</p>
+</div>
+
+	</div>
+
+	<div data-role="footer" data-theme="d">
+		<h4>PicoPicoGameEngine</h4> 
+		<a href="#" data-role="button" data-rel="back" data-icon="arrow-l" class="ui-btn-left">Back</a>
+		<a href="../index.html" class="ui-btn-right">TOP</a>
+	</div>
+</div>
+
+
+</body>
+</html>

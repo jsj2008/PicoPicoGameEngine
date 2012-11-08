@@ -1,0 +1,47 @@
+<!DOCTYPE html> 
+<html> 
+	<head> 
+	<title>PicoPicoGameEngine</title> 
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=no"> 
+	<link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
+	<link rel="stylesheet" href="../picoapi.css" />
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js"></script>
+</head> 
+<body> 
+
+<div data-role="page" id="doteditor_edit_script">
+
+	<div data-role="header" data-theme="d">
+		<h1>スクリプトを書き換えて遊ぶ</h1>
+		<a href="#" data-role="button" data-rel="back" data-icon="arrow-l" class="ui-btn-left">Back</a>
+		<a href="../index.html" class="ui-btn-right">TOP</a>
+	</div>
+
+	<div data-role="content">
+		<p>ピコピコエンジンはlua5.2をベースにしたインタプリタを内蔵しています。<br/>
+		スクリプトを書き換える事で全く新しいオリジナルのピコピコゲームを作る事ができます。</p>
+		
+		<p>DotEDITOR内蔵のluaでは以下の点が異なります。</p>
+		
+		<ul>
+		<li>ファイルIO関連のモジュールが使えません。</li>
+		<li>require()で読み込めるファイルは tileinfo.lua のみです。</li>
+		<li>pptmxで読み込めるTMXファイルはマップデータで指定したものと、現在編集中のマップデータ(current.tmx)です。</li>
+		<li>pptexで読み込めるテクスチャファイルは main.png, map.png, sample.png, icon.png です。</li>
+		</ul>
+		
+	</div>
+
+	<div data-role="footer" data-theme="d">
+		<h4>PicoPicoGameEngine</h4> 
+		<a href="#" data-role="button" data-rel="back" data-icon="arrow-l" class="ui-btn-left">Back</a>
+		<a href="../index.html" class="ui-btn-right">TOP</a>
+	</div>
+
+</div>
+
+</body>
+</html>

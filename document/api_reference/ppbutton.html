@@ -1,0 +1,163 @@
+<!DOCTYPE html> 
+<html> 
+	<head> 
+	<title>PicoPicoGameEngine</title> 
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=no"> 
+	<link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
+	<link rel="stylesheet" href="../picoapi.css" />
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js"></script>
+</head> 
+<body> 
+
+
+<div data-role="page" id="ppbutton">
+	<div data-role="header" data-theme="d">
+		<h1>ppbutton</h1>
+		<a href="#" data-role="button" data-rel="back" data-icon="arrow-l" class="ui-btn-left">Back</a>
+		<a href="../index.html" class="ui-btn-right">TOP</a>
+	</div><!-- /header -->
+
+	<div data-role="content">	
+		ボタンを処理するクラスです。
+		
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppbutton(title)</h3>
+<p class="pico-desc">titleを表示したボタンを作成します。</p>
+		
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--ボタンを押すとgameloopへ遷移します
+b=ppbutton("START GAME")
+b.bgcolor = ppgraph.blue
+
+function start()
+  if b:idle() then
+    ppgame:start(gameloop)
+  end
+  b:draw()
+end
+
+function gameloop()
+  ppgraph:print("GAME LOOP")
+end</code></pre>
+<img src="./image/screen-shot 2012-06-28 17.56.22.png"/></div></div>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:draw()</h3>
+<p class="pico-desc">ボタンを描画します。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:size()</h3>
+<p class="pico-desc">ボタンのサイズを返します。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:layout(auto,cx,cy,rx,ry,rw,rh)</h3>
+<p class="pico-desc">ボタンのレイアウトを指定します。</p>
+
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--ボタンを画面中央に配置します
+b=ppbutton("GAME START")
+b:layout(true,true,true)
+
+function start()
+  b:idle()
+  b:draw()
+end</code></pre>
+<img src="./image/screen-shot 2012-06-28 18.04.48.png"/></div></div>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:aabb()</h3>
+<p class="pico-desc">ボタンのバウンディングボックスを計算します。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:drawbg(rect)</h3>
+<p class="pico-desc">ボタンの背景画像を描画します。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>:idle()<br/>:idle({points})</h3>
+<p class="pico-desc">ボタンのタッチ判定を処理します。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>.bgcolor (default:ppgraph.black)</h3>
+<p class="pico-desc">背景色です。nilにすると透明になります。</p>
+
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--ボタンの背景を透明にしてスクリーンを青色にします
+b=ppbutton("GAME START")
+b:layout(true,true,true)
+b.bgcolor = nil
+
+function start()
+  ppgraph:fill(ppscreen:size(),ppgraph.blue)
+  b:idle()
+  b:draw()
+end</code></pre>
+<img src="./image/screen-shot 2012-06-28 18.07.35.png"/></div></div>
+
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>.selectcolor (default:ppgraph.red)</h3>
+<p class="pico-desc">タッチ時のテキストカラーです。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>.color (default:ppgraph.white)</h3>
+<p class="pico-desc">非タッチ時のテキストカラーです。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>.autolayout (default:false)<br/>
+.centerx (default:false)<br/>
+.centery (default:false)<br/>
+.layoutarea (default:nil)</h3>
+<p class="pico-desc">:layout()で使用するパラメータです。直接指定する事ができます。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>.bg.tile (default:0)</h3>
+<p class="pico-desc">背景画像をタイル番号で指定します。</p>
+
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--タイル番号17を背景に使って表示します
+pptex:default(pptex:load("sample.png"))
+b=ppbutton("TITLE")
+b.bg.tile = 17
+b.bg.edge = 4
+function start()
+  b:idle()
+  b:draw()
+end</code></pre>
+<img src="./image/screen-shot 2012-06-28 17.58.28.png"/></div></div>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>.bg.texture (default:nil)</h3>
+<p class="pico-desc">背景画像のテクスチャを変更します。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>.bg.edge (default:4)</h3>
+<p class="pico-desc">背景画像のエッジ領域を指定します。</p>
+</div>
+	</div>
+
+	<div data-role="footer" data-theme="d">
+		<h4>PicoPicoGameEngine</h4> 
+		<a href="#" data-role="button" data-rel="back" data-icon="arrow-l" class="ui-btn-left">Back</a>
+		<a href="../index.html" class="ui-btn-right">TOP</a>
+	</div>
+</div>
+
+
+</body>
+</html>

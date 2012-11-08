@@ -1,0 +1,103 @@
+<!DOCTYPE html> 
+<html> 
+	<head> 
+	<title>PicoPicoGameEngine</title> 
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=no"> 
+	<link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+
+<!--
+	<link rel="stylesheet" href="./js/default/jquery.mobile-1.1.0.min.css" />
+	<link rel="stylesheet" href="./picoapi.css" />
+	<script type="text/javascript" src="./js/jquery.js"></script>
+	<script type="text/javascript" src="./js/jquery.mobile-1.1.0.min.js"></script>
+-->
+
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
+	<link rel="stylesheet" href="./picoapi.css" />
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js"></script>
+</head>
+<body> 
+
+
+<div data-role="page" id="reference">
+	<div data-role="header" data-theme="d">
+		<h1>ピコピコエンジンをビルドする</h1>
+		<a href="#" data-role="button" data-rel="back" data-icon="arrow-l" class="ui-btn-left">Back</a>
+		<a href="../index.html" class="ui-btn-right">TOP</a>
+	</div><!-- /header -->
+	<div data-role="content">
+			<h3>ピコピコゲームエンジンのビルド方法</h3>
+			<p>ソースコードは以下のリンクからダウンロードできます。</p>
+			<a href="https://github.com/yamagame/PicoPicoGameEngine" data-role="button" data-ajax="false">「ピコピコゲームエンジンソースコード(GitHub)」</a><br>
+			<p>執筆時のビルド環境は MacOSX Lion 10.7.4 + Xcode 4.4 です。</p>
+			<p>※実際にビルドするには、それぞれの環境についての知識やプログラミングの基礎的なスキルが必要になります。</p>
+
+			<h3>iOS版</h3>
+			<p>FullBuild/iOS/PicoGame.xcodeproj を開きます。ビルドスキームに FullBuild を選択しビルドします。
+			ビルドすると以下のフレームワークが作られます。</p>
+
+			<ul data-role="listview" data-inset="true" data-theme="c">
+			<li>Box2D/iOS/Box2D/Products/Box2D.framework</li>
+			<li>CocosDenshion/iOS/CocosDenshion/Products/CocosDenshion.framework</li>
+			<li>FlMML/iOS/FlMML/Products/FlMML.framework</li>
+			<li>freetype/iOS/freetype/Products/freetype.framework</li>
+			<li>Lua5.2/iOS/Lua/Products/Lua.framework</li>
+			<li>PicoGame/iOS/PicoGame/Products/PicoGame.framework</li>
+			</ul>
+
+			<h3>MacOSX版</h3>
+			<p>FullBuild/OSX/PicoGame.xcodeprojを開きます。ビルドスキームに FullBuild を選択しビルドします。
+			ビルドすると以下のフレームワークが作られます。</p>
+
+			<ul data-role="listview" data-inset="true" data-theme="c">
+			<li>Box2D/OSX/Box2D/Products/Box2D.framework</li>
+			<li>CocosDenshion/OSX/CocosDenshion/Products/CocosDenshion.framework</li>
+			<li>FlMML/OSX/FlMML/Products/FlMML.framework</li>
+			<li>freetype/OSX/freetype/Products/freetype.framework</li>
+			<li>Lua5.2/OSX/Lua/Products/Lua.framework</li>
+			<li>PicoGame/OSX/PicoGame/Products/PicoGame.framework</li>
+			</ul>
+
+			<h3>Android版</h3>
+			<p>FullBuild/Androidフォルダで ndk-build します。
+			ビルドすると以下のライブラリが作られます。</p>
+
+			<ul data-role="listview" data-inset="true" data-theme="c">
+			<li>FullBuild/Android/libs/armeabi/libbox2d.so</li>
+			<li>FullBuild/Android/libs/armeabi/libcocos2d.so</li>
+			<li>FullBuild/Android/libs/armeabi/libcocosdenshion.so</li>
+			<li>FullBuild/Android/libs/armeabi/libflmml.so</li>
+			<li>FullBuild/Android/libs/armeabi/libfreetype.so</li>
+			<li>FullBuild/Android/libs/armeabi/liblua.so</li>
+			<li>FullBuild/Android/libs/armeabi/libpicogame.so</li>
+			<li>FullBuild/Android/libs/armeabi/libpicomain.so</li>
+			</ul>
+
+			<p>Android版をビルドするには NDK 環境を作る必要があります。</p>
+			
+			<h3>Windows版</h3>
+			<p>FullBuild/Win32/PicoGameフォルダで make fullbuild します。
+			ビルドすると以下の実行ファイルが作られます。</p>
+
+			<ul data-role="listview" data-inset="true" data-theme="c">
+			<li>FullBuild/Win32/PicoGame/picogame.exe</li>
+			</ul>
+			
+			<p>Windows版をMacOSXでビルドするには MinGW が必要です。
+			Cocotronをインストールし、Makefile の中で指定している CC や AR などのパスを設定する必要があります。
+			Cocotronの環境構築は手間がかかりますので、VC++などの環境に慣れている方はそちらを使ってプロジェクトを作り直した方が早いかもしれません。</p>
+
+	</div>
+	<div data-role="footer" data-theme="d">
+		<h4>PicoPicoGameEngine</h4> 
+		<a href="#" data-role="button" data-rel="back" data-icon="arrow-l" class="ui-btn-left">Back</a>
+		<a href="./index.html" class="ui-btn-right">TOP</a>
+	</div>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,543 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXAggregateTarget section */
+		6BA522B315B950CD006749D7 /* Fullbuild */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 6BA522B615B950CD006749D7 /* Build configuration list for PBXAggregateTarget "Fullbuild" */;
+			buildPhases = (
+				6BA522B815B950D2006749D7 /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = Fullbuild;
+			productName = Fullbuild;
+		};
+/* End PBXAggregateTarget section */
+
+/* Begin PBXBuildFile section */
+		6B06AFE415B500D300D2EFF6 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B06AFE315B500D300D2EFF6 /* UIKit.framework */; };
+		6B06AFE615B500D300D2EFF6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B06AFE515B500D300D2EFF6 /* Foundation.framework */; };
+		6B06AFE815B500D300D2EFF6 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B06AFE715B500D300D2EFF6 /* CoreGraphics.framework */; };
+		6B06AFEE15B500D300D2EFF6 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6B06AFEC15B500D300D2EFF6 /* InfoPlist.strings */; };
+		6B06AFF015B500D300D2EFF6 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6B06AFEF15B500D300D2EFF6 /* main.mm */; };
+		6B06B01215B5012100D2EFF6 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B06B00815B5012100D2EFF6 /* OpenGLES.framework */; };
+		6B06B01315B5012100D2EFF6 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B06B00915B5012100D2EFF6 /* GameKit.framework */; };
+		6B06B01415B5012100D2EFF6 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B06B00A15B5012100D2EFF6 /* MessageUI.framework */; };
+		6B06B01515B5012100D2EFF6 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B06B00B15B5012100D2EFF6 /* SystemConfiguration.framework */; };
+		6B06B01615B5012100D2EFF6 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B06B00C15B5012100D2EFF6 /* MediaPlayer.framework */; };
+		6B06B01715B5012100D2EFF6 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B06B00D15B5012100D2EFF6 /* CoreMotion.framework */; };
+		6B06B01815B5012100D2EFF6 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B06B00E15B5012100D2EFF6 /* AudioToolbox.framework */; };
+		6B06B01915B5012100D2EFF6 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B06B00F15B5012100D2EFF6 /* QuartzCore.framework */; };
+		6B06B01A15B5012100D2EFF6 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B06B01015B5012100D2EFF6 /* AVFoundation.framework */; };
+		6B06B01B15B5012100D2EFF6 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B06B01115B5012100D2EFF6 /* OpenAL.framework */; };
+		6B06B02015B5014300D2EFF6 /* PicoGameAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6B06B01E15B5014300D2EFF6 /* PicoGameAppDelegate.mm */; };
+		6B06B02115B5014300D2EFF6 /* PPGameStart.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6B06B01F15B5014300D2EFF6 /* PPGameStart.cpp */; };
+		6B06B02F15B501EC00D2EFF6 /* freetype.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B06B02915B501EC00D2EFF6 /* freetype.framework */; };
+		6B06B03015B501EC00D2EFF6 /* CocosDenshion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B06B02A15B501EC00D2EFF6 /* CocosDenshion.framework */; };
+		6B06B03115B501EC00D2EFF6 /* FlMML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B06B02B15B501EC00D2EFF6 /* FlMML.framework */; };
+		6B06B03215B501ED00D2EFF6 /* Box2D.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B06B02C15B501EC00D2EFF6 /* Box2D.framework */; };
+		6B06B03315B501ED00D2EFF6 /* Lua.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B06B02D15B501EC00D2EFF6 /* Lua.framework */; };
+		6B06B03415B501ED00D2EFF6 /* PicoGame.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B06B02E15B501EC00D2EFF6 /* PicoGame.framework */; };
+		6BC178D0162E7BF600AE9E3C /* MainViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6BC178CF162E7BF600AE9E3C /* MainViewController.mm */; };
+		6BC178DD162EA32D00AE9E3C /* PPScriptGameEngine.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6BC178DC162EA32D00AE9E3C /* PPScriptGameEngine.mm */; };
+		6BC178E5162EA4B500AE9E3C /* StartViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BC178E4162EA4B500AE9E3C /* StartViewController.m */; };
+		6BC387721626CDAF00D112A2 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BC387711626CDAF00D112A2 /* Default.png */; };
+		6BC387741626CDB200D112A2 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BC387731626CDB200D112A2 /* Default-568h@2x.png */; };
+		6BC3877A1626CED000D112A2 /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6BC387791626CED000D112A2 /* MainStoryboard.storyboard */; };
+		6BFE568F164B4F1400704F3D /* apple.lua in Resources */ = {isa = PBXBuildFile; fileRef = 6BFE5681164B4F1400704F3D /* apple.lua */; };
+		6BFE5690164B4F1400704F3D /* current.tmx in Resources */ = {isa = PBXBuildFile; fileRef = 6BFE5682164B4F1400704F3D /* current.tmx */; };
+		6BFE5691164B4F1400704F3D /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BFE5683164B4F1400704F3D /* icon.png */; };
+		6BFE5692164B4F1400704F3D /* main.lua in Resources */ = {isa = PBXBuildFile; fileRef = 6BFE5684164B4F1400704F3D /* main.lua */; };
+		6BFE5693164B4F1400704F3D /* main.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BFE5685164B4F1400704F3D /* main.png */; };
+		6BFE5694164B4F1400704F3D /* map.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6BFE5686164B4F1400704F3D /* map.plist */; };
+		6BFE5695164B4F1400704F3D /* map.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BFE5687164B4F1400704F3D /* map.png */; };
+		6BFE5696164B4F1400704F3D /* map1.tmx in Resources */ = {isa = PBXBuildFile; fileRef = 6BFE5688164B4F1400704F3D /* map1.tmx */; };
+		6BFE5697164B4F1400704F3D /* pattern.tileinfo in Resources */ = {isa = PBXBuildFile; fileRef = 6BFE5689164B4F1400704F3D /* pattern.tileinfo */; };
+		6BFE5698164B4F1400704F3D /* PPImageFont.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BFE568A164B4F1400704F3D /* PPImageFont.png */; };
+		6BFE5699164B4F1400704F3D /* project.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6BFE568B164B4F1400704F3D /* project.plist */; };
+		6BFE569A164B4F1400704F3D /* sample.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BFE568C164B4F1400704F3D /* sample.png */; };
+		6BFE569B164B4F1400704F3D /* tile.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6BFE568D164B4F1400704F3D /* tile.plist */; };
+		6BFE569C164B4F1400704F3D /* tileinfo.lua in Resources */ = {isa = PBXBuildFile; fileRef = 6BFE568E164B4F1400704F3D /* tileinfo.lua */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		6B06AFDF15B500D300D2EFF6 /* PicoGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PicoGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6B06AFE315B500D300D2EFF6 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		6B06AFE515B500D300D2EFF6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		6B06AFE715B500D300D2EFF6 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		6B06AFEB15B500D300D2EFF6 /* PicoGame-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PicoGame-Info.plist"; sourceTree = "<group>"; };
+		6B06AFED15B500D300D2EFF6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		6B06AFEF15B500D300D2EFF6 /* main.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
+		6B06AFF115B500D300D2EFF6 /* PicoGame-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PicoGame-Prefix.pch"; sourceTree = "<group>"; };
+		6B06B00815B5012100D2EFF6 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		6B06B00915B5012100D2EFF6 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
+		6B06B00A15B5012100D2EFF6 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
+		6B06B00B15B5012100D2EFF6 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		6B06B00C15B5012100D2EFF6 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		6B06B00D15B5012100D2EFF6 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
+		6B06B00E15B5012100D2EFF6 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/AudioToolbox.framework; sourceTree = DEVELOPER_DIR; };
+		6B06B00F15B5012100D2EFF6 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/QuartzCore.framework; sourceTree = DEVELOPER_DIR; };
+		6B06B01015B5012100D2EFF6 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/AVFoundation.framework; sourceTree = DEVELOPER_DIR; };
+		6B06B01115B5012100D2EFF6 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/OpenAL.framework; sourceTree = DEVELOPER_DIR; };
+		6B06B01D15B5014300D2EFF6 /* PicoGameAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PicoGameAppDelegate.h; sourceTree = "<group>"; };
+		6B06B01E15B5014300D2EFF6 /* PicoGameAppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PicoGameAppDelegate.mm; sourceTree = "<group>"; };
+		6B06B01F15B5014300D2EFF6 /* PPGameStart.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPGameStart.cpp; sourceTree = "<group>"; };
+		6B06B02315B5016000D2EFF6 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainWindow.xib; sourceTree = "<group>"; };
+		6B06B02515B5016000D2EFF6 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/PPGameViewController.xib; sourceTree = "<group>"; };
+		6B06B02915B501EC00D2EFF6 /* freetype.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = freetype.framework; path = ../../freetype/iOS/freetype/Products/freetype.framework; sourceTree = "<group>"; };
+		6B06B02A15B501EC00D2EFF6 /* CocosDenshion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocosDenshion.framework; path = ../../CocosDenshion/iOS/CocosDenshion/Products/CocosDenshion.framework; sourceTree = "<group>"; };
+		6B06B02B15B501EC00D2EFF6 /* FlMML.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FlMML.framework; path = ../../FlMML/iOS/FlMML/Products/FlMML.framework; sourceTree = "<group>"; };
+		6B06B02C15B501EC00D2EFF6 /* Box2D.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Box2D.framework; path = ../../Box2D/iOS/Box2D/Products/Box2D.framework; sourceTree = "<group>"; };
+		6B06B02D15B501EC00D2EFF6 /* Lua.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Lua.framework; path = ../../Lua5.2/iOS/Lua/Products/Lua.framework; sourceTree = "<group>"; };
+		6B06B02E15B501EC00D2EFF6 /* PicoGame.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PicoGame.framework; path = ../../PicoGame/iOS/PicoGame/Products/PicoGame.framework; sourceTree = "<group>"; };
+		6BC178CE162E7BF600AE9E3C /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
+		6BC178CF162E7BF600AE9E3C /* MainViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MainViewController.mm; sourceTree = "<group>"; };
+		6BC178DB162EA32D00AE9E3C /* PPScriptGameEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPScriptGameEngine.h; sourceTree = "<group>"; };
+		6BC178DC162EA32D00AE9E3C /* PPScriptGameEngine.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PPScriptGameEngine.mm; sourceTree = "<group>"; };
+		6BC178E3162EA4B400AE9E3C /* StartViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StartViewController.h; sourceTree = "<group>"; };
+		6BC178E4162EA4B500AE9E3C /* StartViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StartViewController.m; sourceTree = "<group>"; };
+		6BC387711626CDAF00D112A2 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = ../Default.png; sourceTree = "<group>"; };
+		6BC387731626CDB200D112A2 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "../Default-568h@2x.png"; sourceTree = "<group>"; };
+		6BC387791626CED000D112A2 /* MainStoryboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MainStoryboard.storyboard; sourceTree = "<group>"; };
+		6BFE5681164B4F1400704F3D /* apple.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = apple.lua; path = GameData/apple.lua; sourceTree = "<group>"; };
+		6BFE5682164B4F1400704F3D /* current.tmx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = current.tmx; path = GameData/current.tmx; sourceTree = "<group>"; };
+		6BFE5683164B4F1400704F3D /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon.png; path = GameData/icon.png; sourceTree = "<group>"; };
+		6BFE5684164B4F1400704F3D /* main.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = main.lua; path = GameData/main.lua; sourceTree = "<group>"; };
+		6BFE5685164B4F1400704F3D /* main.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = main.png; path = GameData/main.png; sourceTree = "<group>"; };
+		6BFE5686164B4F1400704F3D /* map.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = map.plist; path = GameData/map.plist; sourceTree = "<group>"; };
+		6BFE5687164B4F1400704F3D /* map.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = map.png; path = GameData/map.png; sourceTree = "<group>"; };
+		6BFE5688164B4F1400704F3D /* map1.tmx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = map1.tmx; path = GameData/map1.tmx; sourceTree = "<group>"; };
+		6BFE5689164B4F1400704F3D /* pattern.tileinfo */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = pattern.tileinfo; path = GameData/pattern.tileinfo; sourceTree = "<group>"; };
+		6BFE568A164B4F1400704F3D /* PPImageFont.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = PPImageFont.png; path = GameData/PPImageFont.png; sourceTree = "<group>"; };
+		6BFE568B164B4F1400704F3D /* project.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = project.plist; path = GameData/project.plist; sourceTree = "<group>"; };
+		6BFE568C164B4F1400704F3D /* sample.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = sample.png; path = GameData/sample.png; sourceTree = "<group>"; };
+		6BFE568D164B4F1400704F3D /* tile.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = tile.plist; path = GameData/tile.plist; sourceTree = "<group>"; };
+		6BFE568E164B4F1400704F3D /* tileinfo.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = tileinfo.lua; path = GameData/tileinfo.lua; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		6B06AFDC15B500D300D2EFF6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6B06AFE415B500D300D2EFF6 /* UIKit.framework in Frameworks */,
+				6B06AFE615B500D300D2EFF6 /* Foundation.framework in Frameworks */,
+				6B06AFE815B500D300D2EFF6 /* CoreGraphics.framework in Frameworks */,
+				6B06B01215B5012100D2EFF6 /* OpenGLES.framework in Frameworks */,
+				6B06B01315B5012100D2EFF6 /* GameKit.framework in Frameworks */,
+				6B06B01415B5012100D2EFF6 /* MessageUI.framework in Frameworks */,
+				6B06B01515B5012100D2EFF6 /* SystemConfiguration.framework in Frameworks */,
+				6B06B01615B5012100D2EFF6 /* MediaPlayer.framework in Frameworks */,
+				6B06B01715B5012100D2EFF6 /* CoreMotion.framework in Frameworks */,
+				6B06B01815B5012100D2EFF6 /* AudioToolbox.framework in Frameworks */,
+				6B06B01915B5012100D2EFF6 /* QuartzCore.framework in Frameworks */,
+				6B06B01A15B5012100D2EFF6 /* AVFoundation.framework in Frameworks */,
+				6B06B01B15B5012100D2EFF6 /* OpenAL.framework in Frameworks */,
+				6B06B02F15B501EC00D2EFF6 /* freetype.framework in Frameworks */,
+				6B06B03015B501EC00D2EFF6 /* CocosDenshion.framework in Frameworks */,
+				6B06B03115B501EC00D2EFF6 /* FlMML.framework in Frameworks */,
+				6B06B03215B501ED00D2EFF6 /* Box2D.framework in Frameworks */,
+				6B06B03315B501ED00D2EFF6 /* Lua.framework in Frameworks */,
+				6B06B03415B501ED00D2EFF6 /* PicoGame.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		6B06AFD415B500D300D2EFF6 = {
+			isa = PBXGroup;
+			children = (
+				6B06B03515B502D000D2EFF6 /* GameData */,
+				6B06AFE915B500D300D2EFF6 /* PicoGame */,
+				6B06B02815B501DE00D2EFF6 /* PicoPicoGameEngine */,
+				6B06AFE215B500D300D2EFF6 /* Frameworks */,
+				6B06AFE015B500D300D2EFF6 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		6B06AFE015B500D300D2EFF6 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6B06AFDF15B500D300D2EFF6 /* PicoGame.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		6B06AFE215B500D300D2EFF6 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				6B06AFE315B500D300D2EFF6 /* UIKit.framework */,
+				6B06AFE515B500D300D2EFF6 /* Foundation.framework */,
+				6B06AFE715B500D300D2EFF6 /* CoreGraphics.framework */,
+				6B06B00815B5012100D2EFF6 /* OpenGLES.framework */,
+				6B06B00915B5012100D2EFF6 /* GameKit.framework */,
+				6B06B00A15B5012100D2EFF6 /* MessageUI.framework */,
+				6B06B00B15B5012100D2EFF6 /* SystemConfiguration.framework */,
+				6B06B00C15B5012100D2EFF6 /* MediaPlayer.framework */,
+				6B06B00D15B5012100D2EFF6 /* CoreMotion.framework */,
+				6B06B00E15B5012100D2EFF6 /* AudioToolbox.framework */,
+				6B06B00F15B5012100D2EFF6 /* QuartzCore.framework */,
+				6B06B01015B5012100D2EFF6 /* AVFoundation.framework */,
+				6B06B01115B5012100D2EFF6 /* OpenAL.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		6B06AFE915B500D300D2EFF6 /* PicoGame */ = {
+			isa = PBXGroup;
+			children = (
+				6B06B01D15B5014300D2EFF6 /* PicoGameAppDelegate.h */,
+				6B06B01E15B5014300D2EFF6 /* PicoGameAppDelegate.mm */,
+				6BC178E3162EA4B400AE9E3C /* StartViewController.h */,
+				6BC178E4162EA4B500AE9E3C /* StartViewController.m */,
+				6BC178CE162E7BF600AE9E3C /* MainViewController.h */,
+				6BC178CF162E7BF600AE9E3C /* MainViewController.mm */,
+				6BC178DB162EA32D00AE9E3C /* PPScriptGameEngine.h */,
+				6BC178DC162EA32D00AE9E3C /* PPScriptGameEngine.mm */,
+				6B06B01F15B5014300D2EFF6 /* PPGameStart.cpp */,
+				6BC387791626CED000D112A2 /* MainStoryboard.storyboard */,
+				6B06B02215B5016000D2EFF6 /* MainWindow.xib */,
+				6B06B02415B5016000D2EFF6 /* PPGameViewController.xib */,
+				6B06AFEA15B500D300D2EFF6 /* Supporting Files */,
+			);
+			path = PicoGame;
+			sourceTree = "<group>";
+		};
+		6B06AFEA15B500D300D2EFF6 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				6BC387731626CDB200D112A2 /* Default-568h@2x.png */,
+				6BC387711626CDAF00D112A2 /* Default.png */,
+				6B06AFEB15B500D300D2EFF6 /* PicoGame-Info.plist */,
+				6B06AFEC15B500D300D2EFF6 /* InfoPlist.strings */,
+				6B06AFEF15B500D300D2EFF6 /* main.mm */,
+				6B06AFF115B500D300D2EFF6 /* PicoGame-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		6B06B02815B501DE00D2EFF6 /* PicoPicoGameEngine */ = {
+			isa = PBXGroup;
+			children = (
+				6B06B02915B501EC00D2EFF6 /* freetype.framework */,
+				6B06B02A15B501EC00D2EFF6 /* CocosDenshion.framework */,
+				6B06B02B15B501EC00D2EFF6 /* FlMML.framework */,
+				6B06B02C15B501EC00D2EFF6 /* Box2D.framework */,
+				6B06B02D15B501EC00D2EFF6 /* Lua.framework */,
+				6B06B02E15B501EC00D2EFF6 /* PicoGame.framework */,
+			);
+			name = PicoPicoGameEngine;
+			sourceTree = "<group>";
+		};
+		6B06B03515B502D000D2EFF6 /* GameData */ = {
+			isa = PBXGroup;
+			children = (
+				6BFE5681164B4F1400704F3D /* apple.lua */,
+				6BFE5682164B4F1400704F3D /* current.tmx */,
+				6BFE5683164B4F1400704F3D /* icon.png */,
+				6BFE5684164B4F1400704F3D /* main.lua */,
+				6BFE5685164B4F1400704F3D /* main.png */,
+				6BFE5686164B4F1400704F3D /* map.plist */,
+				6BFE5687164B4F1400704F3D /* map.png */,
+				6BFE5688164B4F1400704F3D /* map1.tmx */,
+				6BFE5689164B4F1400704F3D /* pattern.tileinfo */,
+				6BFE568A164B4F1400704F3D /* PPImageFont.png */,
+				6BFE568B164B4F1400704F3D /* project.plist */,
+				6BFE568C164B4F1400704F3D /* sample.png */,
+				6BFE568D164B4F1400704F3D /* tile.plist */,
+				6BFE568E164B4F1400704F3D /* tileinfo.lua */,
+			);
+			name = GameData;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		6B06AFDE15B500D300D2EFF6 /* PicoGame */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6B06AFFD15B500D300D2EFF6 /* Build configuration list for PBXNativeTarget "PicoGame" */;
+			buildPhases = (
+				6B06AFDB15B500D300D2EFF6 /* Sources */,
+				6B06AFDC15B500D300D2EFF6 /* Frameworks */,
+				6B06AFDD15B500D300D2EFF6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PicoGame;
+			productName = PicoGame;
+			productReference = 6B06AFDF15B500D300D2EFF6 /* PicoGame.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		6B06AFD615B500D300D2EFF6 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0430;
+			};
+			buildConfigurationList = 6B06AFD915B500D300D2EFF6 /* Build configuration list for PBXProject "PicoGame" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 6B06AFD415B500D300D2EFF6;
+			productRefGroup = 6B06AFE015B500D300D2EFF6 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				6B06AFDE15B500D300D2EFF6 /* PicoGame */,
+				6BA522B315B950CD006749D7 /* Fullbuild */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		6B06AFDD15B500D300D2EFF6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6B06AFEE15B500D300D2EFF6 /* InfoPlist.strings in Resources */,
+				6BC387721626CDAF00D112A2 /* Default.png in Resources */,
+				6BC387741626CDB200D112A2 /* Default-568h@2x.png in Resources */,
+				6BC3877A1626CED000D112A2 /* MainStoryboard.storyboard in Resources */,
+				6BFE568F164B4F1400704F3D /* apple.lua in Resources */,
+				6BFE5690164B4F1400704F3D /* current.tmx in Resources */,
+				6BFE5691164B4F1400704F3D /* icon.png in Resources */,
+				6BFE5692164B4F1400704F3D /* main.lua in Resources */,
+				6BFE5693164B4F1400704F3D /* main.png in Resources */,
+				6BFE5694164B4F1400704F3D /* map.plist in Resources */,
+				6BFE5695164B4F1400704F3D /* map.png in Resources */,
+				6BFE5696164B4F1400704F3D /* map1.tmx in Resources */,
+				6BFE5697164B4F1400704F3D /* pattern.tileinfo in Resources */,
+				6BFE5698164B4F1400704F3D /* PPImageFont.png in Resources */,
+				6BFE5699164B4F1400704F3D /* project.plist in Resources */,
+				6BFE569A164B4F1400704F3D /* sample.png in Resources */,
+				6BFE569B164B4F1400704F3D /* tile.plist in Resources */,
+				6BFE569C164B4F1400704F3D /* tileinfo.lua in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		6BA522B815B950D2006749D7 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/bin/echo ${SRCROOT}\n\ncd ${SRCROOT}\ncd ../../Box2D/iOS/Box2D/\nxcodebuild -target Universal\n\ncd ${SRCROOT}\ncd ../../CocosDenshion/iOS/CocosDenshion/\nxcodebuild -target Universal\n\ncd ${SRCROOT}\ncd ../../FlMML/iOS/FlMML/\nxcodebuild -target Universal\n\ncd ${SRCROOT}\ncd ../../freetype/iOS/freetype/\nxcodebuild -target Universal\n\ncd ${SRCROOT}\ncd ../../Lua5.2/iOS/Lua/\nxcodebuild -target Universal\n\ncd ${SRCROOT}\ncd ../../PicoGame/iOS/PicoGame/\nxcodebuild -target Universal\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		6B06AFDB15B500D300D2EFF6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6B06AFF015B500D300D2EFF6 /* main.mm in Sources */,
+				6B06B02015B5014300D2EFF6 /* PicoGameAppDelegate.mm in Sources */,
+				6B06B02115B5014300D2EFF6 /* PPGameStart.cpp in Sources */,
+				6BC178D0162E7BF600AE9E3C /* MainViewController.mm in Sources */,
+				6BC178DD162EA32D00AE9E3C /* PPScriptGameEngine.mm in Sources */,
+				6BC178E5162EA4B500AE9E3C /* StartViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		6B06AFEC15B500D300D2EFF6 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6B06AFED15B500D300D2EFF6 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		6B06B02215B5016000D2EFF6 /* MainWindow.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6B06B02315B5016000D2EFF6 /* en */,
+			);
+			name = MainWindow.xib;
+			sourceTree = "<group>";
+		};
+		6B06B02415B5016000D2EFF6 /* PPGameViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6B06B02515B5016000D2EFF6 /* en */,
+			);
+			name = PPGameViewController.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		6B06AFFB15B500D300D2EFF6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		6B06AFFC15B500D300D2EFF6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		6B06AFFE15B500D300D2EFF6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../freetype/iOS/freetype/Products\"",
+					"\"$(SRCROOT)/../../CocosDenshion/iOS/CocosDenshion/Products\"",
+					"\"$(SRCROOT)/../../FlMML/iOS/FlMML/Products\"",
+					"\"$(SRCROOT)/../../Box2D/iOS/Box2D/Products\"",
+					"\"$(SRCROOT)/../../Lua5.2/iOS/Lua/Products\"",
+					"\"$(SRCROOT)/../../PicoGame/iOS/PicoGame/Products\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "PicoGame/PicoGame-Prefix.pch";
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../../freetype/iOS/freetype/Products/freetype.framework/Versions/A/Headers/\"";
+				INFOPLIST_FILE = "PicoGame/PicoGame-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				OTHER_LDFLAGS = (
+					"-lz",
+					"-lxml2",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../../freetype/iOS/freetype/Products/freetype.framework/Versions/A/Headers/\"";
+				VALID_ARCHS = armv7;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		6B06AFFF15B500D300D2EFF6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../freetype/iOS/freetype/Products\"",
+					"\"$(SRCROOT)/../../CocosDenshion/iOS/CocosDenshion/Products\"",
+					"\"$(SRCROOT)/../../FlMML/iOS/FlMML/Products\"",
+					"\"$(SRCROOT)/../../Box2D/iOS/Box2D/Products\"",
+					"\"$(SRCROOT)/../../Lua5.2/iOS/Lua/Products\"",
+					"\"$(SRCROOT)/../../PicoGame/iOS/PicoGame/Products\"",
+				);
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "PicoGame/PicoGame-Prefix.pch";
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../../freetype/iOS/freetype/Products/freetype.framework/Versions/A/Headers/\"";
+				INFOPLIST_FILE = "PicoGame/PicoGame-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				OTHER_LDFLAGS = (
+					"-lz",
+					"-lxml2",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../../freetype/iOS/freetype/Products/freetype.framework/Versions/A/Headers/\"";
+				VALID_ARCHS = armv7;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		6BA522B415B950CD006749D7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		6BA522B515B950CD006749D7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		6B06AFD915B500D300D2EFF6 /* Build configuration list for PBXProject "PicoGame" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6B06AFFB15B500D300D2EFF6 /* Debug */,
+				6B06AFFC15B500D300D2EFF6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6B06AFFD15B500D300D2EFF6 /* Build configuration list for PBXNativeTarget "PicoGame" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6B06AFFE15B500D300D2EFF6 /* Debug */,
+				6B06AFFF15B500D300D2EFF6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6BA522B615B950CD006749D7 /* Build configuration list for PBXAggregateTarget "Fullbuild" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6BA522B415B950CD006749D7 /* Debug */,
+				6BA522B515B950CD006749D7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 6B06AFD615B500D300D2EFF6 /* Project object */;
+}

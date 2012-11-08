@@ -1,0 +1,2599 @@
+<!DOCTYPE html> 
+<html> 
+	<head> 
+	<title>PicoPicoGameEngine</title> 
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=no"> 
+	<link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
+	<link rel="stylesheet" href="./picoapi.css" />
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js"></script>
+</head> 
+<body> 
+
+<div data-role="page" id="reference">
+	<div data-role="header" data-theme="d">
+		<h1>APIリファレンス</h1>
+		<a href="#" data-role="button" data-rel="back" data-icon="arrow-l" class="ui-btn-left">Back</a>
+		<a href="./index.html" class="ui-btn-right">TOP</a>
+	</div><!-- /header -->
+	<div data-role="content">
+		<a id="top"></a>
+	
+<!-------------------------------------------------------------------------------------------------->
+		<a id="ppgame"></a>
+		<div data-role="collapsible" data-collapsed="false" data-theme="a" data-content-theme="b"> 
+			<h3>ppgame</h3>
+
+			<div data-role="collapsible" data-collapsed="false"> 
+				<h3>ppgame:start(func)</h3>
+
+				<p class="pico-desc">ゲームループとなる関数を変更します。funcはゲームループとなる関数(クロージャ)です。
+					ゲームループ関数はデフォルトではstart()ですが、別の関数に変更することができます。</p>
+				<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+					<pre><code>--１秒後にtitle()がゲームループになります。
+local t=0
+function start()
+  ppgraph:print("start loop");
+  t=t+1
+  if t>60 then
+    ppgame:start(title)
+  end
+end
+function title()
+  ppgraph:print("title loop");
+end</code></pre>
+<!-- 					<img src="./image/screen-shot-2012-06-17-9.57.40.gif"/> -->
+				</div></div>
+			</div>
+	    
+			<div data-role="collapsible" data-collapsed="false"> 
+				<h3>ppgame:platform()</h3>
+				<p class="pico-desc">実行中のプラトフォームを文字列で返します。</p>
+				<ul>
+				<li class="pico-desc">mac</h3>
+				<li class="pico-desc">ios</h3>
+				<li class="pico-desc">win</h3>
+<!--
+				<li class="pico-desc">android</h3>
+-->
+				</ul>
+		
+				<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+					<pre><code>--platform()の戻り値を表示します。
+function start()
+  ppgraph:print(ppgame:platform())
+end</code></pre>
+				</div></div>
+			</div>
+	
+	
+			<div data-role="collapsible" data-collapsed="false"> 
+				<h3>ppgame:fps()</h3>
+				<p class="pico-desc">フレームレートを返します。</p>
+
+				<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+					<pre><code>--fps()の戻り値を表示します。
+function start()
+  ppgraph:print(ppgame:fps())
+end</code></pre>
+				</div></div>
+			</div>
+
+			<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppgame:deltaTime()</h3>
+<p class="pico-desc">前回のゲームループからの経過時間を返します。</p>
+
+				<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+					<pre><code>--deltaTime()の戻り値を表示します。
+function start()
+  ppgraph:print(ppgame:fps())
+end</code></pre>
+				</div></div>
+			</div>
+
+			<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppgame:mouse()</h3>
+<!-- <p class="pico-desc">マウスポインタの位置を返します。(Mac,Windowsのみ)</p> -->
+<p class="pico-desc">マウスポインタの位置を返します。(DotEDITORでは機能しません。)</p>
+
+<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+					<pre><code>--mouse()の戻り値を表示します。
+function start()
+  ppgraph:print(ppgame:mouse().x..","..ppgame:mouse().y)
+end</code></pre>
+				</div></div>
+			</div>
+
+			<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppgame:volume(vol)</h3>
+<p class="pico-desc">MMLエンジンのマスターボリュームを設定します。引数がない場合は設定値を返します。</p>
+		
+<ul>
+<li class="pico-desc">vol 音量 0〜1</h3>
+</ul>
+			</div>
+
+			<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppgame:setNumber(name, value)<br/>ppgame:setInteger(name, value)<br/>ppgame:setString(name, string)</h3>
+<p class="pico-desc">ゲームのスコアなどの値を保存します。</p>
+<ul>
+<li class="pico-desc">name 保存する値のキー文字列</h3>
+<li class="pico-desc">value 保存する値</h3>
+</ul>
+			</div>
+
+			<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppgame:getNumber(name, default)<br/>ppgame:getInteger(name, default)<br/>ppgame:getString(name, default)</h3>
+<p class="pico-desc">保存しているゲームのスコアなどの値を取得します。</p>
+<ul>
+<li class="pico-desc">name 取り出す値のキー文字列</h3>
+<li class="pico-desc">default 取り出す値のデフォルト値</h3>
+</ul>
+
+<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+					<pre><code>--１回目の実行ではscoreは100ですが、２回目の実行でscoreは200になります。
+local score = ppgame:getInteger("score",100)
+ppgame:setInteger("score",200)
+function start()
+  ppgraph:print(score)
+end</code></pre>
+				</div></div>
+			</div>
+		</div>
+
+<!-------------------------------------------------------------------------------------------------->
+		<a id="ppgraph"></a>
+		<div data-role="collapsible" data-collapsed="false" data-theme="a" data-content-theme="b"> 
+			<h3>ppgraph</h3>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppgraph:tileInfo({tile info})</h3>
+<p class="pico-desc">テクスチャのタイル位置を{tile info}テーブルで設定します。引数がないときは設定値を取り出せます。
+    この関数を使用することでテクスチャの好きな位置を切り出して表示することができます。
+    {tile info}テーブルの構造は次のようになっています。</p>
+
+<pre><code>{
+  size={width=タイル横幅,height=タイル高さ},
+  stride={x=タイルの横間隔,y=タイルの縦間隔},
+  offset={x=タイルの横開始位置,y=タイルの縦開始位置}
+}</code></pre>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppgraph:put({x,y},tile,name,{texture option},{r,g,b,a})<br/>
+ppgraph:put({x,y},tile,{texture},{r,g,b,a})</h3>
+<p class="pico-desc">タイル番号を指定してキャラクタを描画します。
+	タイル番号とはテクスチャをタイルサイズ(デフォルトは32x32ドット)で分割したものを左上から右に向かって１、２、３と割ふられた番号になります。</p>
+	
+<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--タイル番号を指定してキャラを描画します。
+function start()
+  ppgraph:tileInfo({size={width=32,height=32}})
+  --座標の指定は以下の３つの方法があります
+  ppgraph:put(0,0,1,"main.png")	--剣士
+  ppgraph:put({0,32},2,"main.png")	--おじいさん
+  ppgraph:put({x=0,y=64},3,"main.png")	--商人
+  ppgraph:tileInfo({size={width=64,height=64}})
+  ppgraph:put(32,0,4,"main.png")	--大魔王
+end
+
+<!-- <img src="./image/screen-shot 2012-06-28 17.00.26.png"/> -->
+
+--pptex:load()関数などと併用する事でテクスチャを指定することもできます
+tex = pptex:load("main.png")
+function start()
+  ppgraph:tileInfo({size={width=32,height=32}})
+  ppgraph:put(0, 0,1,tex)	--剣士
+  ppgraph:put({0,32},2,tex)	--おじいさん
+  ppgraph:put({x=0,y=64},3,tex)	--商人
+  ppgraph:tileInfo({size={width=64,height=64}})
+  ppgraph:put(32,0,4,tex)	--大魔王
+end</code></pre></div></div>
+	
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppgraph:pos({x,y})<br/>
+ppgraph:locate({x,y})</h3>
+<p class="pico-desc">文字列の表示位置を指定します。引数を省略すると設定値を返します。</p>
+
+<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>function start()
+  ppgraph:pos(100,100)
+  ppgraph:print("HELLO1")
+  ppgraph:pos({100,116})
+  ppgraph:print("HELLO2")
+  ppgraph:pos({x=100,y=132})
+  ppgraph:print("HELLO3")
+end</code></pre></div></div>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppgraph:move({x,y})</h3>
+<p class="pico-desc">文字列の表示位置を移動させます。</p>
+
+<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>function start()
+  ppgraph:pos(100,100)
+  ppgraph:print("HELLO1")
+  ppgraph:move(0,16)	--16ドット下へ移動
+  ppgraph:print("HELLO2")
+  ppgraph:move(0,16)	--16ドット下へ移動
+  ppgraph:print("HELLO3")
+end</code></pre></div></div>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppgraph:print(string,{r,g,b,a})</h3>
+<p class="pico-desc">文字列を表示します。ビットマップフォントでは英数、ひらがな、カタカナのみです。
+    描画色を省略した場合はppgraph:color()で指定した色で描画します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppgraph:color({r,g,b,a})</h3>
+<p class="pico-desc">文字やキャラクタの描画の色を指定します。引数を省略すると設定値を返します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppgraph:scale({x,y})</h3>
+<p class="pico-desc">文字やキャラクタの描画時のスケールを変更します。引数を省略すると設定値を返します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppgraph:flip(hflip,vflip,rot90)</h3>
+<p class="pico-desc">垂直水平反転、９０度回転の指定を行います。引数を省略すると設定値を返します。</p>
+
+<ul>
+<li class="pico-desc">hflip 水平反転</h3>
+<li class="pico-desc">vflip 垂直反転</h3>
+<li class="pico-desc">rot90 0〜3 反時計回り</h3>
+</ul>
+    
+<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>pptex:default(pptex:load("main.png"))
+function start()
+  ppgraph:flip(false,false,0)	--回転４パターン
+  ppgraph:put(0,0,1)
+  ppgraph:flip(false,false,1)
+  ppgraph:put(32,0,1)
+  ppgraph:flip(false,false,2)
+  ppgraph:put(64,0,1)
+  ppgraph:flip(false,false,3)
+  ppgraph:put(96,0,1)
+
+  ppgraph:flip(true,false,0)	--水平反転で回転
+  ppgraph:put(0,32,1)
+  ppgraph:flip(true,false,1)
+  ppgraph:put(32,32,1)
+  ppgraph:flip(true,false,2)
+  ppgraph:put(64,32,1)
+  ppgraph:flip(true,false,3)
+  ppgraph:put(96,32,1)
+
+  ppgraph:flip(false,true,0)	--垂直反転で回転
+  ppgraph:put(0,64,1)
+  ppgraph:flip(false,true,1)
+  ppgraph:put(32,64,1)
+  ppgraph:flip(false,true,2)
+  ppgraph:put(64,64,1)
+  ppgraph:flip(false,true,3)
+  ppgraph:put(96,64,1)
+
+  hflip,vflip,rot90 = ppgraph:flip()	--取り出し例
+  ppgraph:flip(false,false,0)
+  ppgraph:locate(0,96)
+  if hflip then hflip = "true" else hflip = "false" end
+  if vflip then vflip = "true" else vflip = "false" end
+  ppgraph:print(hflip..","..vflip..","..rot90)
+end
+
+<!-- <img = src="./image/screen-shot 2012-06-28 17.03.55.png"/> -->
+</code></pre></div></div>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppgraph:rotate(r)</h3>
+<p class="pico-desc">文字やキャラクタの描画時の回転値を変更します。引数を省略すると設定値を返します。
+	rの単位はラジアンです。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppgraph:alpha(a)</h3>
+<p class="pico-desc">文字やキャラクタの描画時の透明度を変更します。引数を省略すると設定値を返します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppgraph:fill({x,y,width,height},{r,g,b,a})</h3>
+<p class="pico-desc">塗りつぶしの四角を描画します。描画色を省略した場合はppgraph:color()で指定した色で描画します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppgraph:box({x,y,width,height},{r,g,b,a})</h3>
+<p class="pico-desc">中抜きの四角を描画します。描画色を省略した場合はppgraph:color()で指定した色で描画します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppgraph:line({x,y},{x,y},{r,g,b,a})</h3>
+<p class="pico-desc">線を描画します。描画色を省略した場合はppgraph:color()で指定した色で描画します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppgraph:layout({x,y,width,height} ,centerx,centery,area)</h3>
+<p class="pico-desc">レイアウトされた座標を計算します。</p>
+
+<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--画面中央に配置
+function start()
+  local p = ppgraph:layout({x=0,y=0,width=32,height=32},true,true)
+  ppgraph:put(p,1,"main.png")
+end
+
+--画面右端に配置
+function start()
+  local p = ppgraph:layout({x=-1,y=0,width=32,height=32},false,true)
+  ppgraph:put(p,1,"main.png")
+end
+
+--画面右下から32x32ドットの位置に配置
+function start()
+  local p = ppgraph:layout({x=-33,y=-33,width=32,height=32},false,false)
+  ppgraph:put(p,1,"main.png")
+end
+
+--画面{0,0,100,100}のエリアの右下から16x16ドットの位置に配置
+function start()
+  local area = {0,0,100,100}
+  local p = ppgraph:layout({x=-17,y=-17,width=32,height=32},false,false,area)
+  ppgraph:fill(area,ppgraph.cyan)
+  ppgraph:put(p,1,"main.png")
+end</code></pre></div></div>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppgraph:update()</h3>
+<p class="pico-desc">ゲームループを抜けて描画処理を行います。</p>
+
+<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--1秒毎に表示非表示を繰り返します
+function start()
+  for i=0,60 do
+    ppgraph:put(0,0,1,"main.png")
+    ppgraph:update()
+  end
+  for i=0,60 do
+    ppgraph:update()
+  end
+end</code></pre></div></div>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppgraph:pivot({x,y,})</h3>
+<p class="pico-desc">回転や拡大縮小の中心位置を指定します。引数を省略すると設定値を返します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false">     
+<h3>ppgraph:lineWrap(flag)</h3>
+<p class="pico-desc">文字列が画面外に出た場合に折り返すかどうかを指定します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false">     
+<h3>ppgraph:append({display object})</h3>
+<p class="pico-desc">{display object}を描画リストに登録します。{display object}は:draw()メソッドを実装したテーブルです。ゲームループを抜けると登録された{display object}のdraw()メソッドが自動的に実行され描画処理を行います。</p>
+
+				<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+					<pre><code>--１秒毎にスプライトの表示、非表示を繰り返します
+sp = ppsprite.new()
+sp:texture("main.png")
+sp:tile(1)
+ppgraph:append(sp)	--描画リストに登録
+
+local t=0
+
+function show()
+  t=t+1
+  if t > 60 then 
+    ppgraph:remove(sp)	--描画リストから削除
+    ppgame:start(hide)
+    t=0
+  end
+end
+
+function hide()
+  t=t+1
+  if t > 60 then 
+    ppgraph:append(sp)	--描画リストに登録
+    ppgame:start(show)
+    t=0
+  end
+end
+
+ppgame:start(show)</code></pre></div></div>
+
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppgraph:remove({display object})</h3>
+<p class="pico-desc">{display object}を描画リストから取り除きます。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppgraph:tileRect(tile,{texture})</h3>
+<p class="pico-desc">タイルのテクスチャ座標位置を計算します。</p>
+
+<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>pptex:default(pptex:load("main.png"))
+r02=ppgraph:tileRect(2)
+r35=ppgraph:tileRect(35)
+function start()
+  ppgraph:print(r02.x..","..r02.y..","..r02.width..","..r02.height)
+  ppgraph:move(0,16)
+  ppgraph:print(r35.x..","..r35.y..","..r35.width..","..r35.height)
+end</code></pre></div></div>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppgraph:stretch(rect,tile,{edge},{texture})</h3>
+<p class="pico-desc">タイルをrect位置に引き伸ばして表示します。edgeで引き伸ばす範囲を指定できます。</p>
+
+<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>pptex:default(pptex:load("main.png"))
+function start()
+  --3番のタイルを{64,32,128,64}に引き伸ばして表示します
+  ppgraph:stretch({64,32,128,64},3)
+  --pprectを使って指定することもできます
+  ppgraph:stretch(pprect(64,96+64,128,64),3)
+  --外周８ドットは引き伸ばされません
+  ppgraph:stretch(pprect(64,96+64*2,128,64),3,8)
+end</code></pre></div></div>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppgraph.white={255,255,255}<br/>
+ppgraph.red={255,0,0}<br/>
+ppgraph.green={0,255,0}<br/>
+ppgraph.blue={0,0,255}<br/>
+ppgraph.yellow={255,255,0}<br/>
+ppgraph.cyan={0,255,255}<br/>
+ppgraph.magenta={255,0,255}<br/>
+ppgraph.black={0,0,0}<br/>
+ppgraph.gray={96,96,96}<br/>
+ppgraph.lightgray={188,188,188}<br/>
+ppgraph.orange={255,128,0}<br/>
+ppgraph.skin={255,216,160}<br/>
+ppgraph.darkgreen={56,104,0}<br/>
+ppgraph.lightgreen={152,232,0}<br/>
+ppgraph.brown={120,64,0}</h3>
+<p class="pico-desc">15色の定数があらかじめ定義されています。</p>
+</div>
+
+</div><!--------------------------------->
+
+<!-------------------------------------------------------------------------------------------------->
+		<a id="ppfont"></a>
+		<div data-role="collapsible" data-collapsed="false" data-theme="a" data-content-theme="b"> 
+			<h3>ppfont</h3>
+
+<div data-role="collapsible" data-collapsed="false">
+<h3>ppfont:loadTTF(ttffont, fontname,size)</h3>
+<p class="pico-desc">TTFフォントを読み込みます。フォントはfontnameで識別します。<br/>
+   	DotEDITORでは使用できません。</p>
+</div>
+    
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppfont:loadTexture(texture, fontname,width,height)</h3>
+<p class="pico-desc">指定したテクスチャをフォントとして使用します。フォントはfontnameで識別します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppfont:loadTexture(name, fontname,width,height)</h3>
+<p class="pico-desc">フォントテクスチャ(png)を読み込みます。<br/>
+    DotEDITORでは使用できません。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppfont:set(name)</h3>
+<p class="pico-desc">使用するフォントを選択します。標準ではhalf、mini、defaultの３つが指定ができます。</p>
+
+<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--3つのフォントを縦に並べて表示します
+function start()
+  ppfont:set("default")
+  ppgraph:print("HELLO")
+  ppgraph:move(0,ppfont:height())
+  ppfont:set("mini")
+  ppgraph:print("HELLO")
+  ppgraph:move(0,ppfont:height())
+  ppfont:set("half")
+  ppgraph:print("HELLO")
+end</code></pre></div></div>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppfont:height()</h3>
+<p class="pico-desc">フォントの高さを取得します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppfont:width(string)</h3>
+<p class="pico-desc">フォントの横幅を計算します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppfont:size(string)</h3>
+<p class="pico-desc">フォントのサイズを計算します。</p>
+
+<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--画面の中央に"HELLO WORLD"を表示します。
+function start()
+  local s="HELLO WORLD"
+  ppgraph:locate(ppgraph:layout(ppfont:size(s),true,true))
+  ppgraph:print(s)
+end
+
+<!-- <img src="./image/screen-shot 2012-06-28 17.06.38.png"/> -->
+</code></pre></div></div>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppfont:texture()</h3>
+<p class="pico-desc">選択中のフォントのテクスチャを返します。</p>
+</div>
+
+</div><!--------------------------------->
+
+<!-------------------------------------------------------------------------------------------------->
+		<a id="ppkey"></a>
+		<div data-role="collapsible" data-collapsed="false" data-theme="a" data-content-theme="b"> 
+			<h3>ppkey</h3>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppkey.up()<br/>
+ppkey.down()<br/>
+ppkey.left()<br/>
+ppkey.right()<br/>
+ppkey.a()<br/>
+ppkey.b()<br/>
+ppkey.c()<br/>
+ppkey.d()<br/>
+ppkey.e()<br/>
+ppkey.f()<br/>
+ppkey.g()<br/>
+ppkey.h()</h3>
+<p class="pico-desc">キーが押されているかどうかを判定します。
+	iOSではiCadeに対応しています。</p>
+</div>
+
+</div><!--------------------------------->
+
+<!-------------------------------------------------------------------------------------------------->
+		<a id="pptex"></a>
+		<div data-role="collapsible" data-collapsed="false" data-theme="a" data-content-theme="b"> 
+			<h3>pptex</h3>
+
+<div data-role="collapsible" data-collapsed="false">
+<h3>pptex:load(name, {texture option})</h3>
+<p class="pico-desc">テクスチャーを読み込みます。<br/>
+    	戻り値のテクスチャテーブル{texture table}は次のようなテーブルになっています。</p>
+
+<pre><code>{
+  index=テクスチャの番号,
+  name=読み込んだときのファイル名,
+  size={width,height},
+  imageSize={width,height}
+}</code></pre>
+ 
+<p class="pico-desc">sizeはテクスチャのサイズ、imageSizeは元の画像のサイズになります。</p>
+     	
+<p class="pico-desc">テクスチャテーブル{texture option}は次のようなテーブルです。</p>
+     	
+<pre><code>{
+  linear=バイリニアフィルタをかけるかどうかのフラッグ,
+  wrap_s=エッジ処理,
+  wrap_t=エッジ処理
+}</code></pre>
+     	
+<p class="pico-desc">linearはバイリニアフィルタを行うかどうかの指定をします。デフォルトはfalseです。
+     	wrap_s,wrap_tは以下の指定を文字列で行います。</p>
+     	
+<ul>
+<li class="pico-desc">linear</h3>
+<li class="pico-desc">repeat</h3>
+<li class="pico-desc">clamp_to_edge</h3>
+</ul>
+	     
+<p class="pico-desc">効果についてはOpenGLのGL_CLAMP_TO_EDGE,GL_LINEAR,GL_REPEATを参照してください。</p>
+
+<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+					<pre><code>tex=pptex:load(&quot;sample.png&quot;)
+
+function start()
+  ppgraph:put(0,0,2,tex)
+  ppgraph:locate(0,32)
+  ppgraph:print(&quot;index=&quot;..tex.index)
+  ppgraph:move(0,16)
+  ppgraph:print(&quot;name=&quot;..tex.name)
+  ppgraph:move(0,16)
+  ppgraph:print(&quot;width=&quot;..tex.size.width..&quot;,height=&quot;..tex.size.height)
+  ppgraph:move(0,16)
+end
+
+<!-- <img src="./image/screen-shot 2012-06-28 17.10.45.png"/> -->
+</code></pre></div></div>
+
+</div>
+   
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>pptex:delete({texture table})</h3>
+<p class="pico-desc">テクスチャーを破棄します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>pptex:default({texture table})</h3>
+<p class="pico-desc">デフォルトテクスチャーを設定します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>pptex:count()</h3>
+<p class="pico-desc">読み込んだテクスチャーの数を返します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>pptex:textures()</h3>
+<p class="pico-desc">読み込んだテクスチャのリスト{texture table}を返します。</p>
+    	
+<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--テクスチャのリストを表示します
+pptex:default(pptex:load(&quot;main.png&quot;))
+ppfont:set(&quot;half&quot;)
+function start()
+  local t = pptex:textures()
+  for k,v in pairs(t) do
+    ppgraph:print(k..&quot;,&quot;..v.name)
+    ppgraph:move(0,16)
+  end
+end
+</code></pre>
+<!-- <img src="./image/screen-shot 2012-06-17 13.54.43.png"/> -->
+</div></div>
+</div>
+
+</div><!--------------------------------->
+
+<!-------------------------------------------------------------------------------------------------->
+		<a id="ppaccelerometer"></a>
+		<div data-role="collapsible" data-collapsed="false" data-theme="a" data-content-theme="b"> 
+			<h3>ppaccelerometer</h3>
+
+<div data-role="collapsible" data-collapsed="false">
+<h3>ppaccelerometer:start(interval)</h3>
+<p class="pico-desc">加速度センサーを稼働させます。intervalでセンサーの計測間隔を指定できます。</p>
+
+<div><div data-role="content" data-theme="e" data-content-theme="e">
+<h3>sample code</h3>
+					<pre><code>ac=ppaccelerometer
+
+ac:start(100)
+
+function start()
+  local v=ac:value()
+  ppgraph:print(&quot;X:&quot;..v.x)
+  ppgraph:move(0,16)
+  ppgraph:print(&quot;Y:&quot;..v.y)
+  ppgraph:move(0,16)
+  ppgraph:print(&quot;Z:&quot;..v.z)
+end</code></pre></div></div>
+
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppaccelerometer:stop()</h3>
+<p class="pico-desc">加速度センサーを止めます。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppaccelerometer:isAvailable()</h3>
+<p class="pico-desc">加速度センサーが利用可能か調べます。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppaccelerometer:value()</h3>
+<p class="pico-desc">加速度センサーの値を取得します。</p>
+</div>
+
+
+			<h3>ppflmml[n]</h3>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppflmml[n]:play(mml)</h3>
+<p class="pico-desc">MMLを再生します。引数を省略した場合はpreload()したMMLを再生します。
+		MMLはFlMMLと互換性があります。</p>
+
+<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--画面をタッチでドレミファソラシドを再生
+function start()
+  if #pptouch() &gt; 0 then
+    ppflmml[1]:play(mml)
+  end
+end
+
+mml=&quot;t120o5l4cdefgab&lt;c&quot;</code></pre></div></div>
+
+</div>
+	
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppflmml[n]:stop()</h3>
+<p class="pico-desc">MMLの再生を止めます。</p>
+</div>
+	
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppflmml[n]:pause()</h3>
+<p class="pico-desc">MMLの再生を一時停止します。</p>
+</div>
+	
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppflmml[n]:preload(mml)</h3>
+<p class="pico-desc">MMLの事前読み込みを行います。</p>
+</div>
+	
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppflmml[n]:resume()</h3>
+<p class="pico-desc">一時停止したMMLの再生を再開します。</p>
+</div>
+	
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppflmml[n]:isPlaying()</h3>
+<p class="pico-desc">再生しているかどうかを調べます。</p>
+</div>
+	
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppflmml[n]:isPaused()</h3>
+<p class="pico-desc">一時停止しているかどうかを調べます。</p>
+</div>
+	
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppflmml[n]:volume(vol)</h3>
+<p class="pico-desc">ボリュームを指定します。引数が省略された場合は設定値を取得します。</p>
+</div>
+	
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppflmml[n]:noteOn(track, noteNo, volume)</h3>
+<p class="pico-desc">トラックを発音させます。noteNo は 0〜8オクターブx12の整数値です。例えば &quot;o5c&quot; の noteNo は 60 になります。</p>
+
+<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--画面をタッチで発音
+ppflmml[1]:play(&quot;@3&quot;)
+note=false
+
+function start()
+  if #pptouch() &gt; 0 then
+    if not note then
+      ppflmml[1]:noteOn(1,67,1)
+      note=true
+    end
+  else
+    ppflmml[1]:noteOff(1)
+    note=false
+  end
+end</code></pre></div></div>
+
+</div>
+		
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppflmml[n]:noteOff(track)</h3>
+<p class="pico-desc">トラックの発音を停止します。</p>
+</div>
+
+</div><!--------------------------------->
+
+<!-------------------------------------------------------------------------------------------------->
+		<a id="ppsemml"></a>
+		<div data-role="collapsible" data-collapsed="false" data-theme="a" data-content-theme="b"> 
+			<h3>ppsemml[n]</h3>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppsemml[n]:play(mml)</h3>
+<p class="pico-desc">効果音MMLトラックでMMLを再生します。
+		MMLはFlMMLの簡易版になっています。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppsemml[n]:stop()</h3>
+<p class="pico-desc">MMLを再生を止めます。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppsemml[n]:isPlaying()</h3>
+<p class="pico-desc">再生しているかどうかを調べます。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppsemml[n]:volume(volume)</h3>
+<p class="pico-desc">ボリュームを指定します。引数が省略された場合は設定値を取得します。</p>
+</div>
+
+</div><!--------------------------------->
+
+<!-------------------------------------------------------------------------------------------------->
+		<a id="ppsewave"></a>
+		<div data-role="collapsible" data-collapsed="false" data-theme="a" data-content-theme="b"> 
+			<h3>ppsewave[n]</h3>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppsewave[n]:wav9(waveNo, intVol, loopFlag, data)</h3>
+<p class="pico-desc">効果音トラックにWEV9データを設定します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppsewave[n]:wav10(waveNo, data)</h3>
+<p class="pico-desc">効果音トラックにWEV10データを設定します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppsewave[n]:wav13(waveNo, data)</h3>
+<p class="pico-desc">効果音トラックにWEV13データを設定します。</p>
+</div>
+
+</div><!--------------------------------->
+
+<!-------------------------------------------------------------------------------------------------->
+		<a id="ppvkey"></a>
+		<div data-role="collapsible" data-collapsed="false" data-theme="a" data-content-theme="b"> 
+			<h3>ppvkey</h3>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppvkey:touch()</h3>
+<p class="pico-desc">バーチャルキーをタッチしているかどうかを調べます。</p>
+
+<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--タッチしたところがバーチャルキーの中心
+pptex:default(pptex:load(&quot;sample.png&quot;))
+fighter=ppsprite.new()
+fighter:tile(2)
+mv={{1,0},{0,-1},{-1,0},{0,1}}
+s=ppscreen:size()
+ppvkey:center(s.width/2,s.height/2)
+fighter:pos(ppvkey:center()-pppoint(16,16))
+
+function start()
+  if ppvkey:touch() then
+    fighter:move(mv[ppvkey:dir(4)+1])
+    ppgraph:print(ppvkey:dir(4))
+  end
+  ppgraph:put(ppvkey:center()-pppoint(16,16),7)
+  fighter:draw()
+end</code></pre></div></div>
+
+</div>
+    	
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppvkey:delta()</h3>
+<p class="pico-desc">バーチャルキーの中心位置からのタッチ位置のずれを取得します。</p>
+
+<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--バーチャルキーを使ったキャラクターの移動
+</code></pre></div></div>
+</div>
+    
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppvkey:dir(division)</h3>
+<p class="pico-desc">中心からの方向を取得します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppvkey:center({x,y})</h3>
+<p class="pico-desc">バーチャルキーの中心を指定します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppvkey:fixed(flag)</h3>
+<p class="pico-desc">中心位置を固定するかどうかを指定します。
+    	trueにした場合はcenter()で指定した位置が中心になります。
+    	falseの場合はタッチ開始位置が中心になります。</p>
+
+<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--画面の中央がバーチャルキーの中心
+pptex:default(pptex:load(&quot;sample.png&quot;))
+fighter=ppsprite.new()
+fighter:tile(2)
+mv={{1,0},{0,-1},{-1,0},{0,1}}
+ppvkey:fixed(true)
+s=ppscreen:size()
+ppvkey:center(s.width/2,s.height/2)
+fighter:pos(ppvkey:center()-pppoint(16,16))
+
+function start()
+  if ppvkey:touch() then
+    fighter:move(mv[ppvkey:dir(4)+1])
+    ppgraph:print(ppvkey:dir(4))
+  end
+  ppgraph:put(ppvkey:center()-pppoint(16,16),7)
+  fighter:draw()
+end</code></pre></div></div>
+
+</div>
+
+</div><!--------------------------------->
+
+<!-------------------------------------------------------------------------------------------------->
+		<a id="ppsprite"></a>
+		<div data-role="collapsible" data-collapsed="false" data-theme="a" data-content-theme="b"> 
+			<h3>ppsprite</h3>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppsprite.new()<br/>
+ppsprite.new(n)</h3>
+<p class="pico-desc">ppspriteオブジェクトを作成します。引数nを指定すると指定した数だけppspriteオブジェクトが入ったテーブルを返します。</p>
+
+<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--スプライトを{32,20}の位置に描画します
+pptex:default(pptex:load("main.png"))
+sp=ppsprite.new()
+sp:pos(32,20)
+
+function start()
+  sp:draw()
+end</code></pre></div></div>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:show()</h3>
+<p class="pico-desc">表示します。</p>
+</div>
+    
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:hide()</h3>
+<p class="pico-desc">非表示にします。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:idle()</h3>
+<p class="pico-desc">ppspriteでは動作しません。</p>
+</div>
+    
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:draw()</h3>
+<p class="pico-desc">描画します。</p>
+</div>
+    	
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:isAlive()</h3>
+<p class="pico-desc">有効かどうかを返します。</p>
+</div>
+    
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:isVisible()</h3>
+<p class="pico-desc">表示中かどうかを返します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:pos({x,y})</h3>
+<p class="pico-desc">表示位置を指定します。引数がない場合は表示位置を返します。</p>
+    	
+<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--位置指定はいくつかの引数指定ができます
+pptex:default(pptex:load("main.png"))
+sp=ppsprite.new()
+sp:pos(32,20)
+sp:pos({32,20})
+sp:pos({x=32,y=20})
+sp.x,sp.y=32,20</code></pre></div></div>
+</div>
+ 
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:aabb()</h3>
+<p class="pico-desc">スプライトのバウンディングボックスを返します。</p>
+    	
+<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--回転するスプライトの周りにバウンディングボックスの白い四角を描きます
+pptex:default(pptex:load("main.png"))
+sp=ppsprite.new()
+sp:pos(32,20)
+
+function start()
+  sp:pivot(16,16)
+  sp:rotate(sp:rotate()+0.01)
+  sp:draw()
+  ppgraph:box(sp:aabb())
+end
+
+<!-- <img src="./image/screen-shot 2012-06-28 17.14.47.png"/> -->
+</code></pre></div></div>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:size()</h3>
+<p class="pico-desc">スプライトのサイズを返します。</p>
+
+<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--スプライトの周りに白い四角を描きます
+pptex:default(pptex:load("main.png"))
+sp=ppsprite.new()
+sp:pos(32,20)
+function start()
+  sp:draw()
+  ppgraph:box(sp:size()+sp:pos())
+end</code></pre></div></div>
+</div>
+    
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:layout(autolayout, centerx, centery, area)</h3>
+<p class="pico-desc">表示位置を自動でレイアウトするかどうかの指定をします。</p>
+</div>
+    
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:texture(name,{texture option})<br>
+:texture({texture})</h3>
+<p class="pico-desc">テクスチャを指定します。引数がない場合は設定値を返します。</p>
+</div>
+    
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:enable()</h3>
+<p class="pico-desc">有効状態にします。:isAlive()で有効、無効を判断できます。</p>
+
+
+<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+					<pre><code>--画面をタップするとスプライトが有効になります
+pptex:default(pptex:load("sample.png"))
+sp=ppsprite.new()
+sp:tile(2)
+sp:pos(32,20)
+
+function start()
+  sp:draw()
+  if sp:isAlive() then
+  	ppgraph:print("Alive")
+  end
+  if #pptouch() > 0 then
+    sp:enable()
+  else
+    sp:disable()
+  end
+end</code></pre>
+<!-- 					<img src="./image/screen-shot 2012-06-28 17.21.55.png"/> -->
+				</div></div>
+
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:disable()</h3>
+<p class="pico-desc">無効状態にします。無効にすると非表示状態になります。:isAlive()で有効、無効を判断できます。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:move({x,y})</h3>
+<p class="pico-desc">表示位置を移動させます。</p>
+</div>
+    
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:tileInfo({index,size={width,height},stride={x,y},offset={x,y}})<br/>
+:tileSize({width,height})<br/>
+:tileStride({width,height})<br/>
+:tileOffset({x,y})</h3>
+<p class="pico-desc">タイルの位置情報を変更します。引数がない場合は設定値を返します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:tile(index)</h3>
+<p class="pico-desc">タイル番号を変更します。引数がない場合は設定値を返します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:rotate(r)</h3>
+<p class="pico-desc">スプライトを回転させます。引数がない場合は設定値を返します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:pivot({x,y})</h3>
+<p class="pico-desc">スプライトを中心位置を指定します。引数がない場合は設定値を返します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:flip(hflip,vflip,rot90)</h3>
+<p class="pico-desc">スプライトを上下左右反転、９０回転を指定します。引数がない場合は設定値を返します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:scale({x,y})</h3>
+<p class="pico-desc">スプライトを拡大縮小値を指定します。引数がない場合は設定値を返します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:alpha(a)</h3>
+<p class="pico-desc">スプライトの透明度を指定します。引数がない場合は設定値を返します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:color({r,g,b,a})</h3>
+<p class="pico-desc">スプライトの色を指定します。引数がない場合は設定値を返します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:loopAnime(time,{anime data})</h3>
+<p class="pico-desc">time時間で{anime data}で指定したタイルアニメーションを行います。アニメーションはループします。</p>
+
+<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--1秒間にタイル番号1,2,3のループでアニメーションします
+pptex:default(pptex:load("main.png"))
+sp=ppsprite.new()
+function start()
+  sp:loopAnime(1,{1,2,3})
+  sp:draw()
+end</code></pre></div></div>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:playAnime(time,{anime data})</h3>
+<p class="pico-desc">time時間で{anime data}で指定したタイルアニメーションを行います。アニメーションが終了するとtrueを返します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:contain(point)</h3>
+<p class="pico-desc">pointがスプライトのバウンディングボックス内かどうかを返します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:intersect(rect)</h3>
+<p class="pico-desc">rectがスプライトのバウンディングボックスと交差しているかどうかを返します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:drag({points},{drag area})</h3>
+<p class="pico-desc">スプライトをドラッグします。</p>
+
+<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>pptex:default(pptex:load("main.png"))
+s=ppsprite.new()
+s:tile(2)
+function start()
+  s:drag(pptouch(),ppscreen:size())
+  s:draw()
+end</code></pre></div></div>
+</div>
+	
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>.x (default:0)<br/>
+.y (default:0)</h3>
+<p class="pico-desc">スプライトの座標を示します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>.animationTime (default:1)</h3>
+<p class="pico-desc">loopAnime() playAnime()で使用します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>.hitlength (default:0)<br/>
+.hitmask (default:0)<br/>
+.hit (default:false)</h3>
+<p class="pico-desc">あたり判定で使用します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>.autolayout (default:false)<br/>
+.centerx (default:false)<br/>
+.centery (default:false)</h3>
+<p class="pico-desc">自動レイアウトを指定します。</p>
+</div>
+
+</div><!--------------------------------->
+
+<!-------------------------------------------------------------------------------------------------->
+		<a id="pptext"></a>
+		<div data-role="collapsible" data-collapsed="false" data-theme="a" data-content-theme="b"> 
+			<h3>pptext</h3>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>pptext.new()<br/>
+pptext.new(n)</h3>
+<p class="pico-desc">pptextオブジェクトを作成します。引数nを指定すると指定した数だけpptextオブジェクトが入ったテーブルを返します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:frameRect({x,y,width,height})</h3>
+<p class="pico-desc">ウインドウ領域を指定します。引数がない場合は設定値を返します。</p>
+    
+<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>m=pptext.new()
+m:frameRect(16,16,ppscreen:size().width-32,300)
+for i=0,30 do
+  m:add("LIST "..i)
+end
+
+function start()
+  ppgraph:fill(m:frameRect(),ppgraph.blue)
+  v=ppscreen:viewport()
+  ppscreen:viewport(m:frameRect())
+  m:idle()
+  m:draw()
+  ppscreen:viewport(v)
+end</code></pre>
+<!-- <img src="./image/screen-shot 2012-06-28 17.27.54.png"/> -->
+</div></div>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:contentsRect()</h3>
+<p class="pico-desc">テキストの内部領域のエリア(pprect)を返します。テキストが変更されると自動的に再計算されます。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:isDragging()</h3>
+<p class="pico-desc">ドラッグ中かどうかを返します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:idle()</h3>
+<p class="pico-desc">タッチ処理やスクロール処理を動作させます。</p>
+</div>
+    
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:clear()</h3>
+<p class="pico-desc">入力したテキストを全て削除します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:text(text)</h3>
+<p class="pico-desc">表示するテキストを指定します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:lineHeight(lineHeight)</h3>
+<p class="pico-desc">１行の高さを指定します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:cellRect(line)</h3>
+<p class="pico-desc">指定したセルの矩形領域を返します。</p>
+
+<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>m=pptext.new()
+m:frameRect(16,16,100,100)
+m:add("HELLO WOLRD 1")
+m:add("HELLO")
+	
+function start()
+  ppgraph:fill(m:frameRect(),ppgraph.blue)
+  v=ppscreen:viewport()
+  ppscreen:viewport(m:frameRect())
+  m:idle()
+  m:draw()
+  ppscreen:viewport(v)
+  
+  ppgraph:box(m:cellRect(1),ppgraph.red)
+  ppgraph:box(m:cellRect(2),ppgraph.red)
+  
+end</code></pre>
+<!-- <img src="./image/screen-shot 2012-06-28 17.31.25.png"/> -->
+</div></div>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:cellString(line)</h3>
+<p class="pico-desc">指定したセルの文字をテーブルで返します。</p>
+
+<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--小さなウインドウ領域を作り長い文字(HELLO WORLD 1)を描画します
+m=pptext.new()
+m:frameRect(16,16,100,100)
+m:add("HELLO WOLRD 1")
+m:add("HELLO WOLRD 2")
+	
+function start()
+  ppgraph:fill(m:frameRect(),ppgraph.blue)
+  v=ppscreen:viewport()
+  ppscreen:viewport(m:frameRect())
+  m:idle()
+  m:draw()
+  ppscreen:viewport(v)
+  ppgraph:locate(132,16)
+  --複数行にまたがった文字を取り出します
+  for k,v in pairs(m:cellString(1)) do
+	ppgraph:print(k..":"..v)
+	ppgraph:move(0,16)
+  end
+end</code></pre>
+<!-- <img src="./image/screen-shot 2012-06-28 17.38.54.png"/> -->
+</div></div>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:autoScroll(flag)</h3>
+<p class="pico-desc">追加した文字がウインドウ領域内に入るように自動スクロールするかどうかの指定をします。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:autoCenter(flag)</h3>
+<p class="pico-desc">文字がウインドウ領域内に収まった場合に中央に寄せるかどうか指定します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:cellCount()</h3>
+<p class="pico-desc">セルの数を返します。</p>
+</div>
+    
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:hideCell(flag)</h3>
+<p class="pico-desc">文字の描画を行うかどうかの指定をします。</p>
+</div>
+    
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:select({...})</h3>
+<p class="pico-desc">指定したセルを選択します。引数がない場合は選択行を返します。</p>
+
+<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--２、４、５行を選択状態にする
+m=pptext.new()
+m:frameRect(ppscreen:size())
+m:add("HELLO WOLRD 1")
+m:add("HELLO WORLD 2")
+m:add("HELLO WORLD 3")
+m:add("HELLO WORLD 4")
+m:add("HELLO WORLD 5")
+m:selectable(true)
+m:select({2,4,5})
+
+function start()
+  ppgraph:fill(m:frameRect(),ppgraph.blue)
+  ppscreen:viewport(m:frameRect())
+  m:idle()
+  m:draw()
+  ppscreen:viewport(ppscreen:size())
+end</code></pre>
+<!-- <img src="./image/screen-shot 2012-06-28 17.35.24.png"/> -->
+</div></div>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:selectedColor({r,g,b,a})</h3>
+<p class="pico-desc">選択したセルの色を指定します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:selectable(flag)</h3>
+<p class="pico-desc">選択可能かどうかを指定します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:multiselectable(flag)</h3>
+<p class="pico-desc">複数選択可能かどうかを指定します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:emptyselection(flag)</h3>
+<p class="pico-desc">０選択状態が可能かどうかを指定します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:column(column)</h3>
+<p class="pico-desc">カラム数を指定します。</p>
+
+<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--２カラム表示
+m=pptext.new()
+m:frameRect(ppscreen:size())
+for i=0,30 do
+  m:add("LIST "..i)
+end
+m:column(2)
+
+function start()
+  ppgraph:fill(m:frameRect(),ppgraph.blue)
+  ppscreen:viewport(m:frameRect())
+  m:idle()
+  m:draw()
+  ppscreen:viewport(ppscreen:size())
+end</code></pre>
+<!-- <img src="./image/screen-shot 2012-06-28 17.37.05.png"/> -->
+</div></div>
+
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:speed(speed)</h3>
+<p class="pico-desc">追加文字の表示スピードを指定します。<br/>1以上を指定すると追加文字列を1文字づつ表示していきます。<br/>0を指定すると遅延なく表示されます。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:add(text)</h3>
+<p class="pico-desc">文字を追加します。改行コードが末尾に付加されます。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:append(text)</h3>
+<p class="pico-desc">文字を追加します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:done()</h3>
+<p class="pico-desc">追加文字の表示アニメーションが終了したかどうかを返します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:cursorPosition()</h3>
+<p class="pico-desc">カーソル位置を返します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:margin({top,left,bottom,right})</h3>
+<p class="pico-desc">文字表示位置のマージンを指定します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:lastSelect()</h3>
+<p class="pico-desc">最後に選択したセルの番号を返します。</p>
+</div>
+
+</div><!--------------------------------->
+
+<!-------------------------------------------------------------------------------------------------->
+		<a id="ppmap"></a>
+		<div data-role="collapsible" data-collapsed="false" data-theme="a" data-content-theme="b"> 
+			<h3>ppmap</h3>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppmap.new()<br/>
+ppmap.new(n)</h3>
+<p class="pico-desc">ppmapオブジェクトを作成します。引数nを指定すると指定した数だけppmapオブジェクトが入ったテーブルを返します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:load(name)<br/>
+:load(name,{texture option})</h3>
+<p class="pico-desc">tmxファイルを読み込みます。
+    DotEDITORではマップデータとして設定したファイルと、現在編集中のマップデータを
+    current.tmxというファイル名で読み込むことができます。
+    テクスチャの指定がある場合は自動的に読み込まれます。読み込みできるテキスチャは１つだけです。</p>
+
+<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--タイルマップを表示します
+pptex:default(pptex:load("main.png"))
+map = ppmap.new()
+map:load("map1.tmx")
+function start()
+  map:draw()
+end</code></pre></div></div>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:check(tile,{char_a,char_b,...})<br/>
+:check(tile,char_from,char_to)</h3>
+<p class="pico-desc">DotEDITORで</p>
+<pre><code>ti=require("tileinfo")</code></pre>
+<p class="pico-desc">の一行を加える事で使用できるようになります。<br/>
+	主にBGとのキャラクタの当たり判定用に使用します。<br/>
+	tileが{char_a,char_b,...}の仲間かどうかを調べます。<br/><br/>
+	※DotEDITORの書き出し機能を使って書き出すと tileinfo.lua の実装を見る事ができます。</p>
+</div>
+	
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:tileInfo()</h3>
+<p class="pico-desc">DotEDITORで</p>
+<pre><code>ti=require("tileinfo")</code></pre>
+<p class="pico-desc">の一行を加える事で使用できるようになります。<br/>
+	主にBGとキャラクタの当たり判定用に使用します。<br/>
+	キャラクタ情報を管理してるテーブルを返します。<br/><br/>
+	※DotEDITORの書き出し機能を使って書き出すと tileinfo.lua の実装を見る事ができます。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:area({x,y,width,height})</h3>
+<p class="pico-desc">描画するエリアを指定します。マップの一部だけを切り取って描画することができます。</p>
+
+<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>pptex:default(pptex:load("main.png"))
+map = ppmap.new()
+map:load("map1.tmx")
+map:area(4,4,10,10)  --{x=4,y=4,width=10,height=10}の部分を切り抜き
+function start()
+  map:draw()
+end</code></pre></div></div>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:reset()</h3>
+<p class="pico-desc">マップデータを初期化します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:layerList()</h3>
+<p class="pico-desc">管理しているレイヤー名の一覧を文字列の配列テーブルで返します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:addLayer(name,{width,height})</h3>
+<p class="pico-desc">レイヤーを追加します。同名のレイヤーがすでにあった場合はリサイズします。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:tileset()</h3>
+<p class="pico-desc">tmxファイル内のtilesetをテーブルで返します。</p>
+
+<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>pptex:default(pptex:load("main.png"))
+map = ppmap.new()
+map:load("map1.tmx")
+
+function start()
+  map:draw()
+  for k,v in pairs(map:tileset()) do
+  	ppgraph:print(v.firstgid..","..v.name
+  	       ..","..v.tilewidth..","..v.tileheight)
+  	ppgraph:move(0,16)
+  end
+end</code></pre></div></div>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:layer(name)</h3>
+<p class="pico-desc">参照するレイヤーを選択します。DotEDITORでは layer1 と layer2 の２つを指定できます。
+	引数を省略した場合は、選択中のレイヤー番号を返します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:show(layer)<br/>
+:hide(layer)</h3>
+<p class="pico-desc">レイヤー番号を指定してレイヤーの表示、非表示を設定します。layerを省略した場合はマップ全体を表示、非表示します。</p>
+
+<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--レイヤー２を非表示に、レイヤー１を表示にしています
+pptex:default(pptex:load("main.png"))
+map = ppmap.new()
+map:load("map1.tmx")
+
+map:layer("layer2")
+map:hide(map:layer())
+
+map:layer("layer1")
+map:show(map:layer())
+
+function start()
+  map:draw()
+end</code></pre></div></div>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:locate({x,y})</h3>
+<p class="pico-desc">参照する位置を変更します。tile()やtile(gid)とともに使用します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:tile({x,y})</h3>
+<p class="pico-desc">選択レイヤーの指定した位置のタイル番号を返します。</p>
+
+<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--タップした場所のタイル番号を表示します
+pptex:default(pptex:load("main.png"))
+map = ppmap.new()
+map:load("map1.tmx")
+map:layer("layer2")  --layer2を参照
+
+function start()
+  map:draw()
+  local p = pptouch()[1]
+  if p==nil then p=pppoint(0,0) end
+  ppgraph:print(map:tile(p/32))  --表示
+end</code></pre></div></div>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:tile({x,y},gid)</h3>
+<p class="pico-desc">選択レイヤーの指定した位置にタイル番号を設定します。</p>
+
+<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--5番のタイルをタップした位置に配置します
+pptex:default(pptex:load("main.png"))
+map = ppmap.new()
+map:load("map1.tmx")
+map:layer("layer2")
+
+function start()
+  map:draw()
+  local p = pptouch()[1]
+  if p~=nil then
+  	map:tile(p/32,5)
+  end
+end</code></pre></div></div>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:tile(gid)</h3>
+<p class="pico-desc">:tile({x,y},gid)と同様です。位置は:locate({x,y})で指定します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:tile()</h3>
+<p class="pico-desc">:tile({x,y})と同様です。位置は:locate({x,y})で指定します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:clear(tile)</h3>
+<p class="pico-desc">選択レイヤーを指定したタイル番号で塗りつぶします。tileを省略すると0で塗りつぶします。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:mapSize({width,height})</h3>
+<p class="pico-desc">選択レイヤーのマップサイズを変更します。引数がない場合はマップサイズを返します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:print(string)</h3>
+<p class="pico-desc">選択レイヤーにテキストVRAMと同様の使い方で文字やキャラクタを表示します。
+	表示位置は :locate({x,y}) を使用します。</p>
+
+<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>pptex:default(pptex:load("main.png"))
+map = ppmap.new()
+map:load("map1.tmx")
+
+--テクスチャをフォントテクスチャに変更
+map:texture(ppfont:texture())
+map:tileSize(8,8)
+map:scale(2)
+
+--layer2をクリア
+map:layer("layer2")
+map:clear()
+
+--layer1をクリア
+map:layer("layer1")
+map:clear()
+
+--layer1のマップサイズを変更
+map:mapSize(20,20)
+map:area(0,0,20,20)
+
+--HELLO WORLDを表示
+map:locate(1,1)
+map:print("HELLO WORLD")
+
+function start()
+  map:draw()
+end</code></pre></div></div>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:fill({x,y,width,height},tile)</h3>
+<p class="pico-desc">選択レイヤーにtileで指定したタイル番号で四角に塗りつぶします。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:box({x,y,width,height},tile)</h3>
+<p class="pico-desc">選択レイヤーにtileで指定したタイル番号で四角を描きます。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:circle({x,y},r,tile,start,end)</h3>
+<p class="pico-desc">選択レイヤーにtileで指定したタイル番号で円を描きます。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:line({x,y},{x,y},tile)</h3>
+<p class="pico-desc">選択レイヤーにtileで指定したタイル番号で線を描きます。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:paint({x,y},tile)</h3>
+<p class="pico-desc">選択レイヤーにtileで指定したタイル番号で塗りつぶします。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:swap(tile1,tile2)</h3>
+<p class="pico-desc">選択レイヤーのtile1とtile2を入れ替えます。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:scroll({dx,dy})</h3>
+<p class="pico-desc">選択レイヤーのタイルを指定した方向にスクロールさせます。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:copy({x,y,width,height},{x,y})</h3>
+<p class="pico-desc">選択レイヤーの指定位置のタイルをコピーします。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:attribute({hflip=水平反転,vflip=垂直反転,rotate90=90回転,color={r,g,b,a}})</h3>
+<p class="pico-desc">描画タイルのアトリビュートを変更します。</p>
+	
+<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--layer1をすべて時計回りに90度回転させます
+pptex:default(pptex:load("main.png"))
+map = ppmap.new()
+map:load("map1.tmx")
+map:layer("layer1")
+map:attribute({rotate90=3})
+for y=0,map:mapSize().height-1 do
+	for x=0,map:mapSize().width-1 do
+		map:tile({x,y},map:tile({x,y}))
+	end
+end
+function start()
+  map:draw()
+end</code></pre></div></div>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:resetAttribute()</h3>
+<p class="pico-desc">描画タイルのアトリビュートを初期化します。</p>
+</div>
+
+</div><!--------------------------------->
+
+<!-------------------------------------------------------------------------------------------------->
+		<a id="ppoffscreen"></a>
+		<div data-role="collapsible" data-collapsed="false" data-theme="a" data-content-theme="b"> 
+			<h3>ppoffscreen</h3>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppoffscreen.new(n)<br/>
+ppoffscreen:create(w,h,linear)</h3>
+<p class="pico-desc">オフスクリーンを作成します。</p>
+
+<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>o=ppoffscreen.new()
+o:create(100,100)
+o:fill({10,10,32,32},ppgraph.red)
+o:box({0,0,100,100},ppgraph.red)
+o:circle({50,50},30,ppgraph.yellow)
+o:paint({1,1},ppgraph.cyan)
+o:paint({50,50},ppgraph.blue)
+function start()
+	o:draw()
+end</code></pre>
+<!-- <img src="./image/screen-shot 2012-06-28 17.42.14.png"/> -->
+</div></div>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:bind()</h3>
+<p class="pico-desc">オフスクリーンをテクスチャとして使用するためにバインドします。</p>
+
+<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--バインドすることでオフスクリーンをテクスチャとして使用できます
+o=ppoffscreen.new()
+o:create(100,100)
+o:fill({10,10,32,32},ppgraph.red)
+o:box({0,0,100,100},ppgraph.red)
+o:circle({50,50},30,ppgraph.yellow)
+o:paint({1,1},ppgraph.cyan)
+o:paint({50,50},ppgraph.blue)
+o:hflip()
+o:bind()
+
+s=ppsprite.new()
+s:texture(o:texture())
+s:tile(1)
+s:tileSize(100,100)
+
+function start()
+	s:draw()
+end</code></pre>
+<!-- <img src="./image/screen-shot 2012-06-28 17.42.14.png"/> -->
+</div></div>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:lock()<br/>
+:unlock(hold)</h3>
+<p class="pico-desc">ppgraphやppspriteなどの描画関数をオフスクリーンに対して使用できます。
+	holdをfalseにするとテクスチャメモリからメインメモリへの転送を行いません。
+	高速に処理できますがlock()/unlock()中に描画した画像はbind()などの描画処理を行うとキャンセルされます。</p>
+	
+<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--タイル番号２のキャラクタをオフスクリーンに描画します
+pptex:default(pptex:load("sample.png"))
+o=ppoffscreen.new()
+o:create(100,100)
+o:circle({50,50},30,ppgraph.yellow)
+o:lock() --描画開始(テクスチャメモリへ転送)
+ppgraph:put(0,0,2) --ここで２番のタイルを描画
+o:unlock() --描画終了(メインメモリへ転送)
+o:paint({50,50},ppgraph.yellow)
+o:hflip()
+o:bind()
+
+s=ppsprite.new()
+s:texture(o:texture())
+s:tile(1)
+s:tileSize(100,100)
+s:scale(2)
+
+function start()
+	s:draw()
+end</code></pre>
+<!-- <img src="./image/screen-shot 2012-06-28 17.44.58.png"/> -->
+</div></div>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:pixel({x,y},{r,g,b,a}) {r,g,b,a}</h3>
+<p class="pico-desc">オフスクリーンに指定した色で点を描きます。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:line({x1,y1},{x2,y2},{r,g,b,a})</h3>
+<p class="pico-desc">オフスクリーンに指定した色で線を描きます。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:box({x,y,w,h},{r,g,b,a})</h3>
+<p class="pico-desc">オフスクリーンに指定した色で四角を描きます。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:fill({x,y,w,h},{r,g,b,a})</h3>
+<p class="pico-desc">オフスクリーンに指定した色で四角く塗りつぶします。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:clear({r,g,b,a})</h3>
+<p class="pico-desc">オフスクリーンを指定した色で塗りつぶします。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:paint({x,y},{r,g,b,a})</h3>
+<p class="pico-desc">オフスクリーンをペイントします。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:circle({x,y},r,{r,g,b,a},start=0,end=360)</h3>
+<p class="pico-desc">オフスクリーンに円を描きます。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:texture()</h3>
+<p class="pico-desc">オフスクリーンのテクスチャを返します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:hflip()</h3>
+<p class="pico-desc">上下反転します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:vflip()</h3>
+<p class="pico-desc">垂直反転します。</p>
+</div>
+
+</div><!--------------------------------->
+
+<!-------------------------------------------------------------------------------------------------->
+		<a id="ppscreen"></a>
+		<div data-role="collapsible" data-collapsed="false" data-theme="a" data-content-theme="b"> 
+			<h3>ppscreen</h3>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppscreen:viewport({x,y, width,height})</h3>
+<p class="pico-desc">描画領域を指定します。引数がない場合は設定値を返します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppscreen:size()</h3>
+<p class="pico-desc">画面サイズを返します。引数がない場合は設定値を返します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppscreen:offset(x,y)</h3>
+<p class="pico-desc">表示位置を移動させます。引数がない場合は設定値を返します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppscreen:rotate(r)</h3>
+<p class="pico-desc">画面を回転させます。引数がない場合は設定値を返します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppscreen:pivot(x,y)</h3>
+<p class="pico-desc">回転やスケールの中心を指定します。引数がない場合は設定値を返します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppscreen:scale(x,y)</h3>
+<p class="pico-desc">画面を拡大縮小させます。引数がない場合は設定値を返します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppscreen:from(t)</h3>
+<p class="pico-desc">スクリーン座標からウインドウ座標へ変換します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppscreen:to(t)</h3>
+<p class="pico-desc">ウインドウ座標からスクリーン座標へ変換します。</p>
+
+<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--仮想スクリーンサイズを320x320で処理します
+base = {0,0,320,320}
+function start()
+  ppscreen:viewport(ppscreen:layout(base))
+  ppgraph:fill(base,ppgraph.blue)
+  local t = pptouch()
+  if #t > 0 then
+    p = ppscreen:to(t[1])
+    --pには{0,0,320,320}の座標に変換された座標が入ります
+    ppgraph:print(math.floor(p.x)..","..math.floor(p.y))
+  end
+end</code></pre></div></div>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppscreen:arrayfrom({t,...})</h3>
+<p class="pico-desc">スクリーン座標からウインドウ座標へ変換します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppscreen:arrayto({t,...})</h3>
+<p class="pico-desc">ウインドウ座標からスクリーン座標へ変換します。</p>
+
+<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--仮想スクリーンサイズを320x320で動作させます
+base = {0,0,320,320}
+function start()
+  ppscreen:viewport(ppscreen:layout(base))
+  ppgraph:fill(base,ppgraph.blue)
+  local t = pptouch()
+  if #t > 0 then
+    p = ppscreen:arrayto(t)
+    --pには{0,0,320,320}の座標に変換された座標のテーブルが入ります
+    ppgraph:print(math.floor(p[1].x)..","..math.floor(p[1].y))
+  end
+end</code></pre></div></div>
+</div>
+
+</div><!--------------------------------->
+
+<!-------------------------------------------------------------------------------------------------->
+		<a id="ppparticle"></a>
+		<div data-role="collapsible" data-collapsed="false" data-theme="a" data-content-theme="b"> 
+			<h3>ppparticle</h3>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppparticle.new()<br/>
+ppparticle.new(n)</h3>
+<p class="pico-desc">ppparticleオブジェクトを作成します。引数nを指定すると指定した数だけppparticleオブジェクトが入ったテーブルを返します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:load(pex)</h3>
+<p class="pico-desc">パーティクルの設定データを読み込みます。DotEDITORでは使用できません。</p>
+</div>
+	
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:set({})</h3>
+
+<p class="pico-desc">パーティクルのパラメータをセットします。</p>
+<p class="pico-desc">デフォルト値は次のようになっています。</p>
+	    
+
+<pre><code>	emitterType=0
+	speed=50
+	speedVariance=11
+	particleLifeSpan=0.5
+	particleLifeSpanVariance=0
+	angle=0
+	angleVariance=360
+	radialAcceleration=0
+	tangentialAcceleration=0
+	radialAccelVariance=0
+	tangentialAccelVariance=0
+	maxParticles=100
+	startParticleSize=32
+	startParticleSizeVariance=0
+	finishParticleSize=32
+	finishParticleSizeVariance=0
+	duration=0.1
+	blendFuncSource=770
+	blendFuncDestination=771
+	maxRadius=10
+	maxRadiusVariance=0
+	radiusSpeed=0
+	minRadius=10
+	rotatePerSecond=0
+	rotatePerSecondVariance=0
+	rotationStart=0
+	rotationStartVariance=0
+	rotationEnd=0
+	rotationEndVariance=0
+	sourcePosition=PPPoint(160,160)
+	sourcePositionVariance=PPPoint(7,7)
+	gravity=PPPoint(0,0)
+	startColor=PPFColor(255,255,255,255)
+	startColorVariance=PPFColor(0,0,0,0)
+	finishColor=PPFColor(255,255,255,0)
+	finishColorVariance=PPFColor(0,0,0,0)
+	animationTime=1/60.0
+	animationData=nil
+	animationLoopPoint=1</code></pre>
+
+<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>pptex:default(pptex:load("sample.png"))
+		
+p=ppparticle.new()
+p:property({
+  startColor={r=240,g=240,b=0,a=255},
+  startColorVariance={r=20,g=20,b=0,a=0},
+  finishColor={r=250,g=0,b=0,a=0},
+  finishColorVariance={r=0,g=0,b=0,a=0},
+  animationTime=0.5,
+  animationData={10},
+  animationLoopPoint=1
+})
+
+function start()
+  if #pptouch()>0 then
+    p:property({sourcePosition=pptouch()[1]})
+    p:fire()
+  end
+  p:idle()
+  p:draw()
+end</code></pre>
+<!-- <img src="./image/screen-shot 2012-06-28 17.51.02.png"/> -->
+</div></div>
+
+<!--
+	ppparticle:set({emitterType,
+	     speed,
+	     speedVariance,
+	     particleLifeSpan,
+	     particleLifeSpanVariance,
+	     angle,
+	     angleVariance,
+	     radialAcceleration,
+	     tangentialAcceleration,
+	     radialAccelVariance,
+	     tangentialAccelVariance,
+	     maxParticles,
+	     startParticleSize,
+	     startParticleSizeVariance,
+	     finishParticleSize,
+	     finishParticleSizeVariance,
+	     duration,
+	     blendFuncSource,
+	     blendFuncDestination,
+	     maxRadius,
+	     maxRadiusVariance,
+	     radiusSpeed,
+	     minRadius,
+	     rotatePerSecond,
+	     rotatePerSecondVariance,
+	     rotationStart,
+	     rotationStartVariance,
+	     rotationEnd,
+	     rotationEndVariance,
+	     sourcePosition={x,y},
+	     sourcePositionVariance={x,y},
+	     gravity={x,y},
+	     startColor={r,g,b,a},
+	     startColorVariance={r,g,b,a},
+	     finishColor={r,g,b,a},
+	     finishColorVariance={r,g,b,a},
+	     animationTime=1/60.0,
+	     animationData=nil,
+	     animationLoopPoint=1})
+-->
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:fire()</h3>
+<p class="pico-desc">パーティクルを発生させます。</p>
+		
+<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>pptex:default(pptex:load("sample.png"))
+		
+p=ppparticle.new()
+p:property({
+  animationTime=0.5,
+  animationData={10},
+  animationLoopPoint=1
+})
+
+function start()
+ if #pptouch()>0 then
+   p:property({sourcePosition=pptouch()[1]})
+   p:fire()
+ end
+ p:idle()
+ p:draw()
+end</code></pre>
+<!-- <img src="./image/screen-shot 2012-06-28 17.52.21.png"/> -->
+</div></div>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:elapsedTime(time)</h3>
+<p class="pico-desc">経過時間を設定します。引数がない場合は経過時間を返します。</p>
+</div>
+	
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:count()</h3>
+<p class="pico-desc">現在発生中のパーティクルの数を返します。</p>
+</div>
+		
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:stop()</h3>
+<p class="pico-desc">パーティクル処理を止めます。</p>
+</div>
+
+</div><!--------------------------------->
+
+<!-------------------------------------------------------------------------------------------------->
+		<a id="ppse"></a>
+		<div data-role="collapsible" data-collapsed="false" data-theme="a" data-content-theme="b"> 
+			<h3>ppse</h3>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppse.volume(vol)</h3>
+<p class="pico-desc">ボリュームを設定します。引数がない場合は設定値を返します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppse.play(filename)</h3>
+<p class="pico-desc">効果音を再生します。soundidを返します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppse.stop(soundid)</h3>
+<p class="pico-desc">再生中の効果音を止めます。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppse.preload(filename)</h3>
+<p class="pico-desc">効果音データを先読みします。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppse.unload(filename)</h3>
+<p class="pico-desc">効果音データを破棄します。</p>
+</div>
+
+</div><!--------------------------------->
+
+<!-------------------------------------------------------------------------------------------------->
+		<a id="ppbgm"></a>
+		<div data-role="collapsible" data-collapsed="false" data-theme="a" data-content-theme="b"> 
+			<h3>ppbgm</h3>
+
+<div data-role="collapsible" data-collapsed="false">
+<h3>ppbgm.preload(filename)</h3>
+<p class="pico-desc">BGMデータを先読みします。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppbgm.play(filename)</h3>
+<p class="pico-desc">BGMを再生します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppbgm.stop(close)</h3>
+<p class="pico-desc">BGMを止めます。closeにtrueにするとBGMデータを破棄します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppbgm.pause()</h3>
+<p class="pico-desc">BGMの再生を一時停止します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppbgm.resume()</h3>
+<p class="pico-desc">BGMの再生を再開します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppbgm.rewind()</h3>
+<p class="pico-desc">BGMを巻き戻します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppbgm.isPlaying()</h3>
+<p class="pico-desc">BGM再生中かどうかを返します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppbgm.volume(vol)</h3>
+<p class="pico-desc">ボリュームを設定します。引数がない場合は設定値を返します。</p>
+</div>
+
+</div><!--------------------------------->
+
+<!-------------------------------------------------------------------------------------------------->
+		<a id="pppoint"></a>
+		<div data-role="collapsible" data-collapsed="false" data-theme="a" data-content-theme="b"> 
+			<h3>pppoint</h3>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>pppoint(x,y)</h3>
+<p class="pico-desc">pppointオブジェクトを作成します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>.x<br/>
+	.y</h3>
+<p class="pico-desc">X座標、Y座標です。</p>
+</div>
+	
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:length()</h3>
+<p class="pico-desc">原点(0,0)からの距離を求めます。</p>
+</div>
+	
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:length({point})</h3>
+<p class="pico-desc">2点間の距離を求めます。</p>
+</div>
+
+</div><!--------------------------------->
+
+<!-------------------------------------------------------------------------------------------------->
+		<a id="pprect"></a>
+		<div data-role="collapsible" data-collapsed="false" data-theme="a" data-content-theme="b"> 
+			<h3>pprect</h3>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>pprect(x,y,width,height)</h3>
+<p class="pico-desc">pprectオブジェクトを作成します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>.x<br/>
+    .y</h3>
+<p class="pico-desc">X座標、Y座標です。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>.width<br/>
+    .height</h3>
+<p class="pico-desc">横幅、高さです。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:min()</h3>
+<p class="pico-desc">左上の座標を計算します。</p>
+</div>
+	
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>	:max()</h3>
+<p class="pico-desc">右下の座標を計算します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>	:cetner()</h3>
+<p class="pico-desc">中央の座標を計算します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>	:equalToSize({rect})</h3>
+<p class="pico-desc">サイズが同じかどうかを判定します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>	:equalToRect({rect})</h3>
+<p class="pico-desc">同じ矩形かどうかを判定します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>	:isEmpty()</h3>
+<p class="pico-desc">横幅、高さが0かどうかを判定します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>	:move(x,y)</h3>
+<p class="pico-desc">位置を移動します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>	:position(x,y)<br/>
+:pos(x,y)</h3>
+<p class="pico-desc">位置を指定します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>	:size(width,height)</h3>
+<p class="pico-desc">サイズを変更します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>	:scale(a)</h3>
+<p class="pico-desc">サイズをa倍します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>	:inset(x,y)</h3>
+<p class="pico-desc">矩形を縮めます。負の値の場合は大きくします。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>	:contain(x,y)</h3>
+<p class="pico-desc">座標を含んだ矩形かどうかを判定します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>	:intersect(r)</h3>
+<p class="pico-desc">矩形が交差しているかどうかを判定します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>	:union(r)</h3>
+<p class="pico-desc">２つの矩形を含んだ矩形を返します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>	:length(x,y)</h3>
+<p class="pico-desc">矩形の左上の位置との距離を計算します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>	:hitCheck(points,hitCheck)</h3>
+<p class="pico-desc">矩形とのあたり判定を行います。</p>
+</div>
+
+</div><!--------------------------------->
+
+<!-------------------------------------------------------------------------------------------------->
+		<a id="ppbutton"></a>
+		<div data-role="collapsible" data-collapsed="false" data-theme="a" data-content-theme="b"> 
+			<h3>ppbutton</h3>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppbutton(title)</h3>
+<p class="pico-desc">titleを表示したボタンを作成します。</p>
+		
+<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--ボタンを押すとgameloopへ遷移します
+b=ppbutton("START GAME")
+b.bgcolor = ppgraph.blue
+
+function start()
+  if b:idle() then
+    ppgame:start(gameloop)
+  end
+  b:draw()
+end
+
+function gameloop()
+  ppgraph:print("GAME LOOP")
+end</code></pre>
+<!-- <img src="./image/screen-shot 2012-06-28 17.56.22.png"/> -->
+</div></div>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:draw()</h3>
+<p class="pico-desc">ボタンを描画します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:size()</h3>
+<p class="pico-desc">ボタンのサイズを返します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:layout(auto,cx,cy,rx,ry,rw,rh)</h3>
+<p class="pico-desc">ボタンのレイアウトを指定します。</p>
+
+<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--ボタンを画面中央に配置します
+b=ppbutton("GAME START")
+b:layout(true,true,true)
+
+function start()
+  b:idle()
+  b:draw()
+end</code></pre>
+<!-- <img src="./image/screen-shot 2012-06-28 18.04.48.png"/> -->
+</div></div>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:aabb()</h3>
+<p class="pico-desc">ボタンのバウンディングボックスを計算します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:drawbg(rect)</h3>
+<p class="pico-desc">ボタンの背景画像を描画します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>:idle()<br/>:idle({points})</h3>
+<p class="pico-desc">ボタンのタッチ判定を処理します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>.bgcolor (default:ppgraph.black)</h3>
+<p class="pico-desc">背景色です。nilにすると透明になります。</p>
+
+<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--ボタンの背景を透明にしてスクリーンを青色にします
+b=ppbutton("GAME START")
+b:layout(true,true,true)
+b.bgcolor = nil
+
+function start()
+  ppgraph:fill(ppscreen:size(),ppgraph.blue)
+  b:idle()
+  b:draw()
+end</code></pre>
+<!-- <img src="./image/screen-shot 2012-06-28 18.07.35.png"/> -->
+</div></div>
+
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>.selectcolor (default:ppgraph.red)</h3>
+<p class="pico-desc">タッチ時のテキストカラーです。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>.color (default:ppgraph.white)</h3>
+<p class="pico-desc">非タッチ時のテキストカラーです。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>.autolayout (default:false)<br/>
+.centerx (default:false)<br/>
+.centery (default:false)<br/>
+.layoutarea (default:nil)</h3>
+<p class="pico-desc">:layout()で使用するパラメータです。直接指定する事ができます。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>.bg.tile (default:0)</h3>
+<p class="pico-desc">背景画像をタイル番号で指定します。</p>
+
+<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--タイル番号17を背景に使って表示します
+pptex:default(pptex:load("sample.png"))
+b=ppbutton("TITLE")
+b.bg.tile = 17
+b.bg.edge = 4
+function start()
+  b:idle()
+  b:draw()
+end</code></pre>
+<!-- <img src="./image/screen-shot 2012-06-28 17.58.28.png"/> -->
+</div></div>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>.bg.texture (default:nil)</h3>
+<p class="pico-desc">背景画像のテクスチャを変更します。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>.bg.edge (default:4)</h3>
+<p class="pico-desc">背景画像のエッジ領域を指定します。</p>
+</div>
+
+</div><!--------------------------------->
+
+<!-------------------------------------------------------------------------------------------------->
+		<a id="other"></a>
+		<div data-role="collapsible" data-collapsed="false" data-theme="a" data-content-theme="b" >
+			<h3>その他の関数</h3>
+		
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>pphitcheck({a...},{b...},function(b,a) ... end)</h3>
+<p class="pico-desc">2つのオブジェクト(テーブル)の当たり判定を行います。
+	オブジェクトは以下の組み合わせのパラメータを持つ必要があります。</p>
+	
+<p class="pico-desc">距離判定の場合</p>
+<pre><code>{
+  x=X座標,
+  y=Y座標,
+  hitmask=当たり判定マスク,
+  hitlength=当たり判定距離,
+  hitcenter=当たり判定の中心座標{x,y}
+}</code></pre>
+
+<p class="pico-desc">矩形判定の場合</p>
+<pre><code>{
+  x=X座標,
+  y=Y座標,
+  hitmask=当たり判定マスク,
+  hitrect=当たり判定矩形{x,y,width,height}
+}</code></pre>
+
+<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--enemyとplayerの接触判定します(距離判定)
+pptex:default(pptex:load("main.png"))
+
+enemy = ppsprite.new(10)
+for k,v in pairs(enemy) do
+	v.x = math.random(0,10)*32
+	v.y = math.random(0,10)*32
+	v.hitmask = 1      --相手のhitmaskとAndした結果0でない相手と当たり判定します
+	v.hitlength = 8    --距離8
+	v.hitcenter = pppoint(16,16)  --中心は16,16の位置
+	v:tile(2)
+	ppgraph:append(v)
+end
+
+player = ppsprite.new()
+player.x = 100
+player.y = 100
+player.hitmask = 1      --相手のhitmaskとAndした結果0でない相手と当たり判定します
+player.hitlength = 8    --距離8
+player.hitcenter = pppoint(16,16)  --中心は16,16の位置
+player:tile(1)
+ppgraph:append(player)
+
+function start()
+	player:drag(pptouch())
+	pphitcheck(enemy,{player},function(a,b)
+		ppgraph:print("HIT!")	--接触すると表示
+	end)
+end
+
+--enemyとplayerの接触判定します(矩形判定)
+pptex:default(pptex:load("main.png"))
+
+enemy = ppsprite.new(10)
+for k,v in pairs(enemy) do
+	v.x = math.random(0,10)*32
+	v.y = math.random(0,10)*32
+	v.hitmask = 1
+	v.hitrect = pprect(0,0,32,32)
+	v:tile(2)
+	ppgraph:append(v)
+end
+
+player = ppsprite.new()
+player.x = 100
+player.y = 100
+player.hitmask = 1
+player.hitrect = pprect(0,0,32,32)
+player:tile(1)
+ppgraph:append(player)
+
+function start()
+	player:drag(pptouch())
+	pphitcheck(enemy,{player},function(a,b)
+		ppgraph:print("HIT!")
+	end)
+end</code></pre></div></div>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>ppforeach({a...},function(index,value) ... end)</h3>
+<p class="pico-desc">配列テーブルをイテレートします。</p>
+</div>
+
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>pplength({point1},{point2})</h3>
+<p class="pico-desc">2点間の距離を計算します。</p>
+</div>
+	
+<div data-role="collapsible" data-collapsed="false"> 
+<h3>pptouch()</h3>
+<p class="pico-desc">
+	タッチ位置を{x=X座標,y=Y座標}の配列で返します。
+	</p>
+
+<div><div data-role="content" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--タッチ座標を表示します
+function start()
+  t=pptouch()
+  for k,v in pairs(t) do
+    ppgraph:print(v.x..","..v.y)
+    ppgraph:move(0,16)
+  end
+end</code></pre></div></div>
+</div>
+
+</div><!--------------------------------->
+
+		</ul>
+	</div>
+	<div data-role="footer" data-theme="d">
+		<h4>PicoPicoGameEngine</h4> 
+		<a href="#" data-role="button" data-rel="back" data-icon="arrow-l" class="ui-btn-left">Back</a>
+		<a href="./index.html" class="ui-btn-right">TOP</a>
+	</div>
+</div>
+
+
+
+</body>
+</html>

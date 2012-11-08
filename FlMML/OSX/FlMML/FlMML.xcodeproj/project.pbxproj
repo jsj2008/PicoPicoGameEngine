@@ -1,0 +1,554 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXAggregateTarget section */
+		6BAC242115B284900051C16B /* Universal */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 6BAC242215B284900051C16B /* Build configuration list for PBXAggregateTarget "Universal" */;
+			buildPhases = (
+				6BAC242515B284930051C16B /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = Universal;
+			productName = Universal;
+		};
+/* End PBXAggregateTarget section */
+
+/* Begin PBXBuildFile section */
+		6BAC23EC15B283140051C16B /* MSequencer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC23D315B283140051C16B /* MSequencer.cpp */; };
+		6BAC23ED15B283140051C16B /* FlMML_Regex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC23E515B283140051C16B /* FlMML_Regex.cpp */; };
+		6BAC23EE15B283140051C16B /* FlMML_StaticDef.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC23E715B283140051C16B /* FlMML_StaticDef.cpp */; };
+		6BAC23EF15B283140051C16B /* MSequencerAU.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC23EA15B283140051C16B /* MSequencerAU.cpp */; };
+		6BAC23F515B283FA0051C16B /* FlMML.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC23B815B283140051C16B /* FlMML.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6BAC23F615B284010051C16B /* MEngineData.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC23BB15B283140051C16B /* MEngineData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6BAC23F715B284010051C16B /* MEnvelope.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC23BC15B283140051C16B /* MEnvelope.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6BAC23F815B284010051C16B /* MEnvelopePoint.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC23BD15B283140051C16B /* MEnvelopePoint.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6BAC23F915B284010051C16B /* MEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC23BE15B283140051C16B /* MEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6BAC23FA15B284010051C16B /* MFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC23BF15B283140051C16B /* MFilter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6BAC23FB15B284010051C16B /* MFormant.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC23C015B283140051C16B /* MFormant.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6BAC23FC15B284010051C16B /* MML.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC23C115B283140051C16B /* MML.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6BAC23FD15B284010051C16B /* MOscFcDpcm.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC23C215B283140051C16B /* MOscFcDpcm.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6BAC23FE15B284010051C16B /* MOscFcNoise.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC23C315B283140051C16B /* MOscFcNoise.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6BAC23FF15B284010051C16B /* MOscFcTri.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC23C415B283140051C16B /* MOscFcTri.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6BAC240015B284010051C16B /* MOscGbLNoise.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC23C515B283140051C16B /* MOscGbLNoise.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6BAC240115B284010051C16B /* MOscGbSNoise.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC23C615B283140051C16B /* MOscGbSNoise.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6BAC240215B284010051C16B /* MOscGbWave.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC23C715B283140051C16B /* MOscGbWave.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6BAC240315B284010051C16B /* MOscillator.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC23C815B283140051C16B /* MOscillator.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6BAC240415B284010051C16B /* MOscMod.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC23C915B283140051C16B /* MOscMod.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6BAC240515B284010051C16B /* MOscNoise.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC23CA15B283140051C16B /* MOscNoise.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6BAC240615B284010051C16B /* MOscOPM.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC23CB15B283140051C16B /* MOscOPM.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6BAC240715B284010051C16B /* MOscPicoWave.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC23CC15B283140051C16B /* MOscPicoWave.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6BAC240815B284010051C16B /* MOscPulse.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC23CD15B283140051C16B /* MOscPulse.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6BAC240915B284010051C16B /* MOscSaw.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC23CE15B283140051C16B /* MOscSaw.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6BAC240A15B284010051C16B /* MOscSine.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC23CF15B283140051C16B /* MOscSine.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6BAC240B15B284010051C16B /* MOscTriangle.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC23D015B283140051C16B /* MOscTriangle.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6BAC240C15B284010051C16B /* MOscWave.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC23D115B283140051C16B /* MOscWave.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6BAC240D15B284010051C16B /* MPolyChannel.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC23D215B283140051C16B /* MPolyChannel.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6BAC240E15B284150051C16B /* MSequencer.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC23D415B283140051C16B /* MSequencer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6BAC240F15B284150051C16B /* MStatus.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC23D515B283140051C16B /* MStatus.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6BAC241015B284150051C16B /* MTrack.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC23D615B283140051C16B /* MTrack.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6BAC241115B284150051C16B /* MWarning.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC23D715B283140051C16B /* MWarning.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6BAC241215B2842D0051C16B /* Channel4.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC23D915B283140051C16B /* Channel4.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6BAC241315B2842D0051C16B /* Chip.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC23DA15B283140051C16B /* Chip.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6BAC241415B2842D0051C16B /* EGPhase.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC23DB15B283140051C16B /* EGPhase.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6BAC241515B2842D0051C16B /* FM.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC23DC15B283140051C16B /* FM.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6BAC241615B2842D0051C16B /* Operator.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC23DD15B283140051C16B /* Operator.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6BAC241715B2842D0051C16B /* OPM.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC23DE15B283140051C16B /* OPM.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6BAC241815B2842D0051C16B /* OpType.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC23DF15B283140051C16B /* OpType.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6BAC241915B2842D0051C16B /* Timer.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC23E015B283140051C16B /* Timer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6BAC241A15B2844A0051C16B /* FlMMl_Array.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC23E215B283140051C16B /* FlMMl_Array.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6BAC241B15B2844A0051C16B /* FlMML_Math.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC23E315B283140051C16B /* FlMML_Math.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6BAC241C15B2844A0051C16B /* FlMML_Number.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC23E415B283140051C16B /* FlMML_Number.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6BAC241D15B2844A0051C16B /* FlMML_Regex.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC23E615B283140051C16B /* FlMML_Regex.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6BAC241E15B2844A0051C16B /* FlMML_StaticDef.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC23E815B283140051C16B /* FlMML_StaticDef.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6BAC241F15B2844A0051C16B /* FlMML_Vector.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC23E915B283140051C16B /* FlMML_Vector.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6BAC242015B2844A0051C16B /* MSequencerAU.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC23EB15B283140051C16B /* MSequencerAU.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6BAC25B315B287FA0051C16B /* IChannel.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC23B915B283140051C16B /* IChannel.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6BAC25B415B287FC0051C16B /* MChannel.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC23BA15B283140051C16B /* MChannel.h */; settings = {ATTRIBUTES = (Public, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		6BAC23A215B282F80051C16B /* FlMML.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FlMML.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6BAC23AD15B282F80051C16B /* FlMML-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "FlMML-Info.plist"; sourceTree = "<group>"; };
+		6BAC23AF15B282F80051C16B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		6BAC23B115B282F80051C16B /* FlMML-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FlMML-Prefix.pch"; sourceTree = "<group>"; };
+		6BAC23B815B283140051C16B /* FlMML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlMML.h; sourceTree = "<group>"; };
+		6BAC23B915B283140051C16B /* IChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IChannel.h; sourceTree = "<group>"; };
+		6BAC23BA15B283140051C16B /* MChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MChannel.h; sourceTree = "<group>"; };
+		6BAC23BB15B283140051C16B /* MEngineData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MEngineData.h; sourceTree = "<group>"; };
+		6BAC23BC15B283140051C16B /* MEnvelope.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MEnvelope.h; sourceTree = "<group>"; };
+		6BAC23BD15B283140051C16B /* MEnvelopePoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MEnvelopePoint.h; sourceTree = "<group>"; };
+		6BAC23BE15B283140051C16B /* MEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MEvent.h; sourceTree = "<group>"; };
+		6BAC23BF15B283140051C16B /* MFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MFilter.h; sourceTree = "<group>"; };
+		6BAC23C015B283140051C16B /* MFormant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MFormant.h; sourceTree = "<group>"; };
+		6BAC23C115B283140051C16B /* MML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MML.h; sourceTree = "<group>"; };
+		6BAC23C215B283140051C16B /* MOscFcDpcm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MOscFcDpcm.h; sourceTree = "<group>"; };
+		6BAC23C315B283140051C16B /* MOscFcNoise.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MOscFcNoise.h; sourceTree = "<group>"; };
+		6BAC23C415B283140051C16B /* MOscFcTri.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MOscFcTri.h; sourceTree = "<group>"; };
+		6BAC23C515B283140051C16B /* MOscGbLNoise.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MOscGbLNoise.h; sourceTree = "<group>"; };
+		6BAC23C615B283140051C16B /* MOscGbSNoise.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MOscGbSNoise.h; sourceTree = "<group>"; };
+		6BAC23C715B283140051C16B /* MOscGbWave.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MOscGbWave.h; sourceTree = "<group>"; };
+		6BAC23C815B283140051C16B /* MOscillator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MOscillator.h; sourceTree = "<group>"; };
+		6BAC23C915B283140051C16B /* MOscMod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MOscMod.h; sourceTree = "<group>"; };
+		6BAC23CA15B283140051C16B /* MOscNoise.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MOscNoise.h; sourceTree = "<group>"; };
+		6BAC23CB15B283140051C16B /* MOscOPM.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MOscOPM.h; sourceTree = "<group>"; };
+		6BAC23CC15B283140051C16B /* MOscPicoWave.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MOscPicoWave.h; sourceTree = "<group>"; };
+		6BAC23CD15B283140051C16B /* MOscPulse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MOscPulse.h; sourceTree = "<group>"; };
+		6BAC23CE15B283140051C16B /* MOscSaw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MOscSaw.h; sourceTree = "<group>"; };
+		6BAC23CF15B283140051C16B /* MOscSine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MOscSine.h; sourceTree = "<group>"; };
+		6BAC23D015B283140051C16B /* MOscTriangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MOscTriangle.h; sourceTree = "<group>"; };
+		6BAC23D115B283140051C16B /* MOscWave.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MOscWave.h; sourceTree = "<group>"; };
+		6BAC23D215B283140051C16B /* MPolyChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPolyChannel.h; sourceTree = "<group>"; };
+		6BAC23D315B283140051C16B /* MSequencer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MSequencer.cpp; sourceTree = "<group>"; };
+		6BAC23D415B283140051C16B /* MSequencer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSequencer.h; sourceTree = "<group>"; };
+		6BAC23D515B283140051C16B /* MStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MStatus.h; sourceTree = "<group>"; };
+		6BAC23D615B283140051C16B /* MTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTrack.h; sourceTree = "<group>"; };
+		6BAC23D715B283140051C16B /* MWarning.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MWarning.h; sourceTree = "<group>"; };
+		6BAC23D915B283140051C16B /* Channel4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Channel4.h; sourceTree = "<group>"; };
+		6BAC23DA15B283140051C16B /* Chip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Chip.h; sourceTree = "<group>"; };
+		6BAC23DB15B283140051C16B /* EGPhase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EGPhase.h; sourceTree = "<group>"; };
+		6BAC23DC15B283140051C16B /* FM.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FM.h; sourceTree = "<group>"; };
+		6BAC23DD15B283140051C16B /* Operator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Operator.h; sourceTree = "<group>"; };
+		6BAC23DE15B283140051C16B /* OPM.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OPM.h; sourceTree = "<group>"; };
+		6BAC23DF15B283140051C16B /* OpType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpType.h; sourceTree = "<group>"; };
+		6BAC23E015B283140051C16B /* Timer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Timer.h; sourceTree = "<group>"; };
+		6BAC23E215B283140051C16B /* FlMMl_Array.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlMMl_Array.h; sourceTree = "<group>"; };
+		6BAC23E315B283140051C16B /* FlMML_Math.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlMML_Math.h; sourceTree = "<group>"; };
+		6BAC23E415B283140051C16B /* FlMML_Number.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlMML_Number.h; sourceTree = "<group>"; };
+		6BAC23E515B283140051C16B /* FlMML_Regex.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FlMML_Regex.cpp; sourceTree = "<group>"; };
+		6BAC23E615B283140051C16B /* FlMML_Regex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlMML_Regex.h; sourceTree = "<group>"; };
+		6BAC23E715B283140051C16B /* FlMML_StaticDef.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FlMML_StaticDef.cpp; sourceTree = "<group>"; };
+		6BAC23E815B283140051C16B /* FlMML_StaticDef.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlMML_StaticDef.h; sourceTree = "<group>"; };
+		6BAC23E915B283140051C16B /* FlMML_Vector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlMML_Vector.h; sourceTree = "<group>"; };
+		6BAC23EA15B283140051C16B /* MSequencerAU.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MSequencerAU.cpp; sourceTree = "<group>"; };
+		6BAC23EB15B283140051C16B /* MSequencerAU.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSequencerAU.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		6BAC239F15B282F80051C16B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		6BAC239715B282F80051C16B = {
+			isa = PBXGroup;
+			children = (
+				6BAC23AB15B282F80051C16B /* FlMML */,
+				6BAC23A415B282F80051C16B /* Frameworks */,
+				6BAC23A315B282F80051C16B /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		6BAC23A315B282F80051C16B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6BAC23A215B282F80051C16B /* FlMML.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		6BAC23A415B282F80051C16B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		6BAC23AB15B282F80051C16B /* FlMML */ = {
+			isa = PBXGroup;
+			children = (
+				6BAC23B715B283140051C16B /* flmml */,
+				6BAC23D815B283140051C16B /* fmgenAs */,
+				6BAC23E115B283140051C16B /* other */,
+				6BAC23AC15B282F80051C16B /* Supporting Files */,
+			);
+			path = FlMML;
+			sourceTree = "<group>";
+		};
+		6BAC23AC15B282F80051C16B /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				6BAC23AD15B282F80051C16B /* FlMML-Info.plist */,
+				6BAC23AE15B282F80051C16B /* InfoPlist.strings */,
+				6BAC23B115B282F80051C16B /* FlMML-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		6BAC23B715B283140051C16B /* flmml */ = {
+			isa = PBXGroup;
+			children = (
+				6BAC23B815B283140051C16B /* FlMML.h */,
+				6BAC23B915B283140051C16B /* IChannel.h */,
+				6BAC23BA15B283140051C16B /* MChannel.h */,
+				6BAC23BB15B283140051C16B /* MEngineData.h */,
+				6BAC23BC15B283140051C16B /* MEnvelope.h */,
+				6BAC23BD15B283140051C16B /* MEnvelopePoint.h */,
+				6BAC23BE15B283140051C16B /* MEvent.h */,
+				6BAC23BF15B283140051C16B /* MFilter.h */,
+				6BAC23C015B283140051C16B /* MFormant.h */,
+				6BAC23C115B283140051C16B /* MML.h */,
+				6BAC23C215B283140051C16B /* MOscFcDpcm.h */,
+				6BAC23C315B283140051C16B /* MOscFcNoise.h */,
+				6BAC23C415B283140051C16B /* MOscFcTri.h */,
+				6BAC23C515B283140051C16B /* MOscGbLNoise.h */,
+				6BAC23C615B283140051C16B /* MOscGbSNoise.h */,
+				6BAC23C715B283140051C16B /* MOscGbWave.h */,
+				6BAC23C815B283140051C16B /* MOscillator.h */,
+				6BAC23C915B283140051C16B /* MOscMod.h */,
+				6BAC23CA15B283140051C16B /* MOscNoise.h */,
+				6BAC23CB15B283140051C16B /* MOscOPM.h */,
+				6BAC23CC15B283140051C16B /* MOscPicoWave.h */,
+				6BAC23CD15B283140051C16B /* MOscPulse.h */,
+				6BAC23CE15B283140051C16B /* MOscSaw.h */,
+				6BAC23CF15B283140051C16B /* MOscSine.h */,
+				6BAC23D015B283140051C16B /* MOscTriangle.h */,
+				6BAC23D115B283140051C16B /* MOscWave.h */,
+				6BAC23D215B283140051C16B /* MPolyChannel.h */,
+				6BAC23D315B283140051C16B /* MSequencer.cpp */,
+				6BAC23D415B283140051C16B /* MSequencer.h */,
+				6BAC23D515B283140051C16B /* MStatus.h */,
+				6BAC23D615B283140051C16B /* MTrack.h */,
+				6BAC23D715B283140051C16B /* MWarning.h */,
+			);
+			name = flmml;
+			path = ../../../sources/FlMML/flmml;
+			sourceTree = "<group>";
+		};
+		6BAC23D815B283140051C16B /* fmgenAs */ = {
+			isa = PBXGroup;
+			children = (
+				6BAC23D915B283140051C16B /* Channel4.h */,
+				6BAC23DA15B283140051C16B /* Chip.h */,
+				6BAC23DB15B283140051C16B /* EGPhase.h */,
+				6BAC23DC15B283140051C16B /* FM.h */,
+				6BAC23DD15B283140051C16B /* Operator.h */,
+				6BAC23DE15B283140051C16B /* OPM.h */,
+				6BAC23DF15B283140051C16B /* OpType.h */,
+				6BAC23E015B283140051C16B /* Timer.h */,
+			);
+			name = fmgenAs;
+			path = ../../../sources/FlMML/fmgenAs;
+			sourceTree = "<group>";
+		};
+		6BAC23E115B283140051C16B /* other */ = {
+			isa = PBXGroup;
+			children = (
+				6BAC23E215B283140051C16B /* FlMMl_Array.h */,
+				6BAC23E315B283140051C16B /* FlMML_Math.h */,
+				6BAC23E415B283140051C16B /* FlMML_Number.h */,
+				6BAC23E515B283140051C16B /* FlMML_Regex.cpp */,
+				6BAC23E615B283140051C16B /* FlMML_Regex.h */,
+				6BAC23E715B283140051C16B /* FlMML_StaticDef.cpp */,
+				6BAC23E815B283140051C16B /* FlMML_StaticDef.h */,
+				6BAC23E915B283140051C16B /* FlMML_Vector.h */,
+				6BAC23EA15B283140051C16B /* MSequencerAU.cpp */,
+				6BAC23EB15B283140051C16B /* MSequencerAU.h */,
+			);
+			name = other;
+			path = ../../../sources/FlMML/other;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		6BAC23F415B283E80051C16B /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6BAC23F515B283FA0051C16B /* FlMML.h in Headers */,
+				6BAC25B315B287FA0051C16B /* IChannel.h in Headers */,
+				6BAC25B415B287FC0051C16B /* MChannel.h in Headers */,
+				6BAC23F615B284010051C16B /* MEngineData.h in Headers */,
+				6BAC23F715B284010051C16B /* MEnvelope.h in Headers */,
+				6BAC23F815B284010051C16B /* MEnvelopePoint.h in Headers */,
+				6BAC23F915B284010051C16B /* MEvent.h in Headers */,
+				6BAC23FA15B284010051C16B /* MFilter.h in Headers */,
+				6BAC23FB15B284010051C16B /* MFormant.h in Headers */,
+				6BAC23FC15B284010051C16B /* MML.h in Headers */,
+				6BAC23FD15B284010051C16B /* MOscFcDpcm.h in Headers */,
+				6BAC23FE15B284010051C16B /* MOscFcNoise.h in Headers */,
+				6BAC23FF15B284010051C16B /* MOscFcTri.h in Headers */,
+				6BAC240015B284010051C16B /* MOscGbLNoise.h in Headers */,
+				6BAC240115B284010051C16B /* MOscGbSNoise.h in Headers */,
+				6BAC240215B284010051C16B /* MOscGbWave.h in Headers */,
+				6BAC240315B284010051C16B /* MOscillator.h in Headers */,
+				6BAC240415B284010051C16B /* MOscMod.h in Headers */,
+				6BAC240515B284010051C16B /* MOscNoise.h in Headers */,
+				6BAC240615B284010051C16B /* MOscOPM.h in Headers */,
+				6BAC240715B284010051C16B /* MOscPicoWave.h in Headers */,
+				6BAC240815B284010051C16B /* MOscPulse.h in Headers */,
+				6BAC240915B284010051C16B /* MOscSaw.h in Headers */,
+				6BAC240A15B284010051C16B /* MOscSine.h in Headers */,
+				6BAC240B15B284010051C16B /* MOscTriangle.h in Headers */,
+				6BAC240C15B284010051C16B /* MOscWave.h in Headers */,
+				6BAC240D15B284010051C16B /* MPolyChannel.h in Headers */,
+				6BAC240E15B284150051C16B /* MSequencer.h in Headers */,
+				6BAC240F15B284150051C16B /* MStatus.h in Headers */,
+				6BAC241015B284150051C16B /* MTrack.h in Headers */,
+				6BAC241115B284150051C16B /* MWarning.h in Headers */,
+				6BAC241215B2842D0051C16B /* Channel4.h in Headers */,
+				6BAC241315B2842D0051C16B /* Chip.h in Headers */,
+				6BAC241415B2842D0051C16B /* EGPhase.h in Headers */,
+				6BAC241515B2842D0051C16B /* FM.h in Headers */,
+				6BAC241615B2842D0051C16B /* Operator.h in Headers */,
+				6BAC241715B2842D0051C16B /* OPM.h in Headers */,
+				6BAC241815B2842D0051C16B /* OpType.h in Headers */,
+				6BAC241915B2842D0051C16B /* Timer.h in Headers */,
+				6BAC241A15B2844A0051C16B /* FlMMl_Array.h in Headers */,
+				6BAC241B15B2844A0051C16B /* FlMML_Math.h in Headers */,
+				6BAC241C15B2844A0051C16B /* FlMML_Number.h in Headers */,
+				6BAC241D15B2844A0051C16B /* FlMML_Regex.h in Headers */,
+				6BAC241E15B2844A0051C16B /* FlMML_StaticDef.h in Headers */,
+				6BAC241F15B2844A0051C16B /* FlMML_Vector.h in Headers */,
+				6BAC242015B2844A0051C16B /* MSequencerAU.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		6BAC23A115B282F80051C16B /* FlMML */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6BAC23B415B282F80051C16B /* Build configuration list for PBXNativeTarget "FlMML" */;
+			buildPhases = (
+				6BAC239E15B282F80051C16B /* Sources */,
+				6BAC239F15B282F80051C16B /* Frameworks */,
+				6BAC23A015B282F80051C16B /* Resources */,
+				6BAC23F415B283E80051C16B /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FlMML;
+			productName = FlMML;
+			productReference = 6BAC23A215B282F80051C16B /* FlMML.framework */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		6BAC239915B282F80051C16B /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0430;
+			};
+			buildConfigurationList = 6BAC239C15B282F80051C16B /* Build configuration list for PBXProject "FlMML" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 6BAC239715B282F80051C16B;
+			productRefGroup = 6BAC23A315B282F80051C16B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				6BAC23A115B282F80051C16B /* FlMML */,
+				6BAC242115B284900051C16B /* Universal */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		6BAC23A015B282F80051C16B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		6BAC242515B284930051C16B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Sets the target folders and the final framework product.\nFMK_NAME=FlMML\nFMK_VERSION=A\n\n# Install dir will be the final output to the framework.\n# The following line create it in the root folder of the current project.\nINSTALL_DIR=${SRCROOT}/Products/${FMK_NAME}.framework\n\n# Working dir will be deleted after the framework creation.\nWRK_DIR=build\nDEVICE_DIR=${WRK_DIR}/Release/${FMK_NAME}.framework\n#SIMULATOR_DIR=${WRK_DIR}/Release-iphonesimulator/${FMK_NAME}.framework\n\n# Building both architectures.\nxcodebuild -configuration \"Release\" -target \"${FMK_NAME}\" -arch i386 -sdk macosx10.7\nmkdir -p \"${WRK_DIR}/i386\"\ncp \"${WRK_DIR}/Release/${FMK_NAME}.framework/Contents/MacOS/${FMK_NAME}\" \"${WRK_DIR}/i386/\"\nxcodebuild -configuration \"Release\" -target \"${FMK_NAME}\" -arch x86_64 -sdk macosx10.7\nmkdir -p \"${WRK_DIR}/x86_64\"\ncp \"${WRK_DIR}/Release/${FMK_NAME}.framework/Contents/MacOS/${FMK_NAME}\" \"${WRK_DIR}/x86_64/\"\n\n# Cleaning the oldest.\nif [ -d \"${INSTALL_DIR}\" ]\nthen\nrm -rf \"${INSTALL_DIR}\"\nfi\n\n# Creates and renews the final product folder.\nmkdir -p \"${INSTALL_DIR}\"\nmkdir -p \"${INSTALL_DIR}/Versions\"\nmkdir -p \"${INSTALL_DIR}/Versions/${FMK_VERSION}\"\nmkdir -p \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources\"\nmkdir -p \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Headers\"\n\n# Creates the internal links.\n# It MUST uses relative path, otherwise will not work when the folder is copied/moved.\nln -s \"${FMK_VERSION}\" \"${INSTALL_DIR}/Versions/Current\"\nln -s \"Versions/Current/Headers\" \"${INSTALL_DIR}/Headers\"\nln -s \"Versions/Current/Resources\" \"${INSTALL_DIR}/Resources\"\nln -s \"Versions/Current/${FMK_NAME}\" \"${INSTALL_DIR}/${FMK_NAME}\"\n\n# Copies the headers and resources files to the final product folder.\ncp -R \"${DEVICE_DIR}/Contents/Headers/\" \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Headers/\"\n#cp -R \"${DEVICE_DIR}/\" \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources/\"\n\n# Removes the binary and header from the resources folder.\n#rm -r \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources/Headers\" \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources/${FMK_NAME}\"\n\n# Uses the Lipo Tool to merge both binary files (i386 + armv6/armv7) into one Universal final product.\nlipo -create \"${WRK_DIR}/i386/${FMK_NAME}\" \"${WRK_DIR}/x86_64/${FMK_NAME}\" -output \"${INSTALL_DIR}/Versions/${FMK_VERSION}/${FMK_NAME}\"\n\nrm -r \"${WRK_DIR}\"";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		6BAC239E15B282F80051C16B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6BAC23EC15B283140051C16B /* MSequencer.cpp in Sources */,
+				6BAC23ED15B283140051C16B /* FlMML_Regex.cpp in Sources */,
+				6BAC23EE15B283140051C16B /* FlMML_StaticDef.cpp in Sources */,
+				6BAC23EF15B283140051C16B /* MSequencerAU.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		6BAC23AE15B282F80051C16B /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6BAC23AF15B282F80051C16B /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		6BAC23B215B282F80051C16B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		6BAC23B315B282F80051C16B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		6BAC23B515B282F80051C16B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				DEAD_CODE_STRIPPING = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "";
+				INFOPLIST_FILE = "";
+				INFOPLIST_OUTPUT_FORMAT = "same-as-input";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LINK_WITH_STANDARD_LIBRARIES = NO;
+				MACH_O_TYPE = mh_object;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = NO;
+				PLIST_FILE_OUTPUT_FORMAT = "same-as-input";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				VALID_ARCHS = "i386 x86_64";
+				WRAPPER_EXTENSION = framework;
+			};
+			name = Debug;
+		};
+		6BAC23B615B282F80051C16B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				DEAD_CODE_STRIPPING = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "";
+				INFOPLIST_FILE = "";
+				INFOPLIST_OUTPUT_FORMAT = "same-as-input";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LINK_WITH_STANDARD_LIBRARIES = NO;
+				MACH_O_TYPE = mh_object;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				PLIST_FILE_OUTPUT_FORMAT = "same-as-input";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				VALID_ARCHS = "i386 x86_64";
+				WRAPPER_EXTENSION = framework;
+			};
+			name = Release;
+		};
+		6BAC242315B284900051C16B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		6BAC242415B284900051C16B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		6BAC239C15B282F80051C16B /* Build configuration list for PBXProject "FlMML" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6BAC23B215B282F80051C16B /* Debug */,
+				6BAC23B315B282F80051C16B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6BAC23B415B282F80051C16B /* Build configuration list for PBXNativeTarget "FlMML" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6BAC23B515B282F80051C16B /* Debug */,
+				6BAC23B615B282F80051C16B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6BAC242215B284900051C16B /* Build configuration list for PBXAggregateTarget "Universal" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6BAC242315B284900051C16B /* Debug */,
+				6BAC242415B284900051C16B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 6BAC239915B282F80051C16B /* Project object */;
+}

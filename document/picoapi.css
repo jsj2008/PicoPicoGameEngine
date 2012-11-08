@@ -1,0 +1,27 @@
+.ui-header .ui-title {
+margin-left: 1em;
+margin-right: 1em;
+}
+
+.pico-desc {
+	font-size: 0.8em;
+}
+
+div.figure {
+	text-align: center
+}
+
+span.ui-btn-text { overflow: visible; line-break: normal; word-break:normal; white-space: normal; }
+pre { white-space: pre; word-wrap: break-word; }
+
+@media all and (max-width: 650px){
+	img.pico-image {
+		width: 100%;
+	}
+}
+@media all and (max-width: 1000px){
+	img.pico-imagex2 {
+		width: 100%;
+	}
+}
+ppgraph:layout({x,y,width,height},centerx,centery,area) click to expand contents 

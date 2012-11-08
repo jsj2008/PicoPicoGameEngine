@@ -1,0 +1,105 @@
+<!DOCTYPE html> 
+<html> 
+	<head> 
+	<title>PicoPicoGameEngine</title> 
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=no"> 
+	<link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
+	<link rel="stylesheet" href="../picoapi.css" />
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js"></script>
+</head> 
+<body> 
+
+<div data-role="page" id="ppvkey">
+	<div data-role="header" data-theme="d">
+		<h1>ppvkey</h1>
+		<a href="#" data-role="button" data-rel="back" data-icon="arrow-l" class="ui-btn-left">Back</a>
+		<a href="../index.html" class="ui-btn-right">TOP</a>
+	</div><!-- /header -->
+
+	<div data-role="content">	
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppvkey:touch()</h3>
+<p class="pico-desc">バーチャルキーをタッチしているかどうかを調べます。</p>
+
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--タッチしたところがバーチャルキーの中心
+pptex:default(pptex:load(&quot;sample.png&quot;))
+fighter=ppsprite.new()
+fighter:tile(2)
+mv={{1,0},{0,-1},{-1,0},{0,1}}
+s=ppscreen:size()
+ppvkey:center(s.width/2,s.height/2)
+fighter:pos(ppvkey:center()-pppoint(16,16))
+
+function start()
+  if ppvkey:touch() then
+    fighter:move(mv[ppvkey:dir(4)+1])
+    ppgraph:print(ppvkey:dir(4))
+  end
+  ppgraph:put(ppvkey:center()-pppoint(16,16),7)
+  fighter:draw()
+end</code></pre></div></div>
+
+</div>
+    	
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppvkey:delta()</h3>
+<p class="pico-desc">バーチャルキーの中心位置からのタッチ位置のずれを取得します。</p>
+
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--バーチャルキーを使ったキャラクターの移動
+</code></pre></div></div>
+</div>
+    
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppvkey:dir(division)</h3>
+<p class="pico-desc">中心からの方向を取得します。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppvkey:center({x,y})</h3>
+<p class="pico-desc">バーチャルキーの中心を指定します。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppvkey:fixed(flag)</h3>
+<p class="pico-desc">中心位置を固定するかどうかを指定します。
+    	trueにした場合はcenter()で指定した位置が中心になります。
+    	falseの場合はタッチ開始位置が中心になります。</p>
+
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--画面の中央がバーチャルキーの中心
+pptex:default(pptex:load(&quot;sample.png&quot;))
+fighter=ppsprite.new()
+fighter:tile(2)
+mv={{1,0},{0,-1},{-1,0},{0,1}}
+ppvkey:fixed(true)
+s=ppscreen:size()
+ppvkey:center(s.width/2,s.height/2)
+fighter:pos(ppvkey:center()-pppoint(16,16))
+
+function start()
+  if ppvkey:touch() then
+    fighter:move(mv[ppvkey:dir(4)+1])
+    ppgraph:print(ppvkey:dir(4))
+  end
+  ppgraph:put(ppvkey:center()-pppoint(16,16),7)
+  fighter:draw()
+end</code></pre></div></div>
+
+</div>
+
+	</div>
+
+	<div data-role="footer" data-theme="d">
+		<h4>PicoPicoGameEngine</h4> 
+		<a href="#" data-role="button" data-rel="back" data-icon="arrow-l" class="ui-btn-left">Back</a>
+		<a href="../index.html" class="ui-btn-right">TOP</a>
+	</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html> 
+<html> 
+	<head> 
+	<title>PicoPicoGameEngine</title> 
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=no"> 
+	<link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
+	<link rel="stylesheet" href="../picoapi.css" />
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js"></script>
+</head> 
+<body> 
+
+<div data-role="page" id="ppaccelerometer">
+	<div data-role="header" data-theme="d">
+		<h1>ppaccelerometer</h1>
+		<a href="#" data-role="button" data-rel="back" data-icon="arrow-l" class="ui-btn-left">Back</a>
+		<a href="../index.html" class="ui-btn-right">TOP</a>
+	</div><!-- /header -->
+
+	<div data-role="content">	
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppaccelerometer:start(interval)</h3>
+<p class="pico-desc">加速度センサーを稼働させます。intervalでセンサーの計測間隔を指定できます。</p>
+
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+					<pre><code>ac=ppaccelerometer
+
+ac:start(100)
+
+function start()
+  local v=ac:value()
+  ppgraph:print(&quot;X:&quot;..v.x)
+  ppgraph:move(0,16)
+  ppgraph:print(&quot;Y:&quot;..v.y)
+  ppgraph:move(0,16)
+  ppgraph:print(&quot;Z:&quot;..v.z)
+end</code></pre></div></div>
+
+
+</div>
+    
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppaccelerometer:stop()</h3>
+<p class="pico-desc">加速度センサーを止めます。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppaccelerometer:isAvailable()</h3>
+<p class="pico-desc">加速度センサーが利用可能か調べます。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppaccelerometer:value()</h3>
+<p class="pico-desc">加速度センサーの値を取得します。</p>
+</div>
+
+	</div>
+
+	<div data-role="footer" data-theme="d">
+		<h4>PicoPicoGameEngine</h4> 
+		<a href="#" data-role="button" data-rel="back" data-icon="arrow-l" class="ui-btn-left">Back</a>
+		<a href="../index.html" class="ui-btn-right">TOP</a>
+	</div>
+</div>
+
+</body>
+</html>

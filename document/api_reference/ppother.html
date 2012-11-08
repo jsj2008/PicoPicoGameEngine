@@ -1,0 +1,143 @@
+<!DOCTYPE html> 
+<html> 
+	<head> 
+	<title>PicoPicoGameEngine</title> 
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=no"> 
+	<link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
+	<link rel="stylesheet" href="../picoapi.css" />
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js"></script>
+</head> 
+<body> 
+
+
+<div data-role="page" id="ppother">
+	<div data-role="header" data-theme="d">
+		<h1>その他の関数</h1>
+		<a href="#" data-role="button" data-rel="back" data-icon="arrow-l" class="ui-btn-left">Back</a>
+		<a href="../index.html" class="ui-btn-right">TOP</a>
+	</div><!-- /header -->
+
+	<div data-role="content">	
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>pphitcheck({a...},{b...},function(b,a) ... end)</h3>
+<p class="pico-desc">2つのオブジェクト(テーブル)の当たり判定を行います。
+	オブジェクトは以下の組み合わせのパラメータを持つ必要があります。</p>
+	
+<p class="pico-desc">距離判定の場合</p>
+<pre><code>{
+  x=X座標,
+  y=Y座標,
+  hitmask=当たり判定マスク,
+  hitlength=当たり判定距離,
+  hitcenter=当たり判定の中心座標{x,y}
+}</code></pre>
+
+<p class="pico-desc">矩形判定の場合</p>
+<pre><code>{
+  x=X座標,
+  y=Y座標,
+  hitmask=当たり判定マスク,
+  hitrect=当たり判定矩形{x,y,width,height}
+}</code></pre>
+
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--enemyとplayerの接触判定します(距離判定)
+pptex:default(pptex:load("main.png"))
+
+enemy = ppsprite.new(10)
+for k,v in pairs(enemy) do
+	v.x = math.random(0,10)*32
+	v.y = math.random(0,10)*32
+	v.hitmask = 1      --相手のhitmaskとAndした結果0でない相手と当たり判定します
+	v.hitlength = 8    --距離8
+	v.hitcenter = pppoint(16,16)  --中心は16,16の位置
+	v:tile(2)
+	ppgraph:append(v)
+end
+
+player = ppsprite.new()
+player.x = 100
+player.y = 100
+player.hitmask = 1      --相手のhitmaskとAndした結果0でない相手と当たり判定します
+player.hitlength = 8    --距離8
+player.hitcenter = pppoint(16,16)  --中心は16,16の位置
+player:tile(1)
+ppgraph:append(player)
+
+function start()
+	player:drag(pptouch())
+	pphitcheck(enemy,{player},function(a,b)
+		ppgraph:print("HIT!")	--接触すると表示
+	end)
+end
+
+--enemyとplayerの接触判定します(矩形判定)
+pptex:default(pptex:load("main.png"))
+
+enemy = ppsprite.new(10)
+for k,v in pairs(enemy) do
+	v.x = math.random(0,10)*32
+	v.y = math.random(0,10)*32
+	v.hitmask = 1
+	v.hitrect = pprect(0,0,32,32)
+	v:tile(2)
+	ppgraph:append(v)
+end
+
+player = ppsprite.new()
+player.x = 100
+player.y = 100
+player.hitmask = 1
+player.hitrect = pprect(0,0,32,32)
+player:tile(1)
+ppgraph:append(player)
+
+function start()
+	player:drag(pptouch())
+	pphitcheck(enemy,{player},function(a,b)
+		ppgraph:print("HIT!")
+	end)
+end</code></pre></div></div>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>ppforeach({a...},function(index,value) ... end)</h3>
+<p class="pico-desc">配列テーブルをイテレートします。</p>
+</div>
+
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>pplength({point1},{point2})</h3>
+<p class="pico-desc">2点間の距離を計算します。</p>
+</div>
+	
+<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
+<h3>pptouch()</h3>
+<p class="pico-desc">
+	タッチ位置を{x=X座標,y=Y座標}の配列で返します。
+	</p>
+
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--タッチ座標を表示します
+function start()
+  t=pptouch()
+  for k,v in pairs(t) do
+    ppgraph:print(v.x..","..v.y)
+    ppgraph:move(0,16)
+  end
+end</code></pre></div></div>
+</div>
+
+	</div>
+
+	<div data-role="footer" data-theme="d">
+		<h4>PicoPicoGameEngine</h4> 
+		<a href="#" data-role="button" data-rel="back" data-icon="arrow-l" class="ui-btn-left">Back</a>
+		<a href="../index.html" class="ui-btn-right">TOP</a>
+	</div>
+</div>
+
+</body>
+</html>
