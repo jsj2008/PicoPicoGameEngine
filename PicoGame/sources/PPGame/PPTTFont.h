@@ -12,8 +12,6 @@
 	インクルードファイル
 -----------------------------------------------------------------------------------------------*/
 
-#include <freetype/ft2build.h>
-#include FT_FREETYPE_H
 #include <string>
 #include "PPWorld.h"
 #include "PPGameTexture.h"
@@ -168,7 +166,7 @@ public:
 private:
 	PPTTFontImage* getFreeTile();
 
-	int drawbitmap(PPTTFontTile* tile,FT_Bitmap* bitmap,FT_Int x,FT_Int y);
+	int drawbitmap(PPTTFontTile* tile,void* _bitmap,signed int x,signed int y);
 	
 	int gridX() {return _gridX;}
 	int gridY() {return _gridY;}
@@ -176,8 +174,12 @@ private:
 	int _gridX;
 	int _gridY;
 
+#if 1
+	void* ftfont;
+#else
 	FT_Library library;
 	FT_Face face;
+#endif
 
 //	int width;
 //	int height;

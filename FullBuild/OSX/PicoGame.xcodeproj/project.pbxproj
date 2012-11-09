@@ -449,14 +449,14 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				HEADER_SEARCH_PATHS = "\"$(PROJECT_NAME)/../../../freetype/sources/freetype/\"/**";
+				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "PicoGame/PicoGame-Info.plist";
 				OTHER_LDFLAGS = (
 					"-lz",
 					"-lxml2",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				USER_HEADER_SEARCH_PATHS = "\"$(PROJECT_NAME)/../../freetype/sources/freetype/include\"/**";
+				USER_HEADER_SEARCH_PATHS = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -480,14 +480,14 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PicoGame/PicoGame-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
-				HEADER_SEARCH_PATHS = "\"$(PROJECT_NAME)/../../../freetype/sources/freetype/\"/**";
+				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "PicoGame/PicoGame-Info.plist";
 				OTHER_LDFLAGS = (
 					"-lz",
 					"-lxml2",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				USER_HEADER_SEARCH_PATHS = "\"$(PROJECT_NAME)/../../freetype/sources/freetype/include\"/**";
+				USER_HEADER_SEARCH_PATHS = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

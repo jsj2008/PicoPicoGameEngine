@@ -19,6 +19,14 @@
 #include "PPGameUtil.h"
 #include "PPGameSprite.h"
 
+#include <freetype/ft2build.h>
+#include FT_FREETYPE_H
+
+typedef struct _FTFONT {
+	FT_Library library;
+	FT_Face face;
+} FTFONT;
+
 int PPTTFontImage::gwidth(PPTTFont* font) {
 	return width/font->tileWidth();
 }
@@ -99,7 +107,7 @@ static unsigned int ConvertCharUTF8toUTF32( const char* string, int* bytes )
     return ch;
 }
 
-PPTTFont::PPTTFont(PPWorld* world,const char* name,int size,int basewidth,int baseheight,int tilenum) : face(NULL),library(NULL),base(NULL),tile(NULL),fontTile(NULL)
+PPTTFont::PPTTFont(PPWorld* world,const char* name,int size,int basewidth,int baseheight,int tilenum) : ftfont(NULL),base(NULL),tile(NULL),fontTile(NULL)
 {
 #ifdef __COCOS2DX__
 	unsigned long datasize;
@@ -128,20 +136,26 @@ PPTTFont::PPTTFont(PPWorld* world,const char* name,int size,int basewidth,int ba
 	newFontCount = 0;
 	tileCount = 0;
 	texture = 0;
+	ftfont = calloc(1,sizeof(FTFONT));
+	FTFONT* f=(FTFONT*)ftfont;
 	if (load(path,size)) {
-		if (face) FT_Done_Face(face);
-		if (library) FT_Done_FreeType(library);
+		if (f->face) FT_Done_Face(f->face);
+		if (f->library) FT_Done_FreeType(f->library);
 		if (base) delete base;
-		face = NULL;
-		library = NULL;
+		f->face = NULL;
+		f->library = NULL;
 		base = NULL;
 	}
 }
 
 PPTTFont::~PPTTFont()
 {
-	if (face) FT_Done_Face(face);
-	if (library) FT_Done_FreeType(library);
+	FTFONT* f=(FTFONT*)ftfont;
+	if (f) {
+		if (f->face) FT_Done_Face(f->face);
+		if (f->library) FT_Done_FreeType(f->library);
+		free(f);
+	}
 //	if (pixel) delete pixel;
 	if (base) delete base;
 	if (fontTile) {
@@ -162,6 +176,7 @@ PPTTFont::~PPTTFont()
 int PPTTFont::load(const char* name,int size)
 {
 //printf("load %s size %d\n",name,size);
+	FTFONT* f=(FTFONT*)ftfont;
 	if (tile) {
 		for (int t=0;t<tileCount;t++) {
 			if (tile[t]) delete tile[t];
@@ -174,29 +189,29 @@ int PPTTFont::load(const char* name,int size)
 		fontTile[i] = NULL;
 	}
 	FT_Error error = 0;
-	if (library == NULL) {
-		error = FT_Init_FreeType(&library);
+	if (f->library == NULL) {
+		error = FT_Init_FreeType(&f->library);
 	}
-	if (face != NULL) {
-		FT_Done_Face(face);
-		face = NULL;
+	if (f->face != NULL) {
+		FT_Done_Face(f->face);
+		f->face = NULL;
 	}
-	if (face == NULL) {
-		error = FT_New_Face(library,name,0,&face);
+	if (f->face == NULL) {
+		error = FT_New_Face(f->library,name,0,&f->face);
 		if (error != 0) {
 			std::string s = name;
 			s += " (loadTTF)";
 			PPReadErrorSet(s.c_str());
 			return error;
 		}
-		error = FT_Set_Pixel_Sizes(face, size, size);
+		error = FT_Set_Pixel_Sizes(f->face, size, size);
 //printf("face->bbox.yMax %d,h %d,height %d\n",(int)face->bbox.yMax,h,face->height);
 //printf("face->size->height %d\n",(int)face->size->metrics.height);
-		baseline = (int)(-face->size->metrics.descender+(face->size->metrics.height-(face->size->metrics.ascender-face->size->metrics.descender)));
+		baseline = (int)(-f->face->size->metrics.descender+(f->face->size->metrics.height-(f->face->size->metrics.ascender-f->face->size->metrics.descender)));
 //printf("baseline %d\n",baseline);
 	}
 	_gridX = size;
-	_gridY = face->size->metrics.height>>6;
+	_gridY = f->face->size->metrics.height>>6;
 //printf("gridx %d,gridy %d\n",_gridX,_gridY);
 	tileCount = base->gwidth(this)*base->gheight(this);
 	tile = new PPTTFontImage*[tileCount];
@@ -241,8 +256,9 @@ void PPTTFont::cacheAlphabetAndNumeric()
 	newFontCount = 0;
 }
 
-int PPTTFont::drawbitmap(PPTTFontTile* tile,FT_Bitmap* bitmap,FT_Int x,FT_Int y)
+int PPTTFont::drawbitmap(PPTTFontTile* tile,void* _bitmap,signed int x,signed int y)
 {
+	FT_Bitmap* bitmap = (FT_Bitmap*)_bitmap;
 	FT_Int  i, j, p, q;
 	FT_Int  x_max = x + bitmap->width;
 	FT_Int  y_max = y + bitmap->rows;
@@ -293,7 +309,8 @@ PPTTFontTile* PPTTFont::length(const char* string)
 
 PPTTFontTile* PPTTFont::image(const char* string)
 {
-	if (face == NULL) return NULL;
+	FTFONT* f=(FTFONT*)ftfont;
+	if (f->face == NULL) return NULL;
 //printf("draw %s\n",string);
 	for (int i=0;i<maxTile;i++) {
 		if (fontTile[i]) {
@@ -305,7 +322,7 @@ PPTTFontTile* PPTTFont::image(const char* string)
 	}
 
 	FT_Error error = 0;
-	FT_GlyphSlot slot = face->glyph;
+	FT_GlyphSlot slot = f->face->glyph;
 	FT_Matrix matrix;
 	FT_Vector pen;
 	float angle=0;
@@ -318,7 +335,7 @@ PPTTFontTile* PPTTFont::image(const char* string)
 	FT_Vector min={0,0};
 	FT_Vector max={0,0};
 
-	int target_height = face->size->metrics.height>>6;
+	int target_height = f->face->size->metrics.height>>6;
 
 	pen.x = 0;
 	pen.y = baseline;
@@ -331,8 +348,8 @@ PPTTFontTile* PPTTFont::image(const char* string)
 	for (int n=0;string[n]!=0;) {
 		int len;
 		unsigned int ch = ConvertCharUTF8toUTF32(&string[n],&len);
-		FT_Set_Transform(face,&matrix,&pen);
-		error = FT_Load_Char(face,ch,FT_LOAD_RENDER);
+		FT_Set_Transform(f->face,&matrix,&pen);
+		error = FT_Load_Char(f->face,ch,FT_LOAD_RENDER);
 		
 		int x = slot->bitmap_left;
 		int y = target_height-slot->bitmap_top;
@@ -426,14 +443,14 @@ PPTTFontTile* PPTTFont::image(const char* string)
 	for (int n=0;string[n]!=0;) {
 		int len;
 		unsigned int ch = ConvertCharUTF8toUTF32(&string[n],&len);
-		FT_Set_Transform(face,&matrix,&pen);
-		error = FT_Load_Char(face,ch,FT_LOAD_RENDER);
+		FT_Set_Transform(f->face,&matrix,&pen);
+		error = FT_Load_Char(f->face,ch,FT_LOAD_RENDER);
 		int t = drawbitmap(ntile,&slot->bitmap,slot->bitmap_left,target_height-slot->bitmap_top);
 		if (h < t) h = t;
 		pen.x += slot->advance.x;
 		pen.y += slot->advance.y;
 		if (n == 0) {
-			ntile->bearingX = face->glyph->metrics.horiBearingX>>6;
+			ntile->bearingX = f->face->glyph->metrics.horiBearingX>>6;
 		}
 		n += getCharBytesUTF8(&string[n]);
   	}
