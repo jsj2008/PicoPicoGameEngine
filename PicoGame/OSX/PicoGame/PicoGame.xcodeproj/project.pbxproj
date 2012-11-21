@@ -22,6 +22,7 @@
 
 /* Begin PBXBuildFile section */
 		6B0F20BE15B971C400588520 /* PPScriptGame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC244915B285930051C16B /* PPScriptGame.cpp */; };
+		6B0F4028164E035700BEEABD /* PPGameStart.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC244715B285930051C16B /* PPGameStart.cpp */; };
 		6B5429C2162D332A00D1620C /* PPAnimation.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B5429C1162D332A00D1620C /* PPAnimation.h */; };
 		6B89307815B80E1D00402E76 /* PPGameBGM.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC24A815B285930051C16B /* PPGameBGM.m */; };
 		6B89307915B80E1D00402E76 /* PPGameController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC24AA15B285930051C16B /* PPGameController.mm */; };
@@ -118,9 +119,12 @@
 		6BAC25FE15B293160051C16B /* PPGameViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC249A15B285930051C16B /* PPGameViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6BAC260115B294FA0051C16B /* PPGame.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC245D15B285930051C16B /* PPGame.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6BAC260715B295AE0051C16B /* QBSoundMac.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC248C15B285930051C16B /* QBSoundMac.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6BFF2F5A164D2EF400767B64 /* PPTTFont-OSX.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6BFF2F58164D2EF400767B64 /* PPTTFont-OSX.mm */; };
+		6BFF2F5D164D332700767B64 /* PPTTFont-Def.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BFF2F5C164D332700767B64 /* PPTTFont-Def.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6B0F403D164E072300BEEABD /* PPTTFont-iOS.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = "PPTTFont-iOS.mm"; sourceTree = "<group>"; };
 		6B5429C1162D332A00D1620C /* PPAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPAnimation.h; sourceTree = "<group>"; };
 		6B89307C15B80E4400402E76 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		6B89307D15B80E4400402E76 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -294,6 +298,8 @@
 		6BAC25AD15B287660051C16B /* freetype.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = freetype.framework; path = ../../../freetype/iOS/freetype/Products/freetype.framework; sourceTree = "<group>"; };
 		6BAC25AF15B287710051C16B /* CocosDenshion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocosDenshion.framework; path = ../../../CocosDenshion/iOS/CocosDenshion/Products/CocosDenshion.framework; sourceTree = "<group>"; };
 		6BAC25B115B287790051C16B /* Box2D.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Box2D.framework; path = ../../../Box2D/iOS/Box2D/Products/Box2D.framework; sourceTree = "<group>"; };
+		6BFF2F58164D2EF400767B64 /* PPTTFont-OSX.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "PPTTFont-OSX.mm"; sourceTree = "<group>"; };
+		6BFF2F5C164D332700767B64 /* PPTTFont-Def.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PPTTFont-Def.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -446,6 +452,7 @@
 				6BAC24A115B285930051C16B /* QBMusicTrack.m */,
 				6BAC24A215B285930051C16B /* UIImage-FontTexture.h */,
 				6BAC24A315B285930051C16B /* UIImage-FontTexture.mm */,
+				6B0F403D164E072300BEEABD /* PPTTFont-iOS.mm */,
 			);
 			path = iOS;
 			sourceTree = "<group>";
@@ -461,6 +468,7 @@
 				6BAC24AC15B285930051C16B /* PPGameView_App.mm */,
 				6BAC24AD15B285930051C16B /* PPJoyReader.cpp */,
 				6BAC24AE15B285930051C16B /* PPJoyReader.h */,
+				6BFF2F58164D2EF400767B64 /* PPTTFont-OSX.mm */,
 			);
 			path = Mac;
 			sourceTree = "<group>";
@@ -576,6 +584,7 @@
 				6BAC251615B285930051C16B /* PPTMXMap.h */,
 				6BAC251715B285930051C16B /* PPTTFont.cpp */,
 				6BAC251815B285930051C16B /* PPTTFont.h */,
+				6BFF2F5C164D332700767B64 /* PPTTFont-Def.h */,
 				6BAC251915B285930051C16B /* PPUIScrollView.cpp */,
 				6BAC251A15B285930051C16B /* PPUIScrollView.h */,
 				6BAC251B15B285930051C16B /* PPUIText.cpp */,
@@ -660,6 +669,7 @@
 				6BAC25F815B290880051C16B /* QBSound.h in Headers */,
 				6BA522F015B96D97006749D7 /* PicoGame-Prefix.pch in Headers */,
 				6B5429C2162D332A00D1620C /* PPAnimation.h in Headers */,
+				6BFF2F5D164D332700767B64 /* PPTTFont-Def.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -786,6 +796,8 @@
 				6B89307A15B80E1D00402E76 /* PPGameView_App.mm in Sources */,
 				6B89307B15B80E1D00402E76 /* PPJoyReader.cpp in Sources */,
 				6B0F20BE15B971C400588520 /* PPScriptGame.cpp in Sources */,
+				6BFF2F5A164D2EF400767B64 /* PPTTFont-OSX.mm in Sources */,
+				6B0F4028164E035700BEEABD /* PPGameStart.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

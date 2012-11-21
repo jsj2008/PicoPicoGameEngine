@@ -27,6 +27,26 @@
 <h3>pptext.new()<br/>
 pptext.new(n)</h3>
 <p class="pico-desc">pptextオブジェクトを作成します。引数nを指定すると指定した数だけpptextオブジェクトが入ったテーブルを返します。</p>
+
+
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>text = pptext.new()
+text:frameRect(0,0,320,200)
+text:lineHeight(ppfont:height())
+text:clear()
+text:autoScroll(true)
+text:autoCenter(false)
+text:add("01:あいうえお")
+text:add("02:かきくけこ")
+text:add("03:ABCDEFG")
+text:add("04:↑↓←→△▲▽▼")
+
+function start()
+	text:draw()
+end</code></pre>
+
+<img src="./image/screen-shot 2012-11-07 14.04.54.png"/></div></div>
+
 </div>
 
 <div data-role="collapsible" data-theme="c" data-content-theme="c"> 

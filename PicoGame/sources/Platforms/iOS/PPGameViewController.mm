@@ -23,12 +23,18 @@
 		self.game = game;
 		[game release];
 	}
+	
+//	if (![[UIScreen mainScreen] scale] == 1.0) {
+//		if ([self.view respondsToSelector:@selector(setContentScaleFactor:)]) {
+//			[self.view setContentScaleFactor:2];
+//		}
+//	}
 
     iCadeReaderView *control = [[iCadeReaderView alloc] initWithFrame:CGRectZero];
     [self.view addSubview:control];
     control.active = YES;
     control.delegate = self;
-    [control release];    
+    [control release];
 }
 
 - (void)viewWillAppear:(BOOL)animated {

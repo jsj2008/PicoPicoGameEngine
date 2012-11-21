@@ -1,0 +1,22 @@
+g=ppgraph
+--ppfont:loadTTF("MikachanPB.ttf","System",18)
+ppfont:loadTTF("System","System",18)
+ppfont:set("System")
+
+function start()
+  g:fill(ppscreen:size(),g.blue)
+	ppfont:set("default")
+	g:locate(0,0)
+	g:print("HELLO WORLD")
+	ppfont:set("mini")
+	g:move(0,16)
+	g:print("HELLO WORLD")
+	ppfont:set("half")
+	g:move(0,16)
+	g:print("HELLO WORLD")
+	ppfont:set("System")
+	g:move(0,16)
+  g:print("HELLOあいうえおiiixxxgg")
+	g:move(0,16)
+  g:print("abcdefgモスバーガー")
+end

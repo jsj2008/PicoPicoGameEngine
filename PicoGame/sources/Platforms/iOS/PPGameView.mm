@@ -139,6 +139,8 @@ void __PPGame_Set3GSLater(int later);
 			UITouch* t;
 			while (t = [e nextObject]) {
 				CGPoint location = [t locationInView:self];
+				location.x *= self.contentScaleFactor;
+				location.y *= self.contentScaleFactor;
 				[set addObject:[NSValue valueWithCGPoint:location]];
 			}
 			_game.touchesSet = set;

@@ -8,12 +8,8 @@
 
 #import <PicoGame/PPGameViewController.h>
 
-@interface PicoGameAppDelegate : NSObject <UIApplicationDelegate> {
-    UIWindow *window;
-    PPGameViewController *viewController;
-}
+@interface PicoGameAppDelegate : NSObject <UIApplicationDelegate>
 
-@property (nonatomic, retain) IBOutlet UIWindow *window;
-@property (nonatomic, retain) IBOutlet PPGameViewController *viewController;
+@property (nonatomic, strong) UIWindow *window;
 
 @end

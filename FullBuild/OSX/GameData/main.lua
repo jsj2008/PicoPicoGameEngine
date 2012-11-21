@@ -3,6 +3,9 @@ g=ppgraph
 sc=ppscreen
 base=pprect(0,0,320,480)
 
+ppfont:loadTTF("System","System",24)
+ppfont:set("System")
+
 sgameover="GAME OVER"
 score_key="carrace-hiscore"
 stitle="CAR RACE"
@@ -281,8 +284,6 @@ function mainloop()
   end
 end
 
-print("HEllo")
-
 function start()
   title()
   score=0
@@ -299,3 +300,18 @@ function start()
   mainloop()
   gameover()
 end
+
+--[[
+g=ppgraph
+--ppfont:loadTTF("MikachanPB.ttf","System",18)
+ppfont:loadTTF("System","System",18)
+ppfont:set("System")
+
+function start()
+  g:fill(ppscreen:size(),g.blue)
+  g:locate(0,0)
+  g:print("HELLOあいうえおiiixxxgg")
+  g:locate(0,24)
+  g:print("abcdefgモスバーガー")
+end
+]]

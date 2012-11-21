@@ -41,7 +41,6 @@
 		6B8930DA15B8165200402E76 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B8930A415B813D700402E76 /* CoreData.framework */; };
 		6B8930DB15B8165400402E76 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B8930A515B813D700402E76 /* Foundation.framework */; };
 		6B8930DD15B8180100402E76 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B8930DC15B8180100402E76 /* QuartzCore.framework */; };
-		6B8930F415B8189E00402E76 /* PPGameStart.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6B8930F315B8189E00402E76 /* PPGameStart.cpp */; };
 		6B8930F615B81AED00402E76 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B8930F515B81AED00402E76 /* Carbon.framework */; };
 		6B89310915B81D8900402E76 /* current.tmx in Resources */ = {isa = PBXBuildFile; fileRef = 6B8930FC15B81D8900402E76 /* current.tmx */; };
 		6B89310A15B81D8900402E76 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 6B8930FD15B81D8900402E76 /* icon.png */; };
@@ -84,7 +83,6 @@
 		6B8930D415B814EC00402E76 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
 		6B8930D615B8155600402E76 /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = System/Library/Frameworks/AudioUnit.framework; sourceTree = SDKROOT; };
 		6B8930DC15B8180100402E76 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		6B8930F315B8189E00402E76 /* PPGameStart.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPGameStart.cpp; sourceTree = "<group>"; };
 		6B8930F515B81AED00402E76 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
 		6B8930FC15B81D8900402E76 /* current.tmx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = current.tmx; sourceTree = "<group>"; };
 		6B8930FD15B81D8900402E76 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
@@ -181,7 +179,6 @@
 			children = (
 				6BC17870162E401600AE9E3C /* MainViewController.h */,
 				6BC17871162E401600AE9E3C /* MainViewController.mm */,
-				6B8930F315B8189E00402E76 /* PPGameStart.cpp */,
 				6B8930B515B813D700402E76 /* MainMenu.xib */,
 				6B8930A715B813D700402E76 /* Supporting Files */,
 				6B8930C115B8144900402E76 /* Box2D.framework */,
@@ -336,7 +333,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				6B8930AD15B813D700402E76 /* main.m in Sources */,
-				6B8930F415B8189E00402E76 /* PPGameStart.cpp in Sources */,
 				6BC17872162E401600AE9E3C /* MainViewController.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

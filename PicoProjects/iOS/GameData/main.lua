@@ -138,6 +138,15 @@ function title()
     end
     b:draw()
     dsc(hiscore)
+	g:pos(0,16)
+	g:print(sc:size().width..","..sc:size().height)
+	
+	local t=sc:arrayto(pptouch())
+	if #t > 0 then
+		g:move(0,16)
+		g:print(t[1].x..","..t[1].y)
+	end
+
     g:update()
   end
   ppsemml[1]:play(playse)

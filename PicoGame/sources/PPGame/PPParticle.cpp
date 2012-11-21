@@ -14,6 +14,7 @@
 #include "PPGameSprite.h"
 #include <string>
 #include <zlib.h>
+#include <float.h>
 
 #ifdef _WIN32
 #define __USE_PPSAX__
@@ -252,7 +253,11 @@ void PPParticle::init(PPParticleEmitter* emitter)
 	
 	// Set the default diameter of the particle from the source position
 	radius = emitter->maxRadius + emitter->maxRadiusVariance * RANDOM_MINUS_1_TO_1();
-	radiusDelta = (emitter->maxRadius / emitter->particleLifeSpan) * (1.0 / MAXIMUM_UPDATE_RATE);
+	if (emitter->particleLifeSpan == 0) {
+		radiusDelta = 0;
+	} else {
+		radiusDelta = (emitter->maxRadius / emitter->particleLifeSpan) * (1.0 / MAXIMUM_UPDATE_RATE);
+	}
 	angle = DEGREES_TO_RADIANS(emitter->angle + emitter->angleVariance * RANDOM_MINUS_1_TO_1());
 	degreesPerSecond = DEGREES_TO_RADIANS(emitter->rotatePerSecond + emitter->rotatePerSecondVariance * RANDOM_MINUS_1_TO_1());
     
@@ -260,10 +265,10 @@ void PPParticle::init(PPParticleEmitter* emitter)
     tangentialAcceleration = emitter->tangentialAcceleration;
 	
 	// Calculate the particles life span using the life span and variance passed in
-	float t = emitter->particleLifeSpan + emitter->particleLifeSpanVariance * RANDOM_0_TO_1();
+	float t = emitter->particleLifeSpan + emitter->particleLifeSpanVariance * RANDOM_MINUS_1_TO_1();
 	timeToLive = MAX(0, t);
 	
-	if (timeToLive == 0) timeToLive = 1;
+	if (timeToLive == 0) timeToLive = FLT_MIN;
 
 	// Calculate the particle size using the start and finish particle sizes
 	float particleStartSize = emitter->startParticleSize + emitter->startParticleSizeVariance * RANDOM_MINUS_1_TO_1();
@@ -758,6 +763,8 @@ bool PPParticleEmitter::loadPNGData(unsigned char* pngZipData,unsigned long leng
 				world()->projector->textureManager->setTexture(poly._texture,pixel,width,height,bytesPerRow,option);
 				tex->bindTexture();
 				r = true;
+				poly.texTileSize.width = tex->width;
+				poly.texTileSize.height = tex->height;
 #else
 				if (!world()->projector->textureManager->setTexture(poly._texture,pixel,width,height,bytesPerRow)) {
 					PPGameTexture* tex = new PPGameTexture();
@@ -812,6 +819,7 @@ static void PPParticle_startElement(void *ctx, const PPXmlChar *name, const PPXm
 	}else
 	if(strcasecmp(elementName.c_str(),"particleLifeSpan") == 0) {
 		p->particleLifeSpan = atof(valueForKey("value",atts));
+		if (p->particleLifeSpan <= 0) p->particleLifeSpan = FLT_MIN;
 	}else
 	if(strcasecmp(elementName.c_str(),"particleLifespanVariance") == 0) {
 		p->particleLifeSpanVariance = atof(valueForKey("value",atts));
@@ -921,7 +929,17 @@ static void PPParticle_startElement(void *ctx, const PPXmlChar *name, const PPXm
 		std::string* dataStr = new std::string(valueForKey("data",atts));
 		unsigned int length = (unsigned int)dataStr->length();
 		unsigned char* pixel = base64decode(dataStr->c_str(),&length);
-		p->loadPNGData(pixel,length);
+		if (!p->loadPNGData(pixel,length)) {
+			PPGameTextureOption option;
+			PPGameTextureManager* manager = p->world()->projector->textureManager;
+			int texture = manager->loadTexture(p->textureName.c_str(),option);
+			if (texture>=0) {
+				p->poly.initTexture(texture);
+				p->poly.texTileSize.width = manager->texture[texture]->width;
+				p->poly.texTileSize.height = manager->texture[texture]->height;
+			}
+			PPReadErrorReset();
+		}
 		delete dataStr;
 	}
 }
@@ -991,6 +1009,8 @@ static int funcSet(lua_State* L)
 		PT_NUM("speedVariance",speedVariance);
 		PT_NUM("particleLifeSpan",particleLifeSpan);
 		PT_NUM("particleLifeSpanVariance",particleLifeSpanVariance);
+		PT_NUM("particleLifespan",particleLifeSpan);
+		PT_NUM("particleLifespanVariance",particleLifeSpanVariance);
 		PT_NUM("angle",angle);
 		PT_NUM("angleVariance",angleVariance);
 		PT_NUM("radialAcceleration",radialAcceleration);
@@ -1052,7 +1072,8 @@ static int funcSet(lua_State* L)
 		m->finishColorVariance.b = s->tableFieldNumber(L,0,"finishColorVariance","b",3,m->finishColorVariance.b*255)/255.0;
 		m->finishColorVariance.a = s->tableFieldNumber(L,0,"finishColorVariance","a",4,m->finishColorVariance.a*255)/255.0;
 
-		if (m->particleLifeSpan <= 0) m->particleLifeSpan = 1;
+		if (m->particleLifeSpan <= 0) m->particleLifeSpan = FLT_MIN;
+
 		m->emissionRate = m->maxParticles / m->particleLifeSpan;
 
 		{
@@ -1078,7 +1099,6 @@ static int funcSet(lua_State* L)
 		PT_INT("animationLoopPoint",animationLoopPoint);
 		if (m->animationLoopPoint <= 0) m->animationLoopPoint = 1;
 		if (m->animationLoopPoint > m->animationDataLength) m->animationLoopPoint = m->animationDataLength;
-
 	} else {
 		lua_createtable(L,0,35);
 		lua_pushinteger(L,m->emitterType);

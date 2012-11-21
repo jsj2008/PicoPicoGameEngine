@@ -25,6 +25,43 @@
 <div data-role="collapsible" data-theme="c" data-content-theme="c"> 
 <h3>ppscreen:viewport({x,y, width,height})</h3>
 <p class="pico-desc">描画領域を指定します。引数がない場合は設定値を返します。</p>
+
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--仮想スクリーンサイズを320x320で処理して、２つのサブビューポートを作ります
+g=ppgraph
+sc=ppscreen
+base=pprect(0,0,320,320)
+t=pptex:load("main.png")
+pptex:default(t)
+
+function start()
+	sc:viewport(sc:layout(base))
+	local so=sc:offset()
+	local ss=sc:scale()
+
+	g:fill(base,g.blue)
+	g:locate(0+32,0+8)
+	g:print("BLUE VIEWPORT")
+	g:put(0,0,2)
+	
+	--サブ1
+	local r = pprect(10,50,300,100)
+	sc:viewport(r*ss+so)
+	g:fill(r,g.green)
+	g:locate(10+32,50+8)
+	g:print("GREEN VIEWPORT")
+	g:put(10,50,3)
+	
+	--サブ2
+	local r = pprect(10,170,300,100)
+	sc:viewport(r*ss+so)
+	g:fill(r,g.orange)
+	g:locate(10+32,170+8)
+	g:print("ORANGE VIEWPORT")
+	g:put(10,170,4)
+end
+
+<img src="./image/screen-shot 2012-09-11 15.09.39.png"/></code></pre></div></div>
 </div>
 
 <div data-role="collapsible" data-theme="c" data-content-theme="c"> 

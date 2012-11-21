@@ -102,6 +102,29 @@ end</code></pre></div></div>
 <h3>ppgraph:print(string,{r,g,b,a})</h3>
 <p class="pico-desc">文字列を表示します。ビットマップフォントでは英数、ひらがな、カタカナのみです。
     描画色を省略した場合はppgraph:color()で指定した色で描画します。</p>
+
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--画面の中央に文字を描画します
+g=ppgraph
+sc=ppscreen
+base=pprect(0,0,320,480)
+
+function drawtext(str,x,y)
+  local r=ppfont:size(str)
+  r.x=x
+  r.y=y
+  local p=g:layout(r,true,true,base)
+  g:locate(p)
+  g:print(str)
+end
+
+function start()
+  sc:viewport(sc:layout(base))
+  drawtext("HELLO WORLD",0,-128)
+  drawtext("HELLO WORLD",0,0)
+  drawtext("HELLO WORLD",0,128)
+end</code></pre></div></div>
+
 </div>
 
 <div data-role="collapsible" data-theme="c" data-content-theme="c"> 

@@ -28,6 +28,35 @@
 <h3>ppmap.new()<br/>
 ppmap.new(n)</h3>
 <p class="pico-desc">ppmapオブジェクトを作成します。引数nを指定すると指定した数だけppmapオブジェクトが入ったテーブルを返します。</p>
+
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+
+
+<pre><code>--TextVRAM風に表示 逆スクロールします
+map=ppmap.new()
+map:mapSize(16,16)
+map:area(0,0,16,16)
+map:texture(ppfont:texture())
+map:tileSize(8,8)
+map:scale(2,2)
+for i=1,255 do
+	map:tile(i%16,i/16,i)
+end
+map.timer=0
+
+function start()
+  ppgraph:fill(ppscreen:size(),ppgraph.blue)
+  map.timer=map.timer+1
+  if map.timer > 8 then
+	map:scroll(0,1)
+	map.timer=0
+  end
+  map:draw()
+end
+
+<img src="./image/screen-shot 2012-11-07 13.56.51.png"/>
+
+</code></pre></div></div>
 </div>
 
 <div data-role="collapsible" data-theme="c" data-content-theme="c"> 

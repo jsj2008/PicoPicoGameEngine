@@ -21,6 +21,8 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		6B0F401A164E02E300BEEABD /* PPGameStart.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC244715B285930051C16B /* PPGameStart.cpp */; };
+		6B110B54165C76BC00202C89 /* PicoGame.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B110B53165C76BC00202C89 /* PicoGame.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6BAC252A15B285930051C16B /* PPScriptGame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC244915B285930051C16B /* PPScriptGame.cpp */; };
 		6BAC253415B285930051C16B /* PPGame.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC245E15B285930051C16B /* PPGame.mm */; };
 		6BAC253615B285930051C16B /* PPGameMap.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC246115B285930051C16B /* PPGameMap.mm */; };
@@ -121,9 +123,11 @@
 		6BAC260515B2954D0051C16B /* iCadeState.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC249015B285930051C16B /* iCadeState.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6BAC260615B295610051C16B /* PPSensoriOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC249E15B285930051C16B /* PPSensoriOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6BAC260715B295AE0051C16B /* QBSoundMac.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC248C15B285930051C16B /* QBSoundMac.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6BFF2F43164CF10B00767B64 /* PPTTFont-iOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6BFF2F41164CF10B00767B64 /* PPTTFont-iOS.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6B110B53165C76BC00202C89 /* PicoGame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PicoGame.h; sourceTree = "<group>"; };
 		6BAC243115B284FA0051C16B /* PicoGame.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PicoGame.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6BAC243C15B284FA0051C16B /* PicoPicoGameEngine-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PicoPicoGameEngine-Info.plist"; sourceTree = "<group>"; };
 		6BAC243E15B284FA0051C16B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -136,7 +140,6 @@
 		6BAC244C15B285930051C16B /* PPScriptGameEmbbed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PPScriptGameEmbbed.h; path = ../../sources/Logic/PPScriptGameEmbbed.h; sourceTree = SOURCE_ROOT; };
 		6BAC244F15B285930051C16B /* AppDelegate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AppDelegate.cpp; path = ../../sources/Platforms/Android/AppDelegate.cpp; sourceTree = SOURCE_ROOT; };
 		6BAC245015B285930051C16B /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = ../../sources/Platforms/Android/AppDelegate.h; sourceTree = SOURCE_ROOT; };
-		6BAC245115B285930051C16B /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = ../../sources/Platforms/Android/main.cpp; sourceTree = SOURCE_ROOT; };
 		6BAC245215B285930051C16B /* PPBaseScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PPBaseScene.cpp; path = ../../sources/Platforms/Android/PPBaseScene.cpp; sourceTree = SOURCE_ROOT; };
 		6BAC245315B285930051C16B /* PPBaseScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PPBaseScene.h; path = ../../sources/Platforms/Android/PPBaseScene.h; sourceTree = SOURCE_ROOT; };
 		6BAC245415B285930051C16B /* PPGameScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PPGameScene.cpp; path = ../../sources/Platforms/Android/PPGameScene.cpp; sourceTree = SOURCE_ROOT; };
@@ -295,6 +298,8 @@
 		6BAC25AD15B287660051C16B /* freetype.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = freetype.framework; path = ../../../freetype/iOS/freetype/Products/freetype.framework; sourceTree = "<group>"; };
 		6BAC25AF15B287710051C16B /* CocosDenshion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocosDenshion.framework; path = ../../../CocosDenshion/iOS/CocosDenshion/Products/CocosDenshion.framework; sourceTree = "<group>"; };
 		6BAC25B115B287790051C16B /* Box2D.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Box2D.framework; path = ../../../Box2D/iOS/Box2D/Products/Box2D.framework; sourceTree = "<group>"; };
+		6BFF2F41164CF10B00767B64 /* PPTTFont-iOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "PPTTFont-iOS.mm"; sourceTree = "<group>"; };
+		6BFF2F46164CF2A600767B64 /* PPTTFont-Def.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PPTTFont-Def.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -393,7 +398,6 @@
 			children = (
 				6BAC244F15B285930051C16B /* AppDelegate.cpp */,
 				6BAC245015B285930051C16B /* AppDelegate.h */,
-				6BAC245115B285930051C16B /* main.cpp */,
 				6BAC245215B285930051C16B /* PPBaseScene.cpp */,
 				6BAC245315B285930051C16B /* PPBaseScene.h */,
 				6BAC245415B285930051C16B /* PPGameScene.cpp */,
@@ -411,6 +415,7 @@
 		6BAC245C15B285930051C16B /* Cocoa */ = {
 			isa = PBXGroup;
 			children = (
+				6B110B53165C76BC00202C89 /* PicoGame.h */,
 				6BAC245D15B285930051C16B /* PPGame.h */,
 				6BAC245E15B285930051C16B /* PPGame.mm */,
 				6BAC246115B285930051C16B /* PPGameMap.mm */,
@@ -445,6 +450,7 @@
 				6BAC24A115B285930051C16B /* QBMusicTrack.m */,
 				6BAC24A215B285930051C16B /* UIImage-FontTexture.h */,
 				6BAC24A315B285930051C16B /* UIImage-FontTexture.mm */,
+				6BFF2F41164CF10B00767B64 /* PPTTFont-iOS.mm */,
 			);
 			path = iOS;
 			sourceTree = "<group>";
@@ -577,6 +583,7 @@
 				6BAC251615B285930051C16B /* PPTMXMap.h */,
 				6BAC251715B285930051C16B /* PPTTFont.cpp */,
 				6BAC251815B285930051C16B /* PPTTFont.h */,
+				6BFF2F46164CF2A600767B64 /* PPTTFont-Def.h */,
 				6BAC251915B285930051C16B /* PPUIScrollView.cpp */,
 				6BAC251A15B285930051C16B /* PPUIScrollView.h */,
 				6BAC251B15B285930051C16B /* PPUIText.cpp */,
@@ -609,6 +616,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6B110B54165C76BC00202C89 /* PicoGame.h in Headers */,
 				6BAC25FB15B292F00051C16B /* PPGameStart.h in Headers */,
 				6BAC260115B294FA0051C16B /* PPGame.h in Headers */,
 				6BAC260415B295400051C16B /* iCadeReaderView.h in Headers */,
@@ -790,6 +798,8 @@
 				6BAC259715B285930051C16B /* PPWorld.cpp in Sources */,
 				6BAC259815B285930051C16B /* QBGame.cpp in Sources */,
 				6BAC259915B285930051C16B /* QBSound.cpp in Sources */,
+				6BFF2F43164CF10B00767B64 /* PPTTFont-iOS.mm in Sources */,
+				6B0F401A164E02E300BEEABD /* PPGameStart.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -892,6 +902,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = YES;
 				DEAD_CODE_STRIPPING = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

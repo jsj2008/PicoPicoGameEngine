@@ -10,101 +10,13 @@
 -----------------------------------------------------------------------------------------------*/
 
 #include "PPTTFont.h"
-#include <math.h>
-//#include "PPGameUtil.h"
-#include <freetype/ftglyph.h>
-#ifdef __COCOS2DX__
-#include "CCFileUtils.h"
-#endif
-#include "PPGameUtil.h"
-#include "PPGameSprite.h"
-
-#include <freetype/ft2build.h>
-#include FT_FREETYPE_H
-
-typedef struct _FTFONT {
-	FT_Library library;
-	FT_Face face;
-} FTFONT;
+#include "PPTTFont-Def.h"
 
 int PPTTFontImage::gwidth(PPTTFont* font) {
 	return width/font->tileWidth();
 }
 int PPTTFontImage::gheight(PPTTFont* font) {
 	return height/font->tileHeight();
-}
-
-static unsigned getCharBytesUTF8( const char* string )
-{
-    const char ch = string[0];
-
-    // マルチバイト文字かどうか
-    if( ch & 0x80 ){
-
-        // 先頭文字かどうか
-        if( ch & 0x40 ){
-            if( !(ch & 0x20 ) ){
-                return 2;
-            }
-            else if( !(ch & 0x10) ){
-                return 3;
-            }
-            else {
-                return 4;
-            }
-        } else {
-            // 不正な文字です
-            return 0;
-        }
-    }
-    else {
-        return 1;
-    }
-}
-
-static unsigned int ConvertCharUTF8toUTF32( const char* string, int* bytes )
-{   
-    if( !string || *string == '\0' ){
-        if( bytes ){
-            *bytes = 0;
-        }
-        return 0;
-    }
-    
-    const char* p = string;
-    unsigned b  = getCharBytesUTF8( string );
-    unsigned ch = 0;
-
-    
-    switch( b ){
-    case 1:
-        ch = *p;
-        break;
-    case 2:
-        ch |= ( p[0] & 0x1F ) << 6;
-        ch |= ( p[1] & 0x3F );
-        break;
-    case 3:
-        ch |= ( p[0] & 0x0F ) << 12;
-        ch |= ( p[1] & 0x3F ) << 6;
-        ch |= ( p[2] & 0x3F );
-        break;
-    case 4:
-        ch |= ( p[0] & 0x07 ) << 18;
-        ch |= ( p[1] & 0x3F ) << 12;
-        ch |= ( p[2] & 0x3F ) << 6;
-        ch |= ( p[3] & 0x3F );
-        break;
-    default:
-        ch = 0;
-        b  = 0;
-    }
-
-    if( bytes ){
-        *bytes = b;
-    }
-
-    return ch;
 }
 
 PPTTFont::PPTTFont(PPWorld* world,const char* name,int size,int basewidth,int baseheight,int tilenum) : ftfont(NULL),base(NULL),tile(NULL),fontTile(NULL)
@@ -123,7 +35,12 @@ PPTTFont::PPTTFont(PPWorld* world,const char* name,int size,int basewidth,int ba
 	}
 	free(data);
 #else
-	std::string p = PPGameDataPath(name);
+	std::string p;
+	if (strcasecmp(name,"System") == 0) {
+		p = name;
+	} else {
+		p = PPGameDataPath(name);
+	}
 #endif
 	const char* path = p.c_str();
 	_updated = false;
@@ -145,6 +62,7 @@ PPTTFont::PPTTFont(PPWorld* world,const char* name,int size,int basewidth,int ba
 		f->face = NULL;
 		f->library = NULL;
 		base = NULL;
+		f->type = 0;
 	}
 }
 
@@ -173,6 +91,7 @@ PPTTFont::~PPTTFont()
 	}
 }
 
+#if !TARGET_OS_MAC
 int PPTTFont::load(const char* name,int size)
 {
 //printf("load %s size %d\n",name,size);
@@ -218,7 +137,7 @@ int PPTTFont::load(const char* name,int size)
 	for (int y=0;y<base->gheight(this);y++) {
 		for (int x=0;x<base->gwidth(this);x++) {
 			int t = x+y*base->gwidth(this);
-			tile[t] = new PPTTFontImage(base,x,y,gridX(),gridY());
+			tile[t] = new PPTTFontImage(base,x,y,tileWidth(),tileHeight());
 			tile[t]->retainCount = 0;
 		}
 	}
@@ -226,6 +145,7 @@ int PPTTFont::load(const char* name,int size)
 	_updated = true;
 	return error;
 }
+#endif
 
 void PPTTFont::cache(const char* str)
 {
@@ -256,20 +176,17 @@ void PPTTFont::cacheAlphabetAndNumeric()
 	newFontCount = 0;
 }
 
-int PPTTFont::drawbitmap(PPTTFontTile* tile,void* _bitmap,signed int x,signed int y)
+int PPTTFont::drawbitmap(PPTTFontTile* tile,signed int width,signed int height,unsigned char* buffer,signed int x,signed int y)
 {
-	FT_Bitmap* bitmap = (FT_Bitmap*)_bitmap;
-	FT_Int  i, j, p, q;
-	FT_Int  x_max = x + bitmap->width;
-	FT_Int  y_max = y + bitmap->rows;
+	signed int  i, j, p, q;
+	signed int  x_max = x + width;
+	signed int  y_max = y + height;
 
 	int h = 0;
 	for (j=y,q=0;j < y_max;j++,q++) {
 		for (i=x,p=0;i < x_max;i++,p++) {
-//			if (i >= 0 && j >= 0 && i < width && j < height) {
-				tile->setPixel(i,j,tile->getPixel(i,j) | bitmap->buffer[q*bitmap->width+p]);
-				if (h < j) h = j;
-//			}
+			tile->setPixel(i,j,tile->getPixel(i,j) | buffer[q*width+p]);
+			if (h < j) h = j;
 		}
 	}
 
@@ -307,6 +224,7 @@ PPTTFontTile* PPTTFont::length(const char* string)
 	return image(string);
 }
 
+#if !TARGET_OS_MAC
 PPTTFontTile* PPTTFont::image(const char* string)
 {
 	FTFONT* f=(FTFONT*)ftfont;
@@ -445,7 +363,7 @@ PPTTFontTile* PPTTFont::image(const char* string)
 		unsigned int ch = ConvertCharUTF8toUTF32(&string[n],&len);
 		FT_Set_Transform(f->face,&matrix,&pen);
 		error = FT_Load_Char(f->face,ch,FT_LOAD_RENDER);
-		int t = drawbitmap(ntile,&slot->bitmap,slot->bitmap_left,target_height-slot->bitmap_top);
+		int t = drawbitmap(ntile,slot->bitmap.width,slot->bitmap.rows,slot->bitmap.buffer,slot->bitmap_left,target_height-slot->bitmap_top);
 		if (h < t) h = t;
 		pen.x += slot->advance.x;
 		pen.y += slot->advance.y;
@@ -469,6 +387,7 @@ PPTTFontTile* PPTTFont::image(const char* string)
 
 	return ntile;
 }
+#endif
 
 void PPTTFont::textureUpdate()
 {
@@ -482,7 +401,8 @@ void PPTTFont::textureUpdate()
 void PPTTFont::idle()
 {
 //printf("----- idle\n");
-//	if (face == NULL) return;
+	FTFONT* f=(FTFONT*)ftfont;
+	if (f->type == 0) return;
 	if (!base->world()->projector->textureManager->checkBind(texture)) _updated = true;
 	//よく使うものを上に
 	for (int j=0;j<newFontCount;j++) {

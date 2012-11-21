@@ -13,7 +13,6 @@
 @implementation PicoGameAppDelegate
 
 @synthesize window;
-@synthesize viewController;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions   
 {
@@ -26,47 +25,23 @@
 	}
 	PPSensor::instance = new PPSensoriOS();
 
-	viewController = [[PPGameViewController alloc] initWithNibName:@"PPGameViewController" bundle:nil];
-    [window addSubview:viewController.view];
-    [window makeKeyAndVisible];
-
     return YES;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
-//	[glView stopAnimation];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-//	[glView startAnimation];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
-	[viewController exitGame];
-//	[glView stopAnimation];
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-	if ([viewController isKindOfClass:[PPGameViewController class]]) {
-		[viewController exitGame];
-	}
-
-	[[NSNotificationCenter defaultCenter] removeObserver: self];
-	[[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
-	
-	//[PPGameBGM stop];
-	exit(0);
-}
-
-- (void)dealloc
-{
-	[window release];
-//	[glView release];
-	[super dealloc];
 }
 
 @end

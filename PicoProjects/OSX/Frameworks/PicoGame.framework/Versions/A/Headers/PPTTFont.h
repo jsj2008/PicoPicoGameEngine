@@ -12,8 +12,6 @@
 	インクルードファイル
 -----------------------------------------------------------------------------------------------*/
 
-#include <freetype/ft2build.h>
-#include FT_FREETYPE_H
 #include <string>
 #include "PPWorld.h"
 #include "PPGameTexture.h"
@@ -145,10 +143,10 @@ public:
 	virtual void showTileTable();
 	
 	virtual int tileWidth() {
-		return gridX();
+		return _gridX;
 	}
 	virtual int tileHeight() {
-		return gridY();
+		return _gridY;
 	}
 	virtual int advanceX(int t);
 	
@@ -168,20 +166,13 @@ public:
 private:
 	PPTTFontImage* getFreeTile();
 
-	int drawbitmap(PPTTFontTile* tile,FT_Bitmap* bitmap,FT_Int x,FT_Int y);
-	
-	int gridX() {return _gridX;}
-	int gridY() {return _gridY;}
+	int drawbitmap(PPTTFontTile* tile,signed int width,signed int height,unsigned char* buffer,signed int x,signed int y);
 	
 	int _gridX;
 	int _gridY;
 
-	FT_Library library;
-	FT_Face face;
+	void* ftfont;
 
-//	int width;
-//	int height;
-//	int target_height;
 	int baseline;
 	int newFontCount;
 	
@@ -229,10 +220,10 @@ public:
 		}
 	}
 	int gwidth() {
-		return (width +font->gridX()-1)/font->gridX();
+		return (width +font->tileWidth()-1)/font->tileWidth();
 	}
 	int gheight() {
-		return (height+font->gridY()-1)/font->gridY();
+		return (height+font->tileHeight()-1)/font->tileHeight();
 	}
 	
 	void setTile(int x,int y,int index) {
@@ -244,21 +235,21 @@ public:
 	
 	void setPixel(int x,int y,unsigned char c) {
 		if (x >= 0 && y >= 0 && x < width && y < height) {
-			int gx = x/font->gridX();
-			int gy = y/font->gridY();
+			int gx = x/font->tileWidth();
+			int gy = y/font->tileHeight();
 			int t = getTile(gx,gy);
 			if (t > 0) {
-				font->tile[t]->setPixel(x % font->gridX(),y % font->gridY(),c);
+				font->tile[t]->setPixel(x % font->tileWidth(),y % font->tileHeight(),c);
 			}
 		}
 	}
 	unsigned char getPixel(int x,int y) {
 		if (x >= 0 && y >= 0 && x < width && y < height) {
-			int gx = x/font->gridX();
-			int gy = y/font->gridY();
+			int gx = x/font->tileWidth();
+			int gy = y/font->tileHeight();
 			int t = getTile(gx,gy);
 			if (t == 0) return 0;
-			return font->tile[t]->getPixel(x % font->gridX(),y % font->gridY());
+			return font->tile[t]->getPixel(x % font->tileWidth(),y % font->tileHeight());
 		}
 		return 0;
 	}

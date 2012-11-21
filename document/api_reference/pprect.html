@@ -120,6 +120,73 @@
 <div data-role="collapsible" data-theme="c" data-content-theme="c"> 
 <h3>	:hitCheck(points,hitCheck)</h3>
 <p class="pico-desc">矩形とのあたり判定を行います。</p>
+
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
+<pre><code>--ボタンの処理例
+button=ppsprite.new()
+button:texture("button.png")
+button:tileInfo({size=button:texture().imageSize})
+button:tile(1)
+button:pos(ppgraph:layout(button:size(),true,true))
+count=0
+
+function start()
+  if button:hitCheck(pptouch()) then
+    count=count+1
+  end
+  ppgraph:print("TouchCount:"..count)
+  ppgraph:move(0,16)
+  if button.hit then
+    ppgraph:print("Hit!")
+    ppgraph:move(0,16)
+  end
+  if button.trigger then
+    ppgraph:print("Trigger!")
+    ppgraph:move(0,16)
+  end
+  if button.touch then
+    ppgraph:print("Touch!")
+    button:alpha(128)
+  else
+    button:alpha(255)
+  end
+  button:draw()
+end
+
+<img src="./image/screen-shot 2012-11-18 11.32.47.png"/>
+
+--ボタンの処理例(タッチエリアのサイズを16ドット広げる)
+button=ppsprite.new()
+button:texture("button.png")
+button:tileInfo({size=button:texture().imageSize})
+button:tile(1)
+button:pos(ppgraph:layout(button:size(),true,true))
+count=0
+
+function hitfunc(button,point)
+  local area=button:aabb():inset(-16)
+  return area:contain(point)
+end
+
+function start()
+  if button:hitCheck(pptouch(),hitfunc) then
+    count=count+1
+  end
+  if button.touch then
+    button:alpha(128)
+  else
+    button:alpha(255)
+  end
+  ppgraph:print("TouchCount:"..count)
+  button:draw()
+  ppgraph:box(button:aabb():inset(-16))
+end
+
+<img src="./image/screen-shot 2012-11-18 11.42.42.png"/>
+
+</code></pre></div></div>
+
+
 </div>
 	</div>
 

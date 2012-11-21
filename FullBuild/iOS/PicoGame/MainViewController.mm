@@ -33,6 +33,13 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+	
+	if ([[UIScreen mainScreen] scale] != 1.0) {
+		if ([self.gameView1 respondsToSelector:@selector(setContentScaleFactor:)]) {
+			[self.gameView1 setContentScaleFactor:[[UIScreen mainScreen] scale]];
+		}
+	}
+	
 	[self.game1 start];
 	[self.game2 start];
 	
