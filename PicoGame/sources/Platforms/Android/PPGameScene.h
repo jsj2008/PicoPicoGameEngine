@@ -44,6 +44,7 @@ public:
 	virtual void onEnterTransitionDidFinish();
 	virtual void gameIdle(cocos2d::ccTime dt);
 	virtual void draw();
+	virtual void keyBackClicked();
 //	virtual void closeGame();
 	
 	QBGame* game;

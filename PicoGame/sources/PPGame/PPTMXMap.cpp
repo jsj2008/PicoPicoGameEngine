@@ -1345,7 +1345,16 @@ static int funcLoad(lua_State* L)
 		}
 		if (!m->tileset.empty()) {
 			const char* str = m->tileset[m->tileset.size()-1]->source.c_str();
-			m->poly.initTexture(m->world()->projector->textureManager->loadTexture(str,option));
+			if (str) {
+				m->poly.initTexture(m->world()->projector->textureManager->loadTexture(str,option));
+
+				if (PPReadError()) {
+					PPReadErrorReset();
+					return luaL_error(L,"texture file read error '%s'",str);
+				}
+			} else {
+				return luaL_error(L,"TMX file error");
+			}
 		}
 	} else {
 		return luaL_argerror(L,1,"no value");

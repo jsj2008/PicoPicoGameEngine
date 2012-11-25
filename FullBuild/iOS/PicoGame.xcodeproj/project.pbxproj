@@ -64,6 +64,9 @@
 		6BC387721626CDAF00D112A2 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BC387711626CDAF00D112A2 /* Default.png */; };
 		6BC387741626CDB200D112A2 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BC387731626CDB200D112A2 /* Default-568h@2x.png */; };
 		6BC3877A1626CED000D112A2 /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6BC387791626CED000D112A2 /* MainStoryboard.storyboard */; };
+		6BD1C9F81661B31E000D7171 /* vkeytest.lua in Resources */ = {isa = PBXBuildFile; fileRef = 6BD1C9F71661B31E000D7171 /* vkeytest.lua */; };
+		6BD1C9FB1661CE44000D7171 /* button.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BD1C9FA1661CE44000D7171 /* button.png */; };
+		6BD1C9FD1661EA4B000D7171 /* Default-Landscape~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BD1C9FC1661EA4B000D7171 /* Default-Landscape~ipad.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -119,6 +122,9 @@
 		6BC387711626CDAF00D112A2 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = ../Default.png; sourceTree = "<group>"; };
 		6BC387731626CDB200D112A2 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "../Default-568h@2x.png"; sourceTree = "<group>"; };
 		6BC387791626CED000D112A2 /* MainStoryboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MainStoryboard.storyboard; sourceTree = "<group>"; };
+		6BD1C9F71661B31E000D7171 /* vkeytest.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = vkeytest.lua; path = GameData/vkeytest.lua; sourceTree = "<group>"; };
+		6BD1C9FA1661CE44000D7171 /* button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = button.png; path = GameData/button.png; sourceTree = "<group>"; };
+		6BD1C9FC1661EA4B000D7171 /* Default-Landscape~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape~ipad.png"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -214,6 +220,7 @@
 			children = (
 				6BC387731626CDB200D112A2 /* Default-568h@2x.png */,
 				6BC387711626CDAF00D112A2 /* Default.png */,
+				6BD1C9FC1661EA4B000D7171 /* Default-Landscape~ipad.png */,
 				6B06AFEB15B500D300D2EFF6 /* PicoGame-Info.plist */,
 				6B06AFEC15B500D300D2EFF6 /* InfoPlist.strings */,
 				6B06AFEF15B500D300D2EFF6 /* main.mm */,
@@ -243,6 +250,8 @@
 				6B110A7916585B2800202C89 /* font.lua */,
 				6B110A7A16585B2800202C89 /* icon.png */,
 				6B110A7B16585B2800202C89 /* main.lua */,
+				6BD1C9F71661B31E000D7171 /* vkeytest.lua */,
+				6BD1C9FA1661CE44000D7171 /* button.png */,
 				6B110A7C16585B2800202C89 /* main.png */,
 				6B110A7D16585B2800202C89 /* map.plist */,
 				6B110A7E16585B2800202C89 /* map.png */,
@@ -327,6 +336,9 @@
 				6B110A9216585B2800202C89 /* sample.png in Resources */,
 				6B110A9316585B2800202C89 /* tile.plist in Resources */,
 				6B110A9416585B2800202C89 /* tileinfo.lua in Resources */,
+				6BD1C9F81661B31E000D7171 /* vkeytest.lua in Resources */,
+				6BD1C9FB1661CE44000D7171 /* button.png in Resources */,
+				6BD1C9FD1661EA4B000D7171 /* Default-Landscape~ipad.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -457,6 +469,7 @@
 					"-lxml2",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "";
 				VALID_ARCHS = armv7;
 				WRAPPER_EXTENSION = app;
@@ -487,6 +500,7 @@
 					"-lxml2",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "";
 				VALID_ARCHS = armv7;
 				WRAPPER_EXTENSION = app;

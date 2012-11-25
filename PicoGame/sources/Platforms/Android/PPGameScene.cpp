@@ -78,8 +78,9 @@ bool PPGameScene::init()
 	if (game == NULL) game = newGame();
 
 	setIsTouchEnabled(true);
+	setIsKeypadEnabled(true);
 	if (touchesSet == NULL) touchesSet = new CCSet();
-	
+
 	return true;
 }
 
@@ -232,6 +233,10 @@ void PPGameScene::gameIdle(ccTime dt)
 //			closeGame();
 //		}
 	}
+}
+
+void PPGameScene::keyBackClicked() {
+//	CCDirector::sharedDirector()->end();
 }
 
 /*-----------------------------------------------------------------------------------------------

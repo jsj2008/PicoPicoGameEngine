@@ -33,24 +33,21 @@ public:
 	virtual void stepTouch();
 	
 	PPPoint startTouch;
+	PPPoint preTouch;
 	bool fixed;
-	int touchState;
+//	int touchState;
 	
-	bool vKeyTouch;
-	bool vKeyTouch2;
+	bool vKeyTouch;			//エリア内でタッチ中
+	bool vKeyTouch2;		//タッチ中
+	bool vKeyTouch3;		//エリア内でタッチ開始した
 	PPPoint vKeyDelta;
 	PPRect vKeyArea;
+	bool doIdle;
 
-	virtual int calcDir(int div) {
-		if (!vKeyTouch) return -1;
-		float length = vKeyDelta.length();
-		PPPoint d = vKeyDelta;
-		float q = atan2(-d.y/length,d.x/length)*360/(2*M_PI);
-		q += (360/div)/2;
-		while (q < 0) q += 360;
-		while (q >= 360) q -= 360;
-		return ((int)q)/(360/div);
-	}
+	virtual int nearTouch(PPPoint pos,PPPoint* outPos);
+
+	virtual int calcDir(int div,PPRect area);
+	virtual int calcDir(int div);
 
 	virtual void openLibrary(PPLuaScript* script,const char* name,const char* superclass=NULL);
 };

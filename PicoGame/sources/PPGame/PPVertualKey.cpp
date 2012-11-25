@@ -10,6 +10,7 @@
 -----------------------------------------------------------------------------------------------*/
 
 #include "PPVertualKey.h"
+#include "PPGameSprite.h"
 
 //PPVertualKey* PPVertualKey::instance = NULL;
 
@@ -27,8 +28,10 @@ void PPVertualKey::start()
 {
 	vKeyTouch = false;
 	vKeyTouch2 = false;
+	vKeyTouch3 = false;
 	fixed = false;
-	touchState = 0;
+	doIdle = true;
+//	touchState = 0;
 	vKeyArea = PPRectZero;
 	PPObject::start();
 	NEXT(PPVertualKey::stepIdle);
@@ -36,54 +39,183 @@ void PPVertualKey::start()
 	
 void PPVertualKey::stepIdle()
 {
+//	if (touchCount() > 0) {
+//		vKeyDelta = PPPointZero;
+//		if (!fixed) {
+//			startTouch = touchPosition(0);
+//		}
+//		NEXT(PPVertualKey::stepTouch);
+//	}
+	doIdle=true;
+//	stepTouch();
+}
+
+int PPVertualKey::nearTouch(PPPoint pos,PPPoint* outPos)
+{
+	int r=-1;
 	if (touchCount() > 0) {
-		vKeyDelta = PPPointZero;
-		if (!fixed) {
-			startTouch = touchPosition(0);
+		PPGameState st=world()->projector->st;
+		float len=0;
+		for (int i=0;i<touchCount();i++) {
+			PPPoint p = touchPosition(i);
+			p=p-st.offset;
+			p=p/st.scale;
+			if (i==0) {
+				len = p.length(pos);
+				*outPos=p;
+				r=i;
+			} else {
+				float l=p.length(pos);
+				if (l<len) {
+					len=l;
+					*outPos=p;
+					r=i;
+				}
+			}
 		}
-		NEXT(PPVertualKey::stepTouch);
 	}
+	return r;
 }
 
 void PPVertualKey::stepTouch()
 {
-	if (touchCount() > 0) {
-		int t=0;
-		float len=-1;
-		for (int i=0;i<touchCount();i++) {
-			PPPoint p = touchPosition(i);
+	if (!doIdle) return;
+	doIdle=false;
+	PPPoint outPos;
+//	PPGameState st=world()->projector->st;
+//	if (touchCount() > 0 && !vKeyTouch2) {
+//		if (!fixed) {
+//			for (int i=0;i<touchCount();i++) {
+//				PPPoint p = touchPosition(i);
+//				p=p-st.offset;
+//				p=p/st.scale;
+//				if (vKeyArea.width > 0 && vKeyArea.height > 0) {
+//					if (p.hitCheck(vKeyArea)) {
+//						startTouch = p;
+//					}
+//				} else {
+//					startTouch = p;
+//				}
+//			}
+//		}
+//	}
+	int touchIndex=nearTouch(vKeyDelta+startTouch,&outPos);
+	if (touchIndex >= 0) {
+#if 1
+		while (true) {
+			//if (fixed)
+			{
+				if (vKeyTouch2) {
+					if (preTouch.length(outPos)>96) {
+//						vKeyTouch2=false;
+						vKeyTouch = false;
+						vKeyTouch2 = false;
+						vKeyTouch3 = false;
+						break;
+					}
+				}
+			}
+
 			bool enable = false;
 			if (vKeyArea.width > 0 && vKeyArea.height > 0) {
-				if (p.hitCheck(vKeyArea)) {
+				if (outPos.hitCheck(vKeyArea)) {
 					enable = true;
 				}
 			} else {
 				enable = true;
 			}
+
 			if (enable) {
-				if (len < 0) {
-					len = p.length(startTouch);
-				} else {
-					if (p.length(startTouch) < len) {
-						len = p.length(startTouch);
-						t = i;
+				if (!vKeyTouch2) {
+					if (enable) {
+						vKeyTouch3=true;
 					}
 				}
 			}
+
+			vKeyTouch=false;
+			if (vKeyTouch3) {
+				if (outPos.length(startTouch)>8) {
+					if (!fixed) {
+						if (!vKeyTouch2) {
+							if (enable) {
+								startTouch = outPos;
+							}
+						}
+					}
+					vKeyTouch=true;
+				}
+			}
+			
+			vKeyTouch2 = true;
+			
+			if (vKeyTouch3) {
+				vKeyDelta = outPos-startTouch;
+			}
+			break;
 		}
-		if (len > 16) {
-			vKeyTouch = true;
-		} else {
-			vKeyTouch = false;
-		}
-		vKeyTouch2 = true;
-//		vKeyTouch = true;
-		vKeyDelta = touchPosition(t)-startTouch;
+		preTouch=outPos;
+#else
+//		int t=0;
+//		float len=-1;
+//		for (int i=0;i<touchCount();i++) {
+//			PPPoint p = touchPosition(i);
+//			bool enable = false;
+//			if (vKeyArea.width > 0 && vKeyArea.height > 0) {
+//				if (p.hitCheck(vKeyArea)) {
+//					enable = true;
+//				}
+//			} else {
+//				enable = true;
+//			}
+//			if (enable) {
+//				if (len < 0) {
+//					len = p.length(startTouch);
+//				} else {
+//					if (p.length(startTouch) < len) {
+//						len = p.length(startTouch);
+//						t = i;
+//					}
+//				}
+//			}
+//		}
+//		if (len > 16) {
+//			vKeyTouch = true;
+//		} else {
+//			vKeyTouch = false;
+//		}
+//		vKeyTouch2 = true;
+////		vKeyTouch = true;
+//		vKeyDelta = touchPosition(t)-startTouch;
+#endif
 	} else {
 		vKeyTouch = false;
 		vKeyTouch2 = false;
-		NEXT(PPVertualKey::stepIdle);
+		vKeyTouch3 = false;
+//		NEXT(PPVertualKey::stepIdle);
 	}
+}
+
+int PPVertualKey::calcDir(int div)
+{
+	stepTouch();
+	if (!vKeyTouch) return -1;
+	float length = vKeyDelta.length();
+	PPPoint d = vKeyDelta;
+	float q = atan2(-d.y/length,d.x/length)*360/(2*M_PI);
+	q += (360/div)/2;
+	while (q < 0) q += 360;
+	while (q >= 360) q -= 360;
+	return ((int)q)/(360/div);
+}
+
+int PPVertualKey::calcDir(int div,PPRect area)
+{
+	PPRect a=vKeyArea;
+	vKeyArea=area;
+	int r=calcDir(div);
+	vKeyArea=a;
+	return r;
 }
 
 #pragma mark -
@@ -95,6 +227,7 @@ static int funcTouch(lua_State* L)
 	PPVertualKey* m = (PPVertualKey*)PPLuaScript::UserData(L);
 	//PPLuaScript* s = PPLuaScript::sharedScript(L);
 	//PPVertualKey* m = PPVertualKey::instance;//(PPVertualKey*)s->userdata;
+	m->stepTouch();
 	lua_pushboolean(L,m->vKeyTouch);
 	return 1;
 }
@@ -104,6 +237,7 @@ static int funcDelta(lua_State* L)
 	PPVertualKey* m = (PPVertualKey*)PPLuaScript::UserData(L);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
 //	PPVertualKey* m = PPVertualKey::instance;//(PPVertualKey*)s->userdata;
+	m->stepTouch();
 	return s->returnPoint(L,m->vKeyDelta);
 //	lua_pushnumber(L,m->vKeyDelta.x);
 //	lua_pushnumber(L,m->vKeyDelta.y);
@@ -116,6 +250,14 @@ static int funcDir(lua_State* L)
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
 //	PPVertualKey* m = PPVertualKey::instance;//(PPVertualKey*)s->userdata;
 	if (s->argCount > 0) {
+#if 1
+		if (s->argCount > 1) {
+			PPRect area = s->getRect(L,1);
+			lua_pushinteger(L,m->calcDir((int)s->integer(0),area));
+		} else {
+			lua_pushinteger(L,m->calcDir((int)s->integer(0)));
+		}
+#else
 		if (s->argCount > 1) {
 			PPRect area = s->getRect(L,1);
 			int d = m->calcDir((int)s->integer(0));
@@ -142,6 +284,7 @@ static int funcDir(lua_State* L)
 		} else {
 			lua_pushinteger(L,m->calcDir((int)s->integer(0)));
 		}
+#endif
 	} else {
 		lua_pushinteger(L,m->calcDir(4));
 	}
@@ -153,6 +296,7 @@ static int funcCenter(lua_State* L)
 	PPVertualKey* m = (PPVertualKey*)PPLuaScript::UserData(L);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
 //	PPVertualKey* m = PPVertualKey::instance;//(PPVertualKey*)s->userdata;
+	m->stepTouch();
 	if (s->argCount > 0) {
 		if (s->isTable(L,0)) {
 			m->startTouch.x = s->tableNumber(L,0,1,"x");
@@ -179,6 +323,7 @@ static int funcArea(lua_State* L)
 //	if (s->argCount < 2) {
 //		return luaL_argerror(L,1,"invalid argument.");
 //	}
+	m->stepTouch();
 	if (s->argCount > 0) {
 		m->vKeyArea = s->getRect(L,0,m->vKeyArea);
 	}
@@ -191,6 +336,7 @@ static int funcFixed(lua_State* L)
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
 //	PPLuaScript* s = PPLuaScript::SharedScript(m->world(),L);
 //	PPVertualKey* m = PPVertualKey::instance;//(PPVertualKey*)s->userdata;
+	m->stepTouch();
 	if (s->argCount > 0) {
 		m->fixed = s->boolean(0,m->fixed);
 	}

@@ -953,6 +953,11 @@ static int funcTexture(lua_State* L)
 			}
 			
 			m->poly.initTexture(m->world()->projector->textureManager->loadTexture(s->args(0),option));
+
+			if (PPReadError()) {
+				PPReadErrorReset();
+				return luaL_error(L,"texture file read error '%s'",s->args(0));
+			}
 		} else {
 		}
 		return 0;

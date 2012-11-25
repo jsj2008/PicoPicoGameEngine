@@ -45,6 +45,28 @@
 	
 	[self.gameView1 startAnimation];
 	[self.gameView2 startAnimation];
+
+	[[NSNotificationCenter defaultCenter] addObserver:self
+	selector:@selector(applicationDidEnterBackground:)
+	name:UIApplicationDidEnterBackgroundNotification
+	object:[UIApplication sharedApplication]];
+
+	[[NSNotificationCenter defaultCenter] addObserver:self
+	selector:@selector(applicationWillEnterForeground:)
+	name:UIApplicationWillEnterForegroundNotification
+	object:[UIApplication sharedApplication]];
+}
+
+- (void)applicationDidEnterBackground:(UIApplication *)application
+{
+	[self.gameView1 stopAnimation];
+	[self.gameView2 stopAnimation];
+}
+
+- (void)applicationWillEnterForeground:(UIApplication *)application
+{
+	[self.gameView1 startAnimation];
+	[self.gameView2 startAnimation];
 }
 
 - (void)viewWillDisappear:(BOOL)animated

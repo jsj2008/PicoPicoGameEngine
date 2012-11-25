@@ -1002,6 +1002,11 @@ static int funcPut(lua_State* L)
 					nc=s->getColor(L,n+2,nc);
 				}
 				m->curTexture = m->projector->textureManager->loadTexture(s->args(n),option);
+
+				if (PPReadError()) {
+					PPReadErrorReset();
+					return luaL_error(L,"texture file read error '%s'",s->args(n));
+				}
 			}
 		} else {
 			m->curTexture = m->projector->textureManager->defaultTexture;
@@ -1281,16 +1286,68 @@ static int funcLine(lua_State* L)
 {
 	QBGame* m = (QBGame*)PPLuaArg::World(L);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-	if (s->argCount > 3) {
-		PPColor c= m->color();
-		PPColor nc = c;
-		nc = s->getColor(L,4,nc);
-		m->color(nc);
-		m->line(PPPoint(s->number(0),s->number(1)),PPPoint(s->number(2),s->number(3)));
-		m->color(c);
-	} else {
-		return luaL_argerror(L,2,"no value");
+	PPPoint p1,p2;
+	PPColor c= m->color();
+	PPColor nc = c;
+#if 1
+	int paramError=0;
+	while (true) {
+		if (s->argCount > 0) {
+			int n=0;
+			if (s->isTable(L,0)) {
+				p1 = s->getPoint(L,0);
+				n++;
+			} else {
+				if (s->argCount > n+1) {
+					p1 = PPPoint(s->number(0),s->number(1));
+					n+=2;
+				} else {
+					paramError=n+2;
+					break;
+				}
+			}
+			if (s->argCount > n) {
+				if (s->isTable(L,n)) {
+					p2 = s->getPoint(L,n);
+					n++;
+				} else {
+					if (s->argCount > n+1) {
+						p2 = PPPoint(s->number(n),s->number(n+1));
+						n+=2;
+					} else {
+						paramError=n+2;
+						break;
+					}
+				}
+			} else {
+				paramError=n+1;
+				break;
+			}
+			if (s->argCount > n) {
+				nc = s->getColor(L,n,nc);
+			}
+			m->color(nc);
+			m->line(p1,p2);
+			m->color(c);
+		} else {
+			paramError=1;
+			break;
+		}
+		break;
 	}
+	if (paramError>0) {
+		return luaL_argerror(L,paramError+1,"no value");
+	}
+#else
+//	if (s->argCount > 3) {
+//		nc = s->getColor(L,4,nc);
+//		m->color(nc);
+//		m->line(PPPoint(s->number(0),s->number(1)),PPPoint(s->number(2),s->number(3)));
+//		m->color(c);
+//	} else {
+//		return luaL_argerror(L,2,"no value");
+//	}
+#endif
 	return 0;
 }
 
@@ -1981,6 +2038,81 @@ static int funcTile(lua_State* L)
 	return 1;
 }
 
+static int funcTileSize(lua_State* L)
+{
+	QBGame* m = (QBGame*)PPLuaArg::World(L);
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
+//	PPObject* m = (PPObject*)s->userdata;
+	if (m==NULL) {
+		return luaL_argerror(L,1,"invalid argument.");
+	}
+	if (s->argCount > 0 && s->isTable(L,0)) {
+		m->poly.texTileSize = s->getSize(L,0);
+		return 0;
+	} else
+	if (s->argCount > 0) {
+		if (s->argCount == 1) {
+			m->poly.texTileSize.width = s->number(0);
+			m->poly.texTileSize.height = s->number(0);
+		} else {
+			m->poly.texTileSize.width = s->number(0);
+			m->poly.texTileSize.height = s->number(1);
+		}
+		return 0;
+	}
+	return s->returnSize(L,m->poly.texTileSize);
+}
+
+static int funcTileStride(lua_State* L)
+{
+	QBGame* m = (QBGame*)PPLuaArg::World(L);
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
+//	PPObject* m = (PPObject*)s->userdata;
+	if (m==NULL) {
+		return luaL_argerror(L,1,"invalid argument.");
+	}
+	if (s->argCount > 0 && s->isTable(L,0)) {
+		m->poly.texTileStride = s->getSize(L,0);
+		return 0;
+	} else
+	if (s->argCount > 0) {
+		if (s->argCount == 1) {
+			m->poly.texTileStride.width = s->number(0);
+			m->poly.texTileStride.height = s->number(0);
+		} else {
+			m->poly.texTileStride.width = s->number(0);
+			m->poly.texTileStride.height = s->number(1);
+		}
+		return 0;
+	}
+	return s->returnSize(L,m->poly.texTileStride);
+}
+
+static int funcTileOffset(lua_State* L)
+{
+	QBGame* m = (QBGame*)PPLuaArg::World(L);
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
+//	PPObject* m = (PPObject*)s->userdata;
+	if (m==NULL) {
+		return luaL_argerror(L,1,"invalid argument.");
+	}
+	if (s->argCount > 0 && s->isTable(L,0)) {
+		m->poly.texOffset = s->getPoint(L,0);
+		return 0;
+	} else
+	if (s->argCount > 0) {
+		if (s->argCount == 1) {
+			m->poly.texOffset.x = s->number(0);
+			m->poly.texOffset.y = s->number(0);
+		} else {
+			m->poly.texOffset.x = s->number(0);
+			m->poly.texOffset.y = s->number(1);
+		}
+		return 0;
+	}
+	return s->returnPoint(L,m->poly.texOffset);
+}
+
 void QBGame::openGameLibrary(PPLuaScript* script,const char* name)
 {
 	script->openModule(name,this);
@@ -2007,6 +2139,9 @@ void QBGame::openViewLibrary(PPLuaScript* script,const char* name)
 {
 	script->openModule(name,this);
 		script->addCommand("tileInfo",funcTile);
+		script->addCommand("tileSize",funcTileSize);
+		script->addCommand("tileStride",funcTileStride);
+		script->addCommand("tileOffset",funcTileOffset);
 		script->addCommand("put",funcPut);
 		script->addCommand("position",funcLocate);
 		script->addCommand("pos",funcLocate);

@@ -35,6 +35,26 @@
     control.active = YES;
     control.delegate = self;
     [control release];
+
+	[[NSNotificationCenter defaultCenter] addObserver:self
+	selector:@selector(applicationDidEnterBackground:)
+	name:UIApplicationDidEnterBackgroundNotification
+	object:[UIApplication sharedApplication]];
+
+	[[NSNotificationCenter defaultCenter] addObserver:self
+	selector:@selector(applicationWillEnterForeground:)
+	name:UIApplicationWillEnterForegroundNotification
+	object:[UIApplication sharedApplication]];
+}
+
+- (void)applicationDidEnterBackground:(UIApplication *)application
+{
+	[((PPGameView*)self.view) stopAnimation];
+}
+
+- (void)applicationWillEnterForeground:(UIApplication *)application
+{
+	[((PPGameView*)self.view) startAnimation];
 }
 
 - (void)viewWillAppear:(BOOL)animated {

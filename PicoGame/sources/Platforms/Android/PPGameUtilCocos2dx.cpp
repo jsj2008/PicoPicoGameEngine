@@ -17,6 +17,10 @@
 #include "png.h"
 #include "PPGameDef.h"
 
+//#include <android/log.h>
+//#define  LOG_TAG    "main"
+//#define  LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG,LOG_TAG,__VA_ARGS__)
+
 #define PNG_HEADER_SIZE 8
 
 static int keySide = 0;
@@ -158,7 +162,34 @@ unsigned char* PPGame_LoadPNG(const char* fileName,unsigned long* imageWidth,uns
 	unsigned char *pix = img->getData();
 	unsigned long size = img->getWidth()*img->getHeight()*4;
 	unsigned char * pixel = (unsigned char*)malloc(size);
-	memcpy(pixel,pix,size);
+	if (img->hasAlpha()) {
+		memcpy(pixel,pix,size);
+	} else {
+		png_uint_32 width=img->getWidth();
+		png_uint_32 height=img->getHeight();
+		int i,j;
+		int cm=3;
+		for (i = 0; i < height; i++) {
+			for (j = 0; j < width; j++) {
+				unsigned char r,g,b,a;
+				r = pix[j*cm+0+i*width*cm];
+				g = pix[j*cm+1+i*width*cm];
+				b = pix[j*cm+2+i*width*cm];
+				a = 255;
+				if (a == 0) {
+					pixel[j*4+0+i*width*4] = 0;
+					pixel[j*4+1+i*width*4] = 0;
+					pixel[j*4+2+i*width*4] = 0;
+					pixel[j*4+3+i*width*4] = 0;
+				} else {
+					pixel[j*4+0+i*width*4] = r;
+					pixel[j*4+1+i*width*4] = g;
+					pixel[j*4+2+i*width*4] = b;
+					pixel[j*4+3+i*width*4] = a;
+				}
+			}
+		}
+	}
 	*imageWidth = img->getWidth();
 	*imageHeight = img->getHeight();
 	*bytesPerRow = img->getWidth()*4;
