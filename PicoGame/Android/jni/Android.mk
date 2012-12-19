@@ -63,11 +63,11 @@ LOCAL_C_INCLUDES := $(COCOS2D_PATH)/cocos2dx \
                     $(COCOS2D_PATH)/cocos2dx/platform/third_party/android/libpng \
                     $(COCOS2D_PATH)/cocos2dx/include \
                   	$(COCOS2D_PATH)/CocosDenshion/include \
- 					$(LOCAL_PATH)/../../../CocosDenshion/sources/CocosDenshion/ \
- 					$(LOCAL_PATH)/../../../FlMML/Android/jni/ \
-					$(LOCAL_PATH)/../../../FlMML/include/flmml/ \
-					$(LOCAL_PATH)/../../../FlMML/include/other/ \
-					$(LOCAL_PATH)/../../../FlMML/sources/ \
+                  	$(LOCAL_PATH)/../../../CocosDenshion/sources/CocosDenshion/ \
+                  	$(LOCAL_PATH)/../../../FlMML/Android/jni/ \
+                  	$(LOCAL_PATH)/../../../FlMML/include/flmml/ \
+                  	$(LOCAL_PATH)/../../../FlMML/include/other/ \
+                  	$(LOCAL_PATH)/../../../FlMML/sources/ \
                     $(LOCAL_PATH)/../../../FlMML/sources/FlMML/fmgenAs/ \
                     $(LOCAL_PATH)/../../../FlMML/sources/FlMML/other/ \
                     $(LOCAL_PATH)/$(SOURCE_PATH)/Platforms/Android/ \
@@ -76,13 +76,13 @@ LOCAL_C_INCLUDES := $(COCOS2D_PATH)/cocos2dx \
                     $(LOCAL_PATH)/$(SOURCE_PATH)/PPGame/ \
                     $(LOCAL_PATH)/$(SOURCE_PATH)/PPImage/ \
                     $(LOCAL_PATH)/$(SOURCE_PATH)/GameLogic/ \
- 					$(LOCAL_PATH)/../../../Lua5.2/sources/ \
- 					$(LOCAL_PATH)/../../../Lua5.2/sources/lua/ \
+                  	$(LOCAL_PATH)/../../../Lua5.2/sources/ \
+                  	$(LOCAL_PATH)/../../../Lua5.2/sources/lua/ \
                     $(LOCAL_PATH)/../../../Box2D/sources/Box2D_v2.2.1/ \
- 					$(LOCAL_PATH)/../../../freetype/sources/ \
-					$(LOCAL_PATH)/../../../freetype/sources/freetype-2.4.10/ \
-					$(LOCAL_PATH)/../../../freetype/sources/freetype-2.4.10/include/ \
-					$(LOCAL_PATH)/.
+                  	$(LOCAL_PATH)/../../../freetype/sources/ \
+                  	$(LOCAL_PATH)/../../../freetype/sources/freetype-2.4.10/ \
+                  	$(LOCAL_PATH)/../../../freetype/sources/freetype-2.4.10/include/ \
+                  	$(LOCAL_PATH)/.
 
 LOCAL_CFLAGS += -O3
 
@@ -90,9 +90,9 @@ LOCAL_CFLAGS += -O3
 # if you build with ndk-r4, comment it  
 # because the new Windows toolchain doesn't support Cygwin's drive
 # mapping (i.e /cygdrive/c/ instead of C:/)  
-LOCAL_LDLIBS := -L$(call host-path, $(JNI_PATH)/../libs/armeabi) \
+LOCAL_LDLIBS := -L$(call host-path, $(JNI_PATH)/../libs/$(TARGET_ARCH_ABI)) \
 				-L$(call host-path, $(LOCAL_PATH)/../lib) \
-				-L$(call host-path, $(COCOS2D_PATH)/cocos2dx/platform/third_party/android/libraries) \
+				-L$(call host-path, $(COCOS2D_PATH)/cocos2dx/platform/third_party/android/libraries/$(TARGET_ARCH_ABI)) \
                 -lGLESv1_CM -lpng -lflmml -lfreetype -llua -lz -lxml2 -llog -lbox2d -lcocos2d -lcocosdenshion
 
 include $(BUILD_SHARED_LIBRARY)

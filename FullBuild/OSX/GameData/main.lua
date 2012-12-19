@@ -1,3 +1,14 @@
+g=ppgraph
+sc=ppscreen
+base=pprect(0,0,320,480)
+function start()
+ sc:viewport(sc:layout(base))
+ g:scale(2)
+ g:pos(0,100)
+ g:print("がぎぐげご")
+end
+
+--[[
 ti=require("tileinfo")
 g=ppgraph
 sc=ppscreen
@@ -300,6 +311,7 @@ function start()
   mainloop()
   gameover()
 end
+]]
 
 --[[
 g=ppgraph

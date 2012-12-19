@@ -14,6 +14,14 @@
 #include "PPSensorAndroid.h"
 #include <jni.h>
 
+#if 0
+#include <android/log.h>
+#define  LOG_TAG    "PPGameScene"
+#define  LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG,LOG_TAG,__VA_ARGS__)
+#else
+#define  LOGD(...) 
+#endif
+
 using namespace cocos2d;
 
 #define PPGAME_MAX_POLY (10000*10)
@@ -156,6 +164,7 @@ unsigned long PPGameScene::getKey()
 
 void PPGameScene::draw()
 {
+	int animationFrameInterval=1;
 	GLfloat pm[16];
 	glPushMatrix();
 	glMatrixMode(GL_PROJECTION);
@@ -163,6 +172,7 @@ void PPGameScene::draw()
 	glEnable(GL_TEXTURE_2D);
 	glDisable(GL_DEPTH_TEST);
 	if (g) {
+		animationFrameInterval=g->animationFrameInterval;
 		g->setWorld(game);
 //		g->ClearScreen2D(0.0f, 0.0f, 0.0f);
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -188,6 +198,14 @@ void PPGameScene::draw()
 	glMatrixMode(GL_MODELVIEW);
 	glPopMatrix();
 	glEnable(GL_TEXTURE_2D);
+
+	if (g) {
+		if (animationFrameInterval!=g->animationFrameInterval) {
+			CCDirector *pDirector = CCDirector::sharedDirector();
+			LOGD("setAnimationInterval %d",g->animationFrameInterval);
+			pDirector->setAnimationInterval(g->animationFrameInterval/60.0);
+		}
+	}
 }
 
 void PPGameScene::onEnterTransitionDidFinish()

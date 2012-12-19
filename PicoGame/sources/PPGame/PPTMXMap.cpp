@@ -132,8 +132,8 @@ void PPTMXLayer::draw(PPObject* obj,PPRect drawArea)
 					}
 							
 					if (draw) {
-						for (int y=my;y<my+grid;y++) {
-							for (int x=mx;x<mx+grid;x++) {
+						for (int y=my;y<my+grid&&y<drawArea.height;y++) {
+							for (int x=mx;x<mx+grid&&x<drawArea.width;x++) {
 								
 								if (getGID(x,y) != 0) {
 									PPPoint p = op-obj->poly.origin+ts;

@@ -198,10 +198,12 @@ void PPVertualKey::stepTouch()
 
 int PPVertualKey::calcDir(int div)
 {
+	if (div==0) div=1;
 	stepTouch();
 	if (!vKeyTouch) return -1;
 	float length = vKeyDelta.length();
 	PPPoint d = vKeyDelta;
+	if (length==0) return -1;
 	float q = atan2(-d.y/length,d.x/length)*360/(2*M_PI);
 	q += (360/div)/2;
 	while (q < 0) q += 360;

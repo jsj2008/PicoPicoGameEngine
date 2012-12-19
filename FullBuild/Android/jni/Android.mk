@@ -19,12 +19,12 @@ COCOS2D_PATH := $(LOCAL_PATH)/../../../cocos2d-1.0.1-x-0.9.2
 
 include $(CLEAR_VARS)
 LOCAL_MODULE    := prebuild-cocos2d
-LOCAL_SRC_FILES := lib/libcocos2d.so
+LOCAL_SRC_FILES := lib/$(TARGET_ARCH_ABI)/libcocos2d.so
 include $(PREBUILT_SHARED_LIBRARY)
 
 include $(CLEAR_VARS)
 LOCAL_MODULE    := prebuild-cocosdenshion
-LOCAL_SRC_FILES := /lib/libcocosdenshion.so
+LOCAL_SRC_FILES := /lib/$(TARGET_ARCH_ABI)/libcocosdenshion.so
 include $(PREBUILT_SHARED_LIBRARY)
 
 include $(CLEAR_VARS)

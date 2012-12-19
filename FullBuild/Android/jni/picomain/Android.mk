@@ -27,7 +27,7 @@ LOCAL_C_INCLUDES := $(COCOS2D_PATH)/cocos2dx \
 					$(ENGINE_PATH)/freetype/sources/freetype-2.4.10/include/ \
                     $(COCOS2DX_PATH)/lua/cocos2dx_support
 
-LOCAL_LDLIBS := -L$(call host-path, $(JNI_PATH)/../libs/armeabi) \
+LOCAL_LDLIBS := -L$(call host-path, $(JNI_PATH)/../libs/$(TARGET_ARCH_ABI)) \
                 -lGLESv1_CM -lcocos2d -llog -lfreetype -llua -lbox2d -lflmml -lpicogame -lcocosdenshion
 
 include $(BUILD_SHARED_LIBRARY)

@@ -7,7 +7,7 @@ LINKFILE = ./objects/LinkFileList.txt
 BUILD_DIR = objects
 
 CFLAGS = -DFT2_BUILD_LIBRARY -DFT_CONFIG_MODULES_H="<ftmodule.h>" -D_WIN32 -DIGNORE_EXPORT -DGLEW_NO_GLU -D__MINGW32__ -DGLEW_STATIC -DREGEX_STATIC -DLUA_COMPAT_ALL -DCC_UNDER_WIN32 -DGL_GLEXT_PROTOTYPES=1 -DWIN32 -D_WINDOWS -DNDEBUG -DWINDOWS \
--O2 \
+-O1 \
 -I../../../CocosDenshion/sources/CocosDenshion/include/ \
 -I../../../CocosDenshion/sources/CocosDenshion/ \
 -I../../../FlMML/include/flmml/ \

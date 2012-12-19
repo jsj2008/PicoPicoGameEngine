@@ -17,9 +17,13 @@
 #include "png.h"
 #include "PPGameDef.h"
 
-//#include <android/log.h>
-//#define  LOG_TAG    "main"
-//#define  LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG,LOG_TAG,__VA_ARGS__)
+#if 0
+#include <android/log.h>
+#define  LOG_TAG    "PicoGame"
+#define  LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG,LOG_TAG,__VA_ARGS__)
+#else
+#define  LOGD(...) 
+#endif
 
 #define PNG_HEADER_SIZE 8
 
@@ -30,7 +34,10 @@ static char path3[1024]={0};
 
 const char* PPGameResourcePath(const char* name)
 {
-	return cocos2d::CCFileUtils::fullPathFromRelativePath(name);
+LOGD("PPGameResourcePath %s(1)",name);
+	const char* r = cocos2d::CCFileUtils::fullPathFromRelativePath(name);
+LOGD("PPGameResourcePath %s(2)",name);
+	return r;
 }
 
 //int PPGame_SetDefault(const char* name)
@@ -158,10 +165,22 @@ static unsigned char* convert(unsigned char* image,png_uint_32 width,png_uint_32
 unsigned char* PPGame_LoadPNG(const char* fileName,unsigned long* imageWidth,unsigned long* imageHeight,unsigned long* bytesPerRow)
 {
 	cocos2d::CCImage* img = new cocos2d::CCImage();
+	if (img==NULL) {
+LOGD("PPGame_LoadPNG error1");
+		return NULL;
+	}
 	img->initWithImageFile(fileName);
 	unsigned char *pix = img->getData();
+	if (pix==NULL) {
+LOGD("PPGame_LoadPNG error2");
+		return NULL;
+	}
 	unsigned long size = img->getWidth()*img->getHeight()*4;
 	unsigned char * pixel = (unsigned char*)malloc(size);
+	if (pixel==NULL) {
+LOGD("PPGame_LoadPNG error3");
+		return NULL;
+	}
 	if (img->hasAlpha()) {
 		memcpy(pixel,pix,size);
 	} else {
@@ -240,6 +259,7 @@ LOGD("Can't get end info for PNG data");
 		return NULL;
     }
     
+#if 0
     if (setjmp(png_jmpbuf(PNG_reader)))
     {
         fprintf(stderr, "Can't decode PNG data\n");
@@ -248,6 +268,7 @@ LOGD("Can't decode PNG data");
 		free(png_buff.data);
 		return NULL;
     }
+#endif
 
 	png_data_read(PNG_reader,&png_buff);
 	png_read_info(PNG_reader,PNG_info);

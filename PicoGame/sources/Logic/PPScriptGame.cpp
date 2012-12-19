@@ -374,6 +374,7 @@ void PPScriptGame::reloadData()
 	textObject = (PPUIText*)PPUIText::registClass(script,"pptext","ppobject");
 	
 	projector->openLibrary(script,"ppscreen");
+	projector->animationFrameInterval=1;
 
 	script->execString(EMBEDDED_LUA_GAME_CODE);
 	script->addCommand("pprect",funcPPRect);

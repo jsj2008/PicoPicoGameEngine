@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
 {
 	{
 		id pool = [NSAutoreleasePool new];
-		NSString *logPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Library/Logs/PicoGame.log"];
+		NSString *logPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Library/Logs/PicoPicoGames.log"];
 		freopen([logPath fileSystemRepresentation], "a", stdout);
 		[pool release];
 	}
