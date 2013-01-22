@@ -31,6 +31,8 @@ static bool reload = false;
 static bool resizing = false;
 static bool resetCommand = false;
 static char dropFileName[1024]={0};
+// static int timerStep=0;
+// static DWORD timeCount=0;
 
 #define APP_NAME "PicoPicoGames"
 #define APP_TITLE "Window Test Application"
@@ -75,6 +77,7 @@ BOOL bSetupPixelFormat(HDC hdc)
 
 void CALLBACK TimerProc(HWND hWnd, UINT uMsg, UINT idEvent, DWORD dwTime)
 {
+	BOOL reloadData=false;
 	HDC hDC;
 	hDC = GetDC(hWnd);
 	wglMakeCurrent(hDC, hRC);
@@ -83,125 +86,146 @@ void CALLBACK TimerProc(HWND hWnd, UINT uMsg, UINT idEvent, DWORD dwTime)
 //	glGenFramebuffersEXT(1, &viewFramebuffer);
 //	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, viewFramebuffer);
 
-	if (scene) {
+	// if (timerStep==0) {
+	// 	timeCount = dwTime;
+	// 	timerStep++;
+	// } else if (timerStep==1) {
+	// 	if (dwTime-timeCount!=0) {
+	// 		timerStep++;
+	// 	}
+	// } else {
 
-		if (reload || resizing) {
-			RECT r;
-			GetClientRect(hWnd,&r);
-			screenWidth = r.right;
-			screenHeight = r.bottom;
-			scene->windowSize.width = screenWidth;
-			scene->windowSize.height = screenHeight;
-			resizing = false;
-			if (reload) {
-//				PPGameTexture::ReloadAllTexture();
-				reload=false;
-			}
-		}
+		if (scene) {
 
-		glViewport(0,0,screenWidth,screenHeight);
-	
-		unsigned long key = 0;
-
-		if (GetForegroundWindow() == hWnd) {
-			if ((GetKeyState(VK_LEFT) & 0x8000)) {
-				key |= PAD_LEFT;
-			}
-			if ((GetKeyState(VK_RIGHT) & 0x8000)) {
-				key |= PAD_RIGHT;
-			}
-			if ((GetKeyState(VK_UP) & 0x8000)) {
-				key |= PAD_UP;
-			}
-			if ((GetKeyState(VK_DOWN) & 0x8000)) {
-				key |= PAD_DOWN;
-			}
-			if ((GetKeyState(VK_ESCAPE) & 0x8000)) {
-				//ExitGame();
-				PostQuitMessage(0);
-			}
-			if ((GetKeyState(VK_SPACE) & 0x8000)) {
-				key |= PAD_A;
-			}
-			if ((GetKeyState(VK_RETURN) & 0x8000)) {
-//				key |= JOY_PAD_RETURN;
-				key |= PAD_B;
-			}
-			if ((GetKeyState(VK_SHIFT) & 0x8000)) {
-//				key |= JOY_PAD_SHIFT;
-				key |= PAD_B;
-			}
-			if ((GetKeyState(VK_CONTROL) & 0x8000)) {
-//				key |= JOY_PAD_CONTROL;
-				key |= PAD_B;
-			}
-			if ((GetKeyState('X') & 0x8000)) {
-				key |= PAD_B;
-			}
-			if ((GetKeyState('Z') & 0x8000)) {
-				key |= PAD_A;
-			}
-			if ((GetKeyState('A') & 0x8000)) {
-				key |= PAD_A;
-			}
-			if ((GetKeyState('B') & 0x8000)) {
-				key |= PAD_B;
-			}
-			if ((GetKeyState('C') & 0x8000)) {
-				key |= PAD_C;
-			}
-			if ((GetKeyState('D') & 0x8000)) {
-				key |= PAD_D;
-			}
-			if ((GetKeyState('E') & 0x8000)) {
-				key |= PAD_E;
-			}
-			if ((GetKeyState('F') & 0x8000)) {
-				key |= PAD_F;
-			}
-			if ((GetKeyState('G') & 0x8000)) {
-				key |= PAD_G;
-			}
-			if ((GetKeyState('H') & 0x8000)) {
-				key |= PAD_H;
-			}
-			if ((GetKeyState(VK_CONTROL) & 0x8000) && (GetKeyState('R') & 0x8000)) {
-				if (!resetCommand) {
-					if (scene->game) {
-						scene->game->reloadData();
-					}
+			if (reload || resizing) {
+				RECT r;
+				GetClientRect(hWnd,&r);
+				screenWidth = r.right;
+				screenHeight = r.bottom;
+				scene->windowSize.width = screenWidth;
+				scene->windowSize.height = screenHeight;
+				resizing = false;
+				if (reload) {
+	//				PPGameTexture::ReloadAllTexture();
+					reload=false;
 				}
-				resetCommand = true;
-			} else {
-				resetCommand = false;
 			}
-		}
+
+			glViewport(0,0,screenWidth,screenHeight);
 		
-		if (dropFileName[0] != 0) {
-			if (strncasecmp(PathFindExtension(dropFileName),".lua",4) == 0) {
-printf("%s\n",dropFileName);
-				PPGameSetMainLua(PathFindFileName(dropFileName));
-				PathRemoveFileSpec(dropFileName);
-				PathAddBackslash(dropFileName);
-				PPGameSetDataPath(dropFileName);
-				scene->game->reloadData();
+			unsigned long key = 0;
+
+			if (GetForegroundWindow() == hWnd) {
+				if ((GetKeyState(VK_LEFT) & 0x8000)) {
+					key |= PAD_LEFT;
+				}
+				if ((GetKeyState(VK_RIGHT) & 0x8000)) {
+					key |= PAD_RIGHT;
+				}
+				if ((GetKeyState(VK_UP) & 0x8000)) {
+					key |= PAD_UP;
+				}
+				if ((GetKeyState(VK_DOWN) & 0x8000)) {
+					key |= PAD_DOWN;
+				}
+				if ((GetKeyState(VK_ESCAPE) & 0x8000)) {
+					//ExitGame();
+					PostQuitMessage(0);
+				}
+				if ((GetKeyState(VK_SPACE) & 0x8000)) {
+					key |= PAD_A;
+				}
+				if ((GetKeyState(VK_RETURN) & 0x8000)) {
+	//				key |= JOY_PAD_RETURN;
+					key |= PAD_B;
+				}
+				if ((GetKeyState(VK_SHIFT) & 0x8000)) {
+	//				key |= JOY_PAD_SHIFT;
+					key |= PAD_B;
+				}
+				if ((GetKeyState(VK_CONTROL) & 0x8000)) {
+	//				key |= JOY_PAD_CONTROL;
+					key |= PAD_B;
+				}
+				if ((GetKeyState('X') & 0x8000)) {
+					key |= PAD_B;
+				}
+				if ((GetKeyState('Z') & 0x8000)) {
+					key |= PAD_A;
+				}
+				if ((GetKeyState('A') & 0x8000)) {
+					key |= PAD_A;
+				}
+				if ((GetKeyState('B') & 0x8000)) {
+					key |= PAD_B;
+				}
+				if ((GetKeyState('C') & 0x8000)) {
+					key |= PAD_C;
+				}
+				if ((GetKeyState('D') & 0x8000)) {
+					key |= PAD_D;
+				}
+				if ((GetKeyState('E') & 0x8000)) {
+					key |= PAD_E;
+				}
+				if ((GetKeyState('F') & 0x8000)) {
+					key |= PAD_F;
+				}
+				if ((GetKeyState('G') & 0x8000)) {
+					key |= PAD_G;
+				}
+				if ((GetKeyState('H') & 0x8000)) {
+					key |= PAD_H;
+				}
+				if ((GetKeyState(VK_CONTROL) & 0x8000) && (GetKeyState('R') & 0x8000)) {
+					if (!resetCommand) {
+						if (scene->game) {
+							//scene->game->reloadData();
+							reloadData=true;
+						}
+					}
+					resetCommand = true;
+				} else {
+					resetCommand = false;
+				}
 			}
-			dropFileName[0] = 0;
+			
+			if (dropFileName[0] != 0) {
+				if (strncasecmp(PathFindExtension(dropFileName),".lua",4) == 0) {
+	printf("%s\n",dropFileName);
+					PPGameSetMainLua(PathFindFileName(dropFileName));
+					PathRemoveFileSpec(dropFileName);
+					PathAddBackslash(dropFileName);
+					PPGameSetDataPath(dropFileName);
+					//scene->game->reloadData();
+					reloadData=true;
+				}
+				dropFileName[0] = 0;
+			}
+
+			POINT cpos;
+			GetCursorPos(&cpos);
+			ScreenToClient(hWnd,&cpos);
+			if (scene->game) {
+				scene->game->mouseLocation.x = cpos.x;
+				scene->game->mouseLocation.y = cpos.y;
+			}
+			scene->hardkey = key;
+			scene->draw();
 		}
 
-		POINT cpos;
-		GetCursorPos(&cpos);
-		ScreenToClient(hWnd,&cpos);
-		if (scene->game) {
-			scene->game->mouseLocation.x = cpos.x;
-			scene->game->mouseLocation.y = cpos.y;
-		}
-		scene->hardkey = key;
-		scene->draw();
-	}
+	// }
 
 	SwapBuffers(hDC);
 	ReleaseDC(hWnd,hDC);
+
+	if (reloadData) {
+		if (scene) {
+			if (scene->game) {
+				scene->game->reloadData();
+			}
+		}
+	}
 }
 
 void glSetInterval(int isinterval)

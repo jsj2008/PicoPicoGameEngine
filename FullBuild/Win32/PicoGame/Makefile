@@ -71,6 +71,14 @@ setup:
 	rm -f $(LINKFILE)
 
 fullbuild:
+	cd ../../../Box2D/Win32/build; make clean
+	cd ../../../CocosDenshion/Win32/build; make clean
+	cd ../../../FlMML/Win32/build; make clean
+	cd ../../../freetype/Win32/build; make clean
+	cd ../../../lua5.2/Win32/build; make clean
+	cd ../../../PicoGame/Win32/build; make clean
+	cd ../../../png/Win32/build; make clean
+	cd ./; make clean
 	cd ../../../Box2D/Win32/build; make
 	cd ../../../CocosDenshion/Win32/build; make
 	cd ../../../FlMML/Win32/build; make

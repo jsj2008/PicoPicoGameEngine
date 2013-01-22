@@ -20,7 +20,10 @@ PPFontManager::~PPFontManager()
 {
 	if (fontTable) {
 		for (int i=0;i<_tableCount;i++) {
-			if (fontTable[i]) delete fontTable[i];
+			if (fontTable[i]) {
+				fontTable[i]->index = -1;
+				delete fontTable[i];
+			}
 		}
 		delete fontTable;
 	}
@@ -151,7 +154,7 @@ PPFont::PPFont(PPWorld* world) : PPObject(world),_name(NULL),index(-1)
 
 PPFont::~PPFont()
 {
-	world()->projector->textureManager->fontManager->removeFont(this);
+	if (index>=0) world()->projector->textureManager->fontManager->removeFont(this);
 #ifndef NO_TTFONT
 	if (ttfont) delete ttfont;
 #endif

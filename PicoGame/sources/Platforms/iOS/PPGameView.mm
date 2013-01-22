@@ -387,6 +387,8 @@ void __PPGame_Set3GSLater(int later);
 	if (staticKey & iCadeButtonF) key |= PAD_F;
 	if (staticKey & iCadeButtonG) key |= PAD_G;
 	if (staticKey & iCadeButtonH) key |= PAD_H;
+	if (staticKey & iCadeButtonSetup) key |= PAD_SetUP;
+	if (staticKey & iCadeButtonStart) key |= PAD_Start;
 	return key;
 }
 

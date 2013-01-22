@@ -1867,6 +1867,20 @@ static int funcGetKeyH(lua_State* L)
 	return 1;
 }
 
+static int funcGetKeySetUP(lua_State* L)
+{
+	QBGame* m = (QBGame*)PPLuaArg::World(L);
+	lua_pushboolean(L,m->GetKey() & PAD_SetUP);
+	return 1;
+}
+
+static int funcGetKeyStart(lua_State* L)
+{
+	QBGame* m = (QBGame*)PPLuaArg::World(L);
+	lua_pushboolean(L,m->GetKey() & PAD_Start);
+	return 1;
+}
+
 static int funcGetDensity(lua_State* L)
 {
 	QBGame* m = (QBGame*)PPLuaArg::World(L);
@@ -2196,6 +2210,8 @@ void QBGame::openKeyLibrary(PPLuaScript* script,const char* name)
 		script->addCommand("f",funcGetKeyF);
 		script->addCommand("g",funcGetKeyG);
 		script->addCommand("h",funcGetKeyH);
+		script->addCommand("setup",funcGetKeySetUP);
+		script->addCommand("start",funcGetKeyStart);
 	script->closeModule();
 }
 

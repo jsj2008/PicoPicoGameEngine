@@ -459,30 +459,37 @@ void PPTMXMap::stepIdle()
 bool PPTMXMap::load(const char* path)
 {
 	reset();
-	
+
 	for (int i=0;path[i];i++) {
 		if (path[i] == '.') {
 			if (strcmp(&path[i+1],"plist") == 0) {
 				PPGameMap map(path);
+				
+				if (map.loadError) {
+					PPReadErrorSet(path);
+					return false;
+				}
 
 				for (int j=0;j<3;j++) {
 					PPTMXLayer* _layer = new PPTMXLayer();
-					{
-						std::stringstream ss;
-						ss << "layer" << (j+1);
-						_layer->name = ss.str();
-					}
-					_layer->mapSize.width = map.map[j].width;
-					_layer->mapSize.height = map.map[j].height;
-					_layer->chip = (PPTMXChip*)calloc(1,_layer->mapSize.width*_layer->mapSize.height*sizeof(PPTMXChip));
-//					_layer->att = (unsigned char*)calloc(1,_layer->width*_layer->height);
-					
-					if (_layer->chip) {
-						for (int y=0;y<map.map[j].height;y++) {
-							for (int x=0;x<map.map[j].width;x++) {
-								_layer->chip[x+y*map.map[j].width].reset();
-								_layer->chip[x+y*map.map[j].width].tile = map.map[j].map[x+y*map.map[j].width];
-								if (_layer->chip[x+y*map.map[j].width].tile > 0) _layer->chip[x+y*map.map[j].width].tile ++;
+					if (map.map[j].map) {
+						{
+							std::stringstream ss;
+							ss << "layer" << (j+1);
+							_layer->name = ss.str();
+						}
+						_layer->mapSize.width = map.map[j].width;
+						_layer->mapSize.height = map.map[j].height;
+						_layer->chip = (PPTMXChip*)calloc(1,_layer->mapSize.width*_layer->mapSize.height*sizeof(PPTMXChip));
+	//					_layer->att = (unsigned char*)calloc(1,_layer->width*_layer->height);
+						
+						if (_layer->chip) {
+							for (int y=0;y<map.map[j].height;y++) {
+								for (int x=0;x<map.map[j].width;x++) {
+									_layer->chip[x+y*map.map[j].width].reset();
+									_layer->chip[x+y*map.map[j].width].tile = map.map[j].map[x+y*map.map[j].width];
+									if (_layer->chip[x+y*map.map[j].width].tile > 0) _layer->chip[x+y*map.map[j].width].tile ++;
+								}
 							}
 						}
 					}
@@ -493,22 +500,24 @@ bool PPTMXMap::load(const char* path)
 //				mapSize.width = map.map[0].width;
 //				mapSize.height = map.map[0].height;
 
-				PPTMXObjectGroup* group = new PPTMXObjectGroup();
-				group->name = "Objects";
-				group->width = map.map[0].width;
-				group->height = map.map[0].height;
-				objectgroup.push_back(group);
-				
-				for (int j=0;j<map.map[0].eventNum;j++) {
-					PPGameMapEvent* e = &map.map[0].event[j];
-					PPTMXObject* object = new PPTMXObject();
-					object->name = e->name;
-					object->type = "";
-					object->x = e->x*32+e->dx;
-					object->y = e->y*32+e->dy;
-					object->width = e->w*32;
-					object->height = e->h*32;
-					objectgroup[objectgroup.size()-1]->object.push_back(object);
+				{
+					PPTMXObjectGroup* group = new PPTMXObjectGroup();
+					group->name = "Objects";
+					group->width = map.map[0].width;
+					group->height = map.map[0].height;
+					objectgroup.push_back(group);
+					
+					for (int j=0;j<map.map[0].eventNum;j++) {
+						PPGameMapEvent* e = &map.map[0].event[j];
+						PPTMXObject* object = new PPTMXObject();
+						object->name = e->name;
+						object->type = "";
+						object->x = e->x*32+e->dx;
+						object->y = e->y*32+e->dy;
+						object->width = e->w*32;
+						object->height = e->h*32;
+						objectgroup[objectgroup.size()-1]->object.push_back(object);
+					}
 				}
 
 				drawArea = PPRect(0,0,map.map[0].width,map.map[0].height);
@@ -1240,7 +1249,7 @@ void PPTMXMap_startElement(void *ctx, const PPXmlChar *name, const PPXmlChar **a
 			layer->encoding = valueForKey("encoding",atts);
 			layer->compression = valueForKey("compression",atts);
 		}
-	} 
+	}
 	else if(elementName == "object")
 	{
 		if (!map->objectgroup.empty()) {
@@ -1336,7 +1345,12 @@ static int funcLoad(lua_State* L)
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
 //	PPTMXMap* m = (PPTMXMap*)s->userdata;
 	if (s->argCount > 0) {
-		m->load(s->args(0));
+		if (!m->load(s->args(0))) {
+			if (PPReadError()) {
+				PPReadErrorReset();
+				return luaL_error(L,"file read error '%s'",s->args(0));
+			}
+		}
 		PPGameTextureOption option;
 		if (s->argCount > 1) {
 			if (s->isTable(L,1)) {

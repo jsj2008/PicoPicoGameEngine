@@ -12,13 +12,14 @@
 #include "PPGameMap.h"
 #include "PPGameUtil.h"
 
-PPGameMap::PPGameMap(const char* path) : texture(NULL)
+PPGameMap::PPGameMap(const char* path) : texture(NULL),loadError(false)
 {
 //	NSDictionary* d = [[NSDictionary dictionaryWithContentsOfFile:[NSString stringWithUTF8String:path]] retain];
 	NSDictionary* d = [[NSDictionary dictionaryWithContentsOfFile:[NSString stringWithUTF8String:PPGameDataPath(path)]] retain];
 
 	if (d==nil) {
 		PPReadErrorSet(path);
+		loadError=true;
 		return;
 	}
 	

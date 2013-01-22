@@ -713,7 +713,7 @@ static int funcPixel(lua_State *L)
 		} else
 		if (s->argCount > 1) {
 			pos = PPPoint(s->number(0),s->number(1));
-			if (s->argCount > 3) {
+			if (s->argCount > 2) {
 				m->pset(pos,s->getColor(L,2));
 			}
 		}

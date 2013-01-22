@@ -143,6 +143,7 @@ int PPTTFont::load(const char* name,int size)
 	}
 	newFontCount = 0;
 	_updated = true;
+	f->type = 1;
 	return error;
 }
 #endif
@@ -400,10 +401,12 @@ void PPTTFont::textureUpdate()
 
 void PPTTFont::idle()
 {
-//printf("----- idle\n");
 	FTFONT* f=(FTFONT*)ftfont;
 	if (f->type == 0) return;
-	if (!base->world()->projector->textureManager->checkBind(texture)) _updated = true;
+	if (!base->world()->projector->textureManager->checkBind(texture)) {
+		base->world()->projector->textureManager->setTexture(texture,base->pixel,base->width,base->height,base->bytePerRow,option);
+//		_updated = true;
+	}
 	//よく使うものを上に
 	for (int j=0;j<newFontCount;j++) {
 		for (int i=0;i<maxTile-1;i++) {

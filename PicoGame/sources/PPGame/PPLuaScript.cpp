@@ -521,6 +521,8 @@ void PPLuaArg::resetTimeout()
 
 PPLuaScript::PPLuaScript(PPWorld* world) : PPLuaArg(world),_module(NULL)
 {
+	resetTimeout();
+	
 	//script = this;
 	L = luaL_newstate();
 	luaApiHook_Init(L,myCountHook,mySetErrorLineNumber);

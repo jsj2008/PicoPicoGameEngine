@@ -99,6 +99,20 @@ public:
 			c = c->sibling();
 		}
 	}
+	
+	virtual void resetScroll() {
+		touchStep=0;
+		touchDownFlag=false;
+		if (dpos.x > 0) dpos.x = 0;
+		if (dpos.y > 0) dpos.y = 0;
+		if (dpos.x+_contentsRect.width < size().width) {
+			dpos.x = size().width-_contentsRect.width;
+		}
+		if (dpos.y+_contentsRect.height < size().height) {
+			dpos.y = size().height-_contentsRect.height;
+		}
+		speed = PPPointZero;
+	}
 
 	virtual bool touchIdle(bool touch=true) {
 		if (manualScroll) {

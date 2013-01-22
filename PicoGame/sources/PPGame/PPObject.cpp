@@ -26,7 +26,7 @@
 #define PPOBJECT_AUTO_LAYOUT	0x0400
 #define PPOBJECT_VIEW_PORT		0x0800
 
-PPObject::PPObject(PPWorld* world) : target(NULL)
+PPObject::PPObject(PPWorld* world) : target(world)
 {
 	flags = 0;
 	index = 0;
@@ -40,10 +40,8 @@ PPObject::PPObject(PPWorld* world) : target(NULL)
 	depth = 0;
 	touchStep = 0;
 	poly._texture = 0;
-	target = NULL;
 	selector = NULL;
 	dragStep = 0;
-	target=world;
 	init(world);
 }
 

@@ -302,21 +302,21 @@ function ppscreen:arrayfrom(t)
 	end
 	return r
 end
-ppgraph.white={255,255,255}
-ppgraph.red={255,0,0}
-ppgraph.green={0,255,0}
-ppgraph.blue={0,0,255}
-ppgraph.yellow={255,255,0}
-ppgraph.cyan={0,255,255}
-ppgraph.magenta={255,0,255}
-ppgraph.black={0,0,0}
-ppgraph.gray={96,96,96}
-ppgraph.lightgray={188,188,188}
-ppgraph.orange={255,128,0}
-ppgraph.skin={255,216,160}
-ppgraph.darkgreen={56,104,0}
-ppgraph.lightgreen={152,232,0}
-ppgraph.brown={120,64,0}
+ppgraph.white={r=255,g=255,b=255,a=255}
+ppgraph.red={r=255,g=0,b=0,a=255}
+ppgraph.green={r=0,g=255,b=0,a=255}
+ppgraph.blue={r=0,g=0,b=255,a=255}
+ppgraph.yellow={r=255,g=255,b=0,a=255}
+ppgraph.cyan={r=0,g=255,b=255,a=255}
+ppgraph.magenta={r=255,g=0,b=255,a=255}
+ppgraph.black={r=0,g=0,b=0,a=255}
+ppgraph.gray={r=96,g=96,b=96,a=255}
+ppgraph.lightgray={r=188,g=188,b=188,a=255}
+ppgraph.orange={r=255,g=128,b=0,a=255}
+ppgraph.skin={r=255,g=216,b=160,a=255}
+ppgraph.darkgreen={r=56,g=104,b=0,a=255}
+ppgraph.lightgreen={r=152,g=232,b=0,a=255}
+ppgraph.brown={r=120,g=64,b=0,a=255}
 
 ppbutton=function(title)
 	local a=pprect(0,0,0,0)
@@ -380,7 +380,7 @@ ppbutton=function(title)
 	  fb:position(self.titleoffset)
 	  local p=ppgraph:layout(fb,true,true,ar)
 	  local op=ppgraph:locate()
-	  ppgraph:locate(p)
+	  ppgraph:locate(math.floor(p.x),math.floor(p.y))
 	  if self.hitrect.touch then
 	    ppgraph:print(self.title,self.selectcolor)
 	  else
@@ -406,6 +406,11 @@ ppbutton=function(title)
 end
 
 function ppgraph:stretch(rect,tile,edge,tex)
+ local deftex=nil
+ if tex~=nil then
+  deftex=pptex:default()
+  pptex:default(tex)
+ end
  local left=nil
  local top=nil
  local right=nil
@@ -422,11 +427,8 @@ function ppgraph:stretch(rect,tile,edge,tex)
  local ot=g:tileInfo()
  local r=pprect(rect)
  local p=r:position()
- if tex==nil then
-    tex=pptex:default()
- end
  if type(tile)~="table" then
- 	tile=self:tileRect(tile)
+ 	tile=self:tileRect(tile,tex)
  end
  if type(tile)=="table" then
   if left==nil then left=0 end
@@ -469,9 +471,17 @@ function ppgraph:stretch(rect,tile,edge,tex)
 
  end
  g:tileInfo(ot)
+ if deftex~=nil then
+  pptex:default(deftex)
+ end
 end
 
 function ppgraph:tileRect(tile,tex)
+  local deftex=nil
+  if tex~=nil then
+    deftex=pptex:default()
+    pptex:default(tex)
+  end
   if tex==nil then
     tex=pptex:default()
   end
@@ -483,5 +493,8 @@ function ppgraph:tileRect(tile,tex)
   r:position((pppoint(i%tw,math.floor(i/tw))*t.psize)+t.offset)
   r.width=t.size.width
   r.height=t.size.height
+  if deftex~=nil then
+    pptex:default(deftex)
+   end
   return r
 end

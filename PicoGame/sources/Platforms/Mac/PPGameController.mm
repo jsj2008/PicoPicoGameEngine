@@ -369,50 +369,62 @@
 	[self startAnimation];
 }
 
-- (IBAction)changeWindowSize:(id)sender
+- (IBAction)changeWindowSize:(NSMenuItem*)sender
 {
-	if ([sender tag] == 320) {
-		NSRect frameRect = [window frame];
-		frameRect.size.width = 320;
-		frameRect.size.height = 480;
+#if 1
+	NSString* title = [sender title];
+	NSArray* a = [title componentsSeparatedByString:@"x"];
+	NSRect frameRect = [window frame];
+	frameRect.size.width = [[a objectAtIndex:0] intValue];
+	frameRect.size.height = [[a objectAtIndex:1] intValue];
+	if (frameRect.size.width > 0 && frameRect.size.height > 0) {
 		frameRect = [window frameRectForContentRect:frameRect];
 		[window setFrame:frameRect display:YES];
 	}
-	if ([sender tag] == 260) {
-		NSRect frameRect = [window frame];
-		frameRect.size.width = 260;
-		frameRect.size.height = 240;
-		frameRect = [window frameRectForContentRect:frameRect];
-		[window setFrame:frameRect display:YES];
-	}
-	if ([sender tag] == 480) {
-		NSRect frameRect = [window frame];
-		frameRect.size.width = 480;
-		frameRect.size.height = 320;
-		frameRect = [window frameRectForContentRect:frameRect];
-		[window setFrame:frameRect display:YES];
-	}
-	if ([sender tag] == 640) {
-		NSRect frameRect = [window frame];
-		frameRect.size.width = 640;
-		frameRect.size.height = 480;
-		frameRect = [window frameRectForContentRect:frameRect];
-		[window setFrame:frameRect display:YES];
-	}
-	if ([sender tag] == 768) {
-		NSRect frameRect = [window frame];
-		frameRect.size.width = 768;
-		frameRect.size.height = 1024;
-		frameRect = [window frameRectForContentRect:frameRect];
-		[window setFrame:frameRect display:YES];
-	}
-	if ([sender tag] == 1024) {
-		NSRect frameRect = [window frame];
-		frameRect.size.width = 1024;
-		frameRect.size.height = 768;
-		frameRect = [window frameRectForContentRect:frameRect];
-		[window setFrame:frameRect display:YES];
-	}
+#else
+//	if ([sender tag] == 320) {
+//		NSRect frameRect = [window frame];
+//		frameRect.size.width = 320;
+//		frameRect.size.height = 480;
+//		frameRect = [window frameRectForContentRect:frameRect];
+//		[window setFrame:frameRect display:YES];
+//	}
+//	if ([sender tag] == 260) {
+//		NSRect frameRect = [window frame];
+//		frameRect.size.width = 260;
+//		frameRect.size.height = 240;
+//		frameRect = [window frameRectForContentRect:frameRect];
+//		[window setFrame:frameRect display:YES];
+//	}
+//	if ([sender tag] == 480) {
+//		NSRect frameRect = [window frame];
+//		frameRect.size.width = 480;
+//		frameRect.size.height = 320;
+//		frameRect = [window frameRectForContentRect:frameRect];
+//		[window setFrame:frameRect display:YES];
+//	}
+//	if ([sender tag] == 640) {
+//		NSRect frameRect = [window frame];
+//		frameRect.size.width = 640;
+//		frameRect.size.height = 480;
+//		frameRect = [window frameRectForContentRect:frameRect];
+//		[window setFrame:frameRect display:YES];
+//	}
+//	if ([sender tag] == 768) {
+//		NSRect frameRect = [window frame];
+//		frameRect.size.width = 768;
+//		frameRect.size.height = 1024;
+//		frameRect = [window frameRectForContentRect:frameRect];
+//		[window setFrame:frameRect display:YES];
+//	}
+//	if ([sender tag] == 1024) {
+//		NSRect frameRect = [window frame];
+//		frameRect.size.width = 1024;
+//		frameRect.size.height = 768;
+//		frameRect = [window frameRectForContentRect:frameRect];
+//		[window setFrame:frameRect display:YES];
+//	}
+#endif
 }
 
 - (IBAction)deleteAllTexture:(id)sender

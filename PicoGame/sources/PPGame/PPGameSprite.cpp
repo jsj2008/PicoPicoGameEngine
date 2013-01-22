@@ -70,7 +70,6 @@ PPGameSprite::~PPGameSprite()
 //	__sprite = NULL;
 	
 	delete textureManager;
-//printf("delete PPGameSprite\n");
 }
 
 int PPGameSprite::Init()

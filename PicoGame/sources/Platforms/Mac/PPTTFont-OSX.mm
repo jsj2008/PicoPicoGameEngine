@@ -90,7 +90,7 @@ PPTTFontTile* PPTTFont::image(const char* string)
 			}
 		}
 	}
-	
+
 	if (f->type==1) {
 		if (f->face == NULL) return NULL;
 

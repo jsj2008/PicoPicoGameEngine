@@ -12,7 +12,7 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification*)aNotification
 {
-	[window setFrameUsingName:@"mainWindow"];
+//	[window setFrameUsingName:@"mainWindow"];
 	
 	NSRect frameRect = [window frame];
 	frameRect.size.width = 640;

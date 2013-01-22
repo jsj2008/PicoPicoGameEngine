@@ -40,5 +40,8 @@ typedef enum iCadeState {
     iCadeButtonF            = 0x200,
     iCadeButtonG            = 0x400,
     iCadeButtonH            = 0x800,
+
+    iCadeButtonStart        = 0x1000,
+    iCadeButtonSetup        = 0x2000,
     
 } iCadeState;

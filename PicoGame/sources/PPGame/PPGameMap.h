@@ -63,6 +63,7 @@ public:
 	}
 	
 	char* texture;
+	bool loadError;
 };
 
 #endif

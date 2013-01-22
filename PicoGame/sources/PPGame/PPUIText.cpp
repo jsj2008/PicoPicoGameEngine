@@ -392,8 +392,8 @@ void PPUIText::touchUp(PPPoint _pos)
 {
 	selectedCell = -1;
 	PPUIScrollView::touchUp(_pos);
-	if (column > 0 && dragged==false) {
 //printf("pos %f,%f\n",_pos.x,_pos.y);
+	if (column > 0 && dragged==false) {
 		PPPoint s = world()->projector->st.scale;
 		PPPoint g = world()->projector->st.origin;
 		PPPoint o = world()->projector->st.offset;
@@ -949,6 +949,21 @@ static int funcScale(lua_State* L)
 	return s->returnPoint(L,m->poly.scale);
 }
 
+static int funcHide(lua_State* L)
+{
+	PPUIText* m = (PPUIText*)PPLuaScript::UserData(L);
+//	PPLuaScript* s = PPLuaScript::sharedScript();
+//	PPObject* m = (PPObject*)s->userData(L);
+	if (m==NULL) {
+		return luaL_argerror(L,1,"invalid argument.");
+	}
+	m->resetScroll();
+//	m->dragged=false;
+//	m->setTouch(false);
+	m->hide();
+	return 0;
+}
+
 static int funcDelete(lua_State *L)
 {
 	delete (PPUIText*)(PPLuaScript::DeleteObject(L));
@@ -1019,6 +1034,7 @@ PPObject* PPUIText::registClass(PPLuaScript* s,const char* name,PPObject* obj,co
 		s->addCommand("cursorPos",funcCurPos);
 		s->addCommand("margin",funcMargin);
 		s->addCommand("lastSelect",funcSelectedCell);
+		s->addCommand("hide",funcHide);
 	s->closeModule();
 	return obj;
 }

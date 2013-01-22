@@ -87,7 +87,7 @@ void PPGameWinScene::draw()
 //		}
 		g->DrawOT();
 		g->ResetOT();
-		textureIdle(g);
+//		textureIdle(g);
 		QBGame::blinkCounter++;
 	} else {
 		g = new PPGameSprite();

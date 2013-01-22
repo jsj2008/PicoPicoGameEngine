@@ -13,6 +13,11 @@
 #include "PPFont.h"
 #include "PPGameUtil.h"
 
+static int resetTexture(int value,const char* str) {
+//printf("resetTexture %s\n",str);
+	return value;
+}
+
 PPGameTextureManager::PPGameTextureManager() : defaultTexture(-1),fontManager(NULL)
 {
 	for (int i=0;i<PPGAME_MAX_TEXTURE;i++) {
@@ -176,7 +181,7 @@ int PPGameTextureManager::unbindAllTexture()
 					glDeleteTextures(1,&texture[i]->texture_name);
 //				}
 			}
-			texture[i]->texture_name = 0;
+			texture[i]->texture_name = resetTexture(0,"1");
 		}
 	}
 	return 0;
@@ -215,7 +220,7 @@ int PPGameTextureManager::reloadAllTexture()
 			} else {
 				glDeleteTextures(1,&texture[i]->texture_name);
 			}
-			texture[i]->texture_name = 0;
+			texture[i]->texture_name = resetTexture(0,"2");
 		}
 	}
 	fontManager->fontManagerIdle();
@@ -326,7 +331,7 @@ int PPGameTexture::unbindTexture()
 //	} else
 	if (texture_name != 0) {
 		glDeleteTextures(1,&texture_name);
-		texture_name = 0;
+		texture_name = resetTexture(0,"3");
 	}
 	return 0;
 }
@@ -419,7 +424,7 @@ int PPGameTextureManager::deleteTexture(int textureid)
 				texture[i]->loaded = false;
 				if (texture[i]->texture_name) {
 					glDeleteTextures(1,&texture[i]->texture_name);
-					texture[i]->texture_name = 0;
+					texture[i]->texture_name = resetTexture(0,"4");
 				}
 				delete texture[i];
 				texture[i] = NULL;
@@ -624,7 +629,7 @@ int PPGameTextureManager::freeTexture(int index)
 //			if (texture[i]->sharedTexture < 0) {
 				if (texture[i]->texture_name) {
 					glDeleteTextures(1,&texture[i]->texture_name);
-					texture[i]->texture_name = 0;
+					texture[i]->texture_name = resetTexture(0,"5");
 				}
 //			}
 		}

@@ -16,7 +16,7 @@
 #include "CCFileUtils.h"
 #endif
 
-PPGameMap::PPGameMap(const char* path) : texture(NULL)
+PPGameMap::PPGameMap(const char* path) : texture(NULL),loadError(false)
 {
 	QBNodePool* pool = QBNodePoolAlloc();
 	if (pool) {
@@ -27,13 +27,26 @@ PPGameMap::PPGameMap(const char* path) : texture(NULL)
 		if (str == NULL) {
 			str = (char*)cocos2d::CCFileUtils::getFileData(path,"r",&size);
 		}
+		if (str == NULL) {
+			loadError = true;
+			return;
+		}
 #else
 		FILE* fp = fopen(PPGameDataPath(path),"r");
 		if (fp == NULL) {
 			fp = fopen(PPGameResourcePath(path),"r");
 		}
+		if (!fp) {
+			loadError = true;
+			return;
+		}
 		fseek(fp,0,SEEK_END);
 		int size = ftell(fp);
+		if (size==0) {
+			fclose(fp);
+			loadError = true;
+			return;
+		}
 		fseek(fp,0,SEEK_SET);
 		char* str = (char*)malloc(size);
 		fread(str,size,1,fp);

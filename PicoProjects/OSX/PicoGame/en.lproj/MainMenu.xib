@@ -296,6 +296,15 @@
 									<reference key="NSMixedImage" ref="502551668"/>
 									<int key="NSTag">320</int>
 								</object>
+								<object class="NSMenuItem" id="808896555">
+									<reference key="NSMenu" ref="835318025"/>
+									<string key="NSTitle">320x568</string>
+									<string key="NSKeyEquiv"/>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="35465992"/>
+									<reference key="NSMixedImage" ref="502551668"/>
+									<int key="NSTag">320</int>
+								</object>
 								<object class="NSMenuItem" id="178622105">
 									<reference key="NSMenu" ref="835318025"/>
 									<string key="NSTitle">480x320</string>
@@ -456,8 +465,9 @@
 					<reference key="NSWindow"/>
 					<reference key="NSNextKeyView" ref="910074980"/>
 				</object>
-				<string key="NSScreenRect">{{0, 0}, {1920, 1058}}</string>
+				<string key="NSScreenRect">{{0, 0}, {1680, 1028}}</string>
 				<string key="NSMaxSize">{10000000000000, 10000000000000}</string>
+				<string key="NSFrameAutosaveName">mainWindow</string>
 				<bool key="NSWindowIsRestorable">YES</bool>
 			</object>
 			<object class="NSCustomObject" id="773271615">
@@ -579,14 +589,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
-						<string key="label">window</string>
-						<reference key="source" ref="976324537"/>
-						<reference key="destination" ref="972006081"/>
-					</object>
-					<int key="connectionID">532</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
 						<string key="label">openGLView</string>
 						<reference key="source" ref="976324537"/>
 						<reference key="destination" ref="910074980"/>
@@ -683,6 +685,22 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
+						<string key="label">window</string>
+						<reference key="source" ref="976324537"/>
+						<reference key="destination" ref="972006081"/>
+					</object>
+					<int key="connectionID">723</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">changeWindowSize:</string>
+						<reference key="source" ref="976324537"/>
+						<reference key="destination" ref="808896555"/>
+					</object>
+					<int key="connectionID">725</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
 						<string key="label">controller</string>
 						<reference key="source" ref="910074980"/>
 						<reference key="destination" ref="976324537"/>
@@ -719,7 +737,7 @@
 						<reference key="source" ref="773271615"/>
 						<reference key="destination" ref="972006081"/>
 					</object>
-					<int key="connectionID">713</int>
+					<int key="connectionID">722</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -893,6 +911,7 @@
 							<reference ref="882438049"/>
 							<reference ref="622041483"/>
 							<reference ref="953675823"/>
+							<reference ref="808896555"/>
 						</array>
 						<reference key="parent" ref="713487014"/>
 					</object>
@@ -1090,6 +1109,12 @@
 						<reference key="object" ref="773271615"/>
 						<reference key="parent" ref="0"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">724</int>
+						<reference key="object" ref="808896555"/>
+						<reference key="parent" ref="835318025"/>
+						<string key="objectName">10</string>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -1174,6 +1199,7 @@
 				<string key="703.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="704.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="709.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="724.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="73.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="81.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="83.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1183,7 +1209,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">721</int>
+			<int key="maxID">725</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
