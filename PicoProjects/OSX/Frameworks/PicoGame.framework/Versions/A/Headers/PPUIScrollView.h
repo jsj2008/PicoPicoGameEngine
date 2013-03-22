@@ -127,8 +127,6 @@ public:
 					break;
 				}
 			}
-	//		PPObject::touchIdle(touch);//PPViewPort::touchIdle(touch);
-	//		{
 			for (int i=0;i<SPEED_QUE-1;i++) {
 				speedque[i] = speedque[i+1];
 			}
@@ -140,6 +138,7 @@ public:
 				}
 				speed /= SPEED_QUE;
 				tpos = touchPos;
+				speed = speed/world()->scale_factor;
 			} else {
 				speed *= 0.99f;
 				speedque[SPEED_QUE-1] = speed;
@@ -197,17 +196,6 @@ public:
 		cpos.x = floorf(cpos.x);
 		cpos.y = floorf(cpos.y);
 		_contentsRect = cpos+pos;
-//		}
-//		if (r) {
-//			r = false;
-//			if (longtouch > 0) {
-//				longtouch++;
-//				if (longtouch > 5) {
-//					longtouch = 5;
-//					r = true;
-//				}
-//			}
-//		}
 		pretouchCount = world()->touchCount();
 		return false;
 	}

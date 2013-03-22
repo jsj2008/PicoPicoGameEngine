@@ -382,7 +382,7 @@ int QBGame::rawLength(const char* str)
 				char s[5]={0};
 				ConvertCharUTF8toUTF32(&str[n],&len);
 				for (int i=0;i<len;i++) s[i] = str[n+i];
-				x += calcLength(curFont->ttfont,s);
+				x += calcLength(curFont,s);
 				n += getCharBytesUTF8(&str[n]);
 			}
 			blend_value = o;
@@ -525,7 +525,7 @@ void QBGame::rawPrint(const char* str)
 				char s[5]={0};
 				ConvertCharUTF8toUTF32(&str[n],&len);
 				for (int i=0;i<len;i++) s[i] = str[n+i];
-				int width = calcLength(curFont->ttfont,s);
+				int width = calcLength(curFont,s);
 
 				if (lineWrap) {
 					PPRect r = viewPort();
@@ -535,7 +535,7 @@ void QBGame::rawPrint(const char* str)
 					}
 				}
 
-				p.x += putFont(curFont->ttfont,p.x,p.y,s);
+				p.x += putFont(curFont,p.x,p.y,s);
 				n += getCharBytesUTF8(&str[n]);
 			}
 			blend_value = o;
@@ -557,11 +557,12 @@ void QBGame::rawPrint(const char* str)
 }
 
 #ifndef NO_TTFONT
-int QBGame::putFont(PPTTFont* font,float x,float y,const char* str)
+int QBGame::putFont(PPFont* basefont,float x,float y,const char* str)
 {
+	PPTTFont* font=basefont->ttfont;
 	float px,py;
-	px = x;
-	py = y;
+	px = x;//basefont->localScale.x;
+	py = y;//basefont->localScale.y;
 	PPTTFontTile* tile = font->image(str);
 	if (tile == NULL) return 0;
 	PPTTFontImage* base = font->base;
@@ -589,8 +590,12 @@ int QBGame::putFont(PPTTFont* font,float x,float y,const char* str)
 		poly.scale.x = scale_value.x;
 		poly.scale.y = scale_value.y;
 
+		unsigned long os = projector->st.flags;
+		projector->st.flags |= PPGameState::UseLocalScale;
+		projector->st.localScale = basefont->localScale;
+
 		float tx,ty;
-		px += tile->bearingX;
+		px += tile->bearingX*curFont->localScale.x;
 		ty = py;
 		for (int y=0;y<tile->gheight();y++) {
 			tx = px;
@@ -604,19 +609,23 @@ int QBGame::putFont(PPTTFont* font,float x,float y,const char* str)
 			}
 			ty += font->tileHeight();
 		}
+
+		projector->st.flags = os;
 	}
-	return (tile->advanceX+tile->bearingX);//*scale().x;
+
+	return (tile->advanceX+tile->bearingX)*curFont->localScale.x;//*scale().x;
 }
 
-int QBGame::calcLength(PPTTFont* font,const char* str)
+int QBGame::calcLength(PPFont* basefont,const char* str)
 {
+	PPTTFont* font=basefont->ttfont;
 	int px,py;
 	px = 0;
 	py = 0;
 	PPTTFontTile* tile = font->length(str);
 	{
 		int tx,ty;
-		px += tile->bearingX;
+		px += tile->bearingX*curFont->localScale.x;
 		ty = py;
 		for (int y=0;y<tile->gheight();y++) {
 			tx = px;
@@ -629,7 +638,7 @@ int QBGame::calcLength(PPTTFont* font,const char* str)
 			ty += font->tileHeight();
 		}
 	}
-	return tile->advanceX+tile->bearingX;
+	return (tile->advanceX+tile->bearingX)*curFont->localScale.x;
 }
 #endif
 
@@ -1500,6 +1509,34 @@ static int funcFontWithTexture(lua_State* L)
 	return 0;
 }
 
+static int funcFontScale(lua_State* L)
+{
+	QBGame* m = (QBGame*)PPLuaArg::World(L);
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
+	PPFont* font=NULL;
+	if (m->curFont) {
+		font=m->curFont;
+	} else {
+		font=m->__normalFont;
+	}
+	if (font) {
+		if (s->argCount > 0) {
+			PPPoint pos;
+			if (s->isTable(L,0)) {
+				pos = PPPoint(s->tableNumber(L,0,1,"x",pos.x),s->tableNumber(L,0,2,"y",pos.y));
+			} else
+			if (s->argCount > 1) {
+				pos = PPPoint(s->number(0),s->number(1));
+			}
+			font->localScale=pos;
+		} else {
+			s->pushPoint(L,font->localScale);
+			return 1;
+		}
+	}
+	return 0;
+}
+
 static int funcFont(lua_State* L)
 {
 	QBGame* m = (QBGame*)PPLuaArg::World(L);
@@ -1635,6 +1672,7 @@ void QBGame::openFontLibrary(PPLuaScript* script,const char* name)
 #endif
 		script->addCommand("loadTexture",funcFontWithTexture);
 		script->addCommand("set",funcFont);
+		script->addCommand("scale",funcFontScale);
 		script->addCommand("height",funcFontHeight);
 		script->addCommand("width",funcFontLength);
 		script->addCommand("size",funcFontRect);
@@ -1884,7 +1922,7 @@ static int funcGetKeyStart(lua_State* L)
 static int funcGetDensity(lua_State* L)
 {
 	QBGame* m = (QBGame*)PPLuaArg::World(L);
-	lua_pushnumber(L,m->density);
+	lua_pushnumber(L,m->scale_factor);
 	return 1;
 }
 
@@ -1942,7 +1980,11 @@ static int funcSetDefaultNumber(lua_State* L)
 {
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
 	if (s->argCount > 1) {
-		PPSetNumber(s->args(0),s->number(1));
+		bool sync=true;
+		if (s->argCount > 2) {
+			sync=s->boolean(2);
+		}
+		PPSetNumber(s->args(0),s->number(1),sync);
 	}
 	return 0;
 }
@@ -1965,7 +2007,11 @@ static int funcSetDefaultInteger(lua_State* L)
 {
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
 	if (s->argCount > 1) {
-		PPSetInteger(s->args(0),(int)s->integer(1));
+		bool sync=true;
+		if (s->argCount > 2) {
+			sync=s->boolean(2);
+		}
+		PPSetInteger(s->args(0),(int)s->integer(1),sync);
 	}
 	return 0;
 }
@@ -1988,7 +2034,11 @@ static int funcSetDefaultString(lua_State* L)
 {
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
 	if (s->argCount > 1) {
-		PPSetString(s->args(0),s->args(1));
+		bool sync=true;
+		if (s->argCount > 2) {
+			sync=s->boolean(2);
+		}
+		PPSetString(s->args(0),s->args(1),sync);
 	}
 	return 0;
 }
@@ -2174,7 +2224,7 @@ void QBGame::openViewLibrary(PPLuaScript* script,const char* name)
 //		script->addCommand("windowSize",funcWinRect);
 //		script->addCommand("viewPort",funcViewPort);
 		script->addCommand("layout",funcLayout);
-		script->addCommand("density",funcGetDensity);
+//		script->addCommand("density",funcGetDensity);
 		script->addCommand("update",funcWait);
 //		script->addCommand("origin",funcOrigin);
 		script->addCommand("pivot",funcOrigin);

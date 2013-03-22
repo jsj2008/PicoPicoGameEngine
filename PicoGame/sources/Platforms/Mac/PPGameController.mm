@@ -43,6 +43,8 @@
 
 - (IBAction)startGame:(id)sender
 {
+	if (openGLView==nil) return;
+	
 	if (_isInitialized == NO) {
 		_isInitialized = YES;
 
@@ -65,7 +67,7 @@
 
 		NSNumber* density = [[NSUserDefaults standardUserDefaults] objectForKey:@"densityValue"];
 		if (density == nil) density = [NSNumber numberWithInt:10];
-		[openGLView.game game]->density = [density intValue]/10.0;
+		[openGLView.game game]->scale_factor = [density intValue]/10.0;
 		[openGLView setNeedsDisplay:YES];
 		
 		// Assign the view's MainController to self
@@ -78,7 +80,7 @@
 
 	NSNumber* density = [[NSUserDefaults standardUserDefaults] objectForKey:@"densityValue"];
 	if (density == nil) density = [NSNumber numberWithInt:10];
-	[openGLView.game game]->density = [density intValue]/10.0;
+	[openGLView.game game]->scale_factor = [density intValue]/10.0;
 	[openGLView setNeedsDisplay:YES];
 }
 
@@ -444,7 +446,7 @@
 - (IBAction)changeDensity:(id)sender
 {
 	[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInt:(int)[sender tag]] forKey:@"densityValue"];
-	[self.game game]->setDensity([sender tag]/10.0);
+	[self.game game]->scale_factor=[sender tag]/10.0;
 }
 
 - (IBAction)changeFullScreen:(id)sender

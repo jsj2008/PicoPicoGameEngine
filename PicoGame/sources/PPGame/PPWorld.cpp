@@ -14,7 +14,7 @@
 #include "PPObject.h"
 
 //static PPWorld* instance=NULL;
-float PPWorld::density = 1.0;
+//float PPWorld::density = 1.0;
 
 //PPWorld* PPWorld::sharedWorld(PPWorld* object)
 //{
@@ -26,7 +26,7 @@ float PPWorld::density = 1.0;
 //	return instance;
 //}
 
-PPWorld::PPWorld() : ot(NULL),projector(NULL),userdata(NULL)
+PPWorld::PPWorld() : ot(NULL),projector(NULL),userdata(NULL),scale_factor(1)
 {
 }
 

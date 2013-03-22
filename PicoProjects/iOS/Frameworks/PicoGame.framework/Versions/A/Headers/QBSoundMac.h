@@ -28,6 +28,9 @@ public:
 		if (mGraph) AUGraphStop(mGraph);
 	};
 	
+	virtual void startAUGraphWithLock();
+	virtual void stopAUGraphWithLock();
+
 	virtual void startAUGraph();
 	virtual void stopAUGraph();
 
@@ -65,6 +68,8 @@ public:
 
 	virtual void noteOn(int track,int ch,int noteNo,int velocity);
 	virtual void noteOff(int track,int ch);
+	
+	virtual unsigned long idleCount();
 	
 	AudioUnit mAudioUnit;
 	AudioStreamBasicDescription mAudioFormat;

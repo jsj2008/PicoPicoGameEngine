@@ -131,6 +131,9 @@ int PPTTFont::load(const char* name,int size)
 	}
 	_gridX = size;
 	_gridY = f->face->size->metrics.height>>6;
+	if (baseline < 0) {
+		_gridY -= baseline;
+	}
 //printf("gridx %d,gridy %d\n",_gridX,_gridY);
 	tileCount = base->gwidth(this)*base->gheight(this);
 	tile = new PPTTFontImage*[tileCount];

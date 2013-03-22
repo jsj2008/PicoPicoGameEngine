@@ -106,7 +106,7 @@ static int funcVolume(lua_State* L)
 //	PPSEMMLObject* m = (PPSEMMLObject*)s->userdata;
 	QBSound* snd = QBSound::sharedSound();
 	if (s->argCount > 0) {
-		snd->setVolume(s->number(0),m->index);
+		snd->setVolume(m->index,s->number(0));
 		return 0;
 	}
 	lua_pushnumber(L,snd->getVolume(m->index));

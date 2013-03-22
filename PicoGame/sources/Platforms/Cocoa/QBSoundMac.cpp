@@ -225,6 +225,12 @@ int QBSoundMac::initGraph()
 									  0,
 									  &input, sizeof(input));
 	}
+	
+//	{
+//		AudioUnitSetParameter (mAudioUnit,
+//										kHALOutputParam_Volume,
+//										kAudioUnitScope_Global,0,1,0);
+//	}
 
 	err = AUGraphInitialize(mGraph);
 	//err = AUGraphStart(mGraph);
@@ -242,6 +248,18 @@ int QBSoundMac::initGraph()
 
 //printf("openAUGraph\n");
 	return err;
+}
+
+void QBSoundMac::startAUGraphWithLock()
+{
+	QBSoundLocker locker(&mMutex,"startAUGraphWithLock");
+	startAUGraph();
+}
+
+void QBSoundMac::stopAUGraphWithLock()
+{
+	QBSoundLocker locker(&mMutex,"stopAUGraphWithLock");
+	stopAUGraph();
 }
 
 void QBSoundMac::startAUGraph()
@@ -431,6 +449,11 @@ void QBSoundMac::setWav13(int no,const char* data)
 {
 	QBSoundLocker locker(&mMutex,"setWav13");
 	QBSound::setWav13(no,data);
+}
+
+unsigned long QBSoundMac::idleCount() {
+	QBSoundLocker locker(&mMutex,"idleCount");
+	return QBSound::idleCount();
 }
 
 /*-----------------------------------------------------------------------------------------------

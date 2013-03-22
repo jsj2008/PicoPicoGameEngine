@@ -173,7 +173,7 @@ public:
 			break;
 		case 5:
 			//s += (signed short)(track->v*((w>S_PI?1:-1)*(((((float)noise_lut[(int)(w/(2*S_PI)*NOISE_LONG)])/256.0)-1)*1.0)));			//矩形波(PSG的)
-			s += (signed short)(track->v*1.5*(((((float)noise_lut[(int)(w/(2*S_PI)*(NOISE_LONG))])/256.0)-1)));	//ノイズ
+			s += (signed short)(track->v*1.5*(((((float)noise_lut[(int)(w/(2*S_PI)*(NOISE_LONG))])/128.0)-1)));	//ノイズ
 			break;
 		}
 		track->lastlevel = s;

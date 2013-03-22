@@ -150,13 +150,14 @@ public:
 	//virtual PPSize getTileSize(int texture)=0;
 	virtual void reloadData() {}
 
-	static void setDensity(float v) {density = v;}
-	static float density;
+//	static void setDensity(float v) {density = v;}
+//	static float density;
 	
 	virtual void drawPattern(PPPoint pos,unsigned short gid,void* userdata)=0;
 
 	PPPoint scale_value;
 	PPPoint rotate_center;
+	float scale_factor;
 //	float scale_x_value;
 //	float scale_y_value;
 

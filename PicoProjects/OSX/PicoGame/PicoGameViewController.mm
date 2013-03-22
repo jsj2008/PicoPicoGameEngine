@@ -7,6 +7,7 @@
 //
 
 #import "PicoGameViewController.h"
+#import <PicoGame/PPGameUtil.h>
 
 @implementation PicoGameViewController
 
@@ -34,6 +35,7 @@
 
 - (void)windowWillClose:(NSNotification *)notification
 {
+	PPSync();
 	[NSApp terminate:self];
 }
 

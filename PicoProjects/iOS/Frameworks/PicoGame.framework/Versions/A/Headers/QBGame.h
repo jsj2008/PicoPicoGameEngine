@@ -261,8 +261,8 @@ public:
 	//virtual PPSize getTileSize(int texture);
 
 #ifndef NO_TTFONT
-	virtual int putFont(PPTTFont* font,float x,float y,const char* str);
-	virtual int calcLength(PPTTFont* font,const char* str);
+	virtual int putFont(PPFont* font,float x,float y,const char* str);
+	virtual int calcLength(PPFont* font,const char* str);
 #endif
 	
 	//図形の描画//

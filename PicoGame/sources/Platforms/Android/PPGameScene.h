@@ -58,6 +58,8 @@ public:
 
 	cocos2d::CCSet* touchesSet;
 
+	static float scale_factor;
+
 	unsigned long getKey();
 };
 

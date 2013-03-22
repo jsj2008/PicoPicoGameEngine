@@ -332,10 +332,10 @@ int PPGetInteger(const char* key,int defaultValue)
 	return defaultValue;
 }
 
-void PPSetInteger(const char* key,int value)
+void PPSetInteger(const char* key,int value,bool sync)
 {
 	[PPPrefreceObject() setObject:[NSNumber numberWithInt:value] forKey:[NSString stringWithUTF8String:key]];
-	[PPPrefreceObject() synchronize];
+	if (sync) [PPPrefreceObject() synchronize];
 }
 
 float PPGetNumber(const char* key,float defaultValue)
@@ -347,10 +347,10 @@ float PPGetNumber(const char* key,float defaultValue)
 	return defaultValue;
 }
 
-void PPSetNumber(const char* key,float value)
+void PPSetNumber(const char* key,float value,bool sync)
 {
 	[PPPrefreceObject() setObject:[NSNumber numberWithFloat:value] forKey:[NSString stringWithUTF8String:key]];
-	[PPPrefreceObject() synchronize];
+	if (sync) [PPPrefreceObject() synchronize];
 }
 
 std::string PPGetString(const char* key,const std::string & defaultValue)
@@ -363,9 +363,14 @@ std::string PPGetString(const char* key,const std::string & defaultValue)
 	return ret;
 }
 
-void PPSetString(const char* key,const std::string & value)
+void PPSetString(const char* key,const std::string & value,bool sync)
 {
 	[PPPrefreceObject() setObject:[NSString stringWithUTF8String:value.c_str()] forKey:[NSString stringWithUTF8String:key]];
+	if (sync) [PPPrefreceObject() synchronize];
+}
+
+void PPSync()
+{
 	[PPPrefreceObject() synchronize];
 }
 

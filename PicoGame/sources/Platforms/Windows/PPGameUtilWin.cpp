@@ -142,7 +142,7 @@ int PPGetInteger(const char* key,int defaultValue)
 	return value;
 }
 
-void PPSetInteger(const char* key,int value)
+void PPSetInteger(const char* key,int value,bool sync)
 {
 	char svalue[1024];
 	sprintf(svalue,"%d",value);
@@ -164,7 +164,7 @@ float PPGetNumber(const char* key,float defaultValue)
 	return value;
 }
 
-void PPSetNumber(const char* key,float value)
+void PPSetNumber(const char* key,float value,bool sync)
 {
 	char svalue[1024];
 	sprintf(svalue,"%f",value);
@@ -184,9 +184,13 @@ std::string PPGetString(const char* key,const std::string & defaultValue)
 	return str;
 }
 
-void PPSetString(const char* key,const std::string & value)
+void PPSetString(const char* key,const std::string & value,bool sync)
 {
 	QBSetDefault(key,(char*)value.c_str());
+}
+
+void PPSync()
+{
 }
 
 unsigned char* PPGame_GetData(const char* key,int* dataSize)

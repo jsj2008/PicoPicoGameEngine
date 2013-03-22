@@ -1077,6 +1077,14 @@ static int funcLayout(lua_State* L)
 	return s->returnRect(L,PPRectZero);
 }
 
+static int funcGetDensity(lua_State* L)
+{
+	PPGameSprite* m = (PPGameSprite*)PPLuaScript::UserData(L);
+	QBGame* g = (QBGame*)m->world();//s->userdata;
+	lua_pushnumber(L,g->scale_factor);
+	return 1;
+}
+
 void PPGameSprite::openLibrary(PPLuaScript* script,const char* name,const char* superclass)
 {
 	script->openModule(name,this,0,superclass);
@@ -1089,6 +1097,7 @@ void PPGameSprite::openLibrary(PPLuaScript* script,const char* name,const char* 
 		script->addCommand("scale",funcScale);
 		script->addCommand("viewport",funcViewport);
 		script->addCommand("interval",funcFrameInterval);
+		script->addCommand("density",funcGetDensity);
 		script->addCommand("layout",funcLayout);
 	script->closeModule();
 }

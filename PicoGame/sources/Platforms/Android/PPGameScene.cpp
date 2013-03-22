@@ -14,19 +14,20 @@
 #include "PPSensorAndroid.h"
 #include <jni.h>
 
-#if 0
-#include <android/log.h>
-#define  LOG_TAG    "PPGameScene"
-#define  LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG,LOG_TAG,__VA_ARGS__)
-#else
-#define  LOGD(...) 
-#endif
+// #if 0
+// #include <android/log.h>
+// #define  LOG_TAG    "PPGameScene"
+// #define  LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG,LOG_TAG,__VA_ARGS__)
+// #else
+// #define  LOGD(...) 
+// #endif
 
 using namespace cocos2d;
 
 #define PPGAME_MAX_POLY (10000*10)
 
 static int staticKey = 0;
+float PPGameScene::scale_factor=1;
 
 extern "C" {
 	void Java_org_cocos2dx_lib_Cocos2dxActivity_setHardKey(JNIEnv*  env, jobject thiz, jint key);
@@ -173,6 +174,7 @@ void PPGameScene::draw()
 	glDisable(GL_DEPTH_TEST);
 	if (g) {
 		animationFrameInterval=g->animationFrameInterval;
+		if (game) game->scale_factor=scale_factor;
 		g->setWorld(game);
 //		g->ClearScreen2D(0.0f, 0.0f, 0.0f);
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);

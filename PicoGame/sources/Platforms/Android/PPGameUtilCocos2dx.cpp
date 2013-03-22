@@ -343,7 +343,7 @@ int PPGetInteger(const char* key,int defaultValue)
 	return def->getIntegerForKey(key,defaultValue);
 }
 
-void PPSetInteger(const char* key,int value)
+void PPSetInteger(const char* key,int value,bool sync)
 {
 	cocos2d::CCUserDefault* def = cocos2d::CCUserDefault::sharedUserDefault();
 	def->setIntegerForKey(key,value);
@@ -355,7 +355,7 @@ float PPGetNumber(const char* key,float defaultValue)
 	return def->getFloatForKey(key,defaultValue);
 }
 
-void PPSetNumber(const char* key,float value)
+void PPSetNumber(const char* key,float value,bool sync)
 {
 	cocos2d::CCUserDefault* def = cocos2d::CCUserDefault::sharedUserDefault();
 	def->setFloatForKey(key,value);
@@ -367,10 +367,14 @@ std::string PPGetString(const char* key,const std::string & defaultValue)
 	return def->getStringForKey(key,defaultValue);
 }
 
-void PPSetString(const char* key,const std::string & value)
+void PPSetString(const char* key,const std::string & value,bool sync)
 {
 	cocos2d::CCUserDefault* def = cocos2d::CCUserDefault::sharedUserDefault();
 	def->setStringForKey(key,value);
+}
+
+void PPSync()
+{
 }
 
 int PPGame_InitBGM(int no,const char* key)

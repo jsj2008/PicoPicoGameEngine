@@ -11,6 +11,7 @@
 
 #include "PPUIText.h"
 #include "QBGame.h"
+#include "PPNormalFont.h"
 
 PPUIText::PPUIText(PPWorld* world) : PPUIScrollView(world)
 {
@@ -322,6 +323,16 @@ void PPUIText::drawSelf(PPPoint _pos)
 	resetColPos();
 	lineWidth = _frameSize.width;
 	QBGame* m = (QBGame*)world();
+
+	float fontHeight=32;
+	if (m->curFont) {
+		fontHeight=m->curFont->height();
+	} else {
+		fontHeight=m->__normalFont->height();
+	}
+
+	PPSize r = frameSize();
+
 	PPPoint tpos = colPos[0];
 	PPPoint oldp = PPPoint(m->locatex,m->locatey);
 	PPPoint olds = m->GetScale();
@@ -360,16 +371,21 @@ void PPUIText::drawSelf(PPPoint _pos)
 
 			}
 			PPPoint ppp = (_contentsRect.pos() + tpos)+_pos;
-			m->rotate_center = ppp;
-			if (!hideCell) {
-				if (selectflag[line]) {
-					m->color(selectedColor);
-				} else {
-					m->color(PPColor(255,255,255,255));
+			if (ppp.y >= pos.y+r.height+(lineHeight+fontHeight)) break;
+			if (ppp.y < pos.y+r.height+(lineHeight+fontHeight) && ppp.y > pos.y-(lineHeight+fontHeight)
+			 && ppp.x < pos.x+r.width +lineWidth  && ppp.x > pos.x-lineWidth) {
+				m->rotate_center = ppp;
+				if (!hideCell) {
+					if (selectflag[line]) {
+						m->color(selectedColor);
+					} else {
+						m->color(PPColor(255,255,255,255));
+					}
+					m->locate(ppp);
+					m->print(s);
 				}
-				m->locate(ppp);
-				m->print(s);
 			}
+
 			tpos.x += length(s)*poly.scale.x;
 		}
 		i += n;
@@ -385,7 +401,11 @@ void PPUIText::drawSelf(PPPoint _pos)
 void PPUIText::touchDown(PPPoint _pos)
 {
 	PPUIScrollView::touchDown(_pos);
-	dragged = false;
+	if (speed.length() > 0) {
+		dragged = true;
+	} else {
+		dragged = false;
+	}
 }
 
 void PPUIText::touchUp(PPPoint _pos)

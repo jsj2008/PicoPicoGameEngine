@@ -31,6 +31,9 @@ int PPTTFont::load(const char* name,int size)
 		baseline = (int)(-font.descender+(font.capHeight-(font.ascender-font.descender)));
 		_gridX = size;
 		_gridY = size;
+		if (baseline < 0) {
+			_gridY -= baseline;
+		}
 		f->type = 2;
 	} else {
 		while (true) {
@@ -56,7 +59,10 @@ int PPTTFont::load(const char* name,int size)
 //printf("baseline %d\n",baseline);
 			}
 			_gridX = size;
-			_gridY = f->face->size->metrics.height>>6;
+			_gridY = (int)(f->face->size->metrics.height>>6);
+			if (baseline < 0) {
+				_gridY -= baseline;
+			}
 //printf("gridx %d,gridy %d\n",_gridX,_gridY);
 			f->type = 1;
 			break;

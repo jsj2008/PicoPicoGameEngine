@@ -172,9 +172,9 @@ void PPGameStickElement::saveCalibration()
 	for (int i=0;i<numAxis;i++) {
 		char num[64];
 		sprintf(num,"[%d]",i);
-		PPSetNumber((basekey+"_calibMin"+num).c_str(),axisCalibMin[i]);
-		PPSetNumber((basekey+"_calibMax"+num).c_str(),axisCalibMax[i]);
-		PPSetNumber((basekey+"_calibCenter"+num).c_str(),axisCalibCenter[i]);
+		PPSetNumber((basekey+"_calibMin"+num).c_str(),axisCalibMin[i],false);
+		PPSetNumber((basekey+"_calibMax"+num).c_str(),axisCalibMax[i],false);
+		PPSetNumber((basekey+"_calibCenter"+num).c_str(),axisCalibCenter[i],true);
 	}
 }
 

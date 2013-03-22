@@ -70,7 +70,20 @@ void Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeInit(JNIEnv*  env, jobject thi
 
 void Java_org_cocos2dx_lib_Cocos2dxRenderer_setDensity(JNIEnv*  env, jobject thiz, jfloat density)
 {
-	PPWorld::setDensity(density);
+//	PPWorld::setDensity(density);
+	// cocos2d::CCScene* mainScene = cocos2d::CCDirector::sharedDirector()->getRunningScene();
+	// if (mainScene) {
+	// 	cocos2d::CCNode* baseScene = mainScene->getChildByTag(8888);
+	// 	if (baseScene) {
+	// 		PPGameScene* gameScene = (PPGameScene*)baseScene->getChildByTag(9999);
+	// 		if (gameScene) {
+	// 			gameScene->game->scale_factor=density;
+	// 		} else {
+	// 		}
+	// 	} else {
+	// 	}
+	// } else {
+	// }
 }
 
 static int FILLSoundBuffer(short* buffer,int size)

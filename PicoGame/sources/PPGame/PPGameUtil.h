@@ -32,13 +32,15 @@ const char* PPGameResourcePath(const char* name);
 const char* PPGameDocumentPath(const char* dbfile);
 
 int PPGetInteger(const char* key,int defaultValue);
-void PPSetInteger(const char* key,int value);
+void PPSetInteger(const char* key,int value,bool sync=true);
 
 float PPGetNumber(const char* key,float defaultValue);
-void PPSetNumber(const char* key,float value);
+void PPSetNumber(const char* key,float value,bool sync=true);
 
 std::string PPGetString(const char* key,const std::string & defaultValue = "");
-void PPSetString(const char* key,const std::string & value);
+void PPSetString(const char* key,const std::string & value,bool sync=true);
+
+void PPSync();
 
 unsigned char* PPGame_GetData(const char* key,int* dataSize);
 void PPGame_SetData(const char* key,unsigned char* data,int dataSize);

@@ -114,6 +114,12 @@ public:
 	virtual void openFlMMLLibrary(PPLuaScript* script,const char* name);
 
 	virtual void idleSEMML();
+	
+	virtual unsigned long idleCount() {
+		return count;
+	}
+	
+	unsigned long count;
 };
 
 #ifdef __cplusplus

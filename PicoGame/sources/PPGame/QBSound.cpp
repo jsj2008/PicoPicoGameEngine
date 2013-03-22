@@ -109,6 +109,7 @@ static void reset_track(PSGTrack* track)
 	track->m_velDetail=true;
 	track->m_octave = 4;
 	track->m_portamento = 0;
+	track->volume=1;
 	
 	track->nlen = 16;
 	track->tempo = 300;
@@ -276,6 +277,8 @@ int QBSound::isPlaying(int track)
 
 int QBSound::fill_sound_buffer(void* buffer,int size)
 {
+	count++;
+	
 #ifdef __FLOAT_BUFFER__
 	//semml
 	{
@@ -291,7 +294,7 @@ int QBSound::fill_sound_buffer(void* buffer,int size)
 				mTrack[j].channel->getSamples(vbuffer,1,0,1);
 			}
 			for (int j=0;j<2;j++) {
-				Number n = vbuffer[j]*mMasterVolume*mTrack[j].volume;
+				Number n = vbuffer[j]*mMasterVolume;	//*mTrack[j].volume;
 				if (n < -1.0f) n = -1.0f;
 				if (n >  1.0f) n =  1.0f;
 				b[i+j] = n;
@@ -321,7 +324,7 @@ int QBSound::fill_sound_buffer(void* buffer,int size)
 				mTrack[j].channel->getSamples(vbuffer,1,0,1);
 			}
 			for (int j=0;j<2;j++) {
-				FlMML::Number n = vbuffer[j]*mMasterVolume*mTrack[j].volume;
+				FlMML::Number n = vbuffer[j]*mMasterVolume;	//*mTrack[j].volume;
 				if (n < -1.0f) n = -1.0f;
 				if (n >  1.0f) n =  1.0f;
 				b[i+j] = (signed short)(n*0x7fff);
@@ -994,9 +997,9 @@ Loop:
 						track->_note = track->m_octave*12+note+track->m_noteShift;
 						if (track->m_portamento) {
 							track->channel->setPortamento((track->m_beforeNote-track->_note)*100,track->notect);
-							track->channel->noteOn(track->_note,track->m_velocity);
+							track->channel->noteOn(track->_note,track->m_velocity*track->volume);
 						} else {
-							track->channel->noteOn(track->_note,track->m_velocity);
+							track->channel->noteOn(track->_note,track->m_velocity*track->volume);
 						}
 					} else {
 						if (track->_note >= 0) {

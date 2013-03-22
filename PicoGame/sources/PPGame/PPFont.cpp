@@ -251,7 +251,7 @@ void PPFont::debugDraw(PPPoint _pos)
 float PPFont::height()
 {
 #ifndef NO_TTFONT
-	if (ttfont) return ttfont->tileHeight();
+	if (ttfont) return ttfont->tileHeight()*localScale.y;
 #endif
 	return 0;
 }
