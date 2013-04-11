@@ -316,6 +316,7 @@ int QBGame::Idle()
 
 void QBGame::Clear()
 {
+	projector->Clear();
 }
 
 unsigned char* QBGame::GetData(const char* key,int* dataSize)
@@ -1728,11 +1729,18 @@ static int funcLayout(lua_State* L)
 	return s->returnRect(L,PPRect(p.x,p.y,r.width,r.height));
 }
 
-static int funcWait(lua_State* L)
+static int funcUpdate(lua_State* L)
 {
 	if (!(L->nny > 0))  {
 		return lua_yield(L,0);
 	}
+	return 0;
+}
+
+static int funcClear(lua_State* L)
+{
+	QBGame* m = (QBGame*)PPLuaArg::World(L);
+	m->Clear();
 	return 0;
 }
 
@@ -2225,7 +2233,8 @@ void QBGame::openViewLibrary(PPLuaScript* script,const char* name)
 //		script->addCommand("viewPort",funcViewPort);
 		script->addCommand("layout",funcLayout);
 //		script->addCommand("density",funcGetDensity);
-		script->addCommand("update",funcWait);
+		script->addCommand("update",funcUpdate);
+		script->addCommand("clear",funcClear);
 //		script->addCommand("origin",funcOrigin);
 		script->addCommand("pivot",funcOrigin);
 		script->addCommand("lineWrap",funcLineWrap);

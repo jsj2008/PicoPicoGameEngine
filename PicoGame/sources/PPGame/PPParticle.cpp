@@ -163,7 +163,7 @@ static unsigned char* base64decode(const char* string,unsigned int* length)
 				break;
 			}
 			if (tsize>0) {
-				buffer = (unsigned char*)malloc(tsize);
+				buffer = (unsigned char*)malloc(tsize+1);
 			}
 			if (buffer == NULL) break;
 		}

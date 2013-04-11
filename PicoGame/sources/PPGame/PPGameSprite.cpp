@@ -645,6 +645,11 @@ void PPGameSprite::ResetOT()
 	resetBlendType();
 }
 
+void PPGameSprite::Clear()
+{
+	ResetOT();
+}
+
 int PPGameSprite::BlendOn(float alpha,int type)
 {
 #if 1

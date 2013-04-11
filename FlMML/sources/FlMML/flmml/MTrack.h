@@ -126,7 +126,7 @@ public:
 		//		m_signalInterval=96/4;
 		//		m_signalCnt=0;
 		m_lfoWidth=0.0;
-		m_totalMSec=0;
+		//m_totalMSec=0;
 		m_chordBegin=0;
 		m_chordEnd=0;
 		m_chordMode=false;
@@ -165,9 +165,11 @@ public:
 			int eLen=(int )m_events.size();
 			MEvent* e;
 			double delta;
+			int loopCount=0;
+			int needle=m_needle;
 			do{
 				exec=0;
-				if (m_pointer<eLen){
+				if (m_pointer<eLen&&loopCount<=1){
 					e=&m_events[m_pointer];
 					delta=e->getDelta()*m_spt;
 					if (m_needle>=delta){
@@ -355,6 +357,17 @@ public:
 								if (m_infinityLoop) {
 									m_pointer = m_loopPointer;
 									m_loopCount ++;
+									
+									//空トラックの無限ループを防ぐ
+									if (needle==m_needle) {
+										loopCount++;
+									} else {
+										needle=m_needle;
+									}
+//									if (loopCount > 1) {
+//										m_isEnd=1;
+//									}
+
 //printf("INFINIRY_LOOP(%d) %d\n",m_trackNo,m_loopCount);
 								} else {
 									m_isEnd=1;
@@ -385,6 +398,10 @@ public:
 				//				if (signal==NULL)
 				m_ch->getSamples(samples,end,i,di);
 				i+=di;
+				if (di==0) {
+					m_isEnd = 1;
+					break;
+				}
 			}
 			else {
 //printf("END_CHANNEL(%d)\n",m_trackNo);

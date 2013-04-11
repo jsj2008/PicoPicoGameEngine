@@ -102,7 +102,7 @@ void PPGameWinScene::draw()
 
 void PPGameWinScene::gameIdle()
 {
-	game->Clear();
+	//game->Clear();
 	if (g) {
 		game->setTouchCount(0);
 		if (touchScreen) {

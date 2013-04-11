@@ -229,7 +229,7 @@ void PPGameScene::gameIdle(ccTime dt)
 			}
 		}
 	}
-	game->Clear();
+	//game->Clear();
 	if (g) {
 		game->setTouchCount(0);
 		if (touchesSet != NULL) {

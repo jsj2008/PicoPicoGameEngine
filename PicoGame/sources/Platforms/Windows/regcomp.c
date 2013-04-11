@@ -455,7 +455,7 @@ regcomp (preg, pattern, cflags)
   reg_syntax_t syntax = ((cflags & REG_EXTENDED) ? RE_SYNTAX_POSIX_EXTENDED
 			 : RE_SYNTAX_POSIX_BASIC);
 
-printf("syntax1 %lx\n",syntax);
+//printf("syntax1 %lx\n",syntax);
 
   preg->buffer = NULL;
   preg->allocated = 0;
@@ -468,7 +468,7 @@ printf("syntax1 %lx\n",syntax);
 
   syntax |= (cflags & REG_ICASE) ? RE_ICASE : 0;
 
-printf("syntax2 %lx\n",syntax);
+//printf("syntax2 %lx\n",syntax);
 
   /* If REG_NEWLINE is set, newlines are treated differently.  */
   if (cflags & REG_NEWLINE)
@@ -483,8 +483,8 @@ printf("syntax2 %lx\n",syntax);
   preg->no_sub = !!(cflags & REG_NOSUB);
   preg->translate = NULL;
 
-printf("preg->no_sub %x\n",preg->no_sub);
-printf("syntax3 %lx\n",syntax);
+//printf("preg->no_sub %x\n",preg->no_sub);
+//printf("syntax3 %lx\n",syntax);
 
   ret = re_compile_internal (preg, pattern, strlen (pattern), syntax);
 

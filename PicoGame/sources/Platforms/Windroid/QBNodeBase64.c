@@ -161,7 +161,7 @@ unsigned char* base64decode(QBNodePool* pool,char* string,long length)
 				tsize += 2;
 				break;
 			}
-			buffer = (unsigned char*)BSMalloc(pool,tsize,"base64decode");
+			buffer = (unsigned char*)BSMalloc(pool,tsize+1,"base64decode");
 			if (buffer == NULL) break;
 		}
 		

@@ -278,7 +278,7 @@ unsigned char* PPGame_LoadPNG(const char* fileName,unsigned long* imageWidth,uns
 
 	FILE *PNG_file = fopen(fileName, "rb");
 
-    fprintf(stderr, "open PNG file %s\n", fileName);
+ //   fprintf(stderr, "open PNG file %s\n", fileName);
 
     if (PNG_file == NULL)
     {

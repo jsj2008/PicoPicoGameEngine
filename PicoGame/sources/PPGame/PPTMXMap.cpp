@@ -338,7 +338,7 @@ static unsigned char* base64decode(const char* string,unsigned int* length)
 				break;
 			}
 			if (tsize>0) {
-				buffer = (unsigned char*)malloc(tsize);
+				buffer = (unsigned char*)malloc(tsize+1);
 			}
 			if (buffer == NULL) break;
 		}
@@ -544,8 +544,9 @@ bool PPTMXMap::load(const char* path)
 		fseek(fp,0,SEEK_END);
 		size = ftell(fp);
 		fseek(fp,0,SEEK_SET);
-		str = (char*)malloc(size);
+		str = (char*)malloc(size+1);
 		fread(str,size,1,fp);
+		str[size] = 0;
 		fclose(fp);
 	}
 #endif

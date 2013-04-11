@@ -68,7 +68,6 @@ static BSErr resultDumpFunc(XMLParser* parser,QBNode* node,int openclose);
 
 int PPSAXParser(PPSAXHandler* handler)
 {
-printf("PPSAXParser in\n");
 	QBNodePool* pool = QBNodePoolAlloc();
 	if (pool) {
 		if (handler->xmltext) {
@@ -85,7 +84,6 @@ printf("PPSAXParser in\n");
 		QBNodePoolDescription(pool);
 		QBNodePoolDealloc(pool);
 	}
-printf("PPSAXParser out\n");
     return 0;
 }
 
@@ -133,17 +131,17 @@ static BSErr resultQBNodeMakerFunc(XMLParser* parser,QBNode* node,int openclose)
 						}
 					}
 					if (noText==0) {
-						char* str = BSCalloc(seri->pool,1,"resultQBNodeMakerFunc");
+						char* str = (char*)BSCalloc(seri->pool,1,"resultQBNodeMakerFunc");
 						if (str) {
 							int i;
 							for (i=0;i<QBNodeChildNum(node);i++) {
 								//if (i > 0) str = BSStrAppend(str,BSRelease(BSStr(seri->pool,",")));
-								if ((str = BSStrAppend(BSRelease(str),QBNodeString(QBNodeChild(node,i)))) == NULL) {
+								if ((str = (char*)BSStrAppend((char*)BSRelease(str),QBNodeString(QBNodeChild(node,i)))) == NULL) {
 									QBNodePoolRecycle(seri->pool);
 									return BSERR_MEM;
 								}
 							}
-							QBNodeSetString(last,BSRelease(str));
+							QBNodeSetString(last,(char*)BSRelease(str));
 							QBNodePoolRecycle(seri->pool);
 						} else {
 							return BSERR_MEM;
@@ -170,7 +168,7 @@ static BSErr resultQBNodeMakerFunc(XMLParser* parser,QBNode* node,int openclose)
 				}
 				BSRelease(newNode);
 				if (seri->node == NULL) {
-					seri->node = BSRetain(newNode);
+					seri->node = (QBNode*)BSRetain(newNode);
 				} else
 				if (last) {
 					QBNodeAppend(last,newNode);
@@ -304,8 +302,12 @@ BSErr XMLParserDo(XMLParser* parser)
 	
 	parser->ptr = 0;
 	parser->size = 0;
-	
-	return findXMLTag(parser);
+
+//printf("XMLParserDo in\n");
+	BSErr err =  findXMLTag(parser);
+//printf("XMLParserDo out\n");	
+
+	return err;
 }
 
 void XMLParserDispose(XMLParser* parser)
@@ -336,113 +338,169 @@ void XMLParserDispose(XMLParser* parser)
 
 static BSErr startTag(XMLParser* parser)
 {
-	XMLParserResultFunc resultCallback = (XMLParserResultFunc)parser->resultCallback;
-	if (resultCallback == NULL) {
-		printf("start tag\n");
-		return BSERR_OK;
+	BSErr err;
+//printf("s-");
+	while (1) {
+		XMLParserResultFunc resultCallback = (XMLParserResultFunc)parser->resultCallback;
+//printf("startTag\n");
+		if (resultCallback == NULL) {
+			printf("start tag\n");
+			err = BSERR_OK;
+			break;
+		}
+		BSRelease(parser->node);
+		QBNodePoolRecycle(QBNodePoolPtr(parser));
+		parser->node = QBNodeAlloc(QBNodePoolPtr(parser),"Tag");
+		if (parser->node == NULL) {
+			err = BSERR_MEM;
+			break;
+		}
+		err = BSERR_OK;
+		break;
 	}
-	BSRelease(parser->node);
-	QBNodePoolRecycle(QBNodePoolPtr(parser));
-	parser->node = QBNodeAlloc(QBNodePoolPtr(parser),"Tag");
-	if (parser->node == NULL) return BSERR_MEM;
-	return BSERR_OK;
+//printf("s %d\n",err);
+	return err;
 }
 
 static BSErr endTag(XMLParser* parser)
 {
-	//int openclose = 0;
-	XMLParserResultFunc resultCallback = (XMLParserResultFunc)parser->resultCallback;
-	if (resultCallback == NULL) {
-		printf("end tag\n");
-		return BSERR_OK;
-	}
-//printf("(");
-//QBNodeDescription(parser->node);
-//printf(")\n");
-	{
-		char* tag = QBNodeString(QBNodeFirstChild(parser->node));
-		if (tag) {
-			if (strcmp(tag,"?") == 0) {
-				parser->openclose = XMLPARSER_HEAD;
-			} else
-			if (strcmp(tag,"/") == 0) {
-				tag = QBNodeString(QBNodeLastChild(parser->node));
-				if (tag) {
-					QBNode* last = QBNodeLastChild(parser->stack);
-					char* s = QBNodeString(last);
-					if (s) {
-						if (strcmp(s,tag) == 0) {
-							QBNodeRemoveLastChild(parser->stack);
-							parser->openclose = XMLPARSER_CLOSE;
-						} else {
-							return BSERR_INVAILD;
-						}
-					} else {
-						return BSERR_MEM;
-					}
-				} else {
-					return BSERR_MEM;
-				}
-//printf("{");
-//QBNodeDescription(parser->stack);
-//printf("}\n");
-			} else {
-				char* lasttag = QBNodeString(QBNodeLastChild(parser->node));
-//printf("[");
-//printf(ltag);
-//printf("]\n");
-				if (lasttag) {
-					if (strcmp(lasttag,"/") == 0) {
-						QBNodeRemoveLastChild(parser->node);
-						parser->openclose = XMLPARSER_OPEN_CLOSE;
-					} else {
-						QBNode* child;
-						if ((child = QBNodeAppendChildWithNumberKey(parser->stack)) != NULL) {
-							QBNodeSetString(child,tag);
-							parser->openclose = XMLPARSER_OPEN;
-						} else {
-							return BSERR_MEM;
-						}
-					}
-				}
-//printf("{");
-//QBNodeDescription(parser->stack);
-//printf("}\n");
-			}
-		} else {
-			return BSERR_MEM;
+	BSErr err;
+//printf("e-");
+	while (1) {
+		//int openclose = 0;
+		XMLParserResultFunc resultCallback = (XMLParserResultFunc)parser->resultCallback;
+	//printf("endTag\n");
+		if (resultCallback == NULL) {
+			printf("end tag\n");
+			err = BSERR_OK;
+			break;
 		}
+	//printf("(");
+	//QBNodeDescription(parser->node);
+	//printf(")\n");
+		{
+			char* tag = QBNodeString(QBNodeFirstChild(parser->node));
+			if (tag) {
+				if (strcmp(tag,"?") == 0) {
+					parser->openclose = XMLPARSER_HEAD;
+				} else
+				if (strcmp(tag,"/") == 0) {
+					tag = QBNodeString(QBNodeLastChild(parser->node));
+					if (tag) {
+						QBNode* last = QBNodeLastChild(parser->stack);
+						char* s = QBNodeString(last);
+						if (s) {
+							if (strcmp(s,tag) == 0) {
+								QBNodeRemoveLastChild(parser->stack);
+								parser->openclose = XMLPARSER_CLOSE;
+							} else {
+								err = BSERR_INVAILD;
+								break;
+							}
+						} else {
+							err = BSERR_MEM;
+							break;
+						}
+					} else {
+						err = BSERR_MEM;
+						break;
+					}
+	//printf("{");
+	//QBNodeDescription(parser->stack);
+	//printf("}\n");
+				} else {
+					char* lasttag = QBNodeString(QBNodeLastChild(parser->node));
+	//printf("[");
+	//printf(ltag);
+	//printf("]\n");
+					if (lasttag) {
+						if (strcmp(lasttag,"/") == 0) {
+							QBNodeRemoveLastChild(parser->node);
+							parser->openclose = XMLPARSER_OPEN_CLOSE;
+						} else {
+							QBNode* child;
+							if ((child = QBNodeAppendChildWithNumberKey(parser->stack)) != NULL) {
+								QBNodeSetString(child,tag);
+								parser->openclose = XMLPARSER_OPEN;
+							} else {
+								err = BSERR_MEM;
+								break;
+							}
+						}
+					}
+	//printf("{");
+	//QBNodeDescription(parser->stack);
+	//printf("}\n");
+				}
+			} else {
+				err = BSERR_MEM;
+				break;
+			}
+		}
+
+//		printf("1-");
+		err = resultCallback(parser,parser->node,parser->openclose);
+//		printf("1\n");
+
+		break;
+
 	}
-	return resultCallback(parser,parser->node,parser->openclose);
+//printf("e\n");
+
+	return err;
 }
 
 static BSErr startDoc(XMLParser* parser)
 {
-	XMLParserResultFunc resultCallback = (XMLParserResultFunc)parser->resultCallback;
-	if (resultCallback == NULL) {
-		printf("start doc\n");
-		return BSERR_OK;
+	BSErr err;
+//printf("sd-");
+	while (1) {
+		XMLParserResultFunc resultCallback = (XMLParserResultFunc)parser->resultCallback;
+	//printf("startDoc\n");
+		if (resultCallback == NULL) {
+			printf("start doc\n");
+			err = BSERR_OK;
+			break;
+		}
+		BSRelease(parser->node);
+		QBNodePoolRecycle(QBNodePoolPtr(parser));
+		parser->node = QBNodeAlloc(QBNodePoolPtr(parser),"Doc");
+		if (parser->node == NULL) {
+			err = BSERR_MEM;
+			break;
+		}
+		err = BSERR_OK;
+		break;
 	}
-	BSRelease(parser->node);
-	QBNodePoolRecycle(QBNodePoolPtr(parser));
-	parser->node = QBNodeAlloc(QBNodePoolPtr(parser),"Doc");
-	if (parser->node == NULL) return BSERR_MEM;
-	return BSERR_OK;
+//printf("sd\n");
+	return err;
 }
 
 static BSErr endDoc(XMLParser* parser)
 {
-	XMLParserResultFunc resultCallback = (XMLParserResultFunc)parser->resultCallback;
-	if (resultCallback == NULL) {
-		printf("end doc\n");
-		return BSERR_OK;
+	BSErr err;
+//printf("ed-");
+	while (1) {
+		XMLParserResultFunc resultCallback = (XMLParserResultFunc)parser->resultCallback;
+	//printf("endDoc\n");
+		if (resultCallback == NULL) {
+			printf("end doc\n");
+			err = BSERR_OK;
+			break;
+		}
+//		printf("2-");
+		err = resultCallback(parser,parser->node,XMLPARSER_DOC);
+//		printf("2\n");
+		break;
 	}
-	return resultCallback(parser,parser->node,XMLPARSER_DOC);
+//printf("ed\n");
+	return err;
 }
 
 static BSErr foundAtr(XMLParser* parser,unsigned char* string)
 {
 	XMLParserResultFunc resultCallback = (XMLParserResultFunc)parser->resultCallback;
+//printf("foundAtr %s\n",string);
 	if (resultCallback == NULL) {
 		printf("\t\t %s\n",(char*)string);
 		return BSERR_OK;
@@ -461,6 +519,7 @@ static BSErr foundAtr(XMLParser* parser,unsigned char* string)
 static BSErr foundTag(XMLParser* parser,unsigned char* string)
 {
 	XMLParserResultFunc resultCallback = (XMLParserResultFunc)parser->resultCallback;
+//printf("foundTag %s\n",string);
 	if (resultCallback == NULL) {
 		printf("\t %s\n",(char*)string);
 		return BSERR_OK;
@@ -479,6 +538,7 @@ static BSErr foundTag(XMLParser* parser,unsigned char* string)
 static BSErr foundDoc(XMLParser* parser,unsigned char* string)
 {
 	XMLParserResultFunc resultCallback = (XMLParserResultFunc)parser->resultCallback;
+//printf("foundDoc %s\n",string);
 	if (resultCallback == NULL) {
 		printf("\t %s\n",(char*)string);
 		return BSERR_OK;
@@ -554,13 +614,15 @@ static BSErr findXMLTag(XMLParser* parser)
 	unsigned char c;
 
 	while (err == BSERR_OK) {
+
+//printf("-\n");
 		
 		if ((err = readMore(parser)) != BSERR_OK) break;
 		if (parser->size == 0) break;
 		
 		{
 			c = (unsigned char)parser->buffer[parser->ptr++];
-
+//printf("%c",c);
 			if (c <= 0x20 && parser->openclose != XMLPARSER_OPEN) {
 				
 			} else
@@ -661,7 +723,9 @@ static BSErr findXMLTag(XMLParser* parser)
 							err = foundTag(parser,stringPtr(parser));
 							resetStr(parser);
 						}
+//printf("et-");
 						err = endTag(parser);
+//printf("et\n");
 						parseErr = BSERR_OK;
 						break;
 					} else {
@@ -705,7 +769,9 @@ static BSErr findXMLTag(XMLParser* parser)
 							err = foundDoc(parser,stringPtr(parser));
 							resetStr(parser);
 						}
+//printf("e-");
 						err = endDoc(parser);
+//printf("e\n");
 						parser->ptr --;
 						break;
 					} else {
@@ -725,6 +791,7 @@ static BSErr findXMLTag(XMLParser* parser)
 	if (parseErr != BSERR_OK) {
 		return parseErr;
 	}
+
 	return err;
 }
 
@@ -752,14 +819,17 @@ static BSErr readFunc(XMLParser* parser,char* buffer,long* size)
 	PPSAXHandler* handler = (PPSAXHandler*)parser->userData;
 	long *p = (long*)&handler->ptr;//XMLParserUserData(parser);
 	long i;
+//printf("\"");
 	if (handler->xmltext[*p] == 0) {
 		*size = 0;
 	} else {
 		for (i=0;(i<*size) && (handler->xmltext[*p]!=0);i++,(*p)++) {
 			buffer[i] = handler->xmltext[*p];
+//printf("%c",buffer[i]);
 		}
 		*size = i;
 	}
+//printf("\"\n");
 	return BSERR_OK;
 }
 
@@ -833,8 +903,10 @@ static BSErr resultFunc(XMLParser* parser,QBNode* node,int openclose)
 	PPSAXHandler* handler = (PPSAXHandler*)parser->userData;
 	switch (openclose) {
 	case XMLPARSER_HEAD:
+//printf("head:");
 		break;
 	case XMLPARSER_DOC:
+//printf("doc:");
 		{
 			int i;
 			for (i=0;i<QBNodeChildNum(node);i++) {
@@ -846,9 +918,10 @@ static BSErr resultFunc(XMLParser* parser,QBNode* node,int openclose)
 		break;
 	case XMLPARSER_OPEN:
 	case XMLPARSER_OPEN_CLOSE:
+//printf("<open-close:");
 		{
 			char* name = QBNodeString(QBNodeFirstChild(node));
-			char** attr = (char**)calloc(sizeof(char*),QBNodeChildNum(node)*2);
+			char** attr = (char**)calloc(sizeof(char*),QBNodeChildNum(node)*2+2);
 //printf("%s ",name);
 			{
 				int i;
@@ -879,8 +952,10 @@ static BSErr resultFunc(XMLParser* parser,QBNode* node,int openclose)
 				handler->endElement(handler->userdata,name);
 			}
 		}
+//printf(">\n");
 		break;
 	case XMLPARSER_CLOSE:
+//printf("close:");
 		{
 			char* name = QBNodeString(QBNodeLastChild(node));
 			handler->endElement(handler->userdata,name);

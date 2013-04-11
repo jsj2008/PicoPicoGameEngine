@@ -92,6 +92,9 @@ public:
 		m_mml.m_sequencer = sequencer;
 		if (sequencer) sequencer->engine = this;
 	}
+	MSequencer* getSequencer() {
+		return m_mml.m_sequencer;
+	}
 	int getLoopCount() {
 		return m_mml.getLoopCount();
 	}

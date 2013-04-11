@@ -79,7 +79,7 @@ public:
 	bool m_velDir;
 	int m_length;		// default length
 	Number m_tempo;
-	int m_letter;
+	string::size_type m_letter;
 	int m_keyoff;
 	int m_gate;
 	int m_maxGate;
@@ -241,7 +241,7 @@ protected:
 				break;
 			case 'e': // Envelope
 			{
-				int releasePos;
+				string::size_type releasePos;
 				Vector<int> t;
 				Vector<int> l;
 				next();
@@ -349,20 +349,22 @@ protected:
 				break;
 			case '\'': // formant filter
                 next();
-                o = (int)m_string.find_first_of('\'',m_letter);
-				if (o!=string::npos){
-					string vstr=m_string.substr(m_letter,o-m_letter);
-					int vowel=0;
-					switch(vstr.c_str()[0]){
-						case 'a':vowel=MFormant::VOWEL_A;break;
-						case 'e':vowel=MFormant::VOWEL_E;break;
-						case 'i':vowel=MFormant::VOWEL_I;break;
-						case 'o':vowel=MFormant::VOWEL_O;break;
-						case 'u':vowel=MFormant::VOWEL_U;break;
-						default :vowel=-1;break;
+				{
+					string::size_type o = m_string.find_first_of('\'',m_letter);
+					if (o!=string::npos){
+						string vstr=m_string.substr(m_letter,o-m_letter);
+						int vowel=0;
+						switch(vstr.c_str()[0]){
+							case 'a':vowel=MFormant::VOWEL_A;break;
+							case 'e':vowel=MFormant::VOWEL_E;break;
+							case 'i':vowel=MFormant::VOWEL_I;break;
+							case 'o':vowel=MFormant::VOWEL_O;break;
+							case 'u':vowel=MFormant::VOWEL_U;break;
+							default :vowel=-1;break;
+						}
+						m_tracks[m_trackNo]->recFormant(vowel);
+						m_letter=o+1;
 					}
-					m_tracks[m_trackNo]->recFormant(vowel);
-					m_letter=o+1;
 				}
 				break;
 			case 'd': // Detune
@@ -699,7 +701,7 @@ protected:
 	
 	int getUInt(int def) {
 		int ret=0;
-		int l=m_letter;
+		string::size_type l=m_letter;
 		int f=1;
 		while(f){
 			char c=getChar();
@@ -790,9 +792,9 @@ public:
 		m_string = toLower(m_string);
 		begin();
 		Vector<int> repeat;
-		Vector<int> origin;
-		Vector<int> start;
-		Vector<int> last;
+		Vector<string::size_type> origin;
+		Vector<string::size_type> start;
+		Vector<string::size_type> last;
 		repeat.reserve(100);
 		origin.reserve(100);
 		start.reserve(100);
@@ -813,7 +815,7 @@ public:
 						else
 						if (repeat[nest] > 1024) repeat[nest] = 1024;
 						start[nest]=m_letter;
-						last[nest]=-1;
+						last[nest]=string::npos;
 					}
 					else if (nest>=0){
 						if (last.size() <= nest) last.reserve(nest+10);
@@ -833,10 +835,10 @@ public:
 						}
 						string contents=m_string.substr(start[nest],m_letter-2-start[nest]);
 						string newstr=m_string.substr(0,origin[nest]);
-						if (repeat[nest] == 9999) {
+						if (repeat[nest]==9999) {
 							newstr+="!";
 							for (int i=0;i<1;i++){
-								if (i<repeat[nest]-1||last[nest]<0) {
+								if (i<repeat[nest]-1 || last[nest]==string::npos) {
 									newstr+=contents;
 								} else {
 									newstr+=m_string.substr(start[nest],last[nest]-start[nest]);
@@ -847,7 +849,7 @@ public:
 							}
 						} else {
 							for (int i=0;i<repeat[nest];i++){
-								if (i<repeat[nest]-1||last[nest]<0) {
+								if (i<repeat[nest]-1||last[nest] == string::npos) {
 									newstr+=contents;
 								} else {
 									newstr+=m_string.substr(start[nest],last[nest]-start[nest]);
@@ -857,7 +859,7 @@ public:
 								}
 							}
 						}
-						int l=(int)newstr.length();
+						string::size_type l= newstr.length();
 						newstr+=m_string.substr(m_letter);
 						m_string=newstr;
 						m_letter=l;
@@ -877,7 +879,7 @@ protected:
 		while (itr != macroTable->end()){
 			MACRO* macro = &itr[0];
 			if (m_string.substr(m_letter,macro->str.length())==macro->str){
-				int start=m_letter;int last=m_letter+(int)macro->str.length();string code=macro->code;
+				string::size_type start=m_letter;string::size_type last=m_letter+macro->str.length();string code=macro->code;
 				m_letter+=macro->str.length();
 				char c=getCharNext();
 				while(isspace(c)/*||c=='　'*/){
@@ -1227,13 +1229,13 @@ public:
 				switch(c){
 					case '$':
 						if (top){
-							int last=(int)m_string.find_first_of(";",m_letter);
+							string::size_type last= m_string.find_first_of(";",m_letter);
 							if (last>m_letter){
-								int nameEnd=(int)m_string.find_first_of("=",m_letter);
+								string::size_type nameEnd=m_string.find_first_of("=",m_letter);
 								if (nameEnd>m_letter&&nameEnd<last){
-									int start=m_letter;
-									int argspos=(int)m_string.find_first_of("{");
-									if (argspos < 0 || argspos >= nameEnd){
+									string::size_type start=m_letter;
+									string::size_type argspos= m_string.find_first_of("{");
+									if (argspos == string::npos || argspos >= nameEnd){
 										argspos=nameEnd;
 									}
 									string idPart = m_string.substr(start,argspos-start);
@@ -1253,7 +1255,7 @@ public:
 											//										Array args=new Array ();
 											vector<ARGS> vargs;
 											if (argspos<nameEnd){
-												int t = m_string.find_first_of("}",argspos);
+												string::size_type t = m_string.find_first_of("}",argspos);
 												if (t > nameEnd) {
 													printf("warning missing '}' '%s'\n",idPart.c_str());
 													t = nameEnd;
@@ -1292,11 +1294,11 @@ public:
 													if (!replaceMacro(&macroTable)){
 														if (m_string.substr(m_letter,str.length())==str){
 															m_letter--;
-															m_string=remove(m_string,m_letter,m_letter+(int)str.length());
+															m_string=remove(m_string,m_letter,m_letter+str.length());
 															warning(MWarning::RECURSIVE_MACRO,str);
 														}
 													}
-													last=(int)m_string.find_first_of(";",m_letter);
+													last= m_string.find_first_of(";",m_letter);
 												}
 												c=getCharNext();
 											}
@@ -1393,22 +1395,22 @@ public:
 	void processComment(string str) {
 		m_string=str;
 		begin();
-		int commentStart=-1;
+		string::size_type commentStart=string::npos;
 		while(m_letter<m_string.length()){
 			char c=getCharNext();
 			switch(c){
 				case '/':
 					if (getChar()=='*'){
-						if (commentStart<0)commentStart=m_letter-1;
+						if (commentStart==string::npos)commentStart=m_letter-1;
 						next();
 					}
 					break;
 				case '*':
 					if (getChar()=='/'){
-						if (commentStart>=0){
+						if (commentStart!=string::npos){
 							m_string=remove(m_string,commentStart,m_letter);
 							m_letter=commentStart;
-							commentStart=-1;
+							commentStart=string::npos;
 						}
 						else {
 							warning(MWarning::UNOPENED_COMMENT,"");
@@ -1419,20 +1421,20 @@ public:
 					break;
 			}
 		}
-		if (commentStart>=0)warning(MWarning::UNCLOSED_COMMENT,"");
+		if (commentStart!=string::npos)warning(MWarning::UNCLOSED_COMMENT,"");
 		
 		// 外部プログラム用のクォーテーション
 		begin();
-		commentStart=-1;
+		commentStart=string::npos;
 		while(m_letter<m_string.length()){
 			if (getCharNext()=='`'){
-				if (commentStart<0){
+				if (commentStart==string::npos){
 					commentStart=m_letter-1;
 				}
 				else {
 					m_string=remove(m_string,commentStart,m_letter-1);
 					m_letter=commentStart;
-					commentStart=-1;
+					commentStart=string::npos;
 				}
 			}
 		}
@@ -1440,10 +1442,10 @@ public:
 	}
 	
 	void processGroupNotes() {
-		int GroupNotesStart=-1;
-		int GroupNotesEnd;
+		string::size_type GroupNotesStart=string::npos;
+		string::size_type GroupNotesEnd;
 		int noteCount=0;
-		int repend;int len;int tick;int tick2;Number tickdiv;int noteTick;int noteOn;
+		string::size_type repend;int len;int tick;int tick2;Number tickdiv;int noteTick;int noteOn;
 		int lenMode;
 		int defLen=96;
 		string newstr;
@@ -1461,7 +1463,7 @@ public:
 					break;
 				case '}':
 					repend=m_letter;
-					if (GroupNotesStart<0){
+					if (GroupNotesStart==string::npos){
 						warning(MWarning::UNOPENED_GROUPNOTES,"");
 					}
 					tick=0;
@@ -1536,7 +1538,7 @@ public:
 					m_letter=(int)newstr.length();
 					newstr+=m_string.substr(GroupNotesEnd);
 					m_string=newstr;
-					GroupNotesStart=-1;
+					GroupNotesStart=string::npos;
 					break;
 				default :
 					if ((c>='a'&&c<='g')||c=='r'){
@@ -1545,7 +1547,7 @@ public:
 					break;
 			}
 		}
-		if (GroupNotesStart>=0)warning(MWarning::UNCLOSED_GROUPNOTES,"");
+		if (GroupNotesStart!=string::npos)warning(MWarning::UNCLOSED_GROUPNOTES,"");
 	}
 public:
 	struct Func33 { 
@@ -1557,7 +1559,7 @@ public:
 		return str;
 	}
 	
-	string remove(string str,int start,int end) {
+	string remove(string str,string::size_type start,string::size_type end) {
 		return str.substr(0,start)+str.substr(end+1);
 	}
 	
@@ -1611,9 +1613,10 @@ public:
 		
 		processComment(str);
 		processMacro();
-//cout << m_string << endl;
 		m_string=removeWhitespace(m_string);
+//cout << m_string << endl;
 		processRepeat();
+//cout << m_string << endl;
 		processGroupNotes();
 //cout << m_string << endl;
 		process();

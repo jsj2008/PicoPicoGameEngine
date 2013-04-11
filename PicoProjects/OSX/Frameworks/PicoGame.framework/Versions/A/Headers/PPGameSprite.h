@@ -225,6 +225,7 @@ public:
 	PPRect viewPort();
 	void PreCalc(PPPoint *pos,PPPoint *outpos);
 	int CaptureScreen(int x,int y,int w,int h,int rowbyte,unsigned char* pixel);
+	void Clear();
 
 //	float _alpha;
 //	int _blendType;

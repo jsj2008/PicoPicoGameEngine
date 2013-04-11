@@ -405,7 +405,7 @@ public:
 		setSoundOff();
 		m_pulseWidth=0.5;
 		m_voiceid=0;
-		setForm(0,0);
+//		setForm(0,0);
 		setDetune(0);
 		setExpression(127);
 		setVelocity(100);

@@ -52,7 +52,7 @@ BOOL bSetupPixelFormat(HDC hdc)
 	ppfd->nVersion = 1; 
 	ppfd->dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL |  PFD_DOUBLEBUFFER; 
 	ppfd->dwLayerMask = PFD_MAIN_PLANE; 
-	ppfd->iPixelType = PFD_TYPE_COLORINDEX; 
+	ppfd->iPixelType = PFD_TYPE_RGBA;	//PFD_TYPE_COLORINDEX;
 	ppfd->cColorBits = 8; 
 	ppfd->cDepthBits = 16; 
 	ppfd->cAccumBits = 0; 
@@ -272,20 +272,6 @@ void OnCreate(HWND hWnd, LPCREATESTRUCT lpcs)
 		wglMakeCurrent(hDC, hRC);
 	}
 	
-	//フルスクリーンにする
-	if (gFullscreenFlag) {
-		DEVMODE devMode;
-		ZeroMemory(&devMode,sizeof(devMode));
-		devMode.dmSize = sizeof(devMode);
-		devMode.dmPelsWidth = 640;//screenWidth;
-		devMode.dmPelsHeight = 480;//screenHeight;
-		devMode.dmBitsPerPel = 32;
-		devMode.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
-		
-		ChangeDisplaySettings(&devMode,CDS_FULLSCREEN);
-//		ShowCursor(FALSE);
-	}
-	
 	glewInit();
 
 	glSetInterval(1);
@@ -353,8 +339,10 @@ LRESULT CALLBACK WndMainProc(HWND hWnd, UINT Msg,
 			{
 				screenWidth  = lParam & 0xFFFF;        // xサイズ
 				screenHeight = (lParam >> 16) & 0xFFFF;
-				scene->windowSize.width = screenWidth;
-				scene->windowSize.height = screenHeight;
+				if (scene) {
+					scene->windowSize.width = screenWidth;
+					scene->windowSize.height = screenHeight;
+				}
 			}
 			break;
 		case WM_EXITSIZEMOVE:
@@ -408,8 +396,10 @@ LRESULT CALLBACK WndMainProc(HWND hWnd, UINT Msg,
 			break;
 		case WM_MOUSEMOVE:
 			if(wParam & MK_LBUTTON) {
-				scene->touchLocation_x = LOWORD(lParam);
-				scene->touchLocation_y = HIWORD(lParam);
+				if (scene) {
+					scene->touchLocation_x = LOWORD(lParam);
+					scene->touchLocation_y = HIWORD(lParam);
+				}
 			}
 			break;
 		case WM_LBUTTONUP:
@@ -485,7 +475,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	//screenWidth += 8;
 	
 	wcex.cbSize         = sizeof(wcex);
-	wcex.style          = CS_HREDRAW | CS_VREDRAW;
+	wcex.style          = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
 	wcex.lpfnWndProc    = WndMainProc;
 	wcex.cbClsExtra     = 0;
 	wcex.cbWndExtra     = 0;
@@ -518,6 +508,17 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	//	SetFullscreenFlag(gFullscreenFlag);
 	
 	if (gFullscreenFlag) {
+	//フルスクリーンにする
+		DEVMODE devMode;
+		ZeroMemory(&devMode,sizeof(devMode));
+		devMode.dmSize = sizeof(devMode);
+		devMode.dmPelsWidth = 640;//screenWidth;
+		devMode.dmPelsHeight = 480;//screenHeight;
+		devMode.dmBitsPerPel = 32;
+		devMode.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
+		
+		ChangeDisplaySettings(&devMode,CDS_FULLSCREEN);
+	
 		RECT windowRect;
 		windowRect.left = 0;
 		windowRect.right = 640;

@@ -602,7 +602,7 @@ static BSMem* bscalloc(QBNodePool* pool,unsigned long size,const char* comment,i
 		unsigned long commentLen = 4;
 		unsigned char* p = NULL;
 		unsigned long bsize = size+sizeof(BSMemHeader);
-#if 0
+#if 1
 		comment = NULL;
 #endif
 		if (comment) {

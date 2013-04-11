@@ -35,6 +35,7 @@ public:
 	void initGraph();
 	void stepIdle();
 	void stepError();
+	virtual void initScript();
 
 	PPLuaScript* script;
 

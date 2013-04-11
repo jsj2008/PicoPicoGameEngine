@@ -65,7 +65,7 @@ MMRESULT QBSoundWin::openWave()
 {
 	UINT m_uDeviceID = WAVE_MAPPER;
 
-printf("openWave\n");
+//printf("openWave\n");
 
 	WORD wFormatTag;
 	WORD nChannels;

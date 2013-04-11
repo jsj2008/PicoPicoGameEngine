@@ -323,6 +323,10 @@ static int funcPPLength(lua_State *L)
 	return 1;
 }
 
+void PPScriptGame::initScript()
+{
+}
+
 void PPScriptGame::reloadData()
 {
 	PPReadErrorReset();
@@ -383,6 +387,8 @@ void PPScriptGame::reloadData()
 //	script->addCommand("ppdraw",funcPPDraw);
 	script->addCommand("pplength",funcPPLength);
 	script->addCommand("ppforeach",funcPPIterator);
+	
+	initScript();
 
 	std::string path = luaScriptPath;
 	if (path == "") {

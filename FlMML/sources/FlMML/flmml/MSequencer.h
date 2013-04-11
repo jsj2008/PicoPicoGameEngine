@@ -226,8 +226,10 @@ printf("processStart()\n");
 	
 public:
 	virtual unsigned int getTotalMSec() {
-		if (m_trackArray[MTrack::TEMPO_TRACK]) {
-			return m_trackArray[MTrack::TEMPO_TRACK]->getTotalMSec();
+		if (m_trackArray.size() > 0) {
+			if (m_trackArray[MTrack::TEMPO_TRACK]) {
+				return m_trackArray[MTrack::TEMPO_TRACK]->getTotalMSec();
+			}
 		}
 		return 0;
 	}
