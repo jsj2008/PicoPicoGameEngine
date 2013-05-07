@@ -69,6 +69,8 @@ public:
 	int width;
 	int height;
 	
+	bool notexturefile;
+	
 	float width100;
 	float height100;
 	float invwidth;
@@ -163,6 +165,7 @@ public:
 	PPSize patternSize(int textureid,int group);
 	bool checkBind(int index);
 	int setTexture(PPGameTexture* _texture);
+	int setTextureWithNameCheck(PPGameTexture* _texture);
 	int setTextureList(PPGameTextureInfo* texList);
 	int getTextureCount();
 	void resetTextureState();

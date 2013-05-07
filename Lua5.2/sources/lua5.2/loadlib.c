@@ -476,23 +476,23 @@ static void findloader (lua_State *L, const char *name) {
   lua_getfield(L, lua_upvalueindex(1), "searchers");  /* will be at index 3 */
   if (!lua_istable(L, 3))
     luaL_error(L, LUA_QL("package.searchers") " must be a table");
-#if DISABLE_IO_INTERFACE
-	if (!(strcmp(name,"tileinfo") == 0 || strcmp(name,"main.lua") == 0)) {
-      luaL_error(L, "module " LUA_QS " not found:%s", name, "");
-	}
-#endif
+//#if DISABLE_IO_INTERFACE
+//	if (!(strcmp(name,"tileinfo") == 0 || strcmp(name,"main.lua") == 0)) {
+//      luaL_error(L, "module " LUA_QS " not found:%s", name, "");
+//	}
+//#endif
   /*  iterate over available seachers to find a loader */
   for (i = 1; ; i++) {
     lua_rawgeti(L, 3, i);  /* get a seacher */
     if (lua_isnil(L, -1)) {  /* no more searchers? */
       lua_pop(L, 1);  /* remove nil */
       luaL_pushresult(&msg);  /* create error message */
-#if DISABLE_IO_INTERFACE
-      luaL_error(L, "module " LUA_QS " not found:%s", name, "");
-#else
+//#if DISABLE_IO_INTERFACE
+//      luaL_error(L, "module " LUA_QS " not found:%s", name, "");
+//#else
       luaL_error(L, "module " LUA_QS " not found:%s",
                     name, lua_tostring(L, -1));
-#endif
+//#endif
     }
     lua_pushstring(L, name);
     lua_call(L, 1, 2);  /* call it */

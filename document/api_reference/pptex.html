@@ -5,10 +5,11 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=no"> 
 	<link rel="apple-touch-icon" href="./apple-touch-icon.png" />
-	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
 	<link rel="stylesheet" href="../picoapi.css" />
-	<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
-	<script type="text/javascript" src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+	<script type="text/javascript" src="../common.js"></script>
 </head> 
 <body> 
 
@@ -54,7 +55,7 @@
 <p class="pico-desc">効果についてはOpenGLのGL_CLAMP_TO_EDGE,GL_LINEAR,GL_REPEATを参照してください。</p>
 
 <div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-					<pre><code>tex=pptex:load(&quot;sample.png&quot;)
+<textarea class="code" id="pptex-1">tex=pptex:load(&quot;sample.png&quot;)
 
 function start()
   ppgraph:put(0,0,2,tex)
@@ -66,8 +67,9 @@ function start()
   ppgraph:print(&quot;width=&quot;..tex.size.width..&quot;,height=&quot;..tex.size.height)
   ppgraph:move(0,16)
 end
-
-<img src="./image/screen-shot 2012-06-28 17.10.45.png"/></code></pre></div></div>
+</textarea>
+<div data-role="button" onclick="selectarea('#pptex-1')" data-mini="true">全選択</div>
+<img src="./image/screen-shot 2012-06-28 17.10.45.png" class="pico-image"></div></div>
 
 </div>
    
@@ -91,7 +93,7 @@ end
 <p class="pico-desc">読み込んだテクスチャのリスト{texture table}を返します。</p>
     	
 <div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-<pre><code>--テクスチャのリストを表示します
+<textarea class="code" id="pptex-2">--テクスチャのリストを表示します
 pptex:default(pptex:load(&quot;main.png&quot;))
 ppfont:set(&quot;half&quot;)
 function start()
@@ -101,8 +103,9 @@ function start()
     ppgraph:move(0,16)
   end
 end
-</code></pre>
-<img src="./image/screen-shot 2012-06-17 13.54.43.png"/>
+</textarea>
+<div data-role="button" onclick="selectarea('#pptex-2')" data-mini="true">全選択</div>
+<img src="./image/screen-shot 2012-06-17 13.54.43.png" class="pico-image">
 </div></div>
 </div>
 	</div>

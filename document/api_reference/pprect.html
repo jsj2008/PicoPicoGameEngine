@@ -5,10 +5,11 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=no"> 
 	<link rel="apple-touch-icon" href="./apple-touch-icon.png" />
-	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
 	<link rel="stylesheet" href="../picoapi.css" />
-	<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
-	<script type="text/javascript" src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+  <script type="text/javascript" src="../common.js"></script>
 </head> 
 <body> 
 
@@ -122,7 +123,7 @@
 <p class="pico-desc">矩形とのあたり判定を行います。</p>
 
 <div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-<pre><code>--ボタンの処理例
+<textarea class="code" id="pprect-1">--ボタンの処理例
 button=ppsprite.new()
 button:texture("button.png")
 button:tileInfo({size=button:texture().imageSize})
@@ -152,10 +153,11 @@ function start()
   end
   button:draw()
 end
+</textarea>
+<div data-role="button" onclick="selectarea('#pprect-1')" data-mini="true">全選択</div>
+<img src="./image/screen-shot 2012-11-18 11.32.47.png" class="pico-image">
 
-<img src="./image/screen-shot 2012-11-18 11.32.47.png"/>
-
---ボタンの処理例(タッチエリアのサイズを16ドット広げる)
+<textarea class="code" id="pprect-2">--ボタンの処理例(タッチエリアのサイズを16ドット広げる)
 button=ppsprite.new()
 button:texture("button.png")
 button:tileInfo({size=button:texture().imageSize})
@@ -181,10 +183,11 @@ function start()
   button:draw()
   ppgraph:box(button:aabb():inset(-16))
 end
+</textarea>
+<div data-role="button" onclick="selectarea('#pprect-2')" data-mini="true">全選択</div>
+<img src="./image/screen-shot 2012-11-18 11.42.42.png" class="pico-image">
 
-<img src="./image/screen-shot 2012-11-18 11.42.42.png"/>
-
-</code></pre></div></div>
+</div></div>
 
 
 </div>

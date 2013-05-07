@@ -5,10 +5,11 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=no"> 
 	<link rel="apple-touch-icon" href="./apple-touch-icon.png" />
-	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
 	<link rel="stylesheet" href="../picoapi.css" />
-	<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
-	<script type="text/javascript" src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+  <script type="text/javascript" src="../common.js"></script>
 </head> 
 <body> 
 
@@ -25,7 +26,9 @@
 <p class="pico-desc">バーチャルキーをタッチしているかどうかを調べます。</p>
 
 <div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-<pre><code>--タッチしたところがバーチャルキーの中心
+<textarea class="code" id="ppvkey-1">--タッチしたところがバーチャルキーの中心(４方向移動)
+--フリックして移動させます
+g=ppgraph
 pptex:default(pptex:load(&quot;sample.png&quot;))
 fighter=ppsprite.new()
 fighter:tile(2)
@@ -35,13 +38,28 @@ ppvkey:center(s.width/2,s.height/2)
 fighter:pos(ppvkey:center()-pppoint(16,16))
 
 function start()
-  if ppvkey:touch() then
-    fighter:move(mv[ppvkey:dir(4)+1])
-    ppgraph:print(ppvkey:dir(4))
+  local d=ppvkey:dir(4)
+  fighter:move(mv[d+1])
+  g:print(d)
+  local c=ppvkey:center()-pppoint(16,16)
+  if #pptouch()&gt;0 then
+    g:put(c,7)
+    g:scale(2)
+    g:pos(c/2)
+    g:move(1,-16+1)
+    g:print(&quot;&uarr;&quot;)
+    g:move(16,16)
+    g:print(&quot;&rarr;&quot;)
+    g:move(-16,16)
+    g:print(&quot;&darr;&quot;)
+    g:move(-16,-16)
+    g:print(&quot;&larr;&quot;)
+    g:scale(1)
   end
-  ppgraph:put(ppvkey:center()-pppoint(16,16),7)
   fighter:draw()
-end</code></pre></div></div>
+end</textarea>
+<div data-role="button" onclick="selectarea('#ppvkey-1')" data-mini="true">全選択</div>
+<img src="./image/screen-shot 2012-11-26 13.31.10.png" class="pico-image"></div></div>
 
 </div>
     	
@@ -50,8 +68,43 @@ end</code></pre></div></div>
 <p class="pico-desc">バーチャルキーの中心位置からのタッチ位置のずれを取得します。</p>
 
 <div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-<pre><code>--バーチャルキーを使ったキャラクターの移動
-</code></pre></div></div>
+<textarea class="code" id="ppvkey-2">--画面の中央がバーチャルキーの中心(４方向移動)
+--キーの中心からのずれを自機の周りに描きます
+g=ppgraph
+pptex:default(pptex:load(&quot;sample.png&quot;))
+fighter=ppsprite.new()
+fighter:tile(2)
+mv={{1,0},{0,-1},{-1,0},{0,1}}
+s=ppscreen:size()
+ppvkey:center(s.width/2,s.height/2)
+ppvkey:fixed(true)
+fighter:pos(ppvkey:center()-pppoint(16,16))
+
+function start()
+  local d=ppvkey:dir(4)
+  fighter:move(mv[d+1])
+  g:print(d)
+  local c=ppvkey:center()-pppoint(16,16)
+  g:put(c,7)
+  g:scale(2)
+  g:pos(c/2)
+  g:move(1,-16+1)
+  g:print(&quot;&uarr;&quot;)
+  g:move(16,16)
+  g:print(&quot;&rarr;&quot;)
+  g:move(-16,16)
+  g:print(&quot;&darr;&quot;)
+  g:move(-16,-16)
+  g:print(&quot;&larr;&quot;)
+  if #pptouch()&gt;0 then
+    g:pos((fighter:pos()+ppvkey:delta())/2)
+    g:print(&quot;&#9675;&quot;)
+  end
+  g:scale(1)
+  fighter:draw()
+end</textarea>
+<div data-role="button" onclick="selectarea('#ppvkey-2')" data-mini="true">全選択</div>
+<img src="./image/screen-shot 2012-11-26 13.41.47.png" class="pico-image"></div></div>
 </div>
     
 <div data-role="collapsible" data-theme="c" data-content-theme="c"> 
@@ -71,24 +124,38 @@ end</code></pre></div></div>
     	falseの場合はタッチ開始位置が中心になります。</p>
 
 <div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-<pre><code>--画面の中央がバーチャルキーの中心
+<textarea class="code" id="ppvkey-3">--画面の中央がバーチャルキーの中心(４方向移動)
+g=ppgraph
 pptex:default(pptex:load(&quot;sample.png&quot;))
 fighter=ppsprite.new()
 fighter:tile(2)
 mv={{1,0},{0,-1},{-1,0},{0,1}}
-ppvkey:fixed(true)
 s=ppscreen:size()
 ppvkey:center(s.width/2,s.height/2)
+ppvkey:fixed(true)
 fighter:pos(ppvkey:center()-pppoint(16,16))
 
 function start()
-  if ppvkey:touch() then
-    fighter:move(mv[ppvkey:dir(4)+1])
-    ppgraph:print(ppvkey:dir(4))
-  end
-  ppgraph:put(ppvkey:center()-pppoint(16,16),7)
+  local d=ppvkey:dir(4)
+  fighter:move(mv[d+1])
+  g:print(d)
+  local c=ppvkey:center()-pppoint(16,16)
+  g:put(c,7)
+  g:scale(2)
+  g:pos(c/2)
+  g:move(1,-16+1)
+  g:print(&quot;&uarr;&quot;)
+  g:move(16,16)
+  g:print(&quot;&rarr;&quot;)
+  g:move(-16,16)
+  g:print(&quot;&darr;&quot;)
+  g:move(-16,-16)
+  g:print(&quot;&larr;&quot;)
+  g:scale(1)
   fighter:draw()
-end</code></pre></div></div>
+end</textarea>
+<div data-role="button" onclick="selectarea('#ppvkey-3')" data-mini="true">全選択</div>
+<img src="./image/screen-shot 2012-11-26 13.38.03.png" class="pico-image"></div></div>
 
 </div>
 

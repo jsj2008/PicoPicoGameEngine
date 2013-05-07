@@ -5,10 +5,11 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=no"> 
 	<link rel="apple-touch-icon" href="./apple-touch-icon.png" />
-	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
 	<link rel="stylesheet" href="../picoapi.css" />
-	<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
-	<script type="text/javascript" src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+	<script type="text/javascript" src="../common.js"></script>
 </head> 
 <body> 
 
@@ -30,7 +31,7 @@ ppoffscreen:create(w,h,linear)</h3>
 <p class="pico-desc">オフスクリーンを作成します。</p>
 
 <div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-<pre><code>o=ppoffscreen.new()
+<textarea class="code" id="ppoffscreen-1">o=ppoffscreen.new()
 o:create(100,100)
 o:fill({10,10,32,32},ppgraph.red)
 o:box({0,0,100,100},ppgraph.red)
@@ -39,8 +40,9 @@ o:paint({1,1},ppgraph.cyan)
 o:paint({50,50},ppgraph.blue)
 function start()
 	o:draw()
-end</code></pre>
-<img src="./image/screen-shot 2012-06-28 17.42.14.png"/></div></div>
+end</textarea>
+<div data-role="button" onclick="selectarea('#ppoffscreen-1')" data-mini="true">全選択</div>
+<img src="./image/screen-shot 2012-06-28 17.42.14.png" class="pico-image"></div></div>
 </div>
 
 <div data-role="collapsible" data-theme="c" data-content-theme="c"> 
@@ -48,7 +50,7 @@ end</code></pre>
 <p class="pico-desc">オフスクリーンをテクスチャとして使用するためにバインドします。</p>
 
 <div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-<pre><code>--バインドすることでオフスクリーンをテクスチャとして使用できます
+<textarea class="code" id="ppoffscreen-2">--バインドすることでオフスクリーンをテクスチャとして使用できます
 o=ppoffscreen.new()
 o:create(100,100)
 o:fill({10,10,32,32},ppgraph.red)
@@ -66,8 +68,9 @@ s:tileSize(100,100)
 
 function start()
 	s:draw()
-end</code></pre>
-<img src="./image/screen-shot 2012-06-28 17.42.14.png"/></div></div>
+end</textarea>
+<div data-role="button" onclick="selectarea('#ppoffscreen-2')" data-mini="true">全選択</div>
+<img src="./image/screen-shot 2012-06-28 17.42.14.png" class="pico-image"></div></div>
 </div>
 
 <div data-role="collapsible" data-theme="c" data-content-theme="c"> 
@@ -78,7 +81,7 @@ end</code></pre>
 	高速に処理できますがlock()/unlock()中に描画した画像はbind()などの描画処理を行うとキャンセルされます。</p>
 	
 <div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-<pre><code>--タイル番号２のキャラクタをオフスクリーンに描画します
+<textarea class="code" id="ppoffscreen-3">--タイル番号２のキャラクタをオフスクリーンに描画します
 pptex:default(pptex:load("sample.png"))
 o=ppoffscreen.new()
 o:create(100,100)
@@ -98,8 +101,9 @@ s:scale(2)
 
 function start()
 	s:draw()
-end</code></pre>
-<img src="./image/screen-shot 2012-06-28 17.44.58.png"/></div></div>
+end</textarea>
+<div data-role="button" onclick="selectarea('#ppoffscreen-3')" data-mini="true">全選択</div>
+<img src="./image/screen-shot 2012-06-28 17.44.58.png" class="pico-image"></div></div>
 </div>
 
 <div data-role="collapsible" data-theme="c" data-content-theme="c"> 

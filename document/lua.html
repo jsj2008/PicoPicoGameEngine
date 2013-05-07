@@ -1,0 +1,618 @@
+<!DOCTYPE html> 
+<html> 
+	<head> 
+	<title>PicoPicoGameEngine</title> 
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=no"> 
+	<link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
+	<link rel="stylesheet" href="./picoapi.css" />
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+	<script type="text/javascript" src="http://yamagame.secret.jp/tools/mmldl/downloadmml.js"></script>	
+	<script type="text/javascript" src="./common.js"></script>
+</head>
+<body> 
+
+<div data-role="page" id="lua_manual">
+
+	<div data-role="header" data-theme="d">
+		<h1>Lua入門</h1>
+		<a href="#" data-role="button" data-rel="back" data-icon="arrow-l" class="ui-btn-left">Back</a>
+		<a href="./index.html" class="ui-btn-right">TOP</a>
+	</div>
+
+	<div data-role="content">
+	
+	<!------------------------------------------------------------------------------------------------->
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="c" data-content-theme="c">
+<h3>コメント</h3>
+<textarea class="code" id="lua-1">-- ここから行末までがコメント
+
+--[[
+複数行をコメントにするときは
+こんな感じに
+]]</textarea>
+<div data-role="button" onclick="selectarea('#lua-1')" data-mini="true">全選択</div>
+</div></div>
+
+<!------------------------------------------------------------------------------------------------->
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="c" data-content-theme="c">
+<h3>変数</h3>
+<textarea class="code" id="lua-2">-- Luaの変数には型がありません
+
+-- 整数
+a=10 -- 変数aに10を代入
+
+-- 実数
+b=10.5
+
+-- 文字列
+c="Hello"
+d='Hello'
+
+-- 複数行にわたる文字列
+e=[[abcd
+efg
+hij]]
+
+print(e)
+
+-- ブーリアン
+f=true
+g=false</textarea>
+<div data-role="button" onclick="selectarea('#lua-2')" data-mini="true">全選択</div>
+</div></div>
+
+<!------------------------------------------------------------------------------------------------->
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="c" data-content-theme="c">
+<h3>四則演算</h3>
+<textarea class="code" id="lua-3">-- 算術演算子
+a=1+2 -- 加算
+b=4-3 -- 減算
+c=4*6 -- 乗算
+d=8/2 -- 除算
+e=5%3 -- 剰余
+f=4^2 -- 累乗</textarea>
+<div data-role="button" onclick="selectarea('#lua-3')" data-mini="true">全選択</div>
+</div></div>
+
+<!------------------------------------------------------------------------------------------------->
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="c" data-content-theme="c">
+<h3>標準出力</h3>
+<textarea class="code" id="lua-4">-- 標準出力には print を使います
+-- DotEDITOR では console.log に出力されます
+
+print("test")
+
+-- 文字列のみの場合は () が省略できます
+
+print "test"</textarea>
+<div data-role="button" onclick="selectarea('#lua-4')" data-mini="true">全選択</div>
+</div></div>
+
+<!------------------------------------------------------------------------------------------------
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="c" data-content-theme="c">
+<h3>ブロック</h3>
+<textarea class="code" id="lua-11">a=1
+
+-- Lua では do〜end でブロックを作ります
+do
+  local a=2 --ローカル変数
+  print(a)
+end
+
+print(a)</textarea>
+<div data-role="button" onclick="selectarea('#lua-11')" data-mini="true">全選択</div>
+</div></div>
+->
+
+<!------------------------------------------------------------------------------------------------->
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="c" data-content-theme="c">
+<h3>ブロック</h3>
+<textarea class="code" id="lua-5">-- Lua では do〜end でブロックを作ります
+
+-- グローバル変数
+a="global a"
+
+do
+  
+  b="global b" -- b はグローバル
+
+  -- ローカル変数は local で宣言します
+  local a="local a" -- a はローカル
+
+  print("---- do のスコープ内")
+  print("a="..a)
+  print("b="..b)
+
+end
+
+print("---- do のスコープ外")
+print("a="..a)
+print("b="..b)</textarea>
+<div data-role="button" onclick="selectarea('#lua-5')" data-mini="true">全選択</div>
+</div></div>
+
+<!------------------------------------------------------------------------------------------------->
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="c" data-content-theme="c">
+<h3>関数</h3>
+<textarea class="code" id="lua-6">-- functionで関数を定義します
+
+function calc(a,b)
+
+  -- return で戻り値を返します
+  -- 「,」で区切る事で複数の戻り値を返せます
+  return a+b,a*b
+
+end
+
+a,b=calc(10,4) --calc関数を呼び出し
+
+print(a..","..b)</textarea>
+<div data-role="button" onclick="selectarea('#lua-6')" data-mini="true">全選択</div>
+</div></div>
+
+<!------------------------------------------------------------------------------------------------->
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="c" data-content-theme="c">
+<h3>無名関数</h3>
+<textarea class="code" id="lua-7">-- 関数も変数に代入できます
+
+calc=function(a,b)
+
+  -- return で戻り値を返します
+  -- 「,」で区切る事で複数の戻り値を返せます
+  return a+b,a*b
+
+end
+
+a,b=calc(10,4) --calc関数を呼び出し
+
+print(a..","..b)</textarea>
+<div data-role="button" onclick="selectarea('#lua-7')" data-mini="true">全選択</div>
+</div></div>
+
+<!------------------------------------------------------------------------------------------------->
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="c" data-content-theme="c">
+<h3>条件分岐</h3>
+<textarea class="code" id="lua-8">-- 条件分岐はこの様になります
+-- Lua に switch文はありません
+
+a=4
+if a==1 then
+  print("a==1")
+elseif a==2 then
+  print("a==2")
+elseif a==3 then
+  print("a==3")
+else
+  print("other")
+end</textarea>
+<div data-role="button" onclick="selectarea('#lua-8')" data-mini="true">全選択</div>
+</div></div>
+
+<!------------------------------------------------------------------------------------------------->
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="c" data-content-theme="c">
+<h3>その他の演算子</h3>
+<textarea class="code" id="lua-9">-- 比較演算子
+g=(a==b) -- 等しい
+h=(a&gt;b) -- 大きい
+i=(a&lt;b) -- 小さい
+j=(a&gt;=b) -- 大きいか等しい
+k=(a&lt;=b) -- 小さいか等しい
+l=(a~=b) -- 等しくない
+
+-- 論理演算子
+m=(g and h) -- かつ
+n=(i or j) -- または
+o=(not k) -- でない
+
+-- 文字列の連結
+p="Hello ".."World"
+
+-- 単項演算子(「++」や「--」)や３項演算子は Lua にはありません。</textarea>
+<div data-role="button" onclick="selectarea('#lua-9')" data-mini="true">全選択</div>
+</div></div>
+
+<!------------------------------------------------------------------------------------------------->
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="c" data-content-theme="c">
+<h3>繰り返し</h3>
+<textarea class="code" id="lua-10">-- for 文
+for i=1,10,2 do
+  print(i) --1から10まで2個飛びで
+end
+
+-- while 文
+i=1
+while i&lt;10 do
+  print(i)
+  i=i+1
+end
+
+-- repeat 文
+i=1
+repeat
+  print(i)
+  i=i+1
+until i==10
+
+-- break 文
+for i=1,10 do
+  if i&gt;5 then
+    break --ここでループを抜けます
+  end
+  print(i)
+end
+
+-- Lua に continue 文はありません</textarea>
+<div data-role="button" onclick="selectarea('#lua-10')" data-mini="true">全選択</div>
+</div></div>
+
+<!------------------------------------------------------------------------------------------------->
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="c" data-content-theme="c">
+<h3>可変引数</h3>
+<textarea class="code" id="lua-12">-- 引数を「...」にすると可変引数になります
+
+function sum(...)
+
+  -- 可変引数をテーブルにする
+  local t={...}
+
+  local s=0
+  for i=1,#t do
+    s=s+t[i]
+  end
+  return s
+
+end
+
+print(sum(1,2,3,4,5,6,7,8,9))</textarea>
+<div data-role="button" onclick="selectarea('#lua-12')" data-mini="true">全選択</div>
+</div></div>
+
+<!------------------------------------------------------------------------------------------------->
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="c" data-content-theme="c">
+<h3>コルーチン</h3>
+<textarea class="code" id="lua-13">-- Lua にはコルーチンがあります
+-- コルーチンを使うと見通しのよいプログラムを作る事ができます
+
+func=function()
+  print("a")
+  coroutine.yield() -- 一旦抜ける
+  print("b")
+  coroutine.yield() -- 一旦抜ける
+  print("c")
+end
+
+c=coroutine.wrap(func)
+
+c() -- "a" を表示
+c() -- "b" を表示
+c() -- "c" を表示
+c() -- エラー
+
+-- coroutine は長い単語なので
+-- 次のようにショートカットを使うとキー入力が楽です。
+
+co=coroutine
+
+func2=function(v)
+  print("a:"..v)
+  co.yield() -- 一旦抜ける
+  print("b:"..v)
+  co.yield() -- 一旦抜ける
+  print("c:"..v)
+end
+
+d=co.wrap(func2)
+
+d(1) -- 引数を渡す事もできます
+d(2) -- この引数は無効
+d(3) -- この引数は無効</textarea>
+<div data-role="button" onclick="selectarea('#lua-13')" data-mini="true">全選択</div>
+</div></div>
+
+<!------------------------------------------------------------------------------------------------->
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="c" data-content-theme="c">
+<h3>テーブルの作成</h3>
+<textarea class="code" id="lua-14">-- Luaには構造体やクラスはありません
+-- すべてテーブルを使って表現します
+-- テーブルの実体は連想配列です
+
+t={}  -- テーブルを変数tに代入
+
+u={   -- 要素付きで作成
+  a=1,
+  b="abc",
+  c=function(s)
+    return s.a+2
+  end
+}
+
+-- 要素への参照は次のように「.」を使います
+
+print("u.b="..u.b)
+--             ↑</textarea>
+<div data-role="button" onclick="selectarea('#lua-14')" data-mini="true">全選択</div>
+</div></div>
+
+<!------------------------------------------------------------------------------------------------->
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="c" data-content-theme="c">
+<h3>テーブルの変更</h3>
+<textarea class="code" id="lua-15">t={} -- テーブルを作成
+
+-- テーブルに要素を追加するには
+-- 次のようにします
+
+t.a=1
+t.b="abc"
+
+-- 次のようにする事もできます
+
+t["a"]=1
+t["b"]="abc"</textarea>
+<div data-role="button" onclick="selectarea('#lua-15')" data-mini="true">全選択</div>
+</div></div>
+
+<!------------------------------------------------------------------------------------------------->
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="c" data-content-theme="c">
+<h3>配列</h3>
+<textarea class="code" id="lua-16">-- Luaでは配列もテーブルで表現します
+
+t={}
+
+t[1]=10 -- 添字は1からです
+t[2]=20
+t[3]=30
+
+-- #をつけると要素の数を返します
+print(#t) -- 3を出力
+
+t[#t+1]=40 -- 要素の追加
+
+-- 次のように定義する事もできます
+
+u={10,20,30}</textarea>
+<div data-role="button" onclick="selectarea('#lua-16')" data-mini="true">全選択</div>
+</div></div>
+
+<!------------------------------------------------------------------------------------------------->
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="c" data-content-theme="c">
+<h3>イテレート</h3>
+<textarea class="code" id="lua-17">-- 連想配列のイテレート
+t={
+  a=10,
+  b=20,
+  c=30
+}
+
+-- 連想配列の場合は pairs を使います
+for i,v in pairs(t) do
+  print("t."..i.."="..v)
+end
+
+-- 配列のイテレート
+u={10,20,30}
+
+-- 配列の場合は ipairs を使います
+for i,v in ipairs(u) do
+  print("u["..i.."]="..v)
+end</textarea>
+<div data-role="button" onclick="selectarea('#lua-17')" data-mini="true">全選択</div>
+</div></div>
+
+<!------------------------------------------------------------------------------------------------->
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="c" data-content-theme="c">
+<h3>インスタンスメソッド</h3>
+<textarea class="code" id="lua-18">-- テーブルに「:」を使うとインスタンスメソッドのように関数を呼び出す事ができます。
+
+t={
+  a=3,
+  b=5,
+  add=function(s)
+    return s.a+s.b --3と5を加算
+  end
+}
+
+print(t:add())  -- (1)
+print(t.add(t)) -- (2)
+
+-- (1)は(2)と同様の意味です
+-- 「:」を使うと第一引数を省略できます</textarea>
+<div data-role="button" onclick="selectarea('#lua-18')" data-mini="true">全選択</div>
+</div></div>
+
+
+<!------------------------------------------------------------------------------------------------->
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="c" data-content-theme="c">
+<h3>文字列操作</h3>
+<textarea class="code" id="lua-20">--文字列を操作するにはstringオブジェクトを使用します。
+
+-- 文字を文字コードに変換します
+t,u=string.byte("ABC",2,3)
+print(t..","..u) --66,67
+
+-- 文字コードから文字列を作ります
+t=string.char(t,u)
+print(t) --BC
+
+-- フォーマット文字で整形した文字列を作ります
+a=12
+t=string.format("a=%04d",a)
+print(t) --a=0012
+
+-- 文字列の検索
+-- 見つかった位置と終了位置を返します
+-- 見つからないときはnilになります
+t,u=string.find("abcdef","cde")
+print(t..","..u) --3,5
+
+-- 文字列の長さを返します
+t=string.len("abcde")
+print(t) --5
+
+-- 大文字にします
+t=string.upper("abc")
+print(t) --ABC
+
+-- 小文字にします
+t=string.lower("ABC")
+print(t) --abc
+
+-- 繰り返し文字列を作ります
+t=string.rep("Ab",3)
+print(t) --AbAbAb
+
+-- 文字列を逆さまにします
+t=string.reverse("ABC")
+print(t) --CBA
+
+-- 文字列を指定位置から終端まで切り出します
+t=string.sub("ABCDEF",3)
+print(t) --CDEF
+
+-- 文字列を指定位置範囲で切り出します
+t=string.sub("ABCDEF",3,5)
+print(t) --CDE</textarea>
+<div data-role="button" onclick="selectarea('#lua-20')" data-mini="true">全選択</div>
+</div></div>
+
+
+<!------------------------------------------------------------------------------------------------->
+<div data-role="collapsible-set"><div data-role="collapsible" data-theme="c" data-content-theme="c">
+<h3>ビット演算</h3>
+<textarea class="code" id="lua-19">-- Luaにビット演算子はありません
+-- 組み込みオブジェクト(bit32)を使います
+
+-- and演算
+bit32.band(1,5)  --4を出力
+-- or演算
+bit32.bor(1,4,8) --13を出力
+-- xor演算
+bit32.bxor(1,4,7)
+
+--band、bor、bxor の引数はいくつでも可
+
+-- not演算 ビット反転
+bit32.bnot(1)
+
+--0ならfalse 0以外ならtrue
+bit32.btest(0)
+
+--ビットの切り出し
+be=bit32.extract(0xffff0f,3,6)
+--3ビットから6ビット切り出して右詰めします
+
+--ビットの入れ替え
+br=bit32.replace(0xff,0x06,2,4)
+--2ビットから4ビットまでを0x06と入れ換えます
+
+a=0xc0000003
+
+--以下、ビット移動関連
+--第二引数省略時は1ビット移動になります
+
+--最上位ビットを保持して右シフト
+bit32.arshift(a,2)
+
+--左ローテート 最上位ビットを最下位へ
+bit32.lrotate(a,2)
+
+--左シフト 最下位ビットは0に
+bit32.lshift(a,2)
+
+--右ローテート 最下位ビットを最上位へ
+bit32.rrotate(a,2)
+
+--右シフト 最上位ビットは0に
+bit32.rshift(a,2)</textarea>
+<div data-role="button" onclick="selectarea('#lua-19')" data-mini="true">全選択</div>
+<textarea class="code" id="lua-20">--以下、DotEDITORで動作確認してみるコード
+
+g=ppgraph
+ppfont:set("half")
+ct=0
+
+a=0xc0000003
+
+function start()
+  ct=ct+1
+  if ct>16 then
+    ct=0
+
+    -- lshiftの部分を他のビット移動
+    -- 関数に入れ替えて動作確認
+    -- してみてください
+
+    a=bit32.lshift(a,1)
+
+  end
+  put(a)
+
+  g:move(0,16)
+  put(bit32.bxor(0xff,12))
+
+  g:move(0,16)
+  put(bit32.bnot(-2))
+
+  g:move(0,16)
+  t=bool2str(bit32.btest(0))
+  g:print("bit32.btest(0)="..t)
+
+end
+
+--ブール値を文字列に
+function bool2str(v)
+  if v then
+    return "true"
+  end
+  return "false"
+end
+
+--数値を二進数文字列にする関数
+function bin(v)
+  local s=""
+  for i=31,0,-1 do
+    local t=bit32.extract(v,i)
+    if t==0 then
+      s=s.."0"
+    else
+      s=s.."1"
+    end
+  end
+  return s
+end
+
+-- 8ビット毎に色分けして表示
+function put(v)
+  local op=g:pos()
+  local t=bin(v)
+  local s
+  s=string.sub(t,1,8)
+  g:pos(g:print(s,g.white))
+  s=string.sub(t,9,16)
+  g:pos(g:print(s,g.cyan))
+  s=string.sub(t,17,24)
+  g:pos(g:print(s,g.white))
+  s=string.sub(t,25,32)
+  g:pos(g:print(s,g.cyan))
+  g:pos(op)
+end</textarea>
+<div data-role="button" onclick="selectarea('#lua-20')" data-mini="true">全選択</div>
+</div></div>
+
+<p>Lua 5.2 リファレンスマニュアルの日本語のページは<a href="http://milkpot.sakura.ne.jp/lua/lua52_manual_ja.html" data-ajax="false">こちら</a>にあります。外部サイトになります。</p>
+
+	</div>
+
+	<div data-role="footer" data-theme="d">
+		<h4>PicoPicoGameEngine</h4> 
+		<a href="./index.html" data-icon="arrow-l" class="ui-btn-left">Back</a>
+		<a href="./index.html" class="ui-btn-right">TOP</a>
+	</div>
+
+</div>
+
+
+</body>
+</html>

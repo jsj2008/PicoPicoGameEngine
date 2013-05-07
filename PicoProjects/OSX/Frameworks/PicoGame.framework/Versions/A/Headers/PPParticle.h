@@ -97,6 +97,7 @@ public:
     float rotationEnd, rotationEndVariance;
 	
 	std::string textureName;
+	std::string particleName;
 
 	int blendFuncSource, blendFuncDestination;
 

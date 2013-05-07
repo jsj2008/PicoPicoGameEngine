@@ -24,3 +24,11 @@ pre { white-space: pre; word-wrap: break-word; }
 		width: 100%;
 	}
 }
+
+textarea.code {
+	border:solid 1px #999999;
+	background-color:#fff;
+	font-size:80%;
+	font-family:'ＭＳ ゴシック', 'MS Gothic', 'Osaka－等幅', Osaka-mono, monospace;
+	resize: vertical;
+}

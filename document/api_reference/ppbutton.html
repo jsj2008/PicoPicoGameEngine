@@ -5,10 +5,11 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=no"> 
 	<link rel="apple-touch-icon" href="./apple-touch-icon.png" />
-	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
 	<link rel="stylesheet" href="../picoapi.css" />
-	<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
-	<script type="text/javascript" src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+	<script type="text/javascript" src="../common.js"></script>
 </head> 
 <body> 
 
@@ -28,7 +29,7 @@
 <p class="pico-desc">titleを表示したボタンを作成します。</p>
 		
 <div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-<pre><code>--ボタンを押すとgameloopへ遷移します
+<textarea class="code" id="ppbutton-1">--ボタンを押すとgameloopへ遷移します
 b=ppbutton("START GAME")
 b.bgcolor = ppgraph.blue
 
@@ -41,8 +42,9 @@ end
 
 function gameloop()
   ppgraph:print("GAME LOOP")
-end</code></pre>
-<img src="./image/screen-shot 2012-06-28 17.56.22.png"/></div></div>
+end</textarea>
+<div data-role="button" onclick="selectarea('#ppbutton-1')" data-mini="true">全選択</div>
+<img src="./image/screen-shot 2012-06-28 17.56.22.png" class="pico-image"></div></div>
 </div>
 
 <div data-role="collapsible" data-theme="c" data-content-theme="c"> 
@@ -66,15 +68,16 @@ end</code></pre>
 <p class="pico-desc">ボタンのレイアウトを指定します。</p>
 
 <div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-<pre><code>--ボタンを画面中央に配置します
+<textarea class="code" id="ppbutton-2">--ボタンを画面中央に配置します
 b=ppbutton("GAME START")
 b:layout(true,true,true)
 
 function start()
   b:idle()
   b:draw()
-end</code></pre>
-<img src="./image/screen-shot 2012-06-28 18.04.48.png"/></div></div>
+end</textarea>
+<div data-role="button" onclick="selectarea('#ppbutton-2')" data-mini="true">全選択</div>
+<img src="./image/screen-shot 2012-06-28 18.04.48.png" class="pico-image"></div></div>
 </div>
 
 <div data-role="collapsible" data-theme="c" data-content-theme="c"> 
@@ -97,7 +100,7 @@ end</code></pre>
 <p class="pico-desc">背景色です。nilにすると透明になります。</p>
 
 <div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-<pre><code>--ボタンの背景を透明にしてスクリーンを青色にします
+<textarea class="code" id="ppbutton-3">--ボタンの背景を透明にしてスクリーンを青色にします
 b=ppbutton("GAME START")
 b:layout(true,true,true)
 b.bgcolor = nil
@@ -106,8 +109,9 @@ function start()
   ppgraph:fill(ppscreen:size(),ppgraph.blue)
   b:idle()
   b:draw()
-end</code></pre>
-<img src="./image/screen-shot 2012-06-28 18.07.35.png"/></div></div>
+end</textarea>
+<div data-role="button" onclick="selectarea('#ppbutton-3')" data-mini="true">全選択</div>
+<img src="./image/screen-shot 2012-06-28 18.07.35.png" class="pico-image"></div></div>
 
 </div>
 
@@ -134,7 +138,7 @@ end</code></pre>
 <p class="pico-desc">背景画像をタイル番号で指定します。</p>
 
 <div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-<pre><code>--タイル番号17を背景に使って表示します
+<textarea class="code" id="ppbutton-4">--タイル番号17を背景に使って表示します
 pptex:default(pptex:load("sample.png"))
 b=ppbutton("TITLE")
 b.bg.tile = 17
@@ -142,8 +146,9 @@ b.bg.edge = 4
 function start()
   b:idle()
   b:draw()
-end</code></pre>
-<img src="./image/screen-shot 2012-06-28 17.58.28.png"/></div></div>
+end</textarea>
+<div data-role="button" onclick="selectarea('#ppbutton-4')" data-mini="true">全選択</div>
+<img src="./image/screen-shot 2012-06-28 17.58.28.png" class="pico-image"></div></div>
 </div>
 
 <div data-role="collapsible" data-theme="c" data-content-theme="c"> 

@@ -5,10 +5,11 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=no"> 
 	<link rel="apple-touch-icon" href="./apple-touch-icon.png" />
-	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
 	<link rel="stylesheet" href="../picoapi.css" />
-	<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
-	<script type="text/javascript" src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+	<script type="text/javascript" src="../common.js"></script>
 </head> 
 <body> 
 
@@ -28,14 +29,16 @@ ppsprite.new(n)</h3>
 <p class="pico-desc">ppspriteオブジェクトを作成します。引数nを指定すると指定した数だけppspriteオブジェクトが入ったテーブルを返します。</p>
 
 <div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-<pre><code>--スプライトを{32,20}の位置に描画します
+<textarea class="code" id="ppsprite-1">--スプライトを{32,20}の位置に描画します
 pptex:default(pptex:load("main.png"))
 sp=ppsprite.new()
 sp:pos(32,20)
 
 function start()
   sp:draw()
-end</code></pre></div></div>
+end</textarea>
+<div data-role="button" onclick="selectarea('#ppsprite-1')" data-mini="true">全選択</div>
+</div></div>
 </div>
 
 <div data-role="collapsible" data-theme="c" data-content-theme="c"> 
@@ -73,13 +76,15 @@ end</code></pre></div></div>
 <p class="pico-desc">表示位置を指定します。引数がない場合は表示位置を返します。</p>
     	
 <div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-<pre><code>--位置指定はいくつかの引数指定ができます
+<textarea class="code" id="ppsprite-2">--位置指定はいくつかの引数指定ができます
 pptex:default(pptex:load("main.png"))
 sp=ppsprite.new()
 sp:pos(32,20)
 sp:pos({32,20})
 sp:pos({x=32,y=20})
-sp.x,sp.y=32,20</code></pre></div></div>
+sp.x,sp.y=32,20</textarea>
+<div data-role="button" onclick="selectarea('#ppsprite-2')" data-mini="true">全選択</div>
+</div></div>
 </div>
  
 <div data-role="collapsible" data-theme="c" data-content-theme="c"> 
@@ -87,7 +92,7 @@ sp.x,sp.y=32,20</code></pre></div></div>
 <p class="pico-desc">スプライトのバウンディングボックスを返します。</p>
     	
 <div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-<pre><code>--回転するスプライトの周りにバウンディングボックスの白い四角を描きます
+<textarea class="code" id="ppsprite-3">--回転するスプライトの周りにバウンディングボックスの白い四角を描きます
 pptex:default(pptex:load("main.png"))
 sp=ppsprite.new()
 sp:pos(32,20)
@@ -97,9 +102,9 @@ function start()
   sp:rotate(sp:rotate()+0.01)
   sp:draw()
   ppgraph:box(sp:aabb())
-end
-
-<img src="./image/screen-shot 2012-06-28 17.14.47.png"/></code></pre></div></div>
+end</textarea>
+<div data-role="button" onclick="selectarea('#ppsprite-3')" data-mini="true">全選択</div>
+<img src="./image/screen-shot 2012-06-28 17.14.47.png" class="pico-image"></div></div>
 </div>
 
 <div data-role="collapsible" data-theme="c" data-content-theme="c"> 
@@ -107,14 +112,16 @@ end
 <p class="pico-desc">スプライトのサイズを返します。</p>
 
 <div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-<pre><code>--スプライトの周りに白い四角を描きます
+<textarea class="code" id="ppsprite-4">--スプライトの周りに白い四角を描きます
 pptex:default(pptex:load("main.png"))
 sp=ppsprite.new()
 sp:pos(32,20)
 function start()
   sp:draw()
   ppgraph:box(sp:size()+sp:pos())
-end</code></pre></div></div>
+end</textarea>
+<div data-role="button" onclick="selectarea('#ppsprite-4')" data-mini="true">全選択</div>
+</div></div>
 </div>
     
 <div data-role="collapsible" data-theme="c" data-content-theme="c"> 
@@ -134,7 +141,7 @@ end</code></pre></div></div>
 
 
 <div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-					<pre><code>--画面をタップするとスプライトが有効になります
+<textarea class="code" id="ppsprite-5">--画面をタップするとスプライトが有効になります
 pptex:default(pptex:load("sample.png"))
 sp=ppsprite.new()
 sp:tile(2)
@@ -150,8 +157,9 @@ function start()
   else
     sp:disable()
   end
-end</code></pre>
-					<img src="./image/screen-shot 2012-06-28 17.21.55.png"/>
+end</textarea>
+<div data-role="button" onclick="selectarea('#ppsprite-5')" data-mini="true">全選択</div>
+<img src="./image/screen-shot 2012-06-28 17.21.55.png" class="pico-image">
 				</div></div>
 
 </div>
@@ -214,13 +222,15 @@ end</code></pre>
 <p class="pico-desc">time時間で{anime data}で指定したタイルアニメーションを行います。アニメーションはループします。</p>
 
 <div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-<pre><code>--1秒間にタイル番号1,2,3のループでアニメーションします
+<textarea class="code" id="ppsprite-6">--1秒間にタイル番号1,2,3のループでアニメーションします
 pptex:default(pptex:load("main.png"))
 sp=ppsprite.new()
 function start()
   sp:loopAnime(1,{1,2,3})
   sp:draw()
-end</code></pre></div></div>
+end</textarea>
+<div data-role="button" onclick="selectarea('#ppsprite-6')" data-mini="true">全選択</div>
+</div></div>
 </div>
 
 <div data-role="collapsible" data-theme="c" data-content-theme="c"> 
@@ -243,13 +253,15 @@ end</code></pre></div></div>
 <p class="pico-desc">スプライトをドラッグします。</p>
 
 <div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-<pre><code>pptex:default(pptex:load("main.png"))
+<textarea class="code" id="ppsprite-7">pptex:default(pptex:load("main.png"))
 s=ppsprite.new()
 s:tile(2)
 function start()
   s:drag(pptouch(),ppscreen:size())
   s:draw()
-end</code></pre></div></div>
+end</textarea>
+<div data-role="button" onclick="selectarea('#ppsprite-7')" data-mini="true">全選択</div>
+</div></div>
 </div>
 	
 <div data-role="collapsible" data-theme="c" data-content-theme="c"> 

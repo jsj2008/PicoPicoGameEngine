@@ -65,38 +65,66 @@ void PPScriptGame::initGraph()
 
 static int funcPPRect(lua_State *L)
 {
-	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->initarg(L);
 //	PPLuaScript* s = PPLuaScript::sharedScript();
-	lua_Number x,y,w,h;
-	x=y=w=h=0;
-	if (lua_type(L,1) == LUA_TTABLE) {
-		x = s->tableNumber(L,-1,1,"x",0);
-		y = s->tableNumber(L,-1,2,"y",0);
-		w = s->tableNumber(L,-1,3,"width",0);
-		h = s->tableNumber(L,-1,4,"height",0);
-	} else {
-		x = lua_tonumber(L,1);
-		y = lua_tonumber(L,2);
-		w = lua_tonumber(L,3);
-		h = lua_tonumber(L,4);
+
+	PPRect r;
+	if (s->argCount > 0 && s->isTable(L,-1)) {
+		r = s->getRect(L,-1);
+	} else
+	if (s->argCount > 1) {
+		r = PPRect(s->number(0),s->number(1),s->number(2),s->number(3));
 	}
-	return s->returnRect(L,PPRect(x,y,w,h));
+
+//printf("%d:%f,%f,%f,%f\n",s->argCount,r.x,r.y,r.width,r.height);
+
+	return s->returnRect(L,r);
+	
+//	lua_Number x,y,w,h;
+//	x=y=w=h=0;
+//	if (lua_type(L,1) == LUA_TTABLE) {
+//		x = s->tableNumber(L,-1,1,"x",0);
+//		y = s->tableNumber(L,-1,2,"y",0);
+//		w = s->tableNumber(L,-1,3,"width",0);
+//		h = s->tableNumber(L,-1,4,"height",0);
+//	} else {
+//		x = lua_tonumber(L,1);
+//		y = lua_tonumber(L,2);
+//		w = lua_tonumber(L,3);
+//		h = lua_tonumber(L,4);
+//	}
+//	return s->returnRect(L,PPRect(x,y,w,h));
 }
 
 static int funcPPPoint(lua_State *L)
 {
-	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->initarg(L);
 //	PPLuaScript* s = PPLuaScript::sharedScript();
-	lua_Number x,y;
-	x=y=0;
-	if (lua_type(L,1) == LUA_TTABLE) {
-		x = s->tableNumber(L,-1,1,"x",0);
-		y = s->tableNumber(L,-1,2,"y",0);
-	} else {
-		x = lua_tonumber(L,1);
-		y = lua_tonumber(L,2);
+
+	PPPoint p;
+	if (s->argCount > 0 && s->isTable(L,-1)) {
+		p = s->getPoint(L,-1);
+	} else
+	if (s->argCount > 1) {
+		p = PPPoint(s->number(0),s->number(1));
 	}
-	return s->returnPoint(L,PPPoint(x,y));
+
+//printf("%d:%f,%f\n",s->argCount,p.x,p.y);
+
+	return s->returnPoint(L,p);
+
+//	lua_Number x,y;
+//	x=y=0;
+//
+//	if (lua_type(L,1) == LUA_TTABLE) {
+//		x = s->tableNumber(L,-1,1,"x",0);
+//		y = s->tableNumber(L,-1,2,"y",0);
+//	} else {
+//		x = lua_tonumber(L,1);
+//		y = lua_tonumber(L,2);
+//	}
+//
+//	return s->returnPoint(L,PPPoint(x,y));
 }
 
 typedef struct _hitdata {

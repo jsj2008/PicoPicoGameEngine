@@ -164,6 +164,7 @@ static unsigned char* convert(unsigned char* image,png_uint_32 width,png_uint_32
 
 unsigned char* PPGame_LoadPNG(const char* fileName,unsigned long* imageWidth,unsigned long* imageHeight,unsigned long* bytesPerRow)
 {
+LOGD("PPGame_LoadPNG %s",fileName);
 	cocos2d::CCImage* img = new cocos2d::CCImage();
 	if (img==NULL) {
 LOGD("PPGame_LoadPNG error1");
@@ -215,126 +216,67 @@ LOGD("PPGame_LoadPNG error3");
 	int width = img->getWidth();
 	int height = img->getHeight();
 	delete img;
+LOGD("PPGame_LoadPNG out %s",fileName);
 	return convert(pixel,width,height);
 }
 
-unsigned char* PPGame_DecodePNG(unsigned char* bytes,unsigned long size,unsigned long* imageWidth,unsigned long* imageHeight,unsigned long* bytesPerRow)
+unsigned char* PPGame_DecodePNG(unsigned char* bytes,unsigned long datalen,unsigned long* imageWidth,unsigned long* imageHeight,unsigned long* bytesPerRow)
 {
-	if (bytes == NULL || size == 0) return NULL;
+	if (bytes == NULL || datalen == 0) return NULL;
 LOGD("PPGame_DecodePNG");
-	my_png_buffer png_buff;
-	png_buff.data_offset = 0;
-	png_buff.data_len = size;
-	png_buff.data = bytes;
-	int is_png = png_check_sig((png_bytep)png_buff.data, 8);
-	if (!is_png) {
-		fprintf(stderr, "is not PNG!\n");
-LOGD("is not PNG!");
-		free(png_buff.data);
+	cocos2d::CCImage* img = new cocos2d::CCImage();
+	if (img==NULL) {
+LOGD("PPGame_DecodePNG error1");
 		return NULL;
 	}
-	png_structp PNG_reader = png_create_read_struct(PNG_LIBPNG_VER_STRING,NULL,NULL,NULL);
-	if (!PNG_reader) {
-		fprintf(stderr, "can't create read_struct\n");
-LOGD("can't create read_struct");
-		free(png_buff.data);
+	img->initWithImageData(bytes,datalen);
+	unsigned char *pix = img->getData();
+	if (pix==NULL) {
+LOGD("PPGame_DecodePNG error2");
 		return NULL;
 	}
-	png_infop PNG_info = png_create_info_struct(PNG_reader);
-	if (!PNG_info) {
-		fprintf(stderr, "can't create info_struct\n");
-LOGD("can't create info_struct");
-		png_destroy_read_struct (&PNG_reader, NULL, NULL);
-		free(png_buff.data);
+	unsigned long size = img->getWidth()*img->getHeight()*4;
+	unsigned char * pixel = (unsigned char*)malloc(size);
+	if (pixel==NULL) {
+LOGD("PPGame_DecodePNG error3");
 		return NULL;
 	}
-
-    png_infop PNG_end_info = png_create_info_struct(PNG_reader);
-    if (PNG_end_info == NULL)
-    {
-        fprintf(stderr, "Can't get end info for PNG data\n");
-LOGD("Can't get end info for PNG data");
-        png_destroy_read_struct(&PNG_reader, &PNG_info, NULL);
-		free(png_buff.data);
-		return NULL;
-    }
-    
-#if 0
-    if (setjmp(png_jmpbuf(PNG_reader)))
-    {
-        fprintf(stderr, "Can't decode PNG data\n");
-LOGD("Can't decode PNG data");
-        png_destroy_read_struct(&PNG_reader, &PNG_info, &PNG_end_info);
-		free(png_buff.data);
-		return NULL;
-    }
-#endif
-
-	png_data_read(PNG_reader,&png_buff);
-	png_read_info(PNG_reader,PNG_info);
-	
-    png_uint_32 width, height;
-    width = png_get_image_width(PNG_reader, PNG_info);
-    height = png_get_image_height(PNG_reader, PNG_info);
-
-//printf("width %ld\n",width);
-//printf("height %ld\n",height);
-    
-    png_uint_32 bit_depth, color_type;
-    bit_depth = png_get_bit_depth(PNG_reader, PNG_info);
-    color_type = png_get_color_type(PNG_reader, PNG_info);
-
-//printf("bit_depth %ld\n",bit_depth);
-//printf("rowbytes %ld\n",png_get_rowbytes(PNG_reader, PNG_info));
-
-    if (color_type == PNG_COLOR_TYPE_PALETTE)
-    {
-	    png_set_palette_to_rgb(PNG_reader);
-    }
-
-    if (color_type == PNG_COLOR_TYPE_GRAY || color_type == PNG_COLOR_TYPE_GRAY_ALPHA)
-    {
-    png_set_gray_to_rgb(PNG_reader);
-    }
-    if (png_get_valid(PNG_reader, PNG_info, PNG_INFO_tRNS))
-    {
-    png_set_tRNS_to_alpha(PNG_reader);
-    }
-    else
-    {
-    png_set_filler(PNG_reader, 0xff, PNG_FILLER_AFTER);
-    }
-    if (bit_depth == 16)
-    {
-        png_set_strip_16(PNG_reader);
-    }
-    
-    png_read_update_info(PNG_reader, PNG_info);
-    
-    png_byte* PNG_image_buffer = (png_byte*)malloc(4 * width * height);
-    png_byte** PNG_rows = (png_byte**)malloc(height * sizeof(png_byte*));
-    
-    unsigned int row;
-    for (row = 0; row < height; ++row)
-    {
-        //PNG_rows[height - 1 - row] = PNG_image_buffer + (row * 4 * width);
-        PNG_rows[row] = PNG_image_buffer + (row * 4 * width);
-    }
-    
-    png_read_image(PNG_reader, PNG_rows);
-    
-    free(PNG_rows);
-    
-    png_destroy_read_struct(&PNG_reader, &PNG_info, &PNG_end_info);
-
-	if (png_buff.data) free(png_buff.data);
-
-    *imageWidth = width;
-    *imageHeight = height;
-	*bytesPerRow = width*4;
-
-LOGD("PPGame_DecodePNG2");
-	return convert(PNG_image_buffer,width,height);
+	if (img->hasAlpha()) {
+		memcpy(pixel,pix,size);
+	} else {
+		png_uint_32 width=img->getWidth();
+		png_uint_32 height=img->getHeight();
+		int i,j;
+		int cm=3;
+		for (i = 0; i < height; i++) {
+			for (j = 0; j < width; j++) {
+				unsigned char r,g,b,a;
+				r = pix[j*cm+0+i*width*cm];
+				g = pix[j*cm+1+i*width*cm];
+				b = pix[j*cm+2+i*width*cm];
+				a = 255;
+				if (a == 0) {
+					pixel[j*4+0+i*width*4] = 0;
+					pixel[j*4+1+i*width*4] = 0;
+					pixel[j*4+2+i*width*4] = 0;
+					pixel[j*4+3+i*width*4] = 0;
+				} else {
+					pixel[j*4+0+i*width*4] = r;
+					pixel[j*4+1+i*width*4] = g;
+					pixel[j*4+2+i*width*4] = b;
+					pixel[j*4+3+i*width*4] = a;
+				}
+			}
+		}
+	}
+	*imageWidth = img->getWidth();
+	*imageHeight = img->getHeight();
+	*bytesPerRow = img->getWidth()*4;
+	int width = img->getWidth();
+	int height = img->getHeight();
+	delete img;
+LOGD("PPGame_DecodePNG out");
+	return convert(pixel,width,height);
 }
 
 int PPGetInteger(const char* key,int defaultValue)

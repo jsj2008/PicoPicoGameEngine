@@ -5,10 +5,11 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=no"> 
 	<link rel="apple-touch-icon" href="./apple-touch-icon.png" />
-	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
 	<link rel="stylesheet" href="../picoapi.css" />
-	<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
-	<script type="text/javascript" src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+	<script type="text/javascript" src="../common.js"></script>
 </head> 
 <body> 
 
@@ -29,14 +30,16 @@ MMLを再生します。nは1から3までです。
 		MMLはFlMMLと互換性があります。</p>
 
 <div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-<pre><code>--画面をタッチでドレミファソラシドを再生
+<textarea class="code" id="ppflmml-1">--画面をタッチでドレミファソラシドを再生
 function start()
   if #pptouch() &gt; 0 then
     ppflmml[1]:play(mml)
   end
 end
 
-mml=&quot;t120o5l4cdefgab&lt;c&quot;</code></pre></div></div>
+mml=&quot;t120o5l4cdefgab&lt;c&quot;</textarea>
+<div data-role="button" onclick="selectarea('#ppflmml-1')" data-mini="true">全選択</div>
+</div></div>
 
 </div>
 	
@@ -80,7 +83,7 @@ mml=&quot;t120o5l4cdefgab&lt;c&quot;</code></pre></div></div>
 <p class="pico-desc">トラックを発音させます。noteNo は 0〜8オクターブx12の整数値です。例えば &quot;o5c&quot; の noteNo は 60 になります。</p>
 
 <div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-<pre><code>--画面をタッチで発音
+<textarea class="code" id="ppflmml-2">--画面をタッチで発音
 ppflmml[1]:play(&quot;@3&quot;)
 note=false
 
@@ -94,7 +97,9 @@ function start()
     ppflmml[1]:noteOff(1)
     note=false
   end
-end</code></pre></div></div>
+end</textarea>
+<div data-role="button" onclick="selectarea('#ppflmml-2')" data-mini="true">全選択</div>
+</div></div>
 
 </div>
 		

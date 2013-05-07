@@ -419,6 +419,7 @@ unsigned char* PPGame_DecodePNG(unsigned char* bytes,unsigned long size,unsigned
 {
 	if (bytes == NULL || size == 0) return NULL;
 	my_png_buffer png_buff;
+	memset(&png_buff,0,sizeof(png_buff));
 	png_buff.data_len = size;
 	png_buff.data = bytes;
 	int is_png = png_check_sig((png_bytep)png_buff.data, 8);

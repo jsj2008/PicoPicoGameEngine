@@ -5,10 +5,11 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=no"> 
 	<link rel="apple-touch-icon" href="./apple-touch-icon.png" />
-	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
 	<link rel="stylesheet" href="../picoapi.css" />
-	<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
-	<script type="text/javascript" src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+	<script type="text/javascript" src="../common.js"></script>
 </head> 
 <body> 
 
@@ -25,9 +26,9 @@
 <p class="pico-desc">加速度センサーを稼働させます。intervalでセンサーの計測間隔を指定できます。</p>
 
 <div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-					<pre><code>ac=ppaccelerometer
+					<textarea class="code" id="ppaccelerometer-1">ac=ppaccelerometer
 
-ac:start(100)
+ac:start(1)
 
 function start()
   local v=ac:value()
@@ -36,7 +37,9 @@ function start()
   ppgraph:print(&quot;Y:&quot;..v.y)
   ppgraph:move(0,16)
   ppgraph:print(&quot;Z:&quot;..v.z)
-end</code></pre></div></div>
+end</textarea>
+<div data-role="button" onclick="selectarea('#ppaccelerometer-1')" data-mini="true">全選択</div>
+</div></div>
 
 
 </div>

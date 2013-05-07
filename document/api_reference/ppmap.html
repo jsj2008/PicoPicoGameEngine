@@ -5,10 +5,11 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=no"> 
 	<link rel="apple-touch-icon" href="./apple-touch-icon.png" />
-	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
 	<link rel="stylesheet" href="../picoapi.css" />
-	<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
-	<script type="text/javascript" src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+	<script type="text/javascript" src="../common.js"></script>
 </head> 
 <body> 
 
@@ -32,7 +33,7 @@ ppmap.new(n)</h3>
 <div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
 
 
-<pre><code>--TextVRAM風に表示 逆スクロールします
+<textarea class="code" id="ppmap-1">--TextVRAM風に表示 逆スクロールします
 map=ppmap.new()
 map:mapSize(16,16)
 map:area(0,0,16,16)
@@ -53,10 +54,11 @@ function start()
   end
   map:draw()
 end
+</textarea>
+<div data-role="button" onclick="selectarea('#ppmap-1')" data-mini="true">全選択</div>
+<img src="./image/screen-shot 2012-11-07 13.56.51.png" class="pico-image">
 
-<img src="./image/screen-shot 2012-11-07 13.56.51.png"/>
-
-</code></pre></div></div>
+</div></div>
 </div>
 
 <div data-role="collapsible" data-theme="c" data-content-theme="c"> 
@@ -68,13 +70,15 @@ end
     テクスチャの指定がある場合は自動的に読み込まれます。読み込みできるテキスチャは１つだけです。</p>
 
 <div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-<pre><code>--タイルマップを表示します
+<textarea class="code" id="ppmap-2">--タイルマップを表示します
 pptex:default(pptex:load("main.png"))
 map = ppmap.new()
 map:load("map1.tmx")
 function start()
   map:draw()
-end</code></pre></div></div>
+end</textarea>
+<div data-role="button" onclick="selectarea('#ppmap-2')" data-mini="true">全選択</div>
+</div></div>
 </div>
 
 <div data-role="collapsible" data-theme="c" data-content-theme="c"> 
@@ -85,7 +89,7 @@ end</code></pre></div></div>
 <p class="pico-desc">の一行を加える事で使用できるようになります。<br/>
 	主にBGとのキャラクタの当たり判定用に使用します。<br/>
 	tileが{char_a,char_b,...}の仲間かどうかを調べます。<br/><br/>
-	※DotEDITORの書き出し機能を使って書き出すと tileinfo.lua の実装を見る事ができます。</p>
+	※DotEDITORの書き出し機能を使って書き出すと tileinfo.lua の実装を見る事ができます。内部でメンバ変数 _ctileinfo を参照します。</p>
 </div>
 	
 <div data-role="collapsible" data-theme="c" data-content-theme="c"> 
@@ -103,13 +107,15 @@ end</code></pre></div></div>
 <p class="pico-desc">描画するエリアを指定します。マップの一部だけを切り取って描画することができます。</p>
 
 <div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-<pre><code>pptex:default(pptex:load("main.png"))
+<textarea class="code" id="ppmap-3">pptex:default(pptex:load("main.png"))
 map = ppmap.new()
 map:load("map1.tmx")
 map:area(4,4,10,10)  --{x=4,y=4,width=10,height=10}の部分を切り抜き
 function start()
   map:draw()
-end</code></pre></div></div>
+end</textarea>
+<div data-role="button" onclick="selectarea('#ppmap-3')" data-mini="true">全選択</div>
+</div></div>
 </div>
 
 <div data-role="collapsible" data-theme="c" data-content-theme="c"> 
@@ -132,7 +138,7 @@ end</code></pre></div></div>
 <p class="pico-desc">tmxファイル内のtilesetをテーブルで返します。</p>
 
 <div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-<pre><code>pptex:default(pptex:load("main.png"))
+<textarea class="code" id="ppmap-4">pptex:default(pptex:load("main.png"))
 map = ppmap.new()
 map:load("map1.tmx")
 
@@ -143,7 +149,9 @@ function start()
   	       ..","..v.tilewidth..","..v.tileheight)
   	ppgraph:move(0,16)
   end
-end</code></pre></div></div>
+end</textarea>
+<div data-role="button" onclick="selectarea('#ppmap-4')" data-mini="true">全選択</div>
+</div></div>
 </div>
 
 <div data-role="collapsible" data-theme="c" data-content-theme="c"> 
@@ -158,7 +166,7 @@ end</code></pre></div></div>
 <p class="pico-desc">レイヤー番号を指定してレイヤーの表示、非表示を設定します。layerを省略した場合はマップ全体を表示、非表示します。</p>
 
 <div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-<pre><code>--レイヤー２を非表示に、レイヤー１を表示にしています
+<textarea class="code" id="ppmap-5">--レイヤー２を非表示に、レイヤー１を表示にしています
 pptex:default(pptex:load("main.png"))
 map = ppmap.new()
 map:load("map1.tmx")
@@ -171,7 +179,9 @@ map:show(map:layer())
 
 function start()
   map:draw()
-end</code></pre></div></div>
+end</textarea>
+<div data-role="button" onclick="selectarea('#ppmap-5')" data-mini="true">全選択</div>
+</div></div>
 </div>
 
 <div data-role="collapsible" data-theme="c" data-content-theme="c"> 
@@ -184,7 +194,7 @@ end</code></pre></div></div>
 <p class="pico-desc">選択レイヤーの指定した位置のタイル番号を返します。</p>
 
 <div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-<pre><code>--タップした場所のタイル番号を表示します
+<textarea class="code" id="ppmap-6">--タップした場所のタイル番号を表示します
 pptex:default(pptex:load("main.png"))
 map = ppmap.new()
 map:load("map1.tmx")
@@ -195,7 +205,9 @@ function start()
   local p = pptouch()[1]
   if p==nil then p=pppoint(0,0) end
   ppgraph:print(map:tile(p/32))  --表示
-end</code></pre></div></div>
+end</textarea>
+<div data-role="button" onclick="selectarea('#ppmap-6')" data-mini="true">全選択</div>
+</div></div>
 </div>
 
 <div data-role="collapsible" data-theme="c" data-content-theme="c"> 
@@ -203,7 +215,7 @@ end</code></pre></div></div>
 <p class="pico-desc">選択レイヤーの指定した位置にタイル番号を設定します。</p>
 
 <div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-<pre><code>--5番のタイルをタップした位置に配置します
+<textarea class="code" id="ppmap-7">--5番のタイルをタップした位置に配置します
 pptex:default(pptex:load("main.png"))
 map = ppmap.new()
 map:load("map1.tmx")
@@ -215,7 +227,9 @@ function start()
   if p~=nil then
   	map:tile(p/32,5)
   end
-end</code></pre></div></div>
+end</textarea>
+<div data-role="button" onclick="selectarea('#ppmap-7')" data-mini="true">全選択</div>
+</div></div>
 </div>
 
 <div data-role="collapsible" data-theme="c" data-content-theme="c"> 
@@ -244,7 +258,7 @@ end</code></pre></div></div>
 	表示位置は :locate({x,y}) を使用します。</p>
 
 <div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-<pre><code>pptex:default(pptex:load("main.png"))
+<textarea class="code" id="ppmap-8">pptex:default(pptex:load("main.png"))
 map = ppmap.new()
 map:load("map1.tmx")
 
@@ -271,7 +285,9 @@ map:print("HELLO WORLD")
 
 function start()
   map:draw()
-end</code></pre></div></div>
+end</textarea>
+<div data-role="button" onclick="selectarea('#ppmap-8')" data-mini="true">全選択</div>
+</div></div>
 </div>
 
 <div data-role="collapsible" data-theme="c" data-content-theme="c"> 
@@ -319,7 +335,7 @@ end</code></pre></div></div>
 <p class="pico-desc">描画タイルのアトリビュートを変更します。</p>
 	
 <div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-<pre><code>--layer1をすべて時計回りに90度回転させます
+<textarea class="code" id="ppmap-9">--layer1をすべて時計回りに90度回転させます
 pptex:default(pptex:load("main.png"))
 map = ppmap.new()
 map:load("map1.tmx")
@@ -332,7 +348,9 @@ for y=0,map:mapSize().height-1 do
 end
 function start()
   map:draw()
-end</code></pre></div></div>
+end</textarea>
+<div data-role="button" onclick="selectarea('#ppmap-9')" data-mini="true">全選択</div>
+</div></div>
 </div>
 
 <div data-role="collapsible" data-theme="c" data-content-theme="c"> 

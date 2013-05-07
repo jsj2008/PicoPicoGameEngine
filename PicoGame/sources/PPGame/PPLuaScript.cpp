@@ -121,6 +121,31 @@ void* PPLuaArg::init(lua_State* L)
 	return userdata;
 }
 
+void* PPLuaArg::initarg(lua_State* L)
+{
+	int top = lua_gettop(L);
+	resetWord();
+	int n=1;
+	userdata = NULL;
+	for (int i=n;i<=top;i++) {
+		_number[argCount] = lua_tonumber(L,i);
+		_integer[argCount] = lua_tointeger(L,i);
+		_boolean[argCount] = lua_toboolean(L,i);
+		const char* str = lua_tostring(L,i);
+		if (str) {
+			addWord(str);
+		} else {
+			addWord("");
+		}
+	}
+	for (int i=top+1;i<MAX_ARG;i++) {
+		_number[i] = 0;
+		_integer[i] = 0;
+		_boolean[i] = false;
+	}
+	return userdata;
+}
+
 bool PPLuaArg::isTable(lua_State* L,int argn)
 {
 	argn += 2;

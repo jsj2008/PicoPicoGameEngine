@@ -5,10 +5,11 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=no"> 
 	<link rel="apple-touch-icon" href="./apple-touch-icon.png" />
-	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
 	<link rel="stylesheet" href="../picoapi.css" />
-	<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
-	<script type="text/javascript" src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+	<script type="text/javascript" src="../common.js"></script>
 </head> 
 <body> 
 
@@ -83,7 +84,7 @@ ppparticle.new(n)</h3>
 	animationLoopPoint=1</code></pre>
 
 <div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-<pre><code>pptex:default(pptex:load("sample.png"))
+<textarea class="code" id="ppparticle-1">pptex:default(pptex:load("sample.png"))
 		
 p=ppparticle.new()
 p:property({
@@ -103,8 +104,9 @@ function start()
   end
   p:idle()
   p:draw()
-end</code></pre>
-<img src="./image/screen-shot 2012-06-28 17.51.02.png"/></div></div>
+end</textarea>
+<div data-role="button" onclick="selectarea('#ppparticle-1')" data-mini="true">全選択</div>
+<img src="./image/screen-shot 2012-06-28 17.51.02.png" class="pico-image"></div></div>
 
 <!--
 	ppparticle:set({emitterType,
@@ -154,7 +156,7 @@ end</code></pre>
 <p class="pico-desc">パーティクルを発生させます。</p>
 		
 <div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-<pre><code>pptex:default(pptex:load("sample.png"))
+<textarea class="code" id="ppparticle-2">pptex:default(pptex:load("sample.png"))
 		
 p=ppparticle.new()
 p:property({
@@ -170,8 +172,9 @@ function start()
  end
  p:idle()
  p:draw()
-end</code></pre>
-<img src="./image/screen-shot 2012-06-28 17.52.21.png"/></div></div>
+end</textarea>
+<div data-role="button" onclick="selectarea('#ppparticle-2')" data-mini="true">全選択</div>
+<img src="./image/screen-shot 2012-06-28 17.52.21.png" class="pico-image"></div></div>
 </div>
 
 <div data-role="collapsible" data-theme="c" data-content-theme="c"> 

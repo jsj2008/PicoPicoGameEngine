@@ -84,7 +84,7 @@ const char* PPGameTextureOption::wrap(int wrap)
 	return "clamp_to_edge";
 }
 
-PPGameTexture::PPGameTexture() : manager(NULL)
+PPGameTexture::PPGameTexture() : manager(NULL),notexturefile(false)
 {
 //	if (!boot) {
 //		for (int i=0;i<PPGAME_MAX_TEXTURE;i++) {
@@ -142,6 +142,11 @@ bool PPGameTextureManager::setTexture(int index,unsigned char* pixel,unsigned lo
 	freeTexture(i);
 	if (texture[i]!=NULL) {
 //		if (pixel) {
+			if (texture[i]->pixel != pixel) {
+				if (texture[i]->pixel) {
+					free(texture[i]->pixel);
+				}
+			}
 			texture[i]->pixel = pixel;
 			texture[i]->width = (int)width;
 			texture[i]->height = (int)height;
@@ -451,7 +456,7 @@ int PPGameTexture::loadTexture()
 //	} else
 	if (texture_name == 0) {
 		loaded =  true;
-		if (strcmp(name.c_str(),"") == 0) {
+		if (strcmp(name.c_str(),"") == 0 || notexturefile) {
 //			pixel = NULL;
 //			width = 0;
 //			height = 0;
@@ -537,7 +542,8 @@ int PPGameTexture::loadTexture()
 				unsigned long w,h,bytesPerRow;
 				unsigned long ow,oh,ob;
 //printf("PPGameTexture:%s\n",PPGameDataPath(name.c_str()));
-				unsigned char* p = PPGame_LoadPNG(PPGameDataPath(name.c_str()),&w,&h,&bytesPerRow);
+				unsigned char* p=NULL;
+				p = PPGame_LoadPNG(PPGameDataPath(name.c_str()),&w,&h,&bytesPerRow);
 				if (p == NULL) {
 					PPReadErrorSet(name.c_str());
 				}
@@ -843,31 +849,41 @@ bool PPGameTextureManager::checkBind(int index)
 //	return __m->checkBind(index);
 //}
 
-int PPGameTextureManager::setTexture(PPGameTexture* _texture)
+int PPGameTextureManager::setTextureWithNameCheck(PPGameTexture* _texture)
 {
-//	for (int i=0;i<PPGAME_MAX_TEXTURE;i++) {
-//		if (texture[i]) {
-////			texture[i]->index = i;
-//			if (_texture->name != "") {
-//				if (texture[i]->name == _texture->name
-//				 && texture[i]->linear == _texture->linear) {
-////					if (_texture->sharedTexture < 0) {
-////						_texture->sharedTexture = i;
-////						break;
-////					}
-//				}
-//			}
-//		}
-//	}
+	for (int i=0;i<PPGAME_MAX_TEXTURE;i++) {
+		if (texture[i]) {
+			if (texture[i]->name == _texture->name && texture[i]->option == _texture->option) {
+			
+				deleteTexture(i);
+			
+				texture[i] = _texture;
+				texture[i]->index = i;
+				texture[i]->manager = this;
+				texture[i]->notexturefile = _texture->notexturefile;
+			
+				return i;
+			}
+		}
+	}
 	for (int i=0;i<PPGAME_MAX_TEXTURE;i++) {
 		if (!texture[i]) {
 			texture[i] = _texture;
 			texture[i]->index = i;
 			texture[i]->manager = this;
-//printf("settexture[%d] %s,%d\n",i,texture[i]->name.c_str(),texture[i]->linear);
-//			if (texture[i]->sharedTexture >= 0) {
-//				texture[texture[i]->sharedTexture]->retainCount ++;
-//			}
+			return i;
+		}
+	}
+	return -1;
+}
+
+int PPGameTextureManager::setTexture(PPGameTexture* _texture)
+{
+	for (int i=0;i<PPGAME_MAX_TEXTURE;i++) {
+		if (!texture[i]) {
+			texture[i] = _texture;
+			texture[i]->index = i;
+			texture[i]->manager = this;
 			return i;
 		}
 	}

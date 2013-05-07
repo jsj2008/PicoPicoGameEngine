@@ -400,10 +400,10 @@ PPParticleEmitter::PPParticleEmitter(PPWorld* world) : PPObject(world),particles
 
 PPParticleEmitter::~PPParticleEmitter()
 {
-	if (poly._texture >= 0) {
-		world()->projector->textureManager->deleteTexture(poly._texture);
-		poly._texture = -1;
-	}
+//	if (poly._texture >= 0) {
+//		world()->projector->textureManager->deleteTexture(poly._texture);
+//		poly._texture = -1;
+//	}
 	if (particles) delete []particles;
 	if (textureData) free(textureData);
 	if (animationData) free(animationData);
@@ -412,10 +412,10 @@ PPParticleEmitter::~PPParticleEmitter()
 void PPParticleEmitter::init(PPWorld* world)
 {
 	PPObject::init(world);
-	if (poly._texture >= 0) {
-		world->projector->textureManager->deleteTexture(poly._texture);
-		poly._texture = -1;
-	}
+//	if (poly._texture >= 0) {
+//		world->projector->textureManager->deleteTexture(poly._texture);
+//		poly._texture = -1;
+//	}
 	if (particles) delete []particles;
 	if (textureData) free(textureData);
 }
@@ -487,6 +487,8 @@ bool PPParticleEmitter::config(const char* xmlpath)
 //printf("---------config in\n");
 	if (textureData) free(textureData);
 	textureData = NULL;
+	
+	particleName = xmlpath;
 	
 	if (animationData) free(animationData);
 	animationData = NULL;
@@ -749,19 +751,30 @@ bool PPParticleEmitter::loadPNGData(unsigned char* pngZipData,unsigned long leng
 		unsigned char* pngdata;
 		unsigned int pnglength;
 		unsigned int loadlen = (unsigned int)length;
-		if (inflateMemoryWithHint(textureData,loadlen,&pngdata,&pnglength,32) == 0) {
+		int err=inflateMemoryWithHint(textureData,loadlen,&pngdata,&pnglength,32);
+		if (err == 0) {
 			unsigned long width,height,bytesPerRow;
 			unsigned char* pixel = PPGame_DecodePNG(pngdata,pnglength,&width,&height,&bytesPerRow);
-			if (pixel) {
-				if (poly._texture >= 0) {
-					world()->projector->textureManager->deleteTexture(poly._texture);
-					poly._texture = -1;
-				}
+
+			if (pixel!=NULL) {
+//				if (poly._texture >= 0) {
+//					world()->projector->textureManager->deleteTexture(poly._texture);
+//					poly._texture = -1;
+//				}
+
 				PPGameTexture* tex = new PPGameTexture();
-				poly._texture = world()->projector->textureManager->setTexture(tex);
+				tex->name = particleName;
+				tex->option = option;
+				tex->notexturefile = true;
+
+				poly._texture = world()->projector->textureManager->setTextureWithNameCheck(tex);
 #if 1
 				world()->projector->textureManager->setTexture(poly._texture,pixel,width,height,bytesPerRow,option);
 				tex->bindTexture();
+
+//				free(pixel);
+//				tex->pixel = NULL;
+
 				r = true;
 				poly.texTileSize.width = tex->width;
 				poly.texTileSize.height = tex->height;
@@ -774,6 +787,7 @@ bool PPParticleEmitter::loadPNGData(unsigned char* pngZipData,unsigned long leng
 					r = true;
 				}
 #endif
+
 			}
 		}
 	}
@@ -786,7 +800,6 @@ static const char* valueForKey(const char* key,const PPXmlChar **atts)
 		if (atts[0]) {
 			for(int i=0;atts[i];i+=2) {
 				if (strcmp((char*)atts[i],(char*)key) == 0) {
-//LOGD("%s=%s",atts[i],atts[i+1]);
 					return (char*)atts[i+1];
 				}
 			}
@@ -928,8 +941,12 @@ static void PPParticle_startElement(void *ctx, const PPXmlChar *name, const PPXm
 		p->textureName = valueForKey("name",atts);
 		std::string* dataStr = new std::string(valueForKey("data",atts));
 		unsigned int length = (unsigned int)dataStr->length();
+
 		unsigned char* pixel = base64decode(dataStr->c_str(),&length);
+
 		if (!p->loadPNGData(pixel,length)) {
+		}
+		if (length==0) {
 			PPGameTextureOption option;
 			PPGameTextureManager* manager = p->world()->projector->textureManager;
 			int texture = manager->loadTexture(p->textureName.c_str(),option);

@@ -70,7 +70,7 @@ setup:
 	mkdir -p $(BUILD_DIR)
 	rm -f $(LINKFILE)
 
-fullbuild:
+buildall:
 	cd ../../../Box2D/Win32/build; make clean
 	cd ../../../CocosDenshion/Win32/build; make clean
 	cd ../../../FlMML/Win32/build; make clean
@@ -97,6 +97,16 @@ cleanall:
 	cd ../../../PicoGame/Win32/build; make clean
 	cd ../../../png/Win32/build; make clean
 	cd ./; make clean
+
+build:
+	cd ../../../Box2D/Win32/build; make
+	cd ../../../CocosDenshion/Win32/build; make
+	cd ../../../FlMML/Win32/build; make
+	cd ../../../freetype/Win32/build; make
+	cd ../../../lua5.2/Win32/build; make
+	cd ../../../PicoGame/Win32/build; make
+	cd ../../../png/Win32/build; make
+	cd ./; make
 
 clean:
 	rm -f *.exe *.ar

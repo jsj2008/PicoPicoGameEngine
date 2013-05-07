@@ -1,6 +1,11 @@
 pppointImp = {
 	length=function(self,x,y)
 		return pplength(self,x,y)
+	end,
+	move = function(self,x,y)
+		local p = pppoint(x,y)
+		self.x = self.x+p.x
+		self.y = self.y+p.y
 	end
 }
 pppoint_mt = {

@@ -238,6 +238,7 @@ public:
 	}
 
 	void* init(lua_State* L);
+	void* initarg(lua_State* L);
 
 	void resetWord();
 	void addWord(const char* str);

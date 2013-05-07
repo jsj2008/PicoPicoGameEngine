@@ -1,14 +1,16 @@
 <!DOCTYPE html> 
 <html lang="ja"> 
-	<head> 
+<head> 
 	<title>PicoPicoGameEngine</title> 
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=no"> 
 	<link rel="apple-touch-icon" href="./apple-touch-icon.png" />
-	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
-	<link rel="stylesheet" href="./picoapi.css" />
-	<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
-	<script type="text/javascript" src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js"></script>
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
+	<link rel="stylesheet" href="./picoapi.css?version=20130427" type="text/css">
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+	<script type="text/javascript" src="http://yamagame.secret.jp/tools/mmldl/downloadmml.js"></script>	
+	<script type="text/javascript" src="./common.js"></script>
 </head> 
 <body> 
 
@@ -21,10 +23,11 @@
 	<div data-role="content">
 		<img src="./image/title.png" width="100%" alt="PicoPicoEngine"/>
 		<ul data-role="listview" data-inset="true" data-theme="c">
-		<li><a href="./doteditor_manual.html" data-transition="fade">DotEDITORの遊び方</a></li>
-		<li><a href="#macwin_manual" data-transition="fade">Mac/Windowsで遊ぶ</a></li>
-		<li><a href="./buildapp.html" data-transition="fade">iOS/Androidアプリ化して遊ぶ</a></li>
-		<li><a href="./api_reference.html" data-transition="fade">APIリファレンス</a></li>
+		<li><a href="./doteditor_manual.html" data-transition="slide">DotEDITORの遊び方</a></li>
+		<li><a href="./winmacplay.html" data-transition="slide">Mac/Windowsで遊ぶ</a></li>
+		<li><a href="./buildapp.html" data-transition="slide">iOS/Androidアプリ化して遊ぶ</a></li>
+		<li><a href="./lua.html" data-transition="slide">Lua入門</a></li>
+		<li><a href="./api_reference.html" data-transition="slide">APIリファレンス</a></li>
 		</ul>
 	</div>
 
@@ -32,56 +35,6 @@
 		<h4>2012 YAMAGAME</h4>
 	</div>
 
-</div>
-
-
-<div data-role="page" id="macwin_manual">
-
-	<div data-role="header" data-theme="d">
-		<h1>Mac/Windowsで遊ぶ</h1>
-		<a href="./index.html" data-icon="arrow-l" class="ui-btn-left">Back</a>
-		<a href="./index.html" class="ui-btn-right">TOP</a>
-	</div>
-
-	<div data-role="content">
-		<p>DotEDITORで作ったゲームはスクリプトを書き出すことでMac/Windows上で遊ぶことができます。</p>
-		
-		<div><a href="./PicoPicoGamesWin.zip" data-ajax="false">Windows版をダウンロード Ver.1.0.1</a></div>
-		<div><a href="./PicoPicoGamesMac.zip" data-ajax="false">Mac版をダウンンロード Ver.1.0.1</a></div>
-		</ul>
-		<p>※DotEDITORからはダウンロードできません。パソコンのブラウザからダウンロードしてください。</p>
-		
-		<p>DotEDITORで書き出したいゲームを選択します。</p>
-
-<div class="figure"><img src="./doteditor_manual/image/play1.png" class="pico-image"></div>
-		
-		<p>プロジェクト設定画面の下の方にある「書き出し」ボタンをタップします。</p>
-
-<div class="figure"><img src="./doteditor_manual/image/play2.png" class="pico-image"></div>
-		
-		<p>プロジェクトファイルはZIPファイルに圧縮された形でiTunesへ送信されます。</p>
-
-<div class="figure"><img src="./doteditor_manual/image/play3.png" class="pico-image"></div>
-		
-		<p>iTunesを立ち上げて、DotEDITORから書き出したZIPファイルを取り出して解凍します。</p>
-
-<div class="figure"><img src="./doteditor_manual/image/screen-shot 2012-06-18 14.12.02.png" class="pico-image"></div>
-		
-		<p>ZIPファイルの中身は次のような構成になっています。</p>
-
-<div class="figure"><img src="./doteditor_manual/image/screen-shot 2012-06-18 14.15.55.png" class="pico-image"></div>
-		
-		<p>この中の main.lua をピコピコゲームエンジンのウインドウへドラッグ&amp;ドロップすることで遊ぶ事ができます。</p>
-
-<div class="figure"><img src="./doteditor_manual/image/screen-shot 2012-06-18 14.16.51.png" class="pico-image"></div>
-
-	</div>
-
-	<div data-role="footer" data-theme="d">
-		<h4>PicoPicoGameEngine</h4> 
-		<a href="./index.html" data-icon="arrow-l" class="ui-btn-left">Back</a>
-		<a href="./index.html" class="ui-btn-right">TOP</a>
-	</div>
 
 </div>
 

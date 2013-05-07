@@ -5,10 +5,11 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=no"> 
 	<link rel="apple-touch-icon" href="./apple-touch-icon.png" />
-	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
 	<link rel="stylesheet" href="../picoapi.css" />
-	<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
-	<script type="text/javascript" src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+  <script type="text/javascript" src="../common.js"></script>
 </head> 
 <body> 
 
@@ -41,7 +42,7 @@ ppgraph:put({x,y},tile,{texture},{r,g,b,a})</h3>
 	タイル番号とはテクスチャをタイルサイズ(デフォルトは32x32ドット)で分割したものを左上から右に向かって１、２、３と割ふられた番号になります。</p>
 	
 <div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-<pre><code>--タイル番号を指定してキャラを描画します。
+<textarea class="code" id="ppgraph-1">--タイル番号を指定してキャラを描画します。
 function start()
   ppgraph:tileInfo({size={width=32,height=32}})
   --座標の指定は以下の３つの方法があります
@@ -51,10 +52,11 @@ function start()
   ppgraph:tileInfo({size={width=64,height=64}})
   ppgraph:put(32,0,4,"main.png")	--大魔王
 end
+</textarea>
+<div data-role="button" onclick="selectarea('#ppgraph-1')" data-mini="true">全選択</div>
+<img src="./image/screen-shot 2012-06-28 17.00.26.png" class="pico-image">
 
-<img src="./image/screen-shot 2012-06-28 17.00.26.png"/>
-
---pptex:load()関数などと併用する事でテクスチャを指定することもできます
+<textarea class="code" id="ppgraph-2">--pptex:load()関数などと併用する事でテクスチャを指定することもできます
 tex = pptex:load("main.png")
 function start()
   ppgraph:tileInfo({size={width=32,height=32}})
@@ -63,7 +65,9 @@ function start()
   ppgraph:put({x=0,y=64},3,tex)	--商人
   ppgraph:tileInfo({size={width=64,height=64}})
   ppgraph:put(32,0,4,tex)	--大魔王
-end</code></pre></div></div>
+end</textarea>
+<div data-role="button" onclick="selectarea('#ppgraph-2')" data-mini="true">全選択</div>
+</div></div>
 	
 </div>
 
@@ -73,14 +77,16 @@ ppgraph:locate({x,y})</h3>
 <p class="pico-desc">文字列の表示位置を指定します。引数を省略すると設定値を返します。</p>
 
 <div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-<pre><code>function start()
+<textarea class="code" id="ppgraph-3">function start()
   ppgraph:pos(100,100)
   ppgraph:print("HELLO1")
   ppgraph:pos({100,116})
   ppgraph:print("HELLO2")
   ppgraph:pos({x=100,y=132})
   ppgraph:print("HELLO3")
-end</code></pre></div></div>
+end</textarea>
+<div data-role="button" onclick="selectarea('#ppgraph-3')" data-mini="true">全選択</div>
+</div></div>
 </div>
 
 <div data-role="collapsible" data-theme="c" data-content-theme="c"> 
@@ -88,14 +94,16 @@ end</code></pre></div></div>
 <p class="pico-desc">文字列の表示位置を移動させます。</p>
 
 <div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-<pre><code>function start()
+<textarea class="code" id="ppgraph-4">function start()
   ppgraph:pos(100,100)
   ppgraph:print("HELLO1")
   ppgraph:move(0,16)	--16ドット下へ移動
   ppgraph:print("HELLO2")
   ppgraph:move(0,16)	--16ドット下へ移動
   ppgraph:print("HELLO3")
-end</code></pre></div></div>
+end</textarea>
+<div data-role="button" onclick="selectarea('#ppgraph-4')" data-mini="true">全選択</div>
+</div></div>
 </div>
 
 <div data-role="collapsible" data-theme="c" data-content-theme="c"> 
@@ -104,7 +112,7 @@ end</code></pre></div></div>
     描画色を省略した場合はppgraph:color()で指定した色で描画します。</p>
 
 <div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-<pre><code>--画面の中央に文字を描画します
+<textarea class="code" id="ppgraph-5">--画面の中央に文字を描画します
 g=ppgraph
 sc=ppscreen
 base=pprect(0,0,320,480)
@@ -123,7 +131,9 @@ function start()
   drawtext("HELLO WORLD",0,-128)
   drawtext("HELLO WORLD",0,0)
   drawtext("HELLO WORLD",0,128)
-end</code></pre></div></div>
+end</textarea>
+<div data-role="button" onclick="selectarea('#ppgraph-5')" data-mini="true">全選択</div>
+</div></div>
 
 </div>
 
@@ -148,7 +158,7 @@ end</code></pre></div></div>
 </ul>
     
 <div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-<pre><code>pptex:default(pptex:load("main.png"))
+<textarea class="code" id="ppgraph-6">pptex:default(pptex:load("main.png"))
 function start()
   ppgraph:flip(false,false,0)	--回転４パターン
   ppgraph:put(0,0,1)
@@ -184,8 +194,9 @@ function start()
   if vflip then vflip = "true" else vflip = "false" end
   ppgraph:print(hflip..","..vflip..","..rot90)
 end
-
-<img = src="./image/screen-shot 2012-06-28 17.03.55.png"/></code></pre></div></div>
+</textarea>
+<div data-role="button" onclick="selectarea('#ppgraph-6')" data-mini="true">全選択</div>
+<img = src="./image/screen-shot 2012-06-28 17.03.55.png" class="pico-image"></div></div>
 </div>
 
 <div data-role="collapsible" data-theme="c" data-content-theme="c"> 
@@ -210,7 +221,7 @@ end
 </div>
 
 <div data-role="collapsible" data-theme="c" data-content-theme="c"> 
-<h3>ppgraph:line({x,y},{x,y},{r,g,b,a})</h3>
+<h3>ppgraph:line(x1,y1,x2,y2,{r,g,b,a})</h3>
 <p class="pico-desc">線を描画します。描画色を省略した場合はppgraph:color()で指定した色で描画します。</p>
 </div>
 
@@ -219,7 +230,7 @@ end
 <p class="pico-desc">レイアウトされた座標を計算します。</p>
 
 <div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-<pre><code>--画面中央に配置
+<textarea class="code" id="ppgraph-7">--画面中央に配置
 function start()
   local p = ppgraph:layout({x=0,y=0,width=32,height=32},true,true)
   ppgraph:put(p,1,"main.png")
@@ -243,7 +254,9 @@ function start()
   local p = ppgraph:layout({x=-17,y=-17,width=32,height=32},false,false,area)
   ppgraph:fill(area,ppgraph.cyan)
   ppgraph:put(p,1,"main.png")
-end</code></pre></div></div>
+end</textarea>
+<div data-role="button" onclick="selectarea('#ppgraph-7')" data-mini="true">全選択</div>
+</div></div>
 </div>
 
 <div data-role="collapsible" data-theme="c" data-content-theme="c"> 
@@ -251,7 +264,7 @@ end</code></pre></div></div>
 <p class="pico-desc">ゲームループを抜けて描画処理を行います。</p>
 
 <div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-<pre><code>--1秒毎に表示非表示を繰り返します
+<textarea class="code" id="ppgraph-8">--1秒毎に表示非表示を繰り返します
 function start()
   for i=0,60 do
     ppgraph:put(0,0,1,"main.png")
@@ -260,7 +273,9 @@ function start()
   for i=0,60 do
     ppgraph:update()
   end
-end</code></pre></div></div>
+end</textarea>
+<div data-role="button" onclick="selectarea('#ppgraph-8')" data-mini="true">全選択</div>
+</div></div>
 </div>
 
 <div data-role="collapsible" data-theme="c" data-content-theme="c"> 
@@ -278,7 +293,7 @@ end</code></pre></div></div>
 <p class="pico-desc">{display object}を描画リストに登録します。{display object}は:draw()メソッドを実装したテーブルです。ゲームループを抜けると登録された{display object}のdraw()メソッドが自動的に実行され描画処理を行います。</p>
 
 				<div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-					<pre><code>--１秒毎にスプライトの表示、非表示を繰り返します
+<textarea class="code" id="ppgraph-9">--１秒毎にスプライトの表示、非表示を繰り返します
 sp = ppsprite.new()
 sp:texture("main.png")
 sp:tile(1)
@@ -304,7 +319,9 @@ function hide()
   end
 end
 
-ppgame:start(show)</code></pre></div></div>
+ppgame:start(show)</textarea>
+<div data-role="button" onclick="selectarea('#ppgraph-9')" data-mini="true">全選択</div>
+</div></div>
 
 </div>
 
@@ -318,14 +335,16 @@ ppgame:start(show)</code></pre></div></div>
 <p class="pico-desc">タイルのテクスチャ座標位置を計算します。</p>
 
 <div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-<pre><code>pptex:default(pptex:load("main.png"))
+<textarea class="code" id="ppgraph-10">pptex:default(pptex:load("main.png"))
 r02=ppgraph:tileRect(2)
 r35=ppgraph:tileRect(35)
 function start()
   ppgraph:print(r02.x..","..r02.y..","..r02.width..","..r02.height)
   ppgraph:move(0,16)
   ppgraph:print(r35.x..","..r35.y..","..r35.width..","..r35.height)
-end</code></pre></div></div>
+end</textarea>
+<div data-role="button" onclick="selectarea('#ppgraph-10')" data-mini="true">全選択</div>
+</div></div>
 </div>
 
 <div data-role="collapsible" data-theme="c" data-content-theme="c"> 
@@ -333,7 +352,7 @@ end</code></pre></div></div>
 <p class="pico-desc">タイルをrect位置に引き伸ばして表示します。edgeで引き伸ばす範囲を指定できます。</p>
 
 <div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-<pre><code>pptex:default(pptex:load("main.png"))
+<textarea class="code" id="ppgraph-11">pptex:default(pptex:load("main.png"))
 function start()
   --3番のタイルを{64,32,128,64}に引き伸ばして表示します
   ppgraph:stretch({64,32,128,64},3)
@@ -341,7 +360,9 @@ function start()
   ppgraph:stretch(pprect(64,96+64,128,64),3)
   --外周８ドットは引き伸ばされません
   ppgraph:stretch(pprect(64,96+64*2,128,64),3,8)
-end</code></pre></div></div>
+end</textarea>
+<div data-role="button" onclick="selectarea('#ppgraph-11')" data-mini="true">全選択</div>
+</div></div>
 </div>
 
 <div data-role="collapsible" data-theme="c" data-content-theme="c"> 

@@ -5,16 +5,15 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=no"> 
 	<link rel="apple-touch-icon" href="./apple-touch-icon.png" />
-	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
-	<link rel="stylesheet" href="./picoapi.css" />
-	<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
-	<script type="text/javascript" src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js"></script>
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
+	<link rel="stylesheet" href="../picoapi.css" />
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+	<script type="text/javascript" src="../common.js"></script>
 </head> 
 <body> 
 
-
-
-<div data-role="page" id="ppgame">
+<div data-role="page" id="ppgame" class="codetextarea">
 
 	<div data-role="header" data-theme="d">
 		<h1>ppgame</h1>
@@ -24,15 +23,16 @@
 
 	<div data-role="content">	
 
+
 <!-- 		<div data-role="collapsible-set">  -->
 	
 			<div data-role="collapsible" data-theme="c" data-content-theme="c"> 
 				<h3>ppgame:start(func)</h3>
 				<p class="pico-desc">ゲームループとなる関数を変更します。funcはゲームループとなる関数(クロージャ)です。
 					ゲームループ関数はデフォルトではstart()ですが、別の関数に変更することができます。</p>
-		
+
 				<div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-					<pre><code>--１秒後にtitle()がゲームループになります。
+<textarea class="code" id="ppgame-1">--１秒後にtitle()がゲームループになります。
 local t=0
 function start()
   ppgraph:print("start loop");
@@ -43,8 +43,9 @@ function start()
 end
 function title()
   ppgraph:print("title loop");
-end</code></pre>
-					<img src="./image/screen-shot-2012-06-17-9.57.40.gif"/>
+end</textarea>
+<div data-role="button" onclick="selectarea('#ppgame-1')" data-mini="true">全選択</div>
+<img src="./image/screen-shot-2012-06-17-9.57.40.gif" class="pico-image">
 				</div></div>
 			</div>
 	    
@@ -61,10 +62,11 @@ end</code></pre>
 				</ul>
 		
 				<div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-					<pre><code>--platform()の戻り値を表示します。
+					<textarea class="code" id="ppgame-2">--platform()の戻り値を表示します。
 function start()
   ppgraph:print(ppgame:platform())
-end</code></pre>
+end</textarea>
+<div data-role="button" onclick="selectarea('#ppgame-2')" data-mini="true">全選択</div>
 				</div></div>
 			</div>
 	
@@ -74,10 +76,11 @@ end</code></pre>
 				<p class="pico-desc">フレームレートを返します。</p>
 
 				<div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-					<pre><code>--fps()の戻り値を表示します。
+					<textarea class="code" id="ppgame-3">--fps()の戻り値を表示します。
 function start()
   ppgraph:print(ppgame:fps())
-end</code></pre>
+end</textarea>
+<div data-role="button" onclick="selectarea('#ppgame-3')" data-mini="true">全選択</div>
 				</div></div>
 			</div>
 
@@ -86,10 +89,13 @@ end</code></pre>
 <p class="pico-desc">前回のゲームループからの経過時間を返します。</p>
 
 				<div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-					<pre><code>--deltaTime()の戻り値を表示します。
+					<textarea class="code" id="ppgame-4">--経過時間を表示します。
+time=0
 function start()
-  ppgraph:print(ppgame:fps())
-end</code></pre>
+  ppgraph:print(time)
+  time=time+ppgame:deltaTime()
+end</textarea>
+<div data-role="button" onclick="selectarea('#ppgame-4')" data-mini="true">全選択</div>
 				</div></div>
 			</div>
 
@@ -99,10 +105,11 @@ end</code></pre>
 <p class="pico-desc">マウスポインタの位置を返します。(DotEDITORでは機能しません。)</p>
 
 <div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-					<pre><code>--mouse()の戻り値を表示します。
+					<textarea class="code" id="ppgame-5">--mouse()の戻り値を表示します。
 function start()
   ppgraph:print(ppgame:mouse().x..","..ppgame:mouse().y)
-end</code></pre>
+end</textarea>
+<div data-role="button" onclick="selectarea('#ppgame-5')" data-mini="true">全選択</div>
 				</div></div>
 			</div>
 
@@ -133,12 +140,13 @@ end</code></pre>
 </ul>
 
 <div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-					<pre><code>--１回目の実行ではscoreは100ですが、２回目の実行でscoreは200になります。
+					<textarea class="code" id="ppgame-6">--１回目の実行ではscoreは100ですが、２回目の実行でscoreは200になります。
 local score = ppgame:getInteger("score",100)
 ppgame:setInteger("score",200)
 function start()
   ppgraph:print(score)
-end</code></pre>
+end</textarea>
+<div data-role="button" onclick="selectarea('#ppgame-6')" data-mini="true">全選択</div>
 				</div></div>
 			</div>
 	
@@ -151,6 +159,7 @@ end</code></pre>
 	</div>
 
 </div><!-- /page -->
+
 
 </body>
 </html>

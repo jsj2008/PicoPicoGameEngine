@@ -1,0 +1,76 @@
+<!DOCTYPE html> 
+<html lang="ja"> 
+	<head> 
+	<title>PicoPicoGameEngine</title> 
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=no"> 
+	<link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
+	<link rel="stylesheet" href="../picoapi.css" />
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+	<script type="text/javascript" src="../common.js"></script>
+</head> 
+<body> 
+
+<div data-role="page" id="title">
+
+	<div data-role="header" data-theme="d">
+		<h1>PicoPicoGameEngine</h1>
+	</div>
+
+	<div data-role="content">
+		DotEDITOR Ver.4.0.1でタイルセット選択画面を表示するとクラッシュするというバグが発覚いたしました。<br/>
+		このバグは次のバージョン Ver.4.0.2 で修正されます。<br/>
+		アップデートは、Appleによる審査が１〜２週間ほどかかります。<br/>
+		ご迷惑をおかけしますが、しばらくお待ちください！<br/>
+		2012.07.01<br/>
+		
+		<h2>バグの回避方法</h2>
+		<a href="http://www.macroplant.com/iexplorer/"><img src="http://www.macroplant.com/img/headerArea/AppLogos/iPhoneExplorer.png"/ width="64" height="64">こちら</a>から、iExplorerをダウンロードしてください。<br/>
+		(iExplorerさんに感謝！)<br/>
+		<br/>
+		iExplorerを使うとファインダーやエクスプローラーと同じような使い方でiPhoneの中のファイルを操作することができます。<br/>
+		※念のため、作業の前にiPhoneのバックアップをしておいてください。<br/>
+		iExplorerを起動してiPhoneの中を見ると、Appsフォルダの中にDotEDITORフォルダがあります。<br/>
+		<br/>
+		<img src="./crushbug120701/screen-shot 2012-07-01 4.16.41_.png" class="pico-image"/>
+		<br/>
+		<br/>
+		この中のLibrary->PrivateDocumentsにタイルセットデータがあります。<br/>
+		<br/>
+		<img src="./crushbug120701/screen-shot 2012-07-01 3.58.02_.png" class="pico-image"/><br/>
+		<br/>
+		拡張子が「.tileData」となっているファイルがタイルセットデータです。<br/>
+		タイルセットデータは「.tileData」「.pn_」「.png」の３つのファイルで一組ですが、<br/>
+		タイルセットデータのうち「.pn_」が存在しないものがあると思います。<br/>
+		クラッシュの原因はこの「.pn_」が作成できないことで発生します。<br/>
+		<br/>
+		<img src="./crushbug120701/screen-shot 2012-07-01 3.58.02__.png" class="pico-image"/><br/>
+		<br/>
+		<a href="./crushbug120701/Empty.zip" data-ajax="false">こちらから「Empty.pn_」ファイル</a>をダウンロードします。<br/>
+		※右クリックで、別名でダウンロードしてください。ファイルはZIPで圧縮しています。<br/>
+		※「.pn_」ファイルは512x512ドットサイズの透明なPNGファイルの、拡張子を「.pn_」にしたものです。<br/>
+		<br/>
+		<img src="./crushbug120701/screen-shot 2012-07-01 3.59.01.png"/><br/>
+		<br/>
+		Empty.pn_のファイル名を変更します。<br/>
+		(例ではDot0002.pn_が存在しなかったのでDot0002.pn_に変更しています。)<br/>
+		<br/>
+		<img src="./crushbug120701/screen-shot 2012-07-01 3.59.20.png"/><br/>
+		<br/>
+		PrivateDocumentsフォルダにコピーします。<br/>
+		<br/>
+		<img src="./crushbug120701/screen-shot 2012-07-01 3.59.34_.png" class="pico-image"/><br/>
+		<br/>
+		これで、タイルセット画面を表示することができるようになります。<br/>
+	</div>
+
+	<div data-role="footer" data-theme="d">
+		<h4>2012 YAMAGAME</h4>
+	</div>
+
+</div>
+
+</body>
+</html>

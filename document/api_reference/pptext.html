@@ -5,10 +5,11 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=no"> 
 	<link rel="apple-touch-icon" href="./apple-touch-icon.png" />
-	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
 	<link rel="stylesheet" href="../picoapi.css" />
-	<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
-	<script type="text/javascript" src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+  <script type="text/javascript" src="../common.js"></script>
 </head> 
 <body> 
 
@@ -30,7 +31,7 @@ pptext.new(n)</h3>
 
 
 <div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-<pre><code>text = pptext.new()
+<textarea class="code" id="pptext-1">text = pptext.new()
 text:frameRect(0,0,320,200)
 text:lineHeight(ppfont:height())
 text:clear()
@@ -43,9 +44,9 @@ text:add("04:↑↓←→△▲▽▼")
 
 function start()
 	text:draw()
-end</code></pre>
-
-<img src="./image/screen-shot 2012-11-07 14.04.54.png"/></div></div>
+end</textarea>
+<div data-role="button" onclick="selectarea('#pptext-1')" data-mini="true">全選択</div>
+<img src="./image/screen-shot 2012-11-07 14.04.54.png" class="pico-image"></div></div>
 
 </div>
 
@@ -54,7 +55,7 @@ end</code></pre>
 <p class="pico-desc">ウインドウ領域を指定します。引数がない場合は設定値を返します。</p>
     
 <div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-<pre><code>m=pptext.new()
+<textarea class="code" id="pptext-2">m=pptext.new()
 m:frameRect(16,16,ppscreen:size().width-32,300)
 for i=0,30 do
   m:add("LIST "..i)
@@ -67,8 +68,9 @@ function start()
   m:idle()
   m:draw()
   ppscreen:viewport(v)
-end</code></pre>
-<img src="./image/screen-shot 2012-06-28 17.27.54.png"/></div></div>
+end</textarea>
+<div data-role="button" onclick="selectarea('#pptext-2')" data-mini="true">全選択</div>
+<img src="./image/screen-shot 2012-06-28 17.27.54.png" class="pico-image"></div></div>
 </div>
 
 <div data-role="collapsible" data-theme="c" data-content-theme="c"> 
@@ -106,7 +108,7 @@ end</code></pre>
 <p class="pico-desc">指定したセルの矩形領域を返します。</p>
 
 <div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-<pre><code>m=pptext.new()
+<textarea class="code" id="pptext-3">m=pptext.new()
 m:frameRect(16,16,100,100)
 m:add("HELLO WOLRD 1")
 m:add("HELLO")
@@ -122,8 +124,9 @@ function start()
   ppgraph:box(m:cellRect(1),ppgraph.red)
   ppgraph:box(m:cellRect(2),ppgraph.red)
   
-end</code></pre>
-<img src="./image/screen-shot 2012-06-28 17.31.25.png"/></div></div>
+end</textarea>
+<div data-role="button" onclick="selectarea('#pptext-3')" data-mini="true">全選択</div>
+<img src="./image/screen-shot 2012-06-28 17.31.25.png" class="pico-image"></div></div>
 </div>
 
 <div data-role="collapsible" data-theme="c" data-content-theme="c"> 
@@ -131,7 +134,7 @@ end</code></pre>
 <p class="pico-desc">指定したセルの文字をテーブルで返します。</p>
 
 <div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-<pre><code>--小さなウインドウ領域を作り長い文字(HELLO WORLD 1)を描画します
+<textarea class="code" id="pptext-4">--小さなウインドウ領域を作り長い文字(HELLO WORLD 1)を描画します
 m=pptext.new()
 m:frameRect(16,16,100,100)
 m:add("HELLO WOLRD 1")
@@ -150,8 +153,9 @@ function start()
 	ppgraph:print(k..":"..v)
 	ppgraph:move(0,16)
   end
-end</code></pre>
-<img src="./image/screen-shot 2012-06-28 17.38.54.png"/></div></div>
+end</textarea>
+<div data-role="button" onclick="selectarea('#pptext-4')" data-mini="true">全選択</div>
+<img src="./image/screen-shot 2012-06-28 17.38.54.png" class="pico-image"></div></div>
 </div>
 
 <div data-role="collapsible" data-theme="c" data-content-theme="c"> 
@@ -179,7 +183,7 @@ end</code></pre>
 <p class="pico-desc">指定したセルを選択します。引数がない場合は選択行を返します。</p>
 
 <div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-<pre><code>--２、４、５行を選択状態にする
+<textarea class="code" id="pptext-5">--２、４、５行を選択状態にする
 m=pptext.new()
 m:frameRect(ppscreen:size())
 m:add("HELLO WOLRD 1")
@@ -196,8 +200,9 @@ function start()
   m:idle()
   m:draw()
   ppscreen:viewport(ppscreen:size())
-end</code></pre>
-<img src="./image/screen-shot 2012-06-28 17.35.24.png"/></div></div>
+end</textarea>
+<div data-role="button" onclick="selectarea('#pptext-5')" data-mini="true">全選択</div>
+<img src="./image/screen-shot 2012-06-28 17.35.24.png" class="pico-image"></div></div>
 </div>
 
 <div data-role="collapsible" data-theme="c" data-content-theme="c"> 
@@ -225,7 +230,7 @@ end</code></pre>
 <p class="pico-desc">カラム数を指定します。</p>
 
 <div data-role="collapsible-set"><div data-role="collapsible" data-theme="e" data-content-theme="e"><h3>sample code</h3>
-<pre><code>--２カラム表示
+<textarea class="code" id="pptext-6">--２カラム表示
 m=pptext.new()
 m:frameRect(ppscreen:size())
 for i=0,30 do
@@ -239,8 +244,9 @@ function start()
   m:idle()
   m:draw()
   ppscreen:viewport(ppscreen:size())
-end</code></pre>
-<img src="./image/screen-shot 2012-06-28 17.37.05.png"/></div></div>
+end</textarea>
+<div data-role="button" onclick="selectarea('#pptext-6')" data-mini="true">全選択</div>
+<img src="./image/screen-shot 2012-06-28 17.37.05.png" class="pico-image"></div></div>
 
 </div>
 

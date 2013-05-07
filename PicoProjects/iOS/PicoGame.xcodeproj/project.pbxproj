@@ -23,6 +23,20 @@
 		6B06B01A15B5012100D2EFF6 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B06B01015B5012100D2EFF6 /* AVFoundation.framework */; };
 		6B06B01B15B5012100D2EFF6 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B06B01115B5012100D2EFF6 /* OpenAL.framework */; };
 		6B06B02015B5014300D2EFF6 /* PicoGameAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6B06B01E15B5014300D2EFF6 /* PicoGameAppDelegate.mm */; };
+		6B0EAD7C1738A542004C88CF /* current.tmx in Resources */ = {isa = PBXBuildFile; fileRef = 6B0EAD6E1738A542004C88CF /* current.tmx */; };
+		6B0EAD7D1738A542004C88CF /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 6B0EAD6F1738A542004C88CF /* icon.png */; };
+		6B0EAD7E1738A542004C88CF /* main.lua in Resources */ = {isa = PBXBuildFile; fileRef = 6B0EAD701738A542004C88CF /* main.lua */; };
+		6B0EAD7F1738A542004C88CF /* main.png in Resources */ = {isa = PBXBuildFile; fileRef = 6B0EAD711738A542004C88CF /* main.png */; };
+		6B0EAD801738A542004C88CF /* map.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6B0EAD721738A542004C88CF /* map.plist */; };
+		6B0EAD811738A542004C88CF /* map.png in Resources */ = {isa = PBXBuildFile; fileRef = 6B0EAD731738A542004C88CF /* map.png */; };
+		6B0EAD821738A542004C88CF /* map1.tmx in Resources */ = {isa = PBXBuildFile; fileRef = 6B0EAD741738A542004C88CF /* map1.tmx */; };
+		6B0EAD831738A542004C88CF /* map2.tmx in Resources */ = {isa = PBXBuildFile; fileRef = 6B0EAD751738A542004C88CF /* map2.tmx */; };
+		6B0EAD841738A542004C88CF /* pattern.tileinfo in Resources */ = {isa = PBXBuildFile; fileRef = 6B0EAD761738A542004C88CF /* pattern.tileinfo */; };
+		6B0EAD851738A542004C88CF /* PPImageFont.png in Resources */ = {isa = PBXBuildFile; fileRef = 6B0EAD771738A542004C88CF /* PPImageFont.png */; };
+		6B0EAD861738A542004C88CF /* project.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6B0EAD781738A542004C88CF /* project.plist */; };
+		6B0EAD871738A542004C88CF /* sample.png in Resources */ = {isa = PBXBuildFile; fileRef = 6B0EAD791738A542004C88CF /* sample.png */; };
+		6B0EAD881738A542004C88CF /* tile.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6B0EAD7A1738A542004C88CF /* tile.plist */; };
+		6B0EAD891738A542004C88CF /* tileinfo.lua in Resources */ = {isa = PBXBuildFile; fileRef = 6B0EAD7B1738A542004C88CF /* tileinfo.lua */; };
 		6B0F20DD15B9802900588520 /* Box2D.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B0F20D715B9802900588520 /* Box2D.framework */; };
 		6B0F20DE15B9802900588520 /* CocosDenshion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B0F20D815B9802900588520 /* CocosDenshion.framework */; };
 		6B0F20DF15B9802900588520 /* FlMML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B0F20D915B9802900588520 /* FlMML.framework */; };
@@ -31,22 +45,8 @@
 		6B110B4F165C75A100202C89 /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6B110B4D165C75A100202C89 /* MainStoryboard.storyboard */; };
 		6B110B52165C75D600202C89 /* PPRetinaGameViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6B110B51165C75D600202C89 /* PPRetinaGameViewController.mm */; };
 		6B110B57165C7A0600202C89 /* PicoGame.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B110B56165C7A0600202C89 /* PicoGame.framework */; };
-		6B110B59165C7A2500202C89 /* PPImageFont.png in Resources */ = {isa = PBXBuildFile; fileRef = 6B110B58165C7A2500202C89 /* PPImageFont.png */; };
 		6B110B5C165C7ABF00202C89 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6B110B5A165C7ABF00202C89 /* Default-568h@2x.png */; };
 		6B110B5D165C7ABF00202C89 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 6B110B5B165C7ABF00202C89 /* Default.png */; };
-		6BD1C982166063CA000D7171 /* current.tmx in Resources */ = {isa = PBXBuildFile; fileRef = 6BD1C975166063CA000D7171 /* current.tmx */; };
-		6BD1C983166063CA000D7171 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BD1C976166063CA000D7171 /* icon.png */; };
-		6BD1C984166063CA000D7171 /* main.lua in Resources */ = {isa = PBXBuildFile; fileRef = 6BD1C977166063CA000D7171 /* main.lua */; };
-		6BD1C985166063CA000D7171 /* main.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BD1C978166063CA000D7171 /* main.png */; };
-		6BD1C986166063CA000D7171 /* map.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6BD1C979166063CA000D7171 /* map.plist */; };
-		6BD1C987166063CA000D7171 /* map.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BD1C97A166063CA000D7171 /* map.png */; };
-		6BD1C988166063CA000D7171 /* map1.tmx in Resources */ = {isa = PBXBuildFile; fileRef = 6BD1C97B166063CA000D7171 /* map1.tmx */; };
-		6BD1C989166063CA000D7171 /* map2.tmx in Resources */ = {isa = PBXBuildFile; fileRef = 6BD1C97C166063CA000D7171 /* map2.tmx */; };
-		6BD1C98A166063CA000D7171 /* pattern.tileinfo in Resources */ = {isa = PBXBuildFile; fileRef = 6BD1C97D166063CA000D7171 /* pattern.tileinfo */; };
-		6BD1C98B166063CA000D7171 /* project.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6BD1C97E166063CA000D7171 /* project.plist */; };
-		6BD1C98C166063CA000D7171 /* sample.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BD1C97F166063CA000D7171 /* sample.png */; };
-		6BD1C98D166063CA000D7171 /* tile.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6BD1C980166063CA000D7171 /* tile.plist */; };
-		6BD1C98E166063CA000D7171 /* tileinfo.lua in Resources */ = {isa = PBXBuildFile; fileRef = 6BD1C981166063CA000D7171 /* tileinfo.lua */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -70,6 +70,20 @@
 		6B06B01115B5012100D2EFF6 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/OpenAL.framework; sourceTree = DEVELOPER_DIR; };
 		6B06B01D15B5014300D2EFF6 /* PicoGameAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PicoGameAppDelegate.h; sourceTree = "<group>"; };
 		6B06B01E15B5014300D2EFF6 /* PicoGameAppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PicoGameAppDelegate.mm; sourceTree = "<group>"; };
+		6B0EAD6E1738A542004C88CF /* current.tmx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = current.tmx; path = GameData/current.tmx; sourceTree = "<group>"; };
+		6B0EAD6F1738A542004C88CF /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon.png; path = GameData/icon.png; sourceTree = "<group>"; };
+		6B0EAD701738A542004C88CF /* main.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = main.lua; path = GameData/main.lua; sourceTree = "<group>"; };
+		6B0EAD711738A542004C88CF /* main.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = main.png; path = GameData/main.png; sourceTree = "<group>"; };
+		6B0EAD721738A542004C88CF /* map.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = map.plist; path = GameData/map.plist; sourceTree = "<group>"; };
+		6B0EAD731738A542004C88CF /* map.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = map.png; path = GameData/map.png; sourceTree = "<group>"; };
+		6B0EAD741738A542004C88CF /* map1.tmx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = map1.tmx; path = GameData/map1.tmx; sourceTree = "<group>"; };
+		6B0EAD751738A542004C88CF /* map2.tmx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = map2.tmx; path = GameData/map2.tmx; sourceTree = "<group>"; };
+		6B0EAD761738A542004C88CF /* pattern.tileinfo */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = pattern.tileinfo; path = GameData/pattern.tileinfo; sourceTree = "<group>"; };
+		6B0EAD771738A542004C88CF /* PPImageFont.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = PPImageFont.png; path = GameData/PPImageFont.png; sourceTree = "<group>"; };
+		6B0EAD781738A542004C88CF /* project.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = project.plist; path = GameData/project.plist; sourceTree = "<group>"; };
+		6B0EAD791738A542004C88CF /* sample.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = sample.png; path = GameData/sample.png; sourceTree = "<group>"; };
+		6B0EAD7A1738A542004C88CF /* tile.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = tile.plist; path = GameData/tile.plist; sourceTree = "<group>"; };
+		6B0EAD7B1738A542004C88CF /* tileinfo.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = tileinfo.lua; path = GameData/tileinfo.lua; sourceTree = "<group>"; };
 		6B0F20D715B9802900588520 /* Box2D.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Box2D.framework; path = Frameworks/Box2D.framework; sourceTree = "<group>"; };
 		6B0F20D815B9802900588520 /* CocosDenshion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocosDenshion.framework; path = Frameworks/CocosDenshion.framework; sourceTree = "<group>"; };
 		6B0F20D915B9802900588520 /* FlMML.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FlMML.framework; path = Frameworks/FlMML.framework; sourceTree = "<group>"; };
@@ -79,22 +93,8 @@
 		6B110B50165C75D600202C89 /* PPRetinaGameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPRetinaGameViewController.h; sourceTree = "<group>"; };
 		6B110B51165C75D600202C89 /* PPRetinaGameViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PPRetinaGameViewController.mm; sourceTree = "<group>"; };
 		6B110B56165C7A0600202C89 /* PicoGame.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PicoGame.framework; path = Frameworks/PicoGame.framework; sourceTree = "<group>"; };
-		6B110B58165C7A2500202C89 /* PPImageFont.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = PPImageFont.png; path = GameData/PPImageFont.png; sourceTree = "<group>"; };
 		6B110B5A165C7ABF00202C89 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = SOURCE_ROOT; };
 		6B110B5B165C7ABF00202C89 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = SOURCE_ROOT; };
-		6BD1C975166063CA000D7171 /* current.tmx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = current.tmx; path = GameData/current.tmx; sourceTree = "<group>"; };
-		6BD1C976166063CA000D7171 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon.png; path = GameData/icon.png; sourceTree = "<group>"; };
-		6BD1C977166063CA000D7171 /* main.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = main.lua; path = GameData/main.lua; sourceTree = "<group>"; };
-		6BD1C978166063CA000D7171 /* main.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = main.png; path = GameData/main.png; sourceTree = "<group>"; };
-		6BD1C979166063CA000D7171 /* map.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = map.plist; path = GameData/map.plist; sourceTree = "<group>"; };
-		6BD1C97A166063CA000D7171 /* map.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = map.png; path = GameData/map.png; sourceTree = "<group>"; };
-		6BD1C97B166063CA000D7171 /* map1.tmx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = map1.tmx; path = GameData/map1.tmx; sourceTree = "<group>"; };
-		6BD1C97C166063CA000D7171 /* map2.tmx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = map2.tmx; path = GameData/map2.tmx; sourceTree = "<group>"; };
-		6BD1C97D166063CA000D7171 /* pattern.tileinfo */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = pattern.tileinfo; path = GameData/pattern.tileinfo; sourceTree = "<group>"; };
-		6BD1C97E166063CA000D7171 /* project.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = project.plist; path = GameData/project.plist; sourceTree = "<group>"; };
-		6BD1C97F166063CA000D7171 /* sample.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = sample.png; path = GameData/sample.png; sourceTree = "<group>"; };
-		6BD1C980166063CA000D7171 /* tile.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = tile.plist; path = GameData/tile.plist; sourceTree = "<group>"; };
-		6BD1C981166063CA000D7171 /* tileinfo.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = tileinfo.lua; path = GameData/tileinfo.lua; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -208,20 +208,20 @@
 		6B06B03515B502D000D2EFF6 /* GameData */ = {
 			isa = PBXGroup;
 			children = (
-				6BD1C975166063CA000D7171 /* current.tmx */,
-				6BD1C976166063CA000D7171 /* icon.png */,
-				6BD1C977166063CA000D7171 /* main.lua */,
-				6BD1C978166063CA000D7171 /* main.png */,
-				6BD1C979166063CA000D7171 /* map.plist */,
-				6BD1C97A166063CA000D7171 /* map.png */,
-				6BD1C97B166063CA000D7171 /* map1.tmx */,
-				6BD1C97C166063CA000D7171 /* map2.tmx */,
-				6BD1C97D166063CA000D7171 /* pattern.tileinfo */,
-				6BD1C97E166063CA000D7171 /* project.plist */,
-				6BD1C97F166063CA000D7171 /* sample.png */,
-				6BD1C980166063CA000D7171 /* tile.plist */,
-				6BD1C981166063CA000D7171 /* tileinfo.lua */,
-				6B110B58165C7A2500202C89 /* PPImageFont.png */,
+				6B0EAD6E1738A542004C88CF /* current.tmx */,
+				6B0EAD6F1738A542004C88CF /* icon.png */,
+				6B0EAD701738A542004C88CF /* main.lua */,
+				6B0EAD711738A542004C88CF /* main.png */,
+				6B0EAD721738A542004C88CF /* map.plist */,
+				6B0EAD731738A542004C88CF /* map.png */,
+				6B0EAD741738A542004C88CF /* map1.tmx */,
+				6B0EAD751738A542004C88CF /* map2.tmx */,
+				6B0EAD761738A542004C88CF /* pattern.tileinfo */,
+				6B0EAD771738A542004C88CF /* PPImageFont.png */,
+				6B0EAD781738A542004C88CF /* project.plist */,
+				6B0EAD791738A542004C88CF /* sample.png */,
+				6B0EAD7A1738A542004C88CF /* tile.plist */,
+				6B0EAD7B1738A542004C88CF /* tileinfo.lua */,
 			);
 			name = GameData;
 			sourceTree = "<group>";
@@ -278,22 +278,22 @@
 			files = (
 				6B06AFEE15B500D300D2EFF6 /* InfoPlist.strings in Resources */,
 				6B110B4F165C75A100202C89 /* MainStoryboard.storyboard in Resources */,
-				6B110B59165C7A2500202C89 /* PPImageFont.png in Resources */,
 				6B110B5C165C7ABF00202C89 /* Default-568h@2x.png in Resources */,
 				6B110B5D165C7ABF00202C89 /* Default.png in Resources */,
-				6BD1C982166063CA000D7171 /* current.tmx in Resources */,
-				6BD1C983166063CA000D7171 /* icon.png in Resources */,
-				6BD1C984166063CA000D7171 /* main.lua in Resources */,
-				6BD1C985166063CA000D7171 /* main.png in Resources */,
-				6BD1C986166063CA000D7171 /* map.plist in Resources */,
-				6BD1C987166063CA000D7171 /* map.png in Resources */,
-				6BD1C988166063CA000D7171 /* map1.tmx in Resources */,
-				6BD1C989166063CA000D7171 /* map2.tmx in Resources */,
-				6BD1C98A166063CA000D7171 /* pattern.tileinfo in Resources */,
-				6BD1C98B166063CA000D7171 /* project.plist in Resources */,
-				6BD1C98C166063CA000D7171 /* sample.png in Resources */,
-				6BD1C98D166063CA000D7171 /* tile.plist in Resources */,
-				6BD1C98E166063CA000D7171 /* tileinfo.lua in Resources */,
+				6B0EAD7C1738A542004C88CF /* current.tmx in Resources */,
+				6B0EAD7D1738A542004C88CF /* icon.png in Resources */,
+				6B0EAD7E1738A542004C88CF /* main.lua in Resources */,
+				6B0EAD7F1738A542004C88CF /* main.png in Resources */,
+				6B0EAD801738A542004C88CF /* map.plist in Resources */,
+				6B0EAD811738A542004C88CF /* map.png in Resources */,
+				6B0EAD821738A542004C88CF /* map1.tmx in Resources */,
+				6B0EAD831738A542004C88CF /* map2.tmx in Resources */,
+				6B0EAD841738A542004C88CF /* pattern.tileinfo in Resources */,
+				6B0EAD851738A542004C88CF /* PPImageFont.png in Resources */,
+				6B0EAD861738A542004C88CF /* project.plist in Resources */,
+				6B0EAD871738A542004C88CF /* sample.png in Resources */,
+				6B0EAD881738A542004C88CF /* tile.plist in Resources */,
+				6B0EAD891738A542004C88CF /* tileinfo.lua in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

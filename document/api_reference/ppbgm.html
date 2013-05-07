@@ -5,10 +5,11 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=no"> 
 	<link rel="apple-touch-icon" href="./apple-touch-icon.png" />
-	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
 	<link rel="stylesheet" href="../picoapi.css" />
-	<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
-	<script type="text/javascript" src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+	<script type="text/javascript" src="../common.js"></script>
 </head> 
 <body> 
 
@@ -29,8 +30,8 @@
 </div>
 
 <div data-role="collapsible" data-theme="c" data-content-theme="c"> 
-<h3>ppbgm.play(filename)</h3>
-<p class="pico-desc">BGMを再生します。</p>
+<h3>ppbgm.play(filename,loopflag)</h3>
+<p class="pico-desc">BGMを再生します。loopflagがtrueの場合はループ再生します。loopflagは省略できます。省略した場合はfalseになります。</p>
 </div>
 
 <div data-role="collapsible" data-theme="c" data-content-theme="c"> 

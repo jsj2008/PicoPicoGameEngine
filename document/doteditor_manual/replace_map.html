@@ -5,10 +5,12 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=no"> 
 	<link rel="apple-touch-icon" href="./apple-touch-icon.png" />
-	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
 	<link rel="stylesheet" href="../picoapi.css" />
-	<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
-	<script type="text/javascript" src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+	<script type="text/javascript" src="../common.js"></script>
+
 </head> 
 <body> 
 
@@ -22,26 +24,42 @@
 
 	<div data-role="content">
 		<p>DotEDITORでは内蔵ゲームのマップデータを入れ替えてゲームの背景を変更できます。<br/>
-		例としてWAKING MANサンプルを使って背景を入れ替えます。<br/>
+		例として WAKING MAN サンプルを使って背景を入れ替えます。<br/>
 		下のスクリーンショットではキャラクタを戦闘機に入れ換えています。</p>
 
 <div class="figure"><img src="./image/char5.png" class="pico-image"></div>
 		
-		<p>DotEDITORのマップエディタで好きな背景を作ります。
-		マップサイズは画面全体を覆いたいので10x15サイズで作ります。</p>
+		<p>DotEDITORのマップエディタで好きな背景を作ります。</p>
 
 <div class="figure"><img src="./image/map1.png" class="pico-image"></div>
 		
-		<p>設定画面からマップデータをタップします。</p>
+		<p>マップサイズは画面全体を覆いたいので10x18サイズで作ります。</p>
+
+<div class="figure"><img src="./image/map1-1.png" class="pico-image"></div>
+		
+		<p>設定画面からタイルマップをタップして map1.tmx を入れ換えます。</p>
 
 <div class="figure"><img src="./image/map2.png" class="pico-image"></div>
 		
-		<p>WAKING MANではmap1.tmxがあらかじめ設定されています。<br/>
-		map1.tmxのセルをタップして、作成したマップデータを選択します。</p>
+		<p>先ほど作った背景を選択して完了をタップします。</p>
 
-<div class="figure"><img src="./image/map3.png" class="pico-image"></div>
+<div class="figure"><img src="./image/map2-1.png" class="pico-image"></div>
 		
-		<p>マップデータが入れ替わりました。</p>
+		<p>このボタンをタップすると背景が入れ替わったことを確認できます。</p>
+
+<div class="figure"><img src="./image/map2-2.png" class="pico-image"></div>
+		
+		<p>WAKING MAN では map1.tmx があらかじめ設定されています。<br/>
+		＋ボタンをタップすることで背景データを追加することもできます。<br/>
+		矢印が指しているボタンをタップしてください。</p>
+
+<div class="figure"><img src="./image/map2-3.png" class="pico-image"></div>
+		
+		<p>設定した背景を確認することができます。背景を元に戻すには reset ボタンをタップします。</p>
+
+<div class="figure"><img src="./image/map2-4.png" class="pico-image"></div>
+		
+		<p>map1.tmxのセルをタップして、作成したマップデータを入れ換えることもできます。</p>
 
 <div class="figure"><img src="./image/map4.png" class="pico-image"></div>
 		
