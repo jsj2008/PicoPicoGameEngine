@@ -15,6 +15,7 @@
 #include "QBGame.h"
 #if TARGET_OS_IPHONE
 #include "PPGamePreference.h"
+#import <GameController/GCController.h>
 #endif
 
 using namespace std;
@@ -442,6 +443,34 @@ const char* PPGameDataPath(const char* name)
 	}
 //#endif
 	return PPGameResourcePath(name);
+}
+
+void PPGameControllerStartDiscoverty()
+{
+#if TARGET_OS_IPHONE
+  if ([[[UIDevice currentDevice] systemVersion] floatValue]>=7.0) {
+    [GCController startWirelessControllerDiscoveryWithCompletionHandler:nil];
+  }
+#endif
+}
+
+void PPGameControllerStopDiscoverty()
+{
+#if TARGET_OS_IPHONE
+  if ([[[UIDevice currentDevice] systemVersion] floatValue]>=7.0) {
+    [GCController stopWirelessControllerDiscovery];
+  }
+#endif
+}
+
+int PPGameControllerCount()
+{
+#if TARGET_OS_IPHONE
+  if ([[[UIDevice currentDevice] systemVersion] floatValue]>=7.0) {
+    return [GCController controllers].count;
+  }
+#endif
+  return 0;
 }
 
 /*-----------------------------------------------------------------------------------------------

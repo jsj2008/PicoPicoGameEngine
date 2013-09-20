@@ -407,6 +407,19 @@ void PPAdjustUVMap(QB3DModel* model,const char* layout)
 }
 */
 
+void PPGameControllerStartDiscoverty()
+{
+}
+
+void PPGameControllerStopDiscoverty()
+{
+}
+
+int PPGameControllerCount()
+{
+  return 0;
+}
+
 /*-----------------------------------------------------------------------------------------------
 	このファイルはここまで
 -----------------------------------------------------------------------------------------------*/

@@ -616,6 +616,19 @@ const char* PPGameDataPath(const char* name)
 	return PPGameResourcePath(name);
 }
 
+void PPGameControllerStartDiscoverty()
+{
+}
+
+void PPGameControllerStopDiscoverty()
+{
+}
+
+int PPGameControllerCount()
+{
+  return 0;
+}
+
 /*-----------------------------------------------------------------------------------------------
 	このファイルはここまで
 -----------------------------------------------------------------------------------------------*/

@@ -55,36 +55,58 @@ pppoint_mt = {
 	end,
 	__index = pppointImp
 }
-ppobject.hitCheck = function(self,points,hitCheck)
-	local ret=false
-	if (hitCheck == nil) then
-		hitCheck = function(a,v)
-			return a:contain(v)
-		end
-	end
-	if #points > 0 then
-		self.hit = false
-		for k,v in pairs(points) do
-			if hitCheck(self,v) then
-				self.hit = true
-				if self.pretouchCount == 0 then
-					self.trigger = true
-				end
-				break
-			end
-		end
-	else
-		if self.hit then
-			self.hit = false
-			if self.trigger then
-				ret = true
-			end
-		end
-		self.trigger = false
-	end
-	self.touch = self.trigger and self.hit
-	self.pretouchCount = #points
-	return ret
+ppobject.hitCheck=function(s,p,hitCheck)
+  local ret=false
+  local pretrigger=s.trigger
+  local pretouch=s.touch
+  if (hitCheck ==nil) then
+    hitCheck=function(a,v)
+      return a:contain(v)
+    end
+  end
+  function findtouch(t,p)
+    if t and p then
+      for i,v in ipairs(p) do
+        if v:length(t)<128 then
+          return v
+        end
+      end
+    end
+    return nil
+  end
+  local prehit=s.hit
+  s.hit=false
+  if p and #p>0 then
+    for i,v in ipairs(p) do
+      if hitCheck(s,v) then
+        s.touchtrackpos=v
+        s.hit=true
+        break
+      end
+    end
+  end
+  if #p~=s.touchCount then
+    if not prehit and s.hit then
+      s.trigger=true
+    end
+  end
+  if s.hit and s.trigger then
+    s.touch=true
+  else
+    s.touch=false
+  end
+  local np=findtouch(s.touchtrackpos,p)
+  s.touchtrackpos=np
+  if not np then
+    s.trigger=false
+  end
+  if pretrigger and not s.trigger then
+    if pretouch and not s.touch then
+      ret=true
+    end
+  end
+  s.touchCount=#p
+  return ret
 end
 pprectImp = {
 	min = function(self)

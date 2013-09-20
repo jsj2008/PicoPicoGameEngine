@@ -281,10 +281,21 @@ const char * PPLuaArg::tableString(lua_State* L,int argn,const char* field,const
 
 PPColor PPLuaArg::tableColor(lua_State* L,int argn,const char* field,PPColor def)
 {
+#if 1
+	argn += 2;
+	if (lua_istable(L,argn)) {
+		lua_getfield(L, argn, field);
+		if (lua_istable(L,-1)) {
+      def = getColor(L,-1-2,def);
+    }
+		lua_pop(L,1);
+  }
+#else
 	def.r = tableTableNumber(L,argn,field,"r",def.r);
 	def.g = tableTableNumber(L,argn,field,"g",def.g);
 	def.b = tableTableNumber(L,argn,field,"b",def.b);
 	def.a = tableTableNumber(L,argn,field,"a",def.a);
+#endif
 	return def;
 }
 

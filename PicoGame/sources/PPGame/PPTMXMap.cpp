@@ -631,6 +631,7 @@ void PPTMXMap::print(const char* _str)
 	const signed char* str = (const signed char*)_str;
 	for (int i=0;str[i]!=0;i++) {
 		if (str[i] == ' ') {
+			tset(str[i]+1,editPos);
 			moveCursor(1,0);
 		} else
 		if (str[i] >= 0 && str[i] <= 0x20) {

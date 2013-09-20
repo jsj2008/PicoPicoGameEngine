@@ -18,7 +18,7 @@
 
 class PPLuaScript;
 
-#define PPGAME_VBO_NUM (4000*10)
+#define PPGAME_VBO_NUM (10000*10)
 
 #define PPFLIP_H 1
 #define PPFLIP_V 2
@@ -27,7 +27,7 @@ class PPLuaScript;
 #define PPFLIP_R270 (3<<2)
 #define PPFLIP_RMASK (3<<2)
 
-#define PPGAME_MAX_BLEND 1000
+#define PPGAME_MAX_BLEND 3000
 
 #ifdef _WIN32
 #define ppGenRenderbuffers glGenRenderbuffersEXT

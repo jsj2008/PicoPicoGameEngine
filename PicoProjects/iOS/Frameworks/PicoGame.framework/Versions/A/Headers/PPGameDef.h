@@ -66,6 +66,12 @@ typedef struct _PPGameTextureInfo {
 #define PAD_F		0x0200
 #define PAD_G		0x0400
 #define PAD_H		0x0800
+
+#define PAD_X		0x0040
+#define PAD_Y		0x0080
+#define PAD_L		0x0100
+#define PAD_R		0x0200
+
 #define PAD_Start	0x1000
 #define PAD_SetUP	0x2000
 #define PAD_ANY		(-1)

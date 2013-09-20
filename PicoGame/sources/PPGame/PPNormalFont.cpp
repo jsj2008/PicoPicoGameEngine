@@ -13,7 +13,7 @@
 #include "PPGameSprite.h"
 #include "PPFontTable.h"
 
-int PPNormalFont::__print(PPWorld* _target,int x,int y,float _scale,const char* _str)
+float PPNormalFont::__print(PPWorld* _target,float x,float y,float _scale,const char* _str)
 {
 //	if (_target) {
 //		poly.color = _target->color();
@@ -111,7 +111,7 @@ int PPNormalFont::__print(PPWorld* _target,int x,int y,float _scale,const char* 
 	return cur.x;
 }
 
-void PPNormalFont::moveCursor(int dx,int dy)
+void PPNormalFont::moveCursor(float dx,float dy)
 {
 	PPPoint s = PPPoint(1,1)*localScale;
 	PPPoint ws=world()->scale();

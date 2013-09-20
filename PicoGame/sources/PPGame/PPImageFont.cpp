@@ -14,7 +14,7 @@
 #include "QBGame.h"
 #include "PPFontTable.h"
 
-int PPImageFont::__print(PPWorld* _target,int x,int y,float _scale,const char* _str)
+float PPImageFont::__print(PPWorld* _target,float x,float y,float _scale,const char* _str)
 {
 	if (_target) {
 		poly.color = _target->color();
@@ -111,7 +111,7 @@ int PPImageFont::__print(PPWorld* _target,int x,int y,float _scale,const char* _
 	return cur.x;
 }
 
-void PPImageFont::moveCursor(int dx,int dy)
+void PPImageFont::moveCursor(float dx,float dy)
 {
 	PPPoint s = PPPoint(1,1)*localScale;
 	PPPoint ws= world()->scale();

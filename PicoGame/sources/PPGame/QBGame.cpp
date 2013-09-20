@@ -39,6 +39,10 @@
 
 #include <lua/lstate.h>
 
+#if TARGET_OS_IPHONE
+#include "PPTextToSpeech.h"
+#endif
+
 //enum {
 //	QBCHAR_FONT
 //};
@@ -1109,7 +1113,7 @@ static int funcColor(lua_State* L)
 	lua_setfield(L, -2, "b");
 	lua_pushinteger(L,color.a);
 	lua_setfield(L, -2, "a");
-	return 4;
+	return 1;
 }
 
 static int funcBlend(lua_State* L)
@@ -1913,6 +1917,52 @@ static int funcGetKeyH(lua_State* L)
 	return 1;
 }
 
+static int funcGetKeyX(lua_State* L)
+{
+	QBGame* m = (QBGame*)PPLuaArg::World(L);
+	lua_pushboolean(L,m->GetKey() & PAD_X);
+	return 1;
+}
+
+static int funcGetKeyY(lua_State* L)
+{
+	QBGame* m = (QBGame*)PPLuaArg::World(L);
+	lua_pushboolean(L,m->GetKey() & PAD_Y);
+	return 1;
+}
+
+static int funcGetKeyL(lua_State* L)
+{
+	QBGame* m = (QBGame*)PPLuaArg::World(L);
+	lua_pushboolean(L,m->GetKey() & PAD_L);
+	return 1;
+}
+
+static int funcGetKeyR(lua_State* L)
+{
+	QBGame* m = (QBGame*)PPLuaArg::World(L);
+	lua_pushboolean(L,m->GetKey() & PAD_R);
+	return 1;
+}
+
+static int funcGetKeyStartDiscovery(lua_State* L)
+{
+	PPGameControllerStartDiscoverty();
+	return 0;
+}
+
+static int funcGetKeyStopDiscovery(lua_State* L)
+{
+	PPGameControllerStopDiscoverty();
+	return 0;
+}
+
+static int functionGetKeyControllers(lua_State* L)
+{
+	lua_pushinteger(L,PPGameControllerCount());
+	return 1;
+}
+
 static int funcGetKeySetUP(lua_State* L)
 {
 	QBGame* m = (QBGame*)PPLuaArg::World(L);
@@ -2269,6 +2319,13 @@ void QBGame::openKeyLibrary(PPLuaScript* script,const char* name)
 		script->addCommand("f",funcGetKeyF);
 		script->addCommand("g",funcGetKeyG);
 		script->addCommand("h",funcGetKeyH);
+		script->addCommand("x",funcGetKeyX);
+		script->addCommand("y",funcGetKeyY);
+		script->addCommand("leftShoulder",funcGetKeyL);
+		script->addCommand("rightShoulder",funcGetKeyR);
+		script->addCommand("startDiscovery",funcGetKeyStartDiscovery);
+		script->addCommand("stopDiscovery",funcGetKeyStopDiscovery);
+		script->addCommand("count",functionGetKeyControllers);
 		script->addCommand("setup",funcGetKeySetUP);
 		script->addCommand("start",funcGetKeyStart);
 	script->closeModule();
@@ -2770,6 +2827,215 @@ void QBGame::openAudioEngineSEMML(PPLuaScript* s,const char* name)
 		s->addCommand("wav10",funcWav10);
 		s->addCommand("wav13",funcWav13);
 	s->closeModule();
+}
+
+void QBGame::openGameController(PPLuaScript* script,const char* name)
+{
+	script->openModule(name,this);
+//		script->addCommand("volume",funcEffectsVolume);
+	script->closeModule();
+}
+
+#if TARGET_OS_IPHONE
+static int funcSpeechReset(lua_State* L)
+{
+  PPTextToSpeech* speech = PPTextToSpeech::sharedSpeech();
+  bool r=false;
+  if (speech) {
+    r = speech->reset();
+  }
+  lua_pushboolean(L,r);
+  return 1;
+}
+
+static int funcSpeechStop(lua_State* L)
+{
+  PPTextToSpeech* speech = PPTextToSpeech::sharedSpeech();
+  if (speech) {
+    speech->stop();
+  }
+  return 0;
+}
+
+static int funcSpeechVoice(lua_State* L)
+{
+  PPTextToSpeech* speech = PPTextToSpeech::sharedSpeech();
+	if (lua_gettop(L) > 1) {
+		if (lua_isstring(L,-1)) {
+      const char* str = lua_tostring(L,-1);
+      if (speech) {
+        speech->voice(str);
+      }
+    } else
+    if (lua_isnil(L,-1)) {
+      if (speech) {
+        speech->voice(NULL);
+      }
+    }
+  } else
+	if (lua_gettop(L) > 0) {
+    if (speech) {
+      const char* v = speech->getVoice();
+      if (v) {
+        lua_pushstring(L,v);
+      } else {
+        lua_pushnil(L);
+      }
+    } else {
+      lua_pushnil(L);
+    }
+    return 1;
+  }
+  return 0;
+}
+
+static int funcSpeechRate(lua_State* L)
+{
+  PPTextToSpeech* speech = PPTextToSpeech::sharedSpeech();
+	if (lua_gettop(L) > 1) {
+		if (lua_isnumber(L,-1)) {
+      float rate = lua_tonumber(L,-1);
+      if (speech) {
+        speech->rate(rate);
+      }
+    }
+  } else
+	if (lua_gettop(L) > 0) {
+    if (speech) {
+      lua_pushnumber(L,speech->getRate());
+    } else {
+      lua_pushnumber(L,0);
+    }
+    return 1;
+  }
+  return 0;
+}
+
+static int funcSpeechPitch(lua_State* L)
+{
+  PPTextToSpeech* speech = PPTextToSpeech::sharedSpeech();
+	if (lua_gettop(L) > 1) {
+		if (lua_isnumber(L,-1)) {
+      float pitch = lua_tonumber(L,-1);
+      if (speech) {
+        speech->pitch(pitch);
+      }
+    }
+  } else
+	if (lua_gettop(L) > 0) {
+    if (speech) {
+      lua_pushnumber(L,speech->getPitch());
+    } else {
+      lua_pushnumber(L,0);
+    }
+    return 1;
+  }
+  return 0;
+}
+
+static int funcSpeechVolume(lua_State* L)
+{
+  PPTextToSpeech* speech = PPTextToSpeech::sharedSpeech();
+	if (lua_gettop(L) > 1) {
+		if (lua_isnumber(L,-1)) {
+      float volume = lua_tonumber(L,-1);
+      if (speech) {
+        speech->volume(volume);
+      }
+    }
+  } else
+	if (lua_gettop(L) > 0) {
+    if (speech) {
+      lua_pushnumber(L,speech->getVolume());
+    } else {
+      lua_pushnumber(L,0);
+    }
+    return 1;
+  }
+  return 0;
+}
+
+static int funcSpeechUtter(lua_State* L)
+{
+  PPTextToSpeech* speech = PPTextToSpeech::sharedSpeech();
+	if (lua_gettop(L) > 0) {
+		if (lua_isstring(L,-1)) {
+      const char* str = lua_tostring(L,-1);
+      if (speech) {
+        speech->utter(str);
+      }
+    }
+  }
+  return 0;
+}
+
+static int funcSpeechIsPlaying(lua_State* L)
+{
+  PPTextToSpeech* speech = PPTextToSpeech::sharedSpeech();
+  if (speech) {
+    bool play = speech->isPlaying();
+    lua_pushboolean(L,play);
+    return 1;
+  }
+  lua_pushboolean(L,false);
+  return 1;
+}
+#else
+static int funcSpeechReset(lua_State* L)
+{
+  lua_pushboolean(L,false);
+  return 1;
+}
+
+static int funcSpeechStop(lua_State* L)
+{
+  return 0;
+}
+
+static int funcSpeechVoice(lua_State* L)
+{
+  return 0;
+}
+
+static int funcSpeechRate(lua_State* L)
+{
+  return 0;
+}
+
+static int funcSpeechPitch(lua_State* L)
+{
+  return 0;
+}
+
+static int funcSpeechVolume(lua_State* L)
+{
+  return 0;
+}
+
+static int funcSpeechUtter(lua_State* L)
+{
+  return 0;
+}
+
+static int funcSpeechIsPlaying(lua_State* L)
+{
+  lua_pushboolean(L,false);
+  return 1;
+}
+#endif
+
+void QBGame::openTextToSpeech(PPLuaScript* script,const char* name)
+{
+	script->openModule(name,this);
+		script->addCommand("reset",funcSpeechReset);
+		script->addCommand("stop",funcSpeechStop);
+		script->addCommand("voice",funcSpeechVoice);
+		script->addCommand("rate",funcSpeechRate);
+		script->addCommand("pitch",funcSpeechPitch);
+		script->addCommand("volume",funcSpeechVolume);
+		script->addCommand("utter",funcSpeechUtter);
+		script->addCommand("isPlaying",funcSpeechIsPlaying);
+	script->closeModule();
 }
 
 /*-----------------------------------------------------------------------------------------------

@@ -202,7 +202,7 @@ void PPFont::cacheAlphabetAndNumeric()
 #endif
 }
 
-int PPFont::__print(PPWorld* _target,int x,int y,float scale,const char* str)
+float PPFont::__print(PPWorld* _target,float x,float y,float scale,const char* str)
 {
 	return x;
 }
@@ -213,7 +213,7 @@ void PPFont::scale(float _scalex,float _scaley)
 //	return scale;
 }
 
-int PPFont::print(int x,int y,const char* str,bool _lineWrap)
+float PPFont::print(float x,float y,const char* str,bool _lineWrap)
 {
 	lineWrap = _lineWrap;
 	return __print(world(),x,y,1,str);

@@ -15,6 +15,8 @@
 class PPLuaScript;
 
 #include <FlMML/MChannel.h>
+#include "PPFlMMLObject.h"
+#include "PPSEMMLObject.h"
 
 typedef struct _PSGTrack {
 	
@@ -61,6 +63,8 @@ class QBSound {
 public:
 	static QBSound* sharedSound();
 	static void exitSound();
+	static PPFlMMLObject** flmmlObjectArray();
+	static PPSEMMLObject** semmlObjectArray();
 
 	QBSound(int maxChannel);
 	virtual ~QBSound() {};

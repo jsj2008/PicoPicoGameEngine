@@ -123,6 +123,8 @@
 		6BAC260515B2954D0051C16B /* iCadeState.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC249015B285930051C16B /* iCadeState.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6BAC260615B295610051C16B /* PPSensoriOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC249E15B285930051C16B /* PPSensoriOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6BAC260715B295AE0051C16B /* QBSoundMac.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC248C15B285930051C16B /* QBSoundMac.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6BE7A49817E153D900FD42D5 /* PPTextToSpeech.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BE7A49617E153D900FD42D5 /* PPTextToSpeech.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6BE7A49917E153D900FD42D5 /* PPTextToSpeech.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6BE7A49717E153D900FD42D5 /* PPTextToSpeech.mm */; };
 		6BFF2F43164CF10B00767B64 /* PPTTFont-iOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6BFF2F41164CF10B00767B64 /* PPTTFont-iOS.mm */; };
 /* End PBXBuildFile section */
 
@@ -298,6 +300,8 @@
 		6BAC25AD15B287660051C16B /* freetype.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = freetype.framework; path = ../../../freetype/iOS/freetype/Products/freetype.framework; sourceTree = "<group>"; };
 		6BAC25AF15B287710051C16B /* CocosDenshion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocosDenshion.framework; path = ../../../CocosDenshion/iOS/CocosDenshion/Products/CocosDenshion.framework; sourceTree = "<group>"; };
 		6BAC25B115B287790051C16B /* Box2D.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Box2D.framework; path = ../../../Box2D/iOS/Box2D/Products/Box2D.framework; sourceTree = "<group>"; };
+		6BE7A49617E153D900FD42D5 /* PPTextToSpeech.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PPTextToSpeech.h; path = ../Platforms/Cocoa/PPTextToSpeech.h; sourceTree = "<group>"; };
+		6BE7A49717E153D900FD42D5 /* PPTextToSpeech.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PPTextToSpeech.mm; path = ../Platforms/Cocoa/PPTextToSpeech.mm; sourceTree = "<group>"; };
 		6BFF2F41164CF10B00767B64 /* PPTTFont-iOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "PPTTFont-iOS.mm"; sourceTree = "<group>"; };
 		6BFF2F46164CF2A600767B64 /* PPTTFont-Def.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PPTTFont-Def.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -594,6 +598,8 @@
 				6BAC252015B285930051C16B /* PPWorld.h */,
 				6BAC252115B285930051C16B /* QBGame.cpp */,
 				6BAC252215B285930051C16B /* QBGame.h */,
+				6BE7A49617E153D900FD42D5 /* PPTextToSpeech.h */,
+				6BE7A49717E153D900FD42D5 /* PPTextToSpeech.mm */,
 			);
 			name = PPGame;
 			path = ../../../sources/PPGame;
@@ -667,6 +673,7 @@
 				6BAC25F515B290880051C16B /* PPVertualKey.h in Headers */,
 				6BAC25F615B290880051C16B /* PPWorld.h in Headers */,
 				6BAC25F715B290880051C16B /* QBGame.h in Headers */,
+				6BE7A49817E153D900FD42D5 /* PPTextToSpeech.h in Headers */,
 				6BAC25F815B290880051C16B /* QBSound.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -786,6 +793,7 @@
 				6BAC258A15B285930051C16B /* PPNormalFont.cpp in Sources */,
 				6BAC258B15B285930051C16B /* PPObject.cpp in Sources */,
 				6BAC258C15B285930051C16B /* PPOffscreenTexture.cpp in Sources */,
+				6BE7A49917E153D900FD42D5 /* PPTextToSpeech.mm in Sources */,
 				6BAC258D15B285930051C16B /* PPParticle.cpp in Sources */,
 				6BAC258E15B285930051C16B /* PPReadError.cpp in Sources */,
 				6BAC259015B285930051C16B /* PPSEMMLObject.cpp in Sources */,

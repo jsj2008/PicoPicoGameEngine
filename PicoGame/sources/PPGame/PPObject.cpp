@@ -807,17 +807,17 @@ static int funcTileOffset(lua_State* L)
 //	return 2;
 //}
 
-static PPPoint calcPoint(PPPoint pos,PPPoint scale,PPPoint origin,float rotate)
-{
-	pos = pos - origin;
-	pos = pos * scale;
-	PPPoint p;
-	p.x = pos.x*cos(rotate)-pos.y*sin(rotate);
-	p.y = pos.x*sin(rotate)+pos.y*cos(rotate);
-	pos = p;
-	pos = pos + origin;
-	return pos;
-}
+//static PPPoint calcPoint(PPPoint pos,PPPoint scale,PPPoint origin,float rotate)
+//{
+//	pos = pos - origin;
+//	pos = pos * scale;
+//	PPPoint p;
+//	p.x = pos.x*cos(rotate)-pos.y*sin(rotate);
+//	p.y = pos.x*sin(rotate)+pos.y*cos(rotate);
+//	pos = p;
+//	pos = pos + origin;
+//	return pos;
+//}
 
 static PPRect calcAABB(lua_State* L)
 {
@@ -865,11 +865,16 @@ static PPRect calcAABB(lua_State* L)
 //	PPPoint p = m->autoLayout(m->pos);
 
 	m->poly.pos = p;
+	m->poly.origin = p+m->origin;
+
+//printf("%f,%f\n",p.x,p.y);
 
 	PPPoint delta=PPPointZero;
 	PPPoint o[4];
 	PPRect r(0,0,m->poly.texTileSize.width,m->poly.texTileSize.height);
 	m->world()->projector->CalcPolyPoint(&m->poly,&r,&delta,o);
+
+//printf("origin %f,scale %f,size %f\n",m->poly.origin.x,m->poly.scale.x,m->poly.size.x);
 
 	float minx,miny,maxx,maxy;
 	minx = o[0].x;
@@ -1485,6 +1490,9 @@ static int funcDrag(lua_State *L)
 	if (m==NULL) {
 		return luaL_argerror(L,1,"invalid argument.");
 	}
+
+  PPRect aabb = calcAABB(L);
+
 	lua_settop(L,top);
 	
 	if (lua_istable(L,2)) {
@@ -1499,7 +1507,7 @@ static int funcDrag(lua_State *L)
 				dragArea = s->getRect(L,1);
 				useDragArea = true;
 			}
-			
+      
 			switch (m->dragStep) {
 			case 0:
 //				{
@@ -1544,25 +1552,40 @@ static int funcDrag(lua_State *L)
 //				}
 				dragPos = nearPos(L,n,m);
 				if (m->pos.length(dragPos-m->dragPos) < 128) {
+          PPPoint op = m->pos;
 					m->pos=dragPos-m->dragPos;
 					if (useDragArea) {
 						PPPoint s=m->pos;
 						PPPoint o=m->dragPos;
+            
+            float dx = op.x-aabb.x;
+            float dy = op.y-aabb.y;
+            
+            dragArea.x += dx;
+            dragArea.y += dy;
+//            dragArea.width += (aabb.width-dx);
+//            dragArea.height += (aabb.height-dy);
+
 						PPRect r=dragArea;
+
 						if (s.x<r.x) {
 							o.x=o.x+s.x-r.x;s.x=r.x;
 						}
 						if (s.y<r.y) {
 							o.y=o.y+s.y-r.y;s.y=r.y;
 						}
-						if (s.x>r.x+r.width-m->size().width) {
-						  o.x=o.x+s.x-(r.x+r.width-m->size().width);
-						  s.x=r.x+r.width-m->size().width;
+						if (s.x>r.x+r.width-aabb.width) {
+						  o.x=o.x+s.x-(r.x+r.width-aabb.width);
+						  s.x=r.x+r.width-aabb.width;
 						}
-						if (s.y>r.y+r.height-m->size().height) {
-						  o.y=o.y+s.y-(r.y+r.height-m->size().height);
-						  s.y=r.y+r.height-m->size().height;
+						if (s.y>r.y+r.height-aabb.height) {
+						  o.y=o.y+s.y-(r.y+r.height-aabb.height);
+						  s.y=r.y+r.height-aabb.height;
 						}
+
+//            s.x -= dx;
+//            s.y -= dy;
+
 						m->pos=s;
 						m->dragPos = o;
 					}

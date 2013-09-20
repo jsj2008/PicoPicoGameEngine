@@ -13,6 +13,9 @@
 #import <OpenGLES/EAGLDrawable.h>
 #import "PPGame.h"
 #import "PPGameView.h"
+#if TARGET_OS_IPHONE
+#import <GameController/GCController.h>
+#endif
 
 void __PPGame_Set3GSLater(int later);
 
@@ -166,9 +169,12 @@ void __PPGame_Set3GSLater(int later);
 			self.projector->ClearScreen2D(0.0f, 0.0f, 0.0f);
 		}
 
-		if ([_game idle] != 0) {
-			
-		}
+    if (self.width == 0 || self.height == 0) {
+    } else {
+      if ([_game idle] != 0) {
+        
+      }
+    }
 		if (self.projector) {
 			if ([_game draw] == 0) {
 				self.projector->SetViewPort();
@@ -375,6 +381,7 @@ void __PPGame_Set3GSLater(int later);
 - (unsigned long)staticButton
 {
 	unsigned long key = 0;
+
 	if (staticKey & iCadeJoystickUp) key |= PAD_UP;
 	if (staticKey & iCadeJoystickDown) key |= PAD_DOWN;
 	if (staticKey & iCadeJoystickLeft) key |= PAD_LEFT;
@@ -389,6 +396,23 @@ void __PPGame_Set3GSLater(int later);
 	if (staticKey & iCadeButtonH) key |= PAD_H;
 	if (staticKey & iCadeButtonSetup) key |= PAD_SetUP;
 	if (staticKey & iCadeButtonStart) key |= PAD_Start;
+
+  if ([[[UIDevice currentDevice] systemVersion] floatValue]>=7.0) {
+    if ([GCController controllers].count>0) {
+      GCController* gc = [[GCController controllers] objectAtIndex:0];
+      if (gc.gamepad.buttonA.pressed) key |= PAD_A;
+      if (gc.gamepad.buttonB.pressed) key |= PAD_B;
+      if (gc.gamepad.buttonX.pressed) key |= PAD_X;
+      if (gc.gamepad.buttonY.pressed) key |= PAD_Y;
+      if (gc.gamepad.leftShoulder.pressed) key |= PAD_L;
+      if (gc.gamepad.rightShoulder.pressed) key |= PAD_R;
+      if (gc.gamepad.dpad.up.pressed) key |= PAD_UP;
+      if (gc.gamepad.dpad.down.pressed) key |= PAD_DOWN;
+      if (gc.gamepad.dpad.left.pressed) key |= PAD_LEFT;
+      if (gc.gamepad.dpad.right.pressed) key |= PAD_RIGHT;
+    }
+  }
+
 	return key;
 }
 

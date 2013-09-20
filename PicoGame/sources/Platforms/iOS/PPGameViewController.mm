@@ -13,6 +13,12 @@
 
 #define kAccelerometerFrequency     10
 
+@interface PPGameViewController ()
+{
+}
+
+@end
+
 @implementation PPGameViewController
 
 - (void)viewDidLoad {
@@ -30,11 +36,11 @@
 //		}
 //	}
 
-    iCadeReaderView *control = [[iCadeReaderView alloc] initWithFrame:CGRectZero];
-    [self.view addSubview:control];
-    control.active = YES;
-    control.delegate = self;
-    [control release];
+  iCadeReaderView *control = [[iCadeReaderView alloc] initWithFrame:CGRectZero];
+  [self.view addSubview:control];
+  control.active = YES;
+  control.delegate = self;
+  [control release];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self
 	selector:@selector(applicationDidEnterBackground:)

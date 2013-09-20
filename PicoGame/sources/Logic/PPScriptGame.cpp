@@ -378,6 +378,9 @@ void PPScriptGame::reloadData()
 	openTextureLibrary(script,"pptex");
 	openAudioEngineBGM(script,"ppbgm");
 	openAudioEngineEffect(script,"ppse");
+//	openGameController(script,"ppgamecontroller");
+	openTextToSpeech(script,"ppspeech");
+
 	PPBox2D::openLibrary(script,"ppb2");
 	PPSensor::openAccelerometerLibrary(script,"ppaccelerometer");
 
@@ -485,7 +488,7 @@ void PPScriptGame::stepError()
 	font(PPFONT_HALF);
 	color(PPColor::white());
 	lineWrap = true;
-	locate(PPPointZero);
+	locate(PPPoint(0,32));
 	print("%s\n",script->errorMessage.c_str());
 	script->resetTimeout();
 }

@@ -67,6 +67,10 @@ void PPGameSetMainLua(const char* luaname);
 void PPGameSetDataPath(const char* datapath);
 const char* PPGameDataPath(const char* name);
 
+void PPGameControllerStartDiscoverty();
+void PPGameControllerStopDiscoverty();
+int PPGameControllerCount();
+
 #ifdef __cplusplus
 extern "C" {
 #endif

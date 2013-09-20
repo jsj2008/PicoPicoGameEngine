@@ -413,6 +413,8 @@ public:
 	virtual void openTouchLibrary(PPLuaScript* script,const char* name);
 	virtual void openViewLibrary(PPLuaScript* script,const char* name);
 	virtual void openAudioEngineSEMML(PPLuaScript* script,const char* name);
+  virtual void openGameController(PPLuaScript* script,const char* name);
+  virtual void openTextToSpeech(PPLuaScript* script,const char* name);
 
 	virtual void drawPattern(PPPoint pos,unsigned short gid,void* userdata)
 	{

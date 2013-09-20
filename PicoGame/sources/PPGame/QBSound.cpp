@@ -960,6 +960,10 @@ Loop:
 						if (*track->noteptr == '#' || *track->noteptr == '+') {
 							nextPtr(track,1);
 							note ++;
+						} else
+						if (*track->noteptr == '-') {
+							nextPtr(track,1);
+							note --;
 						}
 					}
 					//音長//
