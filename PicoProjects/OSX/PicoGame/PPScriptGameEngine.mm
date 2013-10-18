@@ -8,7 +8,7 @@
 
 #import "PPScriptGameEngine.h"
 #import <PicoGame/PPScriptGame.h>
-#include <iostream.h>
+#include <iostream>
 
 @implementation PPScriptGameEngine
 @synthesize mainLuaName=_mainLuaName;

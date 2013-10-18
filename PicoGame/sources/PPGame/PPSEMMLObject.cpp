@@ -25,6 +25,8 @@ PPSEMMLObject::~PPSEMMLObject()
 void PPSEMMLObject::start()
 {
 	PPObject::start();
+  QBSound* snd = QBSound::sharedSound();
+  if (snd) snd->play("@@",index);
 	NEXT(PPSEMMLObject::stepIdle);
 }
 

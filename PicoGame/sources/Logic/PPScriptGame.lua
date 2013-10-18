@@ -172,10 +172,13 @@ pprectImp = {
 		return {width=self.width,height=self.height}
 	end,
 
-	scale = function(self,a)
+	scale = function(self,x,y)
 		local r = pprect(self)
-		r.width  = r.width *a
-		r.height = r.height*a
+    if not y then
+      y = x
+    end
+		r.width  = r.width *x
+		r.height = r.height*y
 		self.width = r.width
 		self.height = r.height
 		return r

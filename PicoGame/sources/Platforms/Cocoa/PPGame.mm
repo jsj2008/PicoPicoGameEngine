@@ -88,7 +88,7 @@
 
 - (void)textureIdle
 {
-	PPGameSprite* g = self.game->projector;//PPGameSprite::instance();//view.projector;
+	PPGameSprite* g = self.game->projector;
 	if (g == NULL) return;
 	
 	if ([self textures]) {
@@ -99,11 +99,6 @@
 		}
 	}
 }
-
-//- (void)closeGame
-//{
-//	[[NSNotificationCenter defaultCenter] postNotificationName:@"closeGame" object:nil];
-//}
 
 #define PPGAME_MAX_POLY (10000*10)
 
@@ -161,7 +156,6 @@
 - (bool)exit
 {
 	if (game) {
-//NSLog(@"delete game");
 		delete game;
 	}
 	game = NULL;
@@ -172,7 +166,7 @@
 {
 	unsigned long key = 0;
 	
-	key |= self.staticButton;//[self.view staticButton];
+	key |= self.staticButton;
 
 	return key;
 }
@@ -204,10 +198,6 @@
 		self.game->screenWidth = screenWidth;
 		self.game->screenHeight = screenHeight;
 		self.game->gameIdle(key);
-//		if (self.game->exitGame) {
-//			self.game->exitGame = false;
-//			[self closeGame];
-//		}
 	}
 	return 0;
 }

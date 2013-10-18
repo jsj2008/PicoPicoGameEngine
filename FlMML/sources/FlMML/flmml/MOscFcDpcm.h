@@ -150,7 +150,7 @@ public:
 				}
 			}
 		}
-		m_ofs=ofs;
+		m_ofs=(int)ofs;
 		return val;
 	}
 	virtual void getSamples(VNumber* samples,int start,int end) {

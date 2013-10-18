@@ -52,7 +52,7 @@ public:
 	virtual ~PPFont();
 
 	virtual void scale(float scalex,float scaley);
-	virtual int print(int x,int y,const char* str,bool lineWrap=false);
+	virtual float print(float x,float y,const char* str,bool lineWrap=false);
 	virtual int length(const char* str);
 	virtual float height();
 
@@ -81,7 +81,7 @@ public:
 	PPPoint cur;
 	
 protected:
-	virtual int __print(PPWorld* _target,int x,int y,float scale,const char* str);
+	virtual float __print(PPWorld* _target,float x,float y,float scale,const char* str);
 	
 	std::string* _name;
 };

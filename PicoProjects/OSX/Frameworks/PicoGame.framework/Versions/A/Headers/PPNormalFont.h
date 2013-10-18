@@ -27,11 +27,11 @@ public:
 	virtual float height();
 	
 protected:
-	virtual int __print(PPWorld* _target,int x,int y,float scale,const char* str);
+	virtual float __print(PPWorld* _target,float x,float y,float scale,const char* str);
 	int fontWidth;
 	int fontHeight;
 	
-	void moveCursor(int dx,int dy);
+	void moveCursor(float dx,float dy);
 };
 
 #endif

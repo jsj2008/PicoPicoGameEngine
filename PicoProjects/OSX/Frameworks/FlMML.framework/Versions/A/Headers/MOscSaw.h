@@ -72,7 +72,9 @@ public:
 		}
 	}
 	virtual void setWaveNo(int waveNo) {
-		m_waveNo=Math::min(waveNo,MAX_WAVE-1);
+		if (waveNo>=MAX_WAVE)waveNo=MAX_WAVE-1;
+		if (waveNo<0)waveNo=0;
+		m_waveNo=waveNo;//Math::min(waveNo,MAX_WAVE-1);
 	}
 };
 

@@ -45,7 +45,7 @@ bool regex_search(std::string& str,flmml::regex& reg,int param)
 	if (str.length() > 0) {
 		regmatch_t match;
 		regmatch_t* pmatch = &match;
-		int t=0;
+		long long t=0;
 		const char *s = str.c_str();
 		if (*s) {
 			while (1) {
@@ -86,15 +86,15 @@ bool regex_search(std::string::const_iterator start,std::string::const_iterator 
 	std::string str(start,end);
 	if (str.length() > 0) {
 		const char* s = str.c_str();
-		int t=0;
+		long long t=0;
 		if (*s) {
 			while (1) {
 				bool match = false;
 				if (regexec(&reg.reg,&s[t],max_match,pmatch,0) != REG_NOMATCH) {
 					for (int i=0;i<max_match;i++) {
 						if (pmatch[i].rm_so != pmatch[i].rm_eo) {
-							result.match_str[i] = str.substr(pmatch[i].rm_so+t,pmatch[i].rm_eo+t-(pmatch[i].rm_so+t));
-							result.match_sub[i].second = start+pmatch[i].rm_eo+t;
+							result.match_str[i] = str.substr((unsigned long)(pmatch[i].rm_so+t),(unsigned long)(pmatch[i].rm_eo+t-(pmatch[i].rm_so+t)));
+							result.match_sub[i].second = start+(int)(pmatch[i].rm_eo+t);
 							match = true;
 						} else {
 							result.match_str[i] = "";
@@ -130,7 +130,7 @@ std::string regex_replace(std::string& str,regex_t* reg,const char* replace,int 
 {
 	regmatch_t match;
 	regmatch_t* pmatch = &match;
-	int t=0;
+	long long t=0;
 	if (str.length() > 0) {
 		char *s = (char*)malloc(str.length()+1);
 		strcpy(s,str.c_str());

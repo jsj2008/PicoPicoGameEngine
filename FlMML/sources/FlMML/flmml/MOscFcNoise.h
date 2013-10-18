@@ -81,7 +81,7 @@ public:
 		Number val=m_val;
 		Number sum=0;
 		Number cnt=0;
-		int delta=FC_NOISE_PHASE_DLT+ofs;
+		Integer delta=FC_NOISE_PHASE_DLT+ofs;
 		while(delta>=m_freqShift){
 			delta-=m_freqShift;
 			m_phase=0;
