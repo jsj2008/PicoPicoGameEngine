@@ -473,6 +473,16 @@ int PPGameControllerCount()
   return 0;
 }
 
+void PPGameOpenWeb(const char* url,const char* title)
+{
+  if (url) {
+    if (title==NULL) title="";
+    NSString* _url = [[NSString alloc] initWithUTF8String:url];
+    NSString* _title = [[NSString alloc] initWithUTF8String:title];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"PPOpenWeb" object:@{@"url":_url,@"title":_title}];
+  }
+}
+
 /*-----------------------------------------------------------------------------------------------
 	このファイルはここまで
 -----------------------------------------------------------------------------------------------*/

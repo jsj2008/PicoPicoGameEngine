@@ -16,31 +16,6 @@
 @implementation PPGameController
 @synthesize game=_game;
 
-/*
-- (void)applicationDidFinishLaunching:(NSNotification*)aNotification
-{
-	[window setFrameUsingName:@"mainWindow"];
-
-	{
-		NSRect frameRect = [window frame];
-		frameRect.size.width = 640;
-		if ([[[NSBundle mainBundle] infoDictionary] objectForKey:@"screenWidth"]) {
-			frameRect.size.width = [[[[NSBundle mainBundle] infoDictionary] objectForKey:@"screenWidth"] intValue];
-		}
-		frameRect.size.height = 480;
-		if ([[[NSBundle mainBundle] infoDictionary] objectForKey:@"screenHeight"]) {
-			frameRect.size.height = [[[[NSBundle mainBundle] infoDictionary] objectForKey:@"screenHeight"] intValue];
-		}
-		frameRect = [window frameRectForContentRect:frameRect];
-		[window setFrame:frameRect display:YES];
-
-		[self startGame:self];
-	}
-
-	[window orderFront:self];
-}
-*/
-
 - (IBAction)startGame:(id)sender
 {
 	if (openGLView==nil) return;
@@ -55,15 +30,7 @@
 			[game release];
 		}
 
-//			scene = [[PPGame alloc] init];
-//			scene.screenWidth = frameRect.size.width;
-//			scene.screenHeight = frameRect.size.height;
-
-//			projector = new PPGameSprite();
-//			projector->InitBuffer([self.game polySize]);
-
 		openGLView.game = self.game;
-//			openGLView.projector = projector;
 
 		NSNumber* density = [[NSUserDefaults standardUserDefaults] objectForKey:@"densityValue"];
 		if (density == nil) density = [NSNumber numberWithInt:10];

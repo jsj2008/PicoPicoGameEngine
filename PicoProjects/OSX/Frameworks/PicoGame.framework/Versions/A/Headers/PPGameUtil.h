@@ -71,6 +71,8 @@ void PPGameControllerStartDiscoverty();
 void PPGameControllerStopDiscoverty();
 int PPGameControllerCount();
 
+void PPGameOpenWeb(const char* url,const char* title);
+
 #ifdef __cplusplus
 extern "C" {
 #endif

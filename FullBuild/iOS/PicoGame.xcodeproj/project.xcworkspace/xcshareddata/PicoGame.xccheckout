@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>A8E98F0A-DF9A-4125-9123-76340475DC50</string>
+	<key>IDESourceControlProjectName</key>
+	<string>PicoGame</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>E7F057DB-9B3D-47C9-9F19-6E733FB77B2C</key>
+		<string>https://github.com/yamagame/PicoPicoGameEngine.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>FullBuild/iOS/PicoGame.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>E7F057DB-9B3D-47C9-9F19-6E733FB77B2C</key>
+		<string>../../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/yamagame/PicoPicoGameEngine.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>E7F057DB-9B3D-47C9-9F19-6E733FB77B2C</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>E7F057DB-9B3D-47C9-9F19-6E733FB77B2C</string>
+			<key>IDESourceControlWCCName</key>
+			<string>PicoPicoGameEngine</string>
+		</dict>
+	</array>
+</dict>
+</plist>

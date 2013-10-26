@@ -351,6 +351,22 @@ static int funcPPLength(lua_State *L)
 	return 1;
 }
 
+#ifdef __MACOSX_APP__
+static int funcOpenWeb(lua_State *L)
+{
+  const char* url = NULL;
+  const char* title = NULL;
+	if (lua_type(L,1) == LUA_TSTRING) {
+		url = lua_tostring(L,1);
+	}
+	if (lua_type(L,2) == LUA_TSTRING) {
+		title = lua_tostring(L,2);
+	}
+  PPGameOpenWeb(url,title);
+	return 0;
+}
+#endif
+
 void PPScriptGame::initScript()
 {
 }
@@ -419,6 +435,10 @@ void PPScriptGame::reloadData()
 	script->addCommand("pplength",funcPPLength);
 	script->addCommand("ppforeach",funcPPIterator);
 	
+#ifdef __MACOSX_APP__
+  script->addCommand("OpenWeb",funcOpenWeb);
+#endif
+  
 	initScript();
 
 	std::string path = luaScriptPath;

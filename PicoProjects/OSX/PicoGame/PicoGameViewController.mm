@@ -31,12 +31,20 @@
 	[game2 startGame:self];
 	
 	[window orderFront:self];
+
+  NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+  [center addObserver:self selector:@selector(openWeb:) name:@"PPOpenWeb" object:nil];
 }
 
 - (void)windowWillClose:(NSNotification *)notification
 {
 	PPSync();
 	[NSApp terminate:self];
+}
+
+- (void)openWeb:(NSNotification*)notification
+{
+  [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[[notification object] objectForKey:@"url"]]];
 }
 
 @end

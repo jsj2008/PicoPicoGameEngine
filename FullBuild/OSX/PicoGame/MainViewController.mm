@@ -29,6 +29,14 @@
 	[self.game startGame:self];
 	
 	[self.window orderFront:self];
+
+  NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+  [center addObserver:self selector:@selector(openWeb:) name:@"PPOpenWeb" object:nil];
+}
+
+- (void)openWeb:(NSNotification*)notification
+{
+  NSLog(@"%@",[notification description]);
 }
 
 @end
