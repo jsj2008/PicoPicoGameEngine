@@ -13,19 +13,20 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification*)aNotification
 {
-//	[window setFrameUsingName:@"mainWindow"];
-	
-	NSRect frameRect = [window frame];
-	frameRect.size.width = 640;
-	if ([[[NSBundle mainBundle] infoDictionary] objectForKey:@"screenWidth"]) {
-		frameRect.size.width = [[[[NSBundle mainBundle] infoDictionary] objectForKey:@"screenWidth"] intValue];
-	}
-	frameRect.size.height = 480;
-	if ([[[NSBundle mainBundle] infoDictionary] objectForKey:@"screenHeight"]) {
-		frameRect.size.height = [[[[NSBundle mainBundle] infoDictionary] objectForKey:@"screenHeight"] intValue];
-	}
-	frameRect = [window frameRectForContentRect:frameRect];
-	[window setFrame:frameRect display:YES];
+  NSRect frameRect = [window frame];
+  NSRect contentRect = [window frameRectForContentRect:frameRect];
+  float dw = frameRect.size.width -contentRect.size.width;
+  float dh = frameRect.size.height-contentRect.size.height;
+  if ([[[NSBundle mainBundle] infoDictionary] objectForKey:@"screenWidth"]) {
+    contentRect.size.width = [[[[NSBundle mainBundle] infoDictionary] objectForKey:@"screenWidth"] intValue];
+  }
+  if ([[[NSBundle mainBundle] infoDictionary] objectForKey:@"screenHeight"]) {
+    contentRect.size.height = [[[[NSBundle mainBundle] infoDictionary] objectForKey:@"screenHeight"] intValue];
+  }
+  frameRect.size = contentRect.size;
+  frameRect.size.width  += dw;
+  frameRect.size.height += dh;
+  [window setFrame:frameRect display:YES];
 	
 	[game1 startGame:self];
 	[game2 startGame:self];

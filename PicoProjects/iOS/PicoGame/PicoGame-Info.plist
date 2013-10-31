@@ -40,5 +40,7 @@
 	<string>MainStoryboard</string>
 	<key>UIMainStoryboardFile~ipad</key>
 	<string>MainStoryboard</string>
+	<key>UIFileSharingEnabled</key>
+	<true/>
 </dict>
 </plist>

@@ -18,10 +18,6 @@
 		6B06B01515B5012100D2EFF6 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B06B00B15B5012100D2EFF6 /* SystemConfiguration.framework */; };
 		6B06B01615B5012100D2EFF6 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B06B00C15B5012100D2EFF6 /* MediaPlayer.framework */; };
 		6B06B01715B5012100D2EFF6 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B06B00D15B5012100D2EFF6 /* CoreMotion.framework */; };
-		6B06B01815B5012100D2EFF6 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B06B00E15B5012100D2EFF6 /* AudioToolbox.framework */; };
-		6B06B01915B5012100D2EFF6 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B06B00F15B5012100D2EFF6 /* QuartzCore.framework */; };
-		6B06B01A15B5012100D2EFF6 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B06B01015B5012100D2EFF6 /* AVFoundation.framework */; };
-		6B06B01B15B5012100D2EFF6 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B06B01115B5012100D2EFF6 /* OpenAL.framework */; };
 		6B06B02015B5014300D2EFF6 /* PicoGameAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6B06B01E15B5014300D2EFF6 /* PicoGameAppDelegate.mm */; };
 		6B0EAD7C1738A542004C88CF /* current.tmx in Resources */ = {isa = PBXBuildFile; fileRef = 6B0EAD6E1738A542004C88CF /* current.tmx */; };
 		6B0EAD7D1738A542004C88CF /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 6B0EAD6F1738A542004C88CF /* icon.png */; };
@@ -47,6 +43,13 @@
 		6B110B57165C7A0600202C89 /* PicoGame.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B110B56165C7A0600202C89 /* PicoGame.framework */; };
 		6B110B5C165C7ABF00202C89 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6B110B5A165C7ABF00202C89 /* Default-568h@2x.png */; };
 		6B110B5D165C7ABF00202C89 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 6B110B5B165C7ABF00202C89 /* Default.png */; };
+		6B63131E182237E100CF59B8 /* PPPicoGame.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6B63131D182237E100CF59B8 /* PPPicoGame.mm */; };
+		6B93B73E1821DB5D006F808B /* GameController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B93B73D1821DB5D006F808B /* GameController.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		6B93B7421821DDE3006F808B /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6B93B7411821DDE3006F808B /* Default@2x.png */; };
+		6B93B74E1821E4D8006F808B /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B93B74D1821E4D8006F808B /* AudioToolbox.framework */; };
+		6B93B7501821E4DF006F808B /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B93B74F1821E4DF006F808B /* QuartzCore.framework */; };
+		6B93B7521821E4E5006F808B /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B93B7511821E4E5006F808B /* AVFoundation.framework */; };
+		6B93B7541821E4EB006F808B /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B93B7531821E4EB006F808B /* OpenAL.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -64,10 +67,6 @@
 		6B06B00B15B5012100D2EFF6 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		6B06B00C15B5012100D2EFF6 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		6B06B00D15B5012100D2EFF6 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
-		6B06B00E15B5012100D2EFF6 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/AudioToolbox.framework; sourceTree = DEVELOPER_DIR; };
-		6B06B00F15B5012100D2EFF6 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/QuartzCore.framework; sourceTree = DEVELOPER_DIR; };
-		6B06B01015B5012100D2EFF6 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/AVFoundation.framework; sourceTree = DEVELOPER_DIR; };
-		6B06B01115B5012100D2EFF6 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/OpenAL.framework; sourceTree = DEVELOPER_DIR; };
 		6B06B01D15B5014300D2EFF6 /* PicoGameAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PicoGameAppDelegate.h; sourceTree = "<group>"; };
 		6B06B01E15B5014300D2EFF6 /* PicoGameAppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PicoGameAppDelegate.mm; sourceTree = "<group>"; };
 		6B0EAD6E1738A542004C88CF /* current.tmx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = current.tmx; path = GameData/current.tmx; sourceTree = "<group>"; };
@@ -95,6 +94,14 @@
 		6B110B56165C7A0600202C89 /* PicoGame.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PicoGame.framework; path = Frameworks/PicoGame.framework; sourceTree = "<group>"; };
 		6B110B5A165C7ABF00202C89 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = SOURCE_ROOT; };
 		6B110B5B165C7ABF00202C89 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = SOURCE_ROOT; };
+		6B63131C182237E100CF59B8 /* PPPicoGame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPPicoGame.h; sourceTree = "<group>"; };
+		6B63131D182237E100CF59B8 /* PPPicoGame.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PPPicoGame.mm; sourceTree = "<group>"; };
+		6B93B73D1821DB5D006F808B /* GameController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameController.framework; path = System/Library/Frameworks/GameController.framework; sourceTree = SDKROOT; };
+		6B93B7411821DDE3006F808B /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = SOURCE_ROOT; };
+		6B93B74D1821E4D8006F808B /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		6B93B74F1821E4DF006F808B /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		6B93B7511821E4E5006F808B /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		6B93B7531821E4EB006F808B /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +109,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6B93B7541821E4EB006F808B /* OpenAL.framework in Frameworks */,
+				6B93B7521821E4E5006F808B /* AVFoundation.framework in Frameworks */,
+				6B93B7501821E4DF006F808B /* QuartzCore.framework in Frameworks */,
+				6B93B74E1821E4D8006F808B /* AudioToolbox.framework in Frameworks */,
+				6B93B73E1821DB5D006F808B /* GameController.framework in Frameworks */,
 				6B06AFE415B500D300D2EFF6 /* UIKit.framework in Frameworks */,
 				6B06AFE615B500D300D2EFF6 /* Foundation.framework in Frameworks */,
 				6B06AFE815B500D300D2EFF6 /* CoreGraphics.framework in Frameworks */,
@@ -111,10 +123,6 @@
 				6B06B01515B5012100D2EFF6 /* SystemConfiguration.framework in Frameworks */,
 				6B06B01615B5012100D2EFF6 /* MediaPlayer.framework in Frameworks */,
 				6B06B01715B5012100D2EFF6 /* CoreMotion.framework in Frameworks */,
-				6B06B01815B5012100D2EFF6 /* AudioToolbox.framework in Frameworks */,
-				6B06B01915B5012100D2EFF6 /* QuartzCore.framework in Frameworks */,
-				6B06B01A15B5012100D2EFF6 /* AVFoundation.framework in Frameworks */,
-				6B06B01B15B5012100D2EFF6 /* OpenAL.framework in Frameworks */,
 				6B0F20DD15B9802900588520 /* Box2D.framework in Frameworks */,
 				6B0F20DE15B9802900588520 /* CocosDenshion.framework in Frameworks */,
 				6B0F20DF15B9802900588520 /* FlMML.framework in Frameworks */,
@@ -149,6 +157,11 @@
 		6B06AFE215B500D300D2EFF6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6B93B7531821E4EB006F808B /* OpenAL.framework */,
+				6B93B7511821E4E5006F808B /* AVFoundation.framework */,
+				6B93B74F1821E4DF006F808B /* QuartzCore.framework */,
+				6B93B74D1821E4D8006F808B /* AudioToolbox.framework */,
+				6B93B73D1821DB5D006F808B /* GameController.framework */,
 				6B06AFE315B500D300D2EFF6 /* UIKit.framework */,
 				6B06AFE515B500D300D2EFF6 /* Foundation.framework */,
 				6B06AFE715B500D300D2EFF6 /* CoreGraphics.framework */,
@@ -158,10 +171,6 @@
 				6B06B00B15B5012100D2EFF6 /* SystemConfiguration.framework */,
 				6B06B00C15B5012100D2EFF6 /* MediaPlayer.framework */,
 				6B06B00D15B5012100D2EFF6 /* CoreMotion.framework */,
-				6B06B00E15B5012100D2EFF6 /* AudioToolbox.framework */,
-				6B06B00F15B5012100D2EFF6 /* QuartzCore.framework */,
-				6B06B01015B5012100D2EFF6 /* AVFoundation.framework */,
-				6B06B01115B5012100D2EFF6 /* OpenAL.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -173,6 +182,8 @@
 				6B06B01E15B5014300D2EFF6 /* PicoGameAppDelegate.mm */,
 				6B110B50165C75D600202C89 /* PPRetinaGameViewController.h */,
 				6B110B51165C75D600202C89 /* PPRetinaGameViewController.mm */,
+				6B63131C182237E100CF59B8 /* PPPicoGame.h */,
+				6B63131D182237E100CF59B8 /* PPPicoGame.mm */,
 				6B110B4D165C75A100202C89 /* MainStoryboard.storyboard */,
 				6B06AFEA15B500D300D2EFF6 /* Supporting Files */,
 			);
@@ -184,6 +195,7 @@
 			children = (
 				6B110B5A165C7ABF00202C89 /* Default-568h@2x.png */,
 				6B110B5B165C7ABF00202C89 /* Default.png */,
+				6B93B7411821DDE3006F808B /* Default@2x.png */,
 				6B06AFEB15B500D300D2EFF6 /* PicoGame-Info.plist */,
 				6B06AFEC15B500D300D2EFF6 /* InfoPlist.strings */,
 				6B06AFEF15B500D300D2EFF6 /* main.mm */,
@@ -292,6 +304,7 @@
 				6B0EAD851738A542004C88CF /* PPImageFont.png in Resources */,
 				6B0EAD861738A542004C88CF /* project.plist in Resources */,
 				6B0EAD871738A542004C88CF /* sample.png in Resources */,
+				6B93B7421821DDE3006F808B /* Default@2x.png in Resources */,
 				6B0EAD881738A542004C88CF /* tile.plist in Resources */,
 				6B0EAD891738A542004C88CF /* tileinfo.lua in Resources */,
 			);
@@ -306,6 +319,7 @@
 			files = (
 				6B06AFF015B500D300D2EFF6 /* main.mm in Sources */,
 				6B06B02015B5014300D2EFF6 /* PicoGameAppDelegate.mm in Sources */,
+				6B63131E182237E100CF59B8 /* PPPicoGame.mm in Sources */,
 				6B110B52165C75D600202C89 /* PPRetinaGameViewController.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
