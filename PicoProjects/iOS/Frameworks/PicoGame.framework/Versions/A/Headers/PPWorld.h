@@ -16,6 +16,7 @@
 
 #include "PPStep.h"
 #include "PPGameGeometry.h"
+#include "PPGamePoly.h"
 //#include "PPAnimation.h"
 #include "PPReadError.h"
 
@@ -124,7 +125,7 @@ public:
 	virtual void print(const char* format,va_list args)=0;
 	virtual void color(PPColor color)=0;
 	virtual PPColor color()=0;
-	virtual void blend(unsigned short blendType)=0;
+	virtual void blend(PPGameBlend blendType)=0;
 	virtual PPPoint scale(PPPoint scale=PPPointZero)=0;
 	virtual void flip(int type=0)=0;
 	virtual void rotate(float rotate=0,float cx=0,float cy=0)=0;

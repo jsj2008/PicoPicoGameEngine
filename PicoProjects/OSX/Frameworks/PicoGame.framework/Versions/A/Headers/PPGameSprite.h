@@ -125,7 +125,7 @@ public:
 
 	void init() {
 		_alpha = 1.0;
-		_blendType = PPGameBlend_None;
+		_blendType = PPGameBlend::None();
 		screenWidth = windowSize.width;
 		screenHeight = windowSize.height;
 		b_ptr = 0;
@@ -150,7 +150,7 @@ public:
 	unsigned long flags;
 
 	float _alpha;
-	int _blendType;
+	PPGameBlend _blendType;
 	PPPoint offset;
 	PPPoint origin;
 	PPPoint scale;

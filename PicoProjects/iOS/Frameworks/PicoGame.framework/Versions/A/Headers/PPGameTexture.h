@@ -87,43 +87,6 @@ public:
 	int bindTexture();
 	int unbindTexture();
 
-//	static int ReloadAllTexture();
-
-//	static int ReleaseAllTexture();
-//	static int UnbindAllTexture();
-//	static int UnbindAllTextureForDebug();
-//
-//	static void idle();
-//	static int BindTexture(int textureid);
-//	static int UnbindTexture(int textureid);
-//	static int CountTexture();
-//	static int DeleteTexture(int textureid);
-//	static void DeleteTextureForDevelop(int textureid);
-//	static int LoadTexture(const char* filename,PPGameTextureOption option);
-//	static int LoadTexture(int index);
-//	static int FreeTexture(int index);
-//	static GLuint GetTextureName(int index);
-//	static const char* GetName(int index);
-//	static PPSize GetTextureSize(int index);
-//	static PPSize GetImageSize(int index);
-//	static PPSize PatternSize(int textureid,int group);
-//	static bool checkBind(int texture);
-//	static int SetTexture(PPGameTexture* _texture);
-//	static int SetTextureList(PPGameTextureInfo* texList);
-//	static bool SetTexture(int index,unsigned char* pixel,unsigned long width,unsigned long height,unsigned long bytesPerRow,PPGameTextureOption option);
-//	static unsigned char* loadPNG(unsigned char* pixel,unsigned long* width,unsigned long* height,unsigned long* bytesPerRow);
-//	static void ResetTextureState();
-//	static void DisableTexture();
-//	static void EnableTexture(int texNo=0);
-//	static int GetTextureCount();
-//	static PPGameTexture* GetTexture(int index);
-//	static void SetDefaultTexture(int texture);
-//	static int DefaultTexture();
-
-//	static int defaultTexture;
-//	static PPGameTexture* texture[PPGAME_MAX_TEXTURE];
-	
-//	static void dump();
 private:
 	bool loaded;
 };
@@ -132,13 +95,10 @@ class PPFontManager;
 
 class PPGameTextureManager {
 public:
-//	static PPGameTextureManager* select(PPGameTextureManager* manager);
-
 	PPGameTextureManager();
 	virtual ~PPGameTextureManager();
 
 	PPGameTexture* texture[PPGAME_MAX_TEXTURE];
-//	bool boot;
 	PPFontManager* fontManager;
 
 	int texId;

@@ -14,8 +14,27 @@
 #include "PPGameSprite.h"
 #include <stdio.h>
 
+PPGameBlend::PPGameBlend()// : blend(false),blendSrc(GL_SRC_ALPHA),blendDst(GL_ONE_MINUS_SRC_ALPHA),fog(false)
+{
+}
+
+PPGameBlend::PPGameBlend(bool b,int src,int dst,bool f,PPColor col)// : blend(false),blendSrc(GL_SRC_ALPHA),blendDst(GL_ONE_MINUS_SRC_ALPHA),fog(false)
+{
+  blend=b;
+  blendSrc=src;
+  blendDst=dst;
+  fog=f;
+  fogColor=col;
+}
+
 void PPGameBlend::set(int type)
 {
+//  blend=type.blend;
+//  blendSrc=type.blendSrc;
+//  blendDst=type.blendDst;
+//  fog=type.fog;
+//  fogColor=type.fogColor;
+//#if 0
 	switch (type) {
 	case PPGameBlend_None:
 		blend = true;
@@ -66,6 +85,39 @@ void PPGameBlend::set(int type)
 		fog = false;
 		break;
 	}
+//#endif
+}
+
+PPGameBlend PPGameBlend::None(){
+  return PPGameBlend(true,GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA,false,PPColor::white());
+}
+
+PPGameBlend PPGameBlend::Light(){
+  return PPGameBlend(true,GL_SRC_ALPHA,GL_ONE,false,PPColor::white());
+}
+
+PPGameBlend PPGameBlend::BlackMask(){
+  return PPGameBlend(true,GL_SRC_ALPHA_SATURATE,GL_ONE_MINUS_SRC_ALPHA,false,PPColor::white());
+}
+
+PPGameBlend PPGameBlend::Flash(){
+  return PPGameBlend(true,GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA,true,PPColor::white());
+}
+
+PPGameBlend PPGameBlend::Red(){
+  return PPGameBlend(false,GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA,true,PPColor::red());
+}
+
+PPGameBlend PPGameBlend::NoMask(){
+  return PPGameBlend(true,GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA,false,PPColor::white());
+}
+
+PPGameBlend PPGameBlend::Color(){
+  return PPGameBlend(true,GL_ONE,GL_ONE_MINUS_SRC_ALPHA,false,PPColor::white());
+}
+
+PPGameBlend PPGameBlend::EdgeSmooth(){
+  return PPGameBlend(true,GL_ONE,GL_ONE_MINUS_SRC_ALPHA,false,PPColor::white());
 }
 
 #pragma mark -
@@ -149,6 +201,10 @@ void PPGamePoly::box(float x1,float y1,float x2,float y2)
 	pos.y = y1;
 	size.x = x2;
 	size.y = y2;
+}
+
+void PPGamePoly::setBlend(int type)
+{
 }
 
 /*-----------------------------------------------------------------------------------------------

@@ -77,7 +77,6 @@ void PPObject::init(PPWorld* world)
 	poly.init();
 	origin = PPPointZero;
 	if (world == NULL) {
-//		display(PPWorld::sharedWorld(),(PP_DRAW_SELECTOR)&PPWorld::drawPattern);
 	} else {
 		display(world,(PP_DRAW_SELECTOR)&PPWorld::drawPattern);
 	}
@@ -109,17 +108,14 @@ bool PPObject::touchIdle(bool touch)
 {
 	if (touch) {
 		setTouch(false);
-//	if (flags & PPOBJECT_TOUCH_IDLE) {
-			switch (touchStep) {
-			case 0:
-				touchStep1();
-				break;
-			case 1:
-				touchStep2();
-				break;
-			}
-//	}
-//	flags &= (~PPOBJECT_TOUCH_IDLE);
+    switch (touchStep) {
+    case 0:
+      touchStep1();
+      break;
+    case 1:
+      touchStep2();
+      break;
+    }
 	}
 	return touch;
 }
@@ -201,7 +197,6 @@ void PPObject::setTouch(bool flag)
 
 void PPObject::display(PPWorld* _target,PP_DRAW_SELECTOR _selector,PPAnimationData* _anime)
 {
-//	animation.set(_anime);
 	target = _target;
 	selector = _selector;
 }
@@ -214,14 +209,6 @@ void PPObject::display(PPWorld* _target,PP_DRAW_SELECTOR _selector)
 
 void PPObject::setAnime(const char* anime,const char* name)
 {
-//	PPAnimationMap* a=PPAnimationMap::getAnimationMap(anime);
-//	int offset = 0;
-//	if (animation.anime()) offset = animation.anime()->offset(name);
-//	if (animation.anime() != a || animation.offset() != offset) {
-//		animation.setAnime(a);
-//		offset = animation.anime()->offset(name);
-//		animation.setOffset(offset);
-//	}
 }
 
 void PPObject::resetAnime()
@@ -231,7 +218,6 @@ void PPObject::resetAnime()
 
 void PPObject::setAnimeSize(const char* anime,const char* name)
 {
-//	animation.setSize(PPAnimationMap::getAnimationMap(anime)->size(name));
 }
 
 PPSize PPObject::animeSize()
@@ -292,10 +278,6 @@ PPPoint PPObject::convertToScreen(PPPoint _pos)
 	if (parent() != NULL) {
 		return parent()->convertToScreen()+pos;
 	}
-//	if (isViewPort()) {
-//		PPPoint t = _viewPortRect().pos();
-//		return autoLayout(pos+_pos-t);
-//	}
 	return autoLayout(pos+_pos);
 }
 
@@ -391,8 +373,6 @@ PPSize PPObject::tileSize()
 static int funcInit(lua_State* L)
 {
 	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
-//	PPLuaScript* s = PPLuaScript::SharedScript(m->world(),L);
-//	PPObject* m = (PPObject*)s->userData(L);
 	if (m==NULL) {
 		return luaL_argerror(L,1,"invalid argument.");
 	}
@@ -403,8 +383,6 @@ static int funcInit(lua_State* L)
 static int funcStart(lua_State* L)
 {
 	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
-//	PPLuaScript* s = PPLuaScript::sharedScript();
-//	PPObject* m = (PPObject*)s->userData(L);
 	if (m==NULL) {
 		return luaL_argerror(L,1,"invalid argument.");
 	}
@@ -415,8 +393,6 @@ static int funcStart(lua_State* L)
 static int funcShow(lua_State* L)
 {
 	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
-//	PPLuaScript* s = PPLuaScript::sharedScript();
-//	PPObject* m = (PPObject*)s->userData(L);
 	if (m==NULL) {
 		return luaL_argerror(L,1,"invalid argument.");
 	}
@@ -427,8 +403,6 @@ static int funcShow(lua_State* L)
 static int funcHide(lua_State* L)
 {
 	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
-//	PPLuaScript* s = PPLuaScript::sharedScript();
-//	PPObject* m = (PPObject*)s->userData(L);
 	if (m==NULL) {
 		return luaL_argerror(L,1,"invalid argument.");
 	}
@@ -439,8 +413,6 @@ static int funcHide(lua_State* L)
 static int funcIdle(lua_State* L)
 {
 	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
-//	PPLuaScript* s = PPLuaScript::sharedScript();
-//	PPObject* m = (PPObject*)s->userData(L);
 	if (m==NULL) {
 		return luaL_argerror(L,1,"invalid argument.");
 	}
@@ -448,35 +420,9 @@ static int funcIdle(lua_State* L)
 	return 0;
 }
 
-/*
-ppsprite.layout=function(self,auto,cx,cy,rx,ry,rw,rh)
-  self.autolayout=auto
-  self.centerx=cx
-  self.centery=cy
-  if rx==nil then
-    self.layoutarea=nil
-  else 
-    self.layoutarea=pprect(rx,ry,rw,rh)
-  end
-end
-
-ppsprite.draw=function(self)
-  local p=self:position()
-  if self.autolayout then
-	local fb=self:size()
-	fb:position(p)
-	self:position(ppgraph:layout(fb,self.centerx,self.centery,self.layoutarea))
-  end
-  self:_draw()
-  self:position(p)
-end
-*/
-
 static int funcLayout(lua_State* L)
 {
-//	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPObject* m = (PPObject*)s->userData(L);
 	if (lua_gettop(L)>=4) {
 		bool autolayout;
 		bool centerx;
@@ -507,7 +453,6 @@ static int funcDraw(lua_State* L)
 {
 	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPObject* m = (PPObject*)s->userData(L);
 	QBGame* g = (QBGame*)m->world();//s->userdata;
 	if (m==NULL) {
 		return luaL_argerror(L,1,"invalid argument.");
@@ -549,7 +494,6 @@ static int funcIsAlive(lua_State* L)
 {
 	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPObject* m = (PPObject*)s->userData(L);
 	if (m==NULL) {
 		return luaL_argerror(L,1,"invalid argument.");
 	}
@@ -560,8 +504,6 @@ static int funcIsAlive(lua_State* L)
 static int funcIsVisible(lua_State* L)
 {
 	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
-//	PPLuaScript* s = PPLuaScript::sharedScript();
-//	PPObject* m = (PPObject*)s->userData(L);
 	if (m==NULL) {
 		return luaL_argerror(L,1,"invalid argument.");
 	}
@@ -569,23 +511,10 @@ static int funcIsVisible(lua_State* L)
 	return 1;
 }
 
-//static int funcPosition(lua_State* L)
-//{
-//	PPLuaScript* s = PPLuaScript::sharedScript(L);
-//	PPObject* m = (PPObject*)s->userdata;
-//	if (s->argCount > 1) {
-//		m->pos = PPPoint(s->number(0),s->number(1));
-//	}
-//	lua_pushnumber(L,m->pos.x);
-//	lua_pushnumber(L,m->pos.y);
-//	return 2;
-//}
-
 static int funcPosition(lua_State* L)
 {
 	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPObject* m = (PPObject*)s->userdata;
 	if (m==NULL) {
 		return luaL_argerror(L,1,"invalid argument.");
 	}
@@ -613,7 +542,6 @@ static int funcColor(lua_State* L)
 {
 	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPObject* m = (PPObject*)s->userdata;
 	if (m==NULL) {
 		return luaL_argerror(L,1,"invalid argument.");
 	}
@@ -647,7 +575,6 @@ static int funcSize(lua_State* L)
 {
 	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPObject* m = (PPObject*)s->userData(L);
 	if (m==NULL) {
 		return luaL_argerror(L,1,"invalid argument.");
 	}
@@ -658,7 +585,6 @@ static int funcTileSize(lua_State* L)
 {
 	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPObject* m = (PPObject*)s->userdata;
 	if (m==NULL) {
 		return luaL_argerror(L,1,"invalid argument.");
 	}
@@ -683,7 +609,6 @@ static int funcTileInfo(lua_State* L)
 {
 	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPObject* m = (PPObject*)s->userdata;
 	if (m==NULL) {
 		return luaL_argerror(L,1,"invalid argument.");
 	}
@@ -730,7 +655,6 @@ static int funcTileStride(lua_State* L)
 {
 	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPObject* m = (PPObject*)s->userdata;
 	if (m==NULL) {
 		return luaL_argerror(L,1,"invalid argument.");
 	}
@@ -755,7 +679,6 @@ static int funcTileOffset(lua_State* L)
 {
 	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPObject* m = (PPObject*)s->userdata;
 	if (m==NULL) {
 		return luaL_argerror(L,1,"invalid argument.");
 	}
@@ -776,54 +699,10 @@ static int funcTileOffset(lua_State* L)
 	return s->returnPoint(L,m->poly.texOffset);
 }
 
-//static int funcXPosition(lua_State* L)
-//{
-//	PPLuaScript* s = PPLuaScript::sharedScript(L);
-//	PPObject* m = (PPObject*)s->userdata;
-//	if (s->argCount > 0) {
-//		m->pos = PPPoint(s->number(0),m->pos.y);
-//	}
-//	lua_pushnumber(L,m->pos.x);
-//	return 1;
-//}
-
-//static int funcYPosition(lua_State* L)
-//{
-//	PPLuaScript* s = PPLuaScript::sharedScript(L);
-//	PPObject* m = (PPObject*)s->userdata;
-//	if (s->argCount > 0) {
-//		m->pos = PPPoint(m->pos.x,s->number(0));
-//	}
-//	lua_pushnumber(L,m->pos.y);
-//	return 1;
-//}
-
-//static int funcPosition(lua_State* L)
-//{
-//	PPLuaScript* s = PPLuaScript::sharedScript(L);
-//	PPObject* m = (PPObject*)s->userdata;
-//	lua_pushinteger(L,m->pos.x);
-//	lua_pushinteger(L,m->pos.y);
-//	return 2;
-//}
-
-//static PPPoint calcPoint(PPPoint pos,PPPoint scale,PPPoint origin,float rotate)
-//{
-//	pos = pos - origin;
-//	pos = pos * scale;
-//	PPPoint p;
-//	p.x = pos.x*cos(rotate)-pos.y*sin(rotate);
-//	p.y = pos.x*sin(rotate)+pos.y*cos(rotate);
-//	pos = p;
-//	pos = pos + origin;
-//	return pos;
-//}
-
 static PPRect calcAABB(lua_State* L)
 {
 	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPObject* m = (PPObject*)s->userData(L);
 	QBGame* g = (QBGame*)m->world();//s->userdata;
 	
 	int top=lua_gettop(L);
@@ -837,7 +716,6 @@ static PPRect calcAABB(lua_State* L)
 	
 	lua_getfield(L,1,"autolayout");
 	if (lua_toboolean(L,-1)) {
-//		PPPoint op = m->pos;
 		bool centerx;
 		bool centery;
 		PPRect layoutarea;
@@ -855,26 +733,15 @@ static PPRect calcAABB(lua_State* L)
 		if (centery) flag |= PP_CENTER_Y;
 		p = g->layout(m->size(),m->pos,flag,layoutarea);
 	} else {
-//		m->draw();
-	}	
-
-//	lua_getfield(L, 1, "x");
-//	m->pos.x = lua_tonumber(L, -1);
-//	lua_getfield(L, 1, "y");
-//	m->pos.y = lua_tonumber(L, -1);
-//	PPPoint p = m->autoLayout(m->pos);
+	}
 
 	m->poly.pos = p;
 	m->poly.origin = p+m->origin;
-
-//printf("%f,%f\n",p.x,p.y);
 
 	PPPoint delta=PPPointZero;
 	PPPoint o[4];
 	PPRect r(0,0,m->poly.texTileSize.width,m->poly.texTileSize.height);
 	m->world()->projector->CalcPolyPoint(&m->poly,&r,&delta,o);
-
-//printf("origin %f,scale %f,size %f\n",m->poly.origin.x,m->poly.scale.x,m->poly.size.x);
 
 	float minx,miny,maxx,maxy;
 	minx = o[0].x;
@@ -897,7 +764,6 @@ static int funcAABB(lua_State* L)
 {
 	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPObject* m = (PPObject*)s->userData(L);
 	if (m==NULL) {
 		return luaL_argerror(L,1,"invalid argument.");
 	}
@@ -905,40 +771,10 @@ static int funcAABB(lua_State* L)
 	return s->returnRect(L,calcAABB(L));
 }
 
-//static int funcLayout(lua_State* L)
-//{
-//	PPLuaScript* s = PPLuaScript::sharedScript(L);
-//	PPObject* m = (PPObject*)s->userdata;
-//	lua_getfield(L, 1, "x");
-//	m->pos.x = lua_tonumber(L, -1);
-//	lua_getfield(L, 1, "y");
-//	m->pos.y = lua_tonumber(L, -1);
-//	unsigned long layout = 0;
-//	if (s->argCount > 0) {
-//		if (s->boolean(0)) {
-//			layout |= PP_AUTO_LAYOUT;
-//		}
-//		if (s->argCount > 1) {
-//			if (s->boolean(1)) {
-//				layout |= PP_CENTER_X;
-//			}
-//		}
-//		if (s->argCount > 2) {
-//			if (s->boolean(2)) {
-//				layout |= PP_CENTER_Y;
-//			}
-//		}
-//		m->setLayout(layout);
-//	}
-//	lua_pushinteger(L,m->layout());
-//	return 1;
-//}
-
 static int funcTexture(lua_State* L)
 {
 	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPObject* m = (PPObject*)s->userdata;
 	if (m==NULL) {
 		return luaL_argerror(L,1,"invalid argument.");
 	}
@@ -969,20 +805,10 @@ static int funcTexture(lua_State* L)
 	return 1;
 }
 
-//static int funcSetTexture(lua_State* L)
-//{
-//	PPLuaScript* s = PPLuaScript::sharedScript(L);
-//	PPObject* m = (PPObject*)s->userdata;
-//	m->texture = atoi(s->args(0));
-////	m->display(PPWorld::sharedWorld(),(PP_DRAW_SELECTOR)&PPWorld::drawPattern);
-//	return 0;
-//}
-
 static int funcTileIndex(lua_State* L)
 {
 	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPObject* m = (PPObject*)s->userdata;
 	if (m==NULL) {
 		return luaL_argerror(L,1,"invalid argument.");
 	}
@@ -997,8 +823,6 @@ static int funcTileIndex(lua_State* L)
 static int funcEnable(lua_State* L)
 {
 	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
-//	PPLuaScript* s = PPLuaScript::SharedScript(m->world(),L);
-//	PPObject* m = (PPObject*)s->userData(L);
 	if (m==NULL) {
 		return luaL_argerror(L,1,"invalid argument.");
 	}
@@ -1009,8 +833,6 @@ static int funcEnable(lua_State* L)
 static int funcDisable(lua_State* L)
 {
 	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
-//	PPLuaScript* s = PPLuaScript::SharedScript(m->world(),L);
-//	PPObject* m = (PPObject*)s->userData(L);
 	if (m==NULL) {
 		return luaL_argerror(L,1,"invalid argument.");
 	}
@@ -1018,19 +840,10 @@ static int funcDisable(lua_State* L)
 	return 0;
 }
 
-//static int funcAnimation(lua_State* L)
-//{
-//	PPLuaScript* s = PPLuaScript::sharedScript(L);
-//	PPObject* m = (PPObject*)s->userdata;
-////	m->display(PPAnimationMap::getAnimationMap(s->args(0))->find(s->args(1),s->args(2)));
-//	return 0;
-//}
-
 static int funcMove(lua_State* L)
 {
 	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPObject* m = (PPObject*)s->userdata;
 	if (m==NULL) {
 		return luaL_argerror(L,1,"invalid argument.");
 	}
@@ -1057,7 +870,6 @@ static int funcRotate(lua_State* L)
 {
 	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPObject* m = (PPObject*)s->userdata;
 	if (m==NULL) {
 		return luaL_argerror(L,1,"invalid argument.");
 	}
@@ -1071,15 +883,7 @@ static int funcRotate(lua_State* L)
 		}
 		return 0;
 	}
-//	if (s->argCount > 1) {
-//		m->__rotateCenter.x = s->number(1);
-//	}
-//	if (s->argCount > 2) {
-//		m->__rotateCenter.y = s->number(2);
-//	}
 	lua_pushnumber(L,m->poly.rotate);
-//	lua_pushnumber(L,m->__rotateCenter.x);
-//	lua_pushnumber(L,m->__rotateCenter.y);
 	return 1;
 }
 
@@ -1087,7 +891,6 @@ static int funcOrigin(lua_State* L)
 {
 	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPObject* m = (PPObject*)s->userdata;
 	if (m==NULL) {
 		return luaL_argerror(L,1,"invalid argument.");
 	}
@@ -1113,7 +916,6 @@ static int funcFlip(lua_State* L)
 {
 	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPObject* m = (PPObject*)s->userdata;
 	if (m==NULL) {
 		return luaL_argerror(L,1,"invalid argument.");
 	}
@@ -1142,7 +944,6 @@ static int funcScale(lua_State* L)
 {
 	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPObject* m = (PPObject*)s->userdata;
 	if (m==NULL) {
 		return luaL_argerror(L,1,"invalid argument.");
 	}
@@ -1160,22 +961,10 @@ static int funcScale(lua_State* L)
 	return s->returnPoint(L,m->poly.scale);
 }
 
-//static int funcScale(lua_State* L)
-//{
-//	PPLuaScript* s = PPLuaScript::sharedScript(L);
-//	PPObject* m = (PPObject*)s->userdata;
-//	if (s->argCount > 0) {
-//		m->__scale = s->number(0);
-//	}
-//	lua_pushnumber(L,m->__scale);
-//	return 1;
-//}
-
 static int funcAlpha(lua_State* L)
 {
 	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPObject* m = (PPObject*)s->userdata;
 	if (m==NULL) {
 		return luaL_argerror(L,1,"invalid argument.");
 	}
@@ -1187,20 +976,9 @@ static int funcAlpha(lua_State* L)
 	return 1;
 }
 
-//if s==nil then return o:tile() end
-//if o.animationTime==nil then o.animationTime=1 end
-//o.animationTime = o.animationTime+(#self.tile[i]/60)/s
-//if (o.animationTime <= 1) then o.time=1 end
-//if (o.animationTime >= #self.tile[i]+1) then o.animationTime = 1 end
-//local t = self.tile[i][math.floor(o.animationTime)]
-//o:tile(t)
-//return true
-
 static int funcLoopAnime(lua_State* L)
 {
 	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
-//	PPLuaScript* s = PPLuaScript::SharedScript(m->world(),L);
-//	PPObject* m = (PPObject*)s->userdata;
 	if (m==NULL) {
 		return luaL_argerror(L,1,"invalid argument.");
 	}
@@ -1233,8 +1011,6 @@ static int funcLoopAnime(lua_State* L)
 static int funcPlayAnime(lua_State* L)
 {
 	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
-//	PPLuaScript* s = PPLuaScript::SharedScript(m->world(),L);
-//	PPObject* m = (PPObject*)s->userdata;
 	if (m==NULL) {
 		return luaL_argerror(L,1,"invalid argument.");
 	}
@@ -1271,122 +1047,10 @@ static int funcPlayAnime(lua_State* L)
 	return 1;
 }
 
-//static int funcSetAnimation(lua_State* L)
-//{
-//	PPLuaScript* s = PPLuaScript::sharedScript(L);
-//	PPObject* m = (PPObject*)s->userdata;
-//	m->setAnime(s->args(0),s->args(1));
-//	if (s->argCount > 2) {
-//		m->setAnimeDuration(atof(s->args(2)));
-//	}
-//	return 0;
-//}
-
-//static int funcResetAnimation(lua_State* L)
-//{
-//	PPLuaScript* s = PPLuaScript::sharedScript(L);
-//	PPObject* m = (PPObject*)s->userdata;
-//	m->resetAnime();
-//	return 0;
-//}
-
-//static int funcSetAnimationSize(lua_State* L)
-//{
-//	PPLuaScript* s = PPLuaScript::sharedScript(L);
-//	PPObject* m = (PPObject*)s->userdata;
-//	m->setAnimeSize(PPSize(atoi(s->args(0)),atoi(s->args(1))));
-//	return 0;
-//}
-
-//static int funcStartAnimation(lua_State* L)
-//{
-//	PPLuaScript* s = PPLuaScript::sharedScript(L);
-//	PPObject* m = (PPObject*)s->userdata;
-//	if (s->argCount > 1) {
-//		m->setAnime(s->args(0),s->args(1));
-//		if (s->argCount > 2) m->setAnimeDuration(atof(s->args(2)));
-//		if (s->argCount > 3) m->startAnime(atoi(s->args(3)));
-//	} else
-//	if (s->argCount > 0) {
-//		m->startAnime(atoi(s->args(0)));
-//	} else {
-//		m->startAnime();
-//	}
-//	return 0;
-//}
-
-//static int funcStopAnimation(lua_State* L)
-//{
-//	PPLuaScript* s = PPLuaScript::sharedScript(L);
-//	PPObject* m = (PPObject*)s->userdata;
-//	m->startAnime(0);
-//	return 0;
-//}
-
-//static int funcAnimation(lua_State* L)
-//{
-//	PPLuaScript* s = PPLuaScript::sharedScript(L);
-//	PPObject* m = (PPObject*)s->userdata;
-//	lua_pushinteger(L,m->animation.loop);
-//	return 1;
-//}
-
-//static int funcSetAnimationFrame(lua_State* L)
-//{
-//	PPLuaScript* s = PPLuaScript::sharedScript(L);
-//	PPObject* m = (PPObject*)s->userdata;
-//	if (s->argCount > 0) {
-//		m->setAnimeFrame(atof(s->args(0)));
-//	} else {
-//		m->setAnimeFrame();
-//	}
-//	return 0;
-//}
-
-//static int funcHitCheck(lua_State *L)
-//{
-//	PPLuaScript* s = PPLuaScript::sharedScript(L);
-//	PPObject* m = (PPObject*)s->userdata;
-//	bool hit=false;
-//	bool ret=false;
-//
-//	lua_getfield(L, 1, "hit");
-//	hit = lua_toboolean(L, -1);
-//	
-//	if (s->isTable(L,0)) {
-//		if (luaL_len(L,2) > 0) {
-//			
-//		} else {
-//			if (hit) {
-//				hit = false;
-//				ret = true;
-//			}
-//		}
-//	}
-//
-//	lua_pushboolean(L,hit);
-//	lua_setfield(L, 1, "hit");
-//
-//	lua_pushboolean(L,ret);
-//
-//	return 1;
-//}
-
-/*
-ppobject.contain = function(self,v)
-	return self:aabb():contain(v)
-end
-ppobject.intersect = function(self,r)
-	return self:aabb():intersect(r)
-end
-*/
-
 static int funcContain(lua_State *L)
 {
 	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPLuaScript* s = PPLuaScript::sharedScript();
-//	PPObject* m = (PPObject*)s->userData(L);
 	if (m==NULL) {
 		return luaL_argerror(L,1,"invalid argument.");
 	}
@@ -1401,7 +1065,6 @@ static int funcIntersect(lua_State *L)
 {
 	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPObject* m = (PPObject*)s->userData(L);
 	if (m==NULL) {
 		return luaL_argerror(L,1,"invalid argument.");
 	}
@@ -1411,33 +1074,6 @@ static int funcIntersect(lua_State *L)
 	lua_pushboolean(L,r);
 	return 1;
 }
-
-/*
-function ppsprite:drag(t,r)
-  local s=self
-  if #t>0 then
-    if s.o==nil then
-	  s.o=t[1]-s:pos()
-	else
-	  s:pos(t[1]-s.o)
-	  if r~=nil then
-	    if s.x<r.x then s.o.x=s.o.x+s.x-r.x;s.x=r.x end
-	    if s.y<r.y then s.o.y=s.o.y+s.y-r.y;s.y=r.y end
-		if s.x>r.x+r.width-s:size().width then
-		  s.o.x=s.o.x+s.x-(r.x+r.width-s:size().width)
-		  s.x=r.x+r.width-s:size().width
-		end
-		if s.y>r.y+r.height-s:size().height then
-		  s.o.y=s.o.y+s.y-(r.y+r.height-s:size().height)
-		  s.y=r.y+r.height-s:size().height
-		end
-	  end
-	end
-  else
-    s.o=nil
-  end
-end
-*/
 
 static lua_Number getNumber(lua_State* L,int stack,int index,const char* field)
 {
@@ -1486,7 +1122,6 @@ static int funcDrag(lua_State *L)
 	int top=lua_gettop(L);
 	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPObject* m = (PPObject*)s->userData(L);
 	if (m==NULL) {
 		return luaL_argerror(L,1,"invalid argument.");
 	}
@@ -1510,46 +1145,11 @@ static int funcDrag(lua_State *L)
       
 			switch (m->dragStep) {
 			case 0:
-//				{
-//					int top=lua_gettop(L);
-//					for (int i=1;i<=n;i++) {
-//						lua_rawgeti(L,2,i);
-//						int top2=lua_gettop(L);
-//						dragPos.x = getNumber(L,-1,1,"x");
-//						lua_settop(L,top2);
-//						dragPos.y = getNumber(L,-1,2,"y");
-//						lua_settop(L,top);
-//						break;
-//					}
-//				}
 				dragPos = nearPos(L,n,m);
 				m->dragPos=dragPos-m->pos;
 				m->dragStep = 1;
 				break;
 			case 1:
-//				{
-//					int top=lua_gettop(L);
-//					float len=-1;
-//					for (int i=1;i<=n;i++) {
-//						PPPoint p;
-//						lua_rawgeti(L,2,i);
-//						int top2=lua_gettop(L);
-//						p.x = getNumber(L,-1,1,"x");
-//						lua_settop(L,top2);
-//						p.y = getNumber(L,-1,2,"y");
-//						lua_settop(L,top);
-//						if (len < 0) {
-//							len = dragPos.length(p);
-//							dragPos = p;
-//						} else {
-//							float l=dragPos.length(p);
-//							if (l < len) {
-//								len = l;
-//								dragPos = p;
-//							}
-//						}
-//					}
-//				}
 				dragPos = nearPos(L,n,m);
 				if (m->pos.length(dragPos-m->dragPos) < 128) {
           PPPoint op = m->pos;
@@ -1563,8 +1163,6 @@ static int funcDrag(lua_State *L)
             
             dragArea.x += dx;
             dragArea.y += dy;
-//            dragArea.width += (aabb.width-dx);
-//            dragArea.height += (aabb.height-dy);
 
 						PPRect r=dragArea;
 
@@ -1582,9 +1180,6 @@ static int funcDrag(lua_State *L)
 						  o.y=o.y+s.y-(r.y+r.height-aabb.height);
 						  s.y=r.y+r.height-aabb.height;
 						}
-
-//            s.x -= dx;
-//            s.y -= dy;
 
 						m->pos=s;
 						m->dragPos = o;
@@ -1604,6 +1199,72 @@ static int funcDrag(lua_State *L)
 	}
 	
 	return 0;
+}
+
+static int funcBlend(lua_State *L)
+{
+	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
+	if (m==NULL) {
+		return luaL_argerror(L,1,"invalid argument.");
+	}
+
+	if (s->argCount > 0) {
+		m->poly.blend.fog = lua_toboolean(L,2);
+    if (s->argCount > 1) {
+      m->poly.blend.blendSrc = (int)lua_tointeger(L,3);
+      if (s->argCount > 2) {
+        m->poly.blend.blendDst = (int)lua_tointeger(L,4);
+      }
+    }
+    return 0;
+  }
+
+  lua_pushboolean(L,m->poly.blend.blend);
+	lua_pushnumber(L,m->poly.blend.blendSrc);
+	lua_pushnumber(L,m->poly.blend.blendDst);
+	return 3;
+}
+
+static int funcFog(lua_State *L)
+{
+	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
+	if (m==NULL) {
+		return luaL_argerror(L,1,"invalid argument.");
+	}
+
+	if (s->argCount > 0) {
+		m->poly.blend.fog = lua_toboolean(L,2);
+    if (s->argCount > 1) {
+      if (s->isTable(L,1)) {
+        m->poly.blend.fogColor.r = s->tableInteger(L,1,1,"r",m->poly.color.r);
+        m->poly.blend.fogColor.g = s->tableInteger(L,1,2,"g",m->poly.color.g);
+        m->poly.blend.fogColor.b = s->tableInteger(L,1,3,"b",m->poly.color.b);
+        m->poly.blend.fogColor.a = s->tableInteger(L,1,4,"a",m->poly.color.a);
+      } else {
+        m->poly.blend.fogColor.r = s->integer(1);
+        if (s->argCount > 1) m->poly.blend.fogColor.g = s->integer(2);
+        if (s->argCount > 2) m->poly.blend.fogColor.b = s->integer(3);
+        if (s->argCount > 3) m->poly.blend.fogColor.a = s->integer(4);
+      }
+    }
+		return 0;
+	}
+  
+  lua_pushboolean(L,m->poly.blend.fog);
+  
+	lua_createtable(L, 0, 4);
+	lua_pushinteger(L,m->poly.blend.fogColor.r);
+	lua_setfield(L, -2, "r");
+	lua_pushinteger(L,m->poly.blend.fogColor.g);
+	lua_setfield(L, -2, "g");
+	lua_pushinteger(L,m->poly.blend.fogColor.b);
+	lua_setfield(L, -2, "b");
+	lua_pushinteger(L,m->poly.blend.fogColor.a);
+	lua_setfield(L, -2, "a");
+
+  return 2;
 }
 
 static int funcDelete(lua_State *L)
@@ -1699,6 +1360,9 @@ PPObject* PPObject::registClass(PPLuaScript* script,const char* name,PPObject* o
 		script->addBoolValue("autolayout",false);
 		script->addBoolValue("centerx",false);
 		script->addBoolValue("centery",false);
+  
+    script->addCommand("blend",funcBlend);
+    script->addCommand("fog",funcFog);
 //		script->addCommand("hitCheck",funcHitCheck);
 
 //		lua_pushnumber(script->L,0);

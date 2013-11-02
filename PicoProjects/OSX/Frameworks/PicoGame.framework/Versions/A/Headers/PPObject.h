@@ -301,7 +301,7 @@ public:
 	virtual PPColor color() {
 		return world()->color();
 	}
-	virtual void blend(unsigned short blendType) {
+	virtual void blend(PPGameBlend blendType) {
 		return world()->blend(blendType);
 	}
 	virtual PPPoint scale(PPPoint scale=PPPointZero) {

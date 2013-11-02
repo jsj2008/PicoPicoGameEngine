@@ -199,7 +199,7 @@ public:
 		//Flip(type);
 		poly.flags = type;
 	}
-	virtual void blend(unsigned short blendType) {
+	virtual void blend(PPGameBlend blendType) {
 		blend_value = blendType;
 	}
 	virtual void fill(PPRect r) {
@@ -429,7 +429,7 @@ public:
 //	PPPoint rotate_center;
 //	float rotate_center_x_value;
 //	float rotate_center_y_value;
-	unsigned short blend_value;
+	PPGameBlend blend_value;
 	
 //	std::string* __nextStepFunc;
 

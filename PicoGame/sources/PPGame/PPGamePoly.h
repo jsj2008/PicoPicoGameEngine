@@ -25,6 +25,9 @@
 
 class PPGameBlend {
 public:
+  PPGameBlend();
+  PPGameBlend(bool b,int src,int dst,bool f,PPColor col);
+
 	bool blend;
 	int blendSrc;
 	int blendDst;
@@ -41,6 +44,15 @@ public:
 		if (fogColor != b.fogColor) return false;
 		return true;
 	};
+  
+  static PPGameBlend None();
+	static PPGameBlend Light();
+	static PPGameBlend BlackMask();
+	static PPGameBlend Flash();
+	static PPGameBlend Red();
+	static PPGameBlend NoMask();
+	static PPGameBlend Color();
+	static PPGameBlend EdgeSmooth();
 };
 
 class PPGamePoly {

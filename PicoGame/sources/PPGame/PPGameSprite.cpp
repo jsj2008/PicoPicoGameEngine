@@ -652,7 +652,6 @@ void PPGameSprite::Clear()
 
 int PPGameSprite::BlendOn(float alpha,int type)
 {
-#if 1
 	PPGameBlend* b = &blendTable[type];
 	if (b->blend) {
 		glEnable(GL_BLEND);
@@ -680,81 +679,6 @@ int PPGameSprite::BlendOn(float alpha,int type)
 	} else {
 		glDisable(GL_FOG);
 	}
-#else
-	_alpha = alpha/255.0;
-
-	switch (type) {
-	case PPGameBlend_NoMask:
-		glDisable(GL_BLEND);
-		glDisable(GL_FOG);
-		break;
-	case PPGameBlend_EdgeSmooth:
-		glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-		glEnable(GL_BLEND);
-		glDisable(GL_FOG);
-		break;
-	case PPGameBlend_None:
-		glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-		glEnable(GL_BLEND);
-		glDisable(GL_FOG);
-		break;
-	case PPGameBlend_Color:
-		glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-		glEnable(GL_BLEND);
-		glDisable(GL_FOG);
-		break;
-	case PPGameBlend_Light:
-		glBlendFunc(GL_SRC_ALPHA,GL_ONE);
-		glEnable(GL_BLEND);
-		glDisable(GL_FOG);
-		break;
-	case PPGameBlend_Flash:
-		glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-		glEnable(GL_BLEND);
-		glEnable(GL_FOG);
-#if TARGET_OS_IPHONE
-		glFogx(GL_FOG_MODE,GL_LINEAR);
-#else
-#ifdef _ANDROID
-		glFogx(GL_FOG_MODE,GL_LINEAR);
-#else
-		glFogi(GL_FOG_MODE,GL_LINEAR);
-#endif
-#endif
-		glFogf(GL_FOG_START, -1.0f);
-		glFogf(GL_FOG_END,0.0f);
-		{
-			GLfloat fogc[]={1.0f,1.0f,1.0f,1.0f};
-			glFogfv(GL_FOG_COLOR,fogc);
-		}
-		break;
-	case PPGameBlend_Red:
-		glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-		glEnable(GL_BLEND);
-		glEnable(GL_FOG);
-#if TARGET_OS_IPHONE
-		glFogx(GL_FOG_MODE,GL_LINEAR);
-#else
-#ifdef _ANDROID
-		glFogx(GL_FOG_MODE,GL_LINEAR);
-#else
-		glFogi(GL_FOG_MODE,GL_LINEAR);
-#endif
-#endif
-		glFogf(GL_FOG_START, -1.0f);
-		glFogf(GL_FOG_END,0.0f);
-		{
-			GLfloat fogc[]={1.0f,0.0f,0.0f,1.0f};
-			glFogfv(GL_FOG_COLOR,fogc);
-		}
-		break;
-	case PPGameBlend_BlackMask:
-		glBlendFunc(GL_SRC_ALPHA_SATURATE,GL_ONE_MINUS_SRC_ALPHA);
-		glEnable(GL_BLEND);
-		glDisable(GL_FOG);
-		break;
-	}
-#endif	
 	return 0;
 }
 
