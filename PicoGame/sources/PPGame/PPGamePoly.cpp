@@ -14,11 +14,11 @@
 #include "PPGameSprite.h"
 #include <stdio.h>
 
-PPGameBlend::PPGameBlend()// : blend(false),blendSrc(GL_SRC_ALPHA),blendDst(GL_ONE_MINUS_SRC_ALPHA),fog(false)
+PPGameBlend::PPGameBlend() : blend(false),blendSrc(GL_SRC_ALPHA),blendDst(GL_ONE_MINUS_SRC_ALPHA),fog(false)
 {
 }
 
-PPGameBlend::PPGameBlend(bool b,int src,int dst,bool f,PPColor col)// : blend(false),blendSrc(GL_SRC_ALPHA),blendDst(GL_ONE_MINUS_SRC_ALPHA),fog(false)
+PPGameBlend::PPGameBlend(bool b,int src,int dst,bool f,PPColor col) : blend(false),blendSrc(GL_SRC_ALPHA),blendDst(GL_ONE_MINUS_SRC_ALPHA),fog(false)
 {
   blend=b;
   blendSrc=src;

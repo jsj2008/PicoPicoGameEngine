@@ -17,7 +17,6 @@
 #include "MOscPicoWave.h"
 #include "MOscGbLNoise.h"
 #include "MOscGbSNoise.h"
-#include "Math.h"
 #include "MFormant.h"
 #include "MWarning.h"
 

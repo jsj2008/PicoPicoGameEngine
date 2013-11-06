@@ -1210,7 +1210,7 @@ static int funcBlend(lua_State *L)
 	}
 
 	if (s->argCount > 0) {
-		m->poly.blend.fog = lua_toboolean(L,2);
+		m->poly.blend.blend = lua_toboolean(L,2);
     if (s->argCount > 1) {
       m->poly.blend.blendSrc = (int)lua_tointeger(L,3);
       if (s->argCount > 2) {

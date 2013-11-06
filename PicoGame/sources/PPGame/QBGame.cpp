@@ -204,7 +204,7 @@ QBGame::QBGame() : __tarray(NULL),__normalFont(NULL),__halfFont(NULL),__miniFont
 	
 	scale_value = PPPoint(1.0,1.0);
 	rotate_value = 0.0;
-	blend_value = PPGameBlend::None();
+	poly.blend = PPGameBlend::None();
 	rotate_center.x = 0;
 	rotate_center.y = 0;
 	
@@ -380,8 +380,8 @@ int QBGame::rawLength(const char* str)
 	if (curFont) {
 #ifndef NO_TTFONT
 		if (curFont->ttfont) {
-			PPGameBlend o = blend_value;
-			blend(PPGameBlend::EdgeSmooth());
+			PPGameBlend o = poly.blend;
+      poly.blend = PPGameBlend::EdgeSmooth();
 			for (int n=0;str[n]!=0;) {
 				int len;
 				char s[5]={0};
@@ -390,7 +390,7 @@ int QBGame::rawLength(const char* str)
 				x += calcLength(curFont,s);
 				n += getCharBytesUTF8(&str[n]);
 			}
-			blend_value = o;
+			poly.blend = o;
 		} else {
 			x = curFont->length(str);
 		}
@@ -523,8 +523,8 @@ void QBGame::rawPrint(const char* str)
 		if (curFont->ttfont) {
 			p.x = locatex;//*scale_value.x;
 			p.y = locatey;//*scale_value.y;
-			PPGameBlend o = blend_value;
-			blend(PPGameBlend::EdgeSmooth());
+			PPGameBlend o = poly.blend;
+			poly.blend = PPGameBlend::EdgeSmooth();
 			for (int n=0;str[n]!=0;) {
 				int len;
 				char s[5]={0};
@@ -543,7 +543,7 @@ void QBGame::rawPrint(const char* str)
 				p.x += putFont(curFont,p.x,p.y,s);
 				n += getCharBytesUTF8(&str[n]);
 			}
-			blend_value = o;
+			poly.blend = o;
 		} else {
 			p.x = curFont->print(p.x,p.y,str,lineWrap);
 			p = curFont->cur;
@@ -564,6 +564,7 @@ void QBGame::rawPrint(const char* str)
 #ifndef NO_TTFONT
 int QBGame::putFont(PPFont* basefont,float x,float y,const char* str)
 {
+  PPGameBlend blend_value=poly.blend;
 	PPTTFont* font=basefont->ttfont;
 	float px,py;
 	px = x;//basefont->localScale.x;
@@ -685,7 +686,7 @@ void QBGame::Put(float x,float y,int pat,int group,int image,unsigned char r,uns
 	poly.color.g = g;
 	poly.color.b = b;
 	poly.color.a = a;
-	poly.blend = blend_value;
+//	poly.blend = blend_value;
 	poly.sprite(x,y,pat,group);
 	poly._texture = image;
 
@@ -1118,26 +1119,27 @@ static int funcColor(lua_State* L)
 
 static int funcBlend(lua_State *L)
 {
-	int top=lua_gettop(L);
 	QBGame* m = (QBGame*)PPLuaArg::World(L);
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
 	if (m==NULL) {
 		return luaL_argerror(L,1,"invalid argument.");
 	}
-	if (top==2 || top>3) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
-  if (top >= 3) {
-    lua_Integer src = lua_tointeger(L,-2);
-    lua_Integer dst = lua_tointeger(L,-1);
 
-    m->blend_value.blendDst = (int)dst;
-    m->blend_value.blendSrc = (int)src;
-
+	if (s->argCount > 0) {
+		m->poly.blend.blend = lua_toboolean(L,2);
+    if (s->argCount > 1) {
+      m->poly.blend.blendSrc = (int)lua_tointeger(L,3);
+      if (s->argCount > 2) {
+        m->poly.blend.blendDst = (int)lua_tointeger(L,4);
+      }
+    }
     return 0;
   }
-	lua_pushnumber(L,m->blend_value.blendSrc);
-	lua_pushnumber(L,m->blend_value.blendDst);
-	return 2;
+
+  lua_pushboolean(L,m->poly.blend.blend);
+	lua_pushnumber(L,m->poly.blend.blendSrc);
+	lua_pushnumber(L,m->poly.blend.blendDst);
+	return 3;
 }
 
 static int funcFog(lua_State *L)
@@ -1149,33 +1151,33 @@ static int funcFog(lua_State *L)
 	}
 
 	if (s->argCount > 0) {
-		m->blend_value.fog = lua_toboolean(L,2);
+		m->poly.blend.fog = lua_toboolean(L,2);
     if (s->argCount > 1) {
       if (s->isTable(L,1)) {
-        m->blend_value.fogColor.r = s->tableInteger(L,1,1,"r",m->poly.color.r);
-        m->blend_value.fogColor.g = s->tableInteger(L,1,2,"g",m->poly.color.g);
-        m->blend_value.fogColor.b = s->tableInteger(L,1,3,"b",m->poly.color.b);
-        m->blend_value.fogColor.a = s->tableInteger(L,1,4,"a",m->poly.color.a);
+        m->poly.blend.fogColor.r = s->tableInteger(L,1,1,"r",m->poly.color.r);
+        m->poly.blend.fogColor.g = s->tableInteger(L,1,2,"g",m->poly.color.g);
+        m->poly.blend.fogColor.b = s->tableInteger(L,1,3,"b",m->poly.color.b);
+        m->poly.blend.fogColor.a = s->tableInteger(L,1,4,"a",m->poly.color.a);
       } else {
-        m->blend_value.fogColor.r = s->integer(1);
-        if (s->argCount > 1) m->blend_value.fogColor.g = s->integer(2);
-        if (s->argCount > 2) m->blend_value.fogColor.b = s->integer(3);
-        if (s->argCount > 3) m->blend_value.fogColor.a = s->integer(4);
+        m->poly.blend.fogColor.r = s->integer(1);
+        if (s->argCount > 1) m->poly.blend.fogColor.g = s->integer(2);
+        if (s->argCount > 2) m->poly.blend.fogColor.b = s->integer(3);
+        if (s->argCount > 3) m->poly.blend.fogColor.a = s->integer(4);
       }
     }
 		return 0;
 	}
   
-  lua_pushboolean(L,m->blend_value.fog);
+  lua_pushboolean(L,m->poly.blend.fog);
   
 	lua_createtable(L, 0, 4);
-	lua_pushinteger(L,m->blend_value.fogColor.r);
+	lua_pushinteger(L,m->poly.blend.fogColor.r);
 	lua_setfield(L, -2, "r");
-	lua_pushinteger(L,m->blend_value.fogColor.g);
+	lua_pushinteger(L,m->poly.blend.fogColor.g);
 	lua_setfield(L, -2, "g");
-	lua_pushinteger(L,m->blend_value.fogColor.b);
+	lua_pushinteger(L,m->poly.blend.fogColor.b);
 	lua_setfield(L, -2, "b");
-	lua_pushinteger(L,m->blend_value.fogColor.a);
+	lua_pushinteger(L,m->poly.blend.fogColor.a);
 	lua_setfield(L, -2, "a");
 
   return 2;
@@ -2351,7 +2353,8 @@ void QBGame::openViewLibrary(PPLuaScript* script,const char* name)
 //		script->addCommand("rad2deg",funcRad2Deg);
 //		script->addCommand("reset",funcReset);
 //		script->addCommand("dump",funcDump);
-//		script->addCommand("blend",funcBlend);
+		script->addCommand("blend",funcBlend);
+		script->addCommand("fog",funcFog);
 	script->closeModule();
 }
 

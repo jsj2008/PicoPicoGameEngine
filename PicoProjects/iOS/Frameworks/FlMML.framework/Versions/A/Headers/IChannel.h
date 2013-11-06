@@ -6,7 +6,7 @@ using namespace std;
 
 #include "FlMML_Vector.h"
 #include "FlMML_Number.h"
-#include "FLMML_StaticDef.h"
+#include "FlMML_StaticDef.h"
 
 namespace FlMML {
 
