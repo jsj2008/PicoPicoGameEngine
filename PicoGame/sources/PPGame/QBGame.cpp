@@ -35,7 +35,9 @@
 #include "PPNormalFont.h"
 #include "PPImageFont.h"
 
+#ifndef NO_COCOSDENSHION
 #include <CocosDenshion/SimpleAudioEngine.h>
+#endif
 
 #include <lua/lstate.h>
 
@@ -242,7 +244,9 @@ QBGame::~QBGame()
 	if (__normalFont) delete __normalFont;
 	if (__halfFont) delete __halfFont;
 	if (__miniFont) delete __miniFont;
+#ifndef NO_COCOSDENSHION
 	CocosDenshion::SimpleAudioEngine::sharedEngine()->end();
+#endif
 }
 
 PPTextureArray* QBGame::texture()
@@ -2354,7 +2358,7 @@ void QBGame::openViewLibrary(PPLuaScript* script,const char* name)
 //		script->addCommand("reset",funcReset);
 //		script->addCommand("dump",funcDump);
 		script->addCommand("blend",funcBlend);
-		script->addCommand("fog",funcFog);
+		script->addCommand("shadow",funcFog);
 	script->closeModule();
 }
 
@@ -2505,7 +2509,9 @@ static int funcPreloadBackgroundMusic(lua_State* L)
 //	PPLuaScript* s = PPLuaScript::sharedScript(L);
 	if (lua_gettop(L) > 0) {
 		if (lua_isstring(L,1)) {
+#ifndef NO_COCOSDENSHION
 			CocosDenshion::SimpleAudioEngine::sharedEngine()->preloadBackgroundMusic(PPGameDataPath(lua_tostring(L,1)));
+#endif
 		}
 	}
 	return 0;
@@ -2516,12 +2522,16 @@ static int funcPlayBackgroundMusic(lua_State* L)
 //	PPLuaScript* s = PPLuaScript::sharedScript(L);
 	if (lua_gettop(L) > 1) {
 		if (lua_isstring(L,1)) {
+#ifndef NO_COCOSDENSHION
 			CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic(PPGameDataPath(lua_tostring(L,1)),lua_toboolean(L,2));
+#endif
 		}
 	} else
 	if (lua_gettop(L) > 0) {
 		if (lua_isstring(L,1)) {
+#ifndef NO_COCOSDENSHION
 			CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic(PPGameDataPath(lua_tostring(L,1)));
+#endif
 		}
 	}
 	return 0;
@@ -2531,45 +2541,62 @@ static int funcStopBackgroundMusic(lua_State* L)
 {
 //	PPLuaScript* s = PPLuaScript::sharedScript(L);
 	if (lua_gettop(L) > 0) {
+#ifndef NO_COCOSDENSHION
 		CocosDenshion::SimpleAudioEngine::sharedEngine()->stopBackgroundMusic(lua_toboolean(L,1));
+#endif
 	} else {
+#ifndef NO_COCOSDENSHION
 		CocosDenshion::SimpleAudioEngine::sharedEngine()->stopBackgroundMusic();
+#endif
 	}
 	return 0;
 }
 
 static int funcPauseBackgroundMusic(lua_State* L)
 {
+#ifndef NO_COCOSDENSHION
 	CocosDenshion::SimpleAudioEngine::sharedEngine()->pauseBackgroundMusic();
+#endif
 	return 0;
 }
 
 static int funcResumeBackgroundMusic(lua_State* L)
 {
+#ifndef NO_COCOSDENSHION
 	CocosDenshion::SimpleAudioEngine::sharedEngine()->resumeBackgroundMusic();
+#endif
 	return 0;
 }
 
 static int funcRewindBackgroundMusic(lua_State* L)
 {
+#ifndef NO_COCOSDENSHION
 	CocosDenshion::SimpleAudioEngine::sharedEngine()->rewindBackgroundMusic();
+#endif
 	return 0;
 }
 
 static int funcWillPlayBackgroundMusic(lua_State* L)
 {
+#ifndef NO_COCOSDENSHION
 	CocosDenshion::SimpleAudioEngine::sharedEngine()->willPlayBackgroundMusic();
+#endif
 	return 0;
 }
 
 static int funcIsBackgroundMusicPlaying(lua_State* L)
 {
+#ifndef NO_COCOSDENSHION
 	lua_pushboolean(L,CocosDenshion::SimpleAudioEngine::sharedEngine()->isBackgroundMusicPlaying());
 	return 1;
+#else
+  return 0;
+#endif
 }
 
 static int funcBackgroundMusicVolume(lua_State* L)
 {
+#ifndef NO_COCOSDENSHION
 //	PPLuaScript* s = PPLuaScript::sharedScript(L);
 	if (lua_gettop(L) > 0) {
 		CocosDenshion::SimpleAudioEngine::sharedEngine()->setBackgroundMusicVolume(lua_tonumber(L,1));
@@ -2577,10 +2604,14 @@ static int funcBackgroundMusicVolume(lua_State* L)
 	}
 	lua_pushnumber(L,CocosDenshion::SimpleAudioEngine::sharedEngine()->getBackgroundMusicVolume());
 	return 1;
+#else
+  return 0;
+#endif
 }
 
 void QBGame::openAudioEngineBGM(PPLuaScript* script,const char* name)
 {
+#ifndef NO_COCOSDENSHION
 	script->openModule(name,CocosDenshion::SimpleAudioEngine::sharedEngine());
 		script->addCommand("preload",funcPreloadBackgroundMusic);
 		script->addCommand("play",funcPlayBackgroundMusic);
@@ -2592,6 +2623,7 @@ void QBGame::openAudioEngineBGM(PPLuaScript* script,const char* name)
 		script->addCommand("isPlaying",funcIsBackgroundMusicPlaying);
 		script->addCommand("volume",funcBackgroundMusicVolume);
 	script->closeModule();
+#endif
 }
 
 static int funcEffectsVolume(lua_State* L)
@@ -2599,15 +2631,22 @@ static int funcEffectsVolume(lua_State* L)
 	//PPLuaScript* s = PPLuaScript::sharedScript(L);
 	if (lua_gettop(L) > 0) {
 		lua_Number val = lua_tonumber(L,1);
+#ifndef NO_COCOSDENSHION
 		CocosDenshion::SimpleAudioEngine::sharedEngine()->setEffectsVolume(val);
+#endif
 		return 0;
 	}
+#ifndef NO_COCOSDENSHION
 	lua_pushnumber(L,CocosDenshion::SimpleAudioEngine::sharedEngine()->getEffectsVolume());
 	return 1;
+#else
+  return 0;
+#endif
 }
 
 static int funcPlayEffect(lua_State* L)
 {
+#ifndef NO_COCOSDENSHION
 	//PPLuaScript* s = PPLuaScript::sharedScript(L);
 	if (lua_gettop(L) > 0) {
 //		std::string fname = lua_tostring(L,1);
@@ -2619,19 +2658,23 @@ static int funcPlayEffect(lua_State* L)
 			return 1;
 		}
 	}
+#endif
 	return 0;
 }
 
 static int funcStopEffect(lua_State* L)
 {
+#ifndef NO_COCOSDENSHION
 	//PPLuaScript* s = PPLuaScript::sharedScript();
 	lua_Unsigned val = lua_tounsigned(L,1);
 	CocosDenshion::SimpleAudioEngine::sharedEngine()->stopEffect(val);
+#endif
 	return 0;
 }
 
 static int funcPreloadEffect(lua_State* L)
 {
+#ifndef NO_COCOSDENSHION
 	//PPLuaScript* s = PPLuaScript::sharedScript(L);
 	if (lua_gettop(L) > 0) {
 //		std::string fname = lua_tostring(L,1);
@@ -2642,22 +2685,26 @@ static int funcPreloadEffect(lua_State* L)
 			CocosDenshion::SimpleAudioEngine::sharedEngine()->preloadEffect(PPGameDataPath(lua_tostring(L,1)));
 		}
 	}
+#endif
 	return 0;
 }
 
 static int funcUnloadEffect(lua_State* L)
 {
+#ifndef NO_COCOSDENSHION
 	//PPLuaScript* s = PPLuaScript::sharedScript(L);
 	if (lua_gettop(L) > 0) {
 		if (lua_isstring(L,1)) {
 			CocosDenshion::SimpleAudioEngine::sharedEngine()->unloadEffect(PPGameDataPath(lua_tostring(L,1)));
 		}
 	}
+#endif
 	return 0;
 }
 
 void QBGame::openAudioEngineEffect(PPLuaScript* script,const char* name)
 {
+#ifndef NO_COCOSDENSHION
 	script->openModule(name,CocosDenshion::SimpleAudioEngine::sharedEngine());
 		script->addCommand("volume",funcEffectsVolume);
 		script->addCommand("play",funcPlayEffect);
@@ -2665,6 +2712,7 @@ void QBGame::openAudioEngineEffect(PPLuaScript* script,const char* name)
 		script->addCommand("preload",funcPreloadEffect);
 		script->addCommand("unload",funcUnloadEffect);
 	script->closeModule();
+#endif
 }
 
 static int funcPlay(lua_State* L)
@@ -2767,7 +2815,7 @@ static int funcFlMMLIsPaused(lua_State* L)
 
 void QBGame::openAudioEngineFlMML(PPLuaScript* script,const char* name)
 {
-	script->openModule(name,CocosDenshion::SimpleAudioEngine::sharedEngine());
+	script->openModule(name,this);
 		script->addCommand("play",funcFlMMLPlay);
 //		script->addCommand("clear",funcFlMMLClear);
 		script->addCommand("stop",funcFlMMLClear);

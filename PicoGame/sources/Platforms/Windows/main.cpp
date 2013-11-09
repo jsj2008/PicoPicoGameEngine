@@ -277,7 +277,7 @@ void OnCreate(HWND hWnd, LPCREATESTRUCT lpcs)
 	glSetInterval(1);
 	
 	// タイマーの作成
-	SetTimer(hWnd, TIMER_ID, 1, TimerProc);
+	SetTimer(hWnd, TIMER_ID, 1000/70, TimerProc);
 }
 
 void OnDestroy(HWND hWnd)

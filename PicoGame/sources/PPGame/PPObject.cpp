@@ -1362,7 +1362,7 @@ PPObject* PPObject::registClass(PPLuaScript* script,const char* name,PPObject* o
 		script->addBoolValue("centery",false);
   
     script->addCommand("blend",funcBlend);
-    script->addCommand("fog",funcFog);
+    script->addCommand("shadow",funcFog);
 //		script->addCommand("hitCheck",funcHitCheck);
 
 //		lua_pushnumber(script->L,0);

@@ -475,6 +475,9 @@ void PPScriptGame::stepIdle()
 	if (!script->alive) {
 		if (script->errorMessage != "") {
 			NEXT(PPScriptGame::stepError);
+#ifdef _LINUX
+  	  printf("%s\n",script->errorMessage.c_str());
+#endif
 			return;
 		}
 		script->startProcess();

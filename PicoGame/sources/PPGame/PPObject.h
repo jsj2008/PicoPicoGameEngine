@@ -192,7 +192,7 @@ protected:
 	
 public:
 	virtual void __directTouchUp(PPPoint pos) {
-		bool t = false;
+		//bool t = false;
 		{
 			PPRect b = bounds();
 			PPPoint p = convertToScreen();
@@ -201,7 +201,7 @@ public:
 			if (pos.hitCheck(b)) {
 				touchDown(pos);
 				touchUp(pos);
-				t = true;
+				//t = true;
 			}
 		}
 		//if (!t) 

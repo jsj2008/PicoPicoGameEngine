@@ -25,8 +25,15 @@
 #include <GLES/gl.h>
 #include <GLES/glext.h>
 #else
+#ifdef _LINUX
+#include "GLES/gl.h"
+#include "GLES/glext.h"
+#include "EGL/egl.h"
+#include "EGL/eglext.h"
+#else
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
+#endif
 #endif
 #endif
 

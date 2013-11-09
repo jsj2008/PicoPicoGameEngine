@@ -667,7 +667,11 @@ int PPGameSprite::BlendOn(float alpha,int type)
 #ifdef _ANDROID
 		glFogx(GL_FOG_MODE,GL_LINEAR);
 #else
+#ifdef _LINUX
+		glFogx(GL_FOG_MODE,GL_LINEAR);
+#else
 		glFogi(GL_FOG_MODE,GL_LINEAR);
+#endif
 #endif
 #endif
 		glFogf(GL_FOG_START, -1.0f);
@@ -817,7 +821,11 @@ void PPGameSprite::SetViewPort()
 #ifdef _ANDROID
 	glOrthof(-1.0f,1.0f,-1.0f,1.0f,-1.0f,1.0f);
 #else
+#ifdef _LINUX
+	glOrthof(-1.0f,1.0f,-1.0f,1.0f,-1.0f,1.0f);
+#else
 	glOrtho(-1.0f,1.0f,-1.0f,1.0f,-1.0f,1.0f);
+#endif
 #endif
 #endif
 	glMatrixMode(GL_MODELVIEW);
