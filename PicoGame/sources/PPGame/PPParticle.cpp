@@ -1096,8 +1096,12 @@ static int funcSet(lua_State* L)
 		{
 			lua_getfield(L,2,"animationData");
 			if (lua_istable(L,-1)) {
+#ifdef __LUAJIT__
+				int len= (int)lua_objlen(L,-1);
+#else
 				lua_len(L,-1);
 				int len = (int)lua_tointeger(L,-1);
+#endif
 				lua_pop(L,1);
 				if (m->animationData) free(m->animationData);
 				m->animationData = (int*)calloc(1,sizeof(int)*len);

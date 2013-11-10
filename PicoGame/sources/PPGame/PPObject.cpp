@@ -989,8 +989,12 @@ static int funcLoopAnime(lua_State* L)
 			lua_getfield(L,1,"animationTime");
 			m->animationTime = lua_tonumber(L,-1);
 
+#ifdef __LUAJIT__
+			int n=lua_objlen(L,3);
+#else
 			lua_len(L,3);
 			int n=(int)lua_tointeger(L,-1);
+#endif
 			
 			if (m->animationTime<1) m->animationTime=1;
 			if (m->animationTime>=n+1) m->animationTime=1;
@@ -1022,8 +1026,12 @@ static int funcPlayAnime(lua_State* L)
 			lua_getfield(L,1,"animationTime");
 			m->animationTime = lua_tonumber(L,-1);
 
+#ifdef __LUAJIT__
+			int n=lua_objlen(L,3);
+#else
 			lua_len(L,3);
 			int n=(int)lua_tointeger(L,-1);
+#endif
 			
 			if (m->animationTime<1) m->animationTime=1;
 			if (m->animationTime>=n+1) {
@@ -1131,8 +1139,12 @@ static int funcDrag(lua_State *L)
 	lua_settop(L,top);
 	
 	if (lua_istable(L,2)) {
+#ifdef __LUAJIT__
+		int n= (int)lua_objlen(L,2);
+#else
 		lua_len(L,2);
 		int n = (int)lua_tointeger(L,-1);
+#endif
 		if (n > 0) {
 			PPPoint dragPos;
 			PPRect dragArea;

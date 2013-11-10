@@ -21,6 +21,10 @@
 #include "CCFileUtils.h"
 #endif
 
+#ifdef __LUAJIT__
+#include <lua.hpp>
+#define LUA_OK 0
+#else
 extern "C" {
 #include <lua/lua.h>
 #include <lua/lualib.h>
@@ -28,6 +32,7 @@ extern "C" {
 #include <lua/ldebug.h>
 #include <lua/luaApiHook.h>
 }
+#endif
 
 //PPLuaScript* PPLuaScript::script = NULL;
 //int PPLuaScript::timeoutCount = 0;
@@ -339,6 +344,9 @@ void PPLuaScript::openModule(const char* name,void* userdata,lua_CFunction gc,co
 	int metatable = lua_gettop(L);
 	if (userdata) {
 		lua_pushlightuserdata(L,userdata);
+#ifdef __LUAJIT__
+		luaJIT_setmode(L, -1, LUAJIT_MODE_ON);
+#endif
 		lua_setfield(L,metatable,PPGAMEINSTNACE);
 	}
 	if (gc) {
@@ -446,6 +454,9 @@ void PPLuaScript::addMetaTable(const char* name,lua_CFunction func)
 		lua_createtable(L,0,0);
 //		lua_pushstring(L,name);
 		lua_pushcfunction(L,func);
+#ifdef __LUAJIT__
+		luaJIT_setmode(L, -1, LUAJIT_MODE_ON);
+#endif
 		lua_setfield(L,-2,name);
 //		lua_rawset(L,-3);
 		lua_setmetatable(L,-2);
@@ -458,6 +469,9 @@ void PPLuaScript::addCommand(const char* name,lua_CFunction func)
 //printf("    %s\n",name);
 	if (strcmp(_module->c_str(),"") == 0) {
 		lua_pushcfunction(L,func);
+#ifdef __LUAJIT__
+		luaJIT_setmode(L, -1, LUAJIT_MODE_ON);
+#endif
 		lua_setglobal(L,name);
 	} else {
 		lua_getglobal(L,_module->c_str());
@@ -561,9 +575,18 @@ PPLuaScript::PPLuaScript(PPWorld* world) : PPLuaArg(world),_module(NULL)
 	
 	//script = this;
 	L = luaL_newstate();
+#ifdef __LUAJIT__
+#else
 	luaApiHook_Init(L,myCountHook,mySetErrorLineNumber);
+#endif
 	coL = NULL;
+#ifdef __LUAJIT__
+  lua_gc(L, LUA_GCSTOP, 0);  /* stop collector during initialization */
+  luaL_openlibs(L);  /* open libraries */
+  lua_gc(L, LUA_GCRESTART, -1);
+#else
 	luaL_openlibs(L);
+#endif
 #ifdef __COCOS2DX__
 	addLuaLoader(loader_Android);
 #endif
@@ -664,7 +687,11 @@ bool PPLuaScript::doProcess()
 		//lua_getglobal(L,"___scriptCorutine");
 		lua_State *co = coL;//lua_tothread(L,-1);
 		if (co) {
+#ifdef __LUAJIT__
+			int status = lua_resume(co,0);
+#else
 			int status = lua_resume(co,L,0);
+#endif
 			if (status == LUA_OK || status == LUA_YIELD) {
 			} else {
 				lua_xmove(co, L, 1);

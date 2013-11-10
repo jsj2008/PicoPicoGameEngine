@@ -42,10 +42,14 @@
 #include "PPTextureArray.h"
 #include "PPGameGeometry.h"
 
+#ifdef __LUAJIT__
+#include <lua.hpp>
+#else
 extern "C" {
 #include <lua/lua.h>
 #include <lua/lauxlib.h>
 }
+#endif
 
 #define PPGAME_MAX_TEXTURE 128
 

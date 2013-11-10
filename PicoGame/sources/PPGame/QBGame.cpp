@@ -39,7 +39,11 @@
 #include <CocosDenshion/SimpleAudioEngine.h>
 #endif
 
+#ifdef __LUAJIT__
+#include <lua.hpp>
+#else
 #include <lua/lstate.h>
+#endif
 
 #if TARGET_OS_IPHONE
 #include "PPTextToSpeech.h"
@@ -1526,8 +1530,12 @@ static int funcFontWithTexture(lua_State* L)
 		}
 		if (s->isTable(L,2)) {
 			int top=lua_gettop(L);
+#ifdef __LUAJIT__
+			int t= (int)lua_objlen(L,2+2);
+#else
 			lua_len(L,2+2);
 			int t = (int)lua_tointeger(L,-1);
+#endif
 			if (t > 0) {
 				float n[4]={0};
 				for (int i=0;i<t&&i<4;i++) {
@@ -1798,9 +1806,13 @@ static int funcLayout(lua_State* L)
 
 static int funcUpdate(lua_State* L)
 {
+#ifdef __LUAJIT__
+  return lua_yield(L,0);
+#else
 	if (!(L->nny > 0))  {
 		return lua_yield(L,0);
 	}
+#endif
 	return 0;
 }
 
@@ -2653,8 +2665,13 @@ static int funcPlayEffect(lua_State* L)
 //		fname = fname + ".";
 //		fname = fname + SDEXT;
 		if (lua_isstring(L,1)) {
+#ifdef __LUAJIT__
+			int val = CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect(PPGameDataPath(lua_tostring(L,1)));
+			lua_pushnumber(L,val);
+#else
 			lua_Unsigned val = CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect(PPGameDataPath(lua_tostring(L,1)));
 			lua_pushunsigned(L,val);
+#endif
 			return 1;
 		}
 	}
@@ -2666,7 +2683,11 @@ static int funcStopEffect(lua_State* L)
 {
 #ifndef NO_COCOSDENSHION
 	//PPLuaScript* s = PPLuaScript::sharedScript();
+#ifdef __LUAJIT__
+	int val=lua_tonumber(L,1);
+#else
 	lua_Unsigned val = lua_tounsigned(L,1);
+#endif
 	CocosDenshion::SimpleAudioEngine::sharedEngine()->stopEffect(val);
 #endif
 	return 0;

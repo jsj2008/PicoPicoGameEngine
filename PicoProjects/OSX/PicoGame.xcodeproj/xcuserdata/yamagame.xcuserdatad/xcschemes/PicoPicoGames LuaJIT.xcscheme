@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0450"
+   LastUpgradeVersion = "0500"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "6BAC243015B284FA0051C16B"
-               BuildableName = "PicoGame.framework"
-               BlueprintName = "PicoGame"
+               BlueprintIdentifier = "6B876AE5182E78D8003D651B"
+               BuildableName = "PicoPicoGames LuaJIT.app"
+               BlueprintName = "PicoPicoGames LuaJIT"
                ReferencedContainer = "container:PicoGame.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -29,16 +29,34 @@
       buildConfiguration = "Debug">
       <Testables>
       </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "6B876AE5182E78D8003D651B"
+            BuildableName = "PicoPicoGames LuaJIT.app"
+            BlueprintName = "PicoPicoGames LuaJIT"
+            ReferencedContainer = "container:PicoGame.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
    </TestAction>
    <LaunchAction
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
-      buildConfiguration = "Release LuaJIT"
+      buildConfiguration = "Debug"
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       allowLocationSimulation = "YES">
+      <BuildableProductRunnable>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "6B876AE5182E78D8003D651B"
+            BuildableName = "PicoPicoGames LuaJIT.app"
+            BlueprintName = "PicoPicoGames LuaJIT"
+            ReferencedContainer = "container:PicoGame.xcodeproj">
+         </BuildableReference>
+      </BuildableProductRunnable>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
@@ -48,6 +66,15 @@
       useCustomWorkingDirectory = "NO"
       buildConfiguration = "Release"
       debugDocumentVersioning = "YES">
+      <BuildableProductRunnable>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "6B876AE5182E78D8003D651B"
+            BuildableName = "PicoPicoGames LuaJIT.app"
+            BlueprintName = "PicoPicoGames LuaJIT"
+            ReferencedContainer = "container:PicoGame.xcodeproj">
+         </BuildableReference>
+      </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

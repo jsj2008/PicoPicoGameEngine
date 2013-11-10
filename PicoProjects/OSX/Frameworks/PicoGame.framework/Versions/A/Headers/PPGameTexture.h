@@ -25,8 +25,15 @@
 #include <GLES/gl.h>
 #include <GLES/glext.h>
 #else
+#ifdef _LINUX
+#include "GLES/gl.h"
+#include "GLES/glext.h"
+#include "EGL/egl.h"
+#include "EGL/eglext.h"
+#else
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
+#endif
 #endif
 #endif
 
@@ -35,10 +42,14 @@
 #include "PPTextureArray.h"
 #include "PPGameGeometry.h"
 
+#ifdef __LUAJIT__
+#include <lua.hpp>
+#else
 extern "C" {
 #include <lua/lua.h>
 #include <lua/lauxlib.h>
 }
+#endif
 
 #define PPGAME_MAX_TEXTURE 128
 

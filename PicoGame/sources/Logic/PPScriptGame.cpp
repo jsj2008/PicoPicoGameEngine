@@ -149,6 +149,143 @@ static lua_Number getNumber(lua_State* L,int stack,int index,const char* field)
 	return lua_tonumber(L,-1);
 }
 
+static hitdata* hit2[2]={0};
+static int hitsize[2]={0};
+
+static int funcPPHitCheck2(lua_State *L)
+{
+	int top=lua_gettop(L);
+	if (lua_isfunction(L,3)) {
+		if (top >= 2) {
+			int n[2];
+#ifdef __LUAJIT__
+			n[0] = lua_objlen(L,1);
+#else
+			lua_len(L,1);
+			n[0] = (int)lua_tointeger(L,-1);
+#endif
+#ifdef __LUAJIT__
+			n[1] = lua_objlen(L,2);
+#else
+			lua_len(L,2);
+			n[1] = (int)lua_tointeger(L,-1);
+#endif
+			lua_settop(L,top);
+			
+			if (n[0] > 0 && n[1] > 0) {
+        for (int i=0;i<2;i++) {
+          if (hitsize[i]<n[i]) {
+            if (hit2[i]) {
+              free(hit2[i]);
+            }
+            hitsize[i]=n[i]+1024;
+            hit2[i] = (hitdata*)malloc(hitsize[i]*sizeof(hitdata));
+          }
+        }
+			
+				for (int i=0;i<2;i++) {
+					for (int j=0;j<n[i];j++) {
+						int top=lua_gettop(L);
+						hit2[i][j].index = j+1;
+						hit2[i][j].mask = 0;
+						hit2[i][j].length = 0;
+						hit2[i][j].type = 0;
+						hit2[i][j].center = PPPoint(0,0);
+						lua_rawgeti(L,1+i,j+1);
+						int table=lua_gettop(L);
+						{
+							lua_getfield(L,table,"hitmask");
+							if (!lua_isnil(L,-1)) {
+								hit2[i][j].mask = (int)lua_tointeger(L,-1);
+							}
+							lua_pop(L,1);
+						}
+						if (hit2[i][j].mask != 0) {
+							lua_getfield(L,table,"hitlength");
+							if (!lua_isnil(L,-1)) {
+								hit2[i][j].length = lua_tonumber(L,-1);
+							}
+							lua_pop(L,1);
+						}
+						if (hit2[i][j].mask != 0) {
+							lua_getfield(L,table,"hitcenter");
+							if (lua_istable(L,-1)) {
+								int center=lua_gettop(L);
+								hit2[i][j].center.x = getNumber(L,center,1,"x");
+								hit2[i][j].center.y = getNumber(L,center,2,"y");
+							}
+							{
+								lua_getfield(L,table,"x");
+								hit2[i][j].pos.x = lua_tonumber(L,-1);
+								lua_getfield(L,table,"y");
+								hit2[i][j].pos.y = lua_tonumber(L,-1);
+							}
+							lua_settop(L,table);
+						}
+						if (hit2[i][j].mask != 0) {
+							lua_getfield(L,table,"hitpos");
+							if (lua_istable(L,-1)) {
+								int center=lua_gettop(L);
+								hit2[i][j].pos.x = getNumber(L,center,1,"x");
+								hit2[i][j].pos.y = getNumber(L,center,2,"y");
+								lua_settop(L,table);
+							}
+						}
+						if (hit2[i][j].mask != 0) {
+							lua_getfield(L,table,"hitrect");
+							if (lua_istable(L,-1)) {
+								int s=lua_gettop(L);
+								PPRect r;
+								r.x = getNumber(L,s,1,"x");
+								r.y = getNumber(L,s,2,"y");
+								r.width = getNumber(L,s,3,"width");
+								r.height = getNumber(L,s,4,"height");
+								hit2[i][j].rect = PPRect(hit2[i][j].pos.x+r.x,hit2[i][j].pos.y+r.y,r.width,r.height);
+								hit2[i][j].pos.x += r.x+r.width/2;
+								hit2[i][j].pos.y += r.y+r.height/2;
+								hit2[i][j].length=sqrt(r.width*r.width/4+r.height*r.height/4);
+								hit2[i][j].type = 1;
+							}
+						}
+						lua_settop(L,top);
+					}
+				}
+				
+				for (int i=0;i<n[0];i++) {
+					hitdata* a = &hit2[0][i];
+					if (a->mask != 0 && a->length > 0) {
+						for (int j=0;j<n[1];j++) {
+							hitdata* b = &hit2[1][j];
+							if (b->mask != 0 && b->length > 0) {
+								if (a->mask & b->mask) {
+									bool hitcheck = false;
+									if (b->type && a->type) {
+										if (b->rect.hitCheck(a->rect)) {
+											hitcheck = true;
+										}
+									} else
+									if ((b->pos+b->center).length(a->pos+a->center) < a->length+b->length) {
+										hitcheck = true;
+									}
+									if (hitcheck) {
+										lua_pushvalue(L,3);
+										lua_rawgeti(L,1,a->index);
+										lua_rawgeti(L,2,b->index);
+										lua_call(L,2,0);
+										lua_settop(L,top);
+									}
+								}
+							}
+						}
+					}
+				}
+				
+			}
+		}
+	}
+	return 0;
+}
+
 static int funcPPHitCheck(lua_State *L)
 {
 	int top=lua_gettop(L);
@@ -156,10 +293,18 @@ static int funcPPHitCheck(lua_State *L)
 		if (top >= 2) {
 			int n[2];
 			hitdata* hit[2];
+#ifdef __LUAJIT__
+			n[0] = lua_objlen(L,1);
+#else
 			lua_len(L,1);
 			n[0] = (int)lua_tointeger(L,-1);
+#endif
+#ifdef __LUAJIT__
+			n[1] = lua_objlen(L,2);
+#else
 			lua_len(L,2);
 			n[1] = (int)lua_tointeger(L,-1);
+#endif
 			lua_settop(L,top);
 			
 			if (n[0] > 0 && n[1] > 0) {
@@ -277,8 +422,12 @@ static int funcPPIterator(lua_State *L)
 	int top=lua_gettop(L);
 	if (top>=2) {
 		if (lua_istable(L,1)) {
+#ifdef __LUAJIT__
+			int n=lua_objlen(L,1);
+#else
 			lua_len(L,1);
 			int n = (int)lua_tointeger(L,-1);
+#endif
 			lua_settop(L,top);
 			if (lua_isfunction(L,2)) {
 				for (int i=0;i<n;i++) {
@@ -376,13 +525,13 @@ void PPScriptGame::reloadData()
 	PPReadErrorReset();
 	
 	initGraph();
-	
+
 	if (script) {
 		delete script;
 	}
 
 	script = new PPLuaScript(this);
-//	script->start();
+
 	script->addSearchPath(PPGameDataPath(""));
 	script->addSearchPath(PPGameResourcePath(""));
 
@@ -430,7 +579,11 @@ void PPScriptGame::reloadData()
 	script->execString(EMBEDDED_LUA_GAME_CODE);
 	script->addCommand("pprect",funcPPRect);
 	script->addCommand("pppoint",funcPPPoint);
+#ifdef __LUAJIT__
+	script->addCommand("pphitcheck",funcPPHitCheck2);
+#else
 	script->addCommand("pphitcheck",funcPPHitCheck);
+#endif
 //	script->addCommand("ppdraw",funcPPDraw);
 	script->addCommand("pplength",funcPPLength);
 	script->addCommand("ppforeach",funcPPIterator);

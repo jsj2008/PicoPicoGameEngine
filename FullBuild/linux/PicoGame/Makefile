@@ -6,8 +6,9 @@ LINKFILE = ./objects/LinkFileList.txt
 
 BUILD_DIR = objects
 
-CFLAGS = -DFT2_BUILD_LIBRARY -DFT_CONFIG_MODULES_H="<ftmodule.h>" \
+CFLAGS = -D__LUAJIT__ -D_LINUX -DFT2_BUILD_LIBRARY -DFT_CONFIG_MODULES_H="<ftmodule.h>" \
 -O3  -march=armv6 -mfpu=vfp -mfloat-abi=hard -ffast-math -fstrict-aliasing -fomit-frame-pointer \
+-I/usr/local/include/luajit-2.0/\
 -I../../../CocosDenshion/sources/CocosDenshion/include/ \
 -I../../../CocosDenshion/sources/CocosDenshion/ \
 -I../../../FlMML/include/flmml/ \
@@ -22,7 +23,6 @@ CFLAGS = -DFT2_BUILD_LIBRARY -DFT_CONFIG_MODULES_H="<ftmodule.h>" \
 -I../../../PicoGame/sources/Logic/ \
 -I../../../PicoGame/sources/PPGame/ \
 -I../../../PicoGame/sources/PPImage/ \
--I../../../Lua5.2/sources/ \
 -I../../../Box2D/sources/Box2D_v2.2.1/ \
 -I../../../Box2D/sources/Box2D_v2.2.1/Box2D/ \
 -I../../../Box2D/sources/Box2D_v2.2.1/Box2D/Collision/ \
@@ -51,13 +51,12 @@ main.o
 
 LIBS = \
 ../../../PicoGame/linux/build/libpicogame.ar \
-../../../Lua5.2/linux/build/liblua.ar \
 ../../../freetype/linux/build/libfreetype.ar \
 ../../../FlMML/linux/build/libflmml.ar \
 ../../../png/linux/build/libpng.ar \
 ../../../Box2D/linux/build/libbox2d.ar
 
-LDFLAGS+=-L$(SDKSTAGE)/opt/vc/lib/ -lGLESv2 -lEGL -lopenmaxil -lbcm_host -lvcos -lvchiq_arm -lpthread -lrt -lxml2 -lasound
+LDFLAGS+=-L$(SDKSTAGE)/opt/vc/lib/ -lluajit-5.1 -lGLESv2 -lEGL -lopenmaxil -lbcm_host -lvcos -lvchiq_arm -lpthread -lrt -lxml2 -lasound
 
 $(BUILD_DIR)/%.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -80,7 +79,6 @@ buildall:
 	cd ../../../CocosDenshion/linux/build; make clean
 	cd ../../../FlMML/linux/build; make clean
 	cd ../../../freetype/linux/build; make clean
-	cd ../../../Lua5.2/linux/build; make clean
 	cd ../../../PicoGame/linux/build; make clean
 	cd ../../../png/linux/build; make clean
 	cd ./; make clean
@@ -88,7 +86,6 @@ buildall:
 	cd ../../../CocosDenshion/linux/build; make
 	cd ../../../FlMML/linux/build; make
 	cd ../../../freetype/linux/build; make
-	cd ../../../Lua5.2/linux/build; make
 	cd ../../../PicoGame/linux/build; make
 	cd ../../../png/linux/build; make
 	cd ./; make
@@ -98,7 +95,6 @@ cleanall:
 	cd ../../../CocosDenshion/linux/build; make clean
 	cd ../../../FlMML/linux/build; make clean
 	cd ../../../freetype/linux/build; make clean
-	cd ../../../Lua5.2/linux/build; make clean
 	cd ../../../PicoGame/linux/build; make clean
 	cd ../../../png/linux/build; make clean
 	cd ./; make clean
@@ -108,7 +104,6 @@ build:
 	cd ../../../CocosDenshion/linux/build; make
 	cd ../../../FlMML/linux/build; make
 	cd ../../../freetype/linux/build; make
-	cd ../../../Lua5.2/linux/build; make
 	cd ../../../PicoGame/linux/build; make
 	cd ../../../png/linux/build; make
 	cd ./; make

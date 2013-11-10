@@ -159,10 +159,6 @@ static void exit_func(void)
    eglDestroySurface( state->display, state->surface );
    eglDestroyContext( state->display, state->context );
    eglTerminate( state->display );
-
-   free(state->tex_buf1);
-   free(state->tex_buf2);
-   free(state->tex_buf3);
 }
 
 //==============================================================================

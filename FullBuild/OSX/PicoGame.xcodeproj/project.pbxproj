@@ -432,12 +432,12 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../../Box2D/OSX/Box2D/Products\"",
-					"\"$(SRCROOT)/../../CocosDenshion/OSX/CocosDenshion/Products\"",
-					"\"$(SRCROOT)/../../FlMML/OSX/FlMML/Products\"",
-					"\"$(SRCROOT)/../../freetype/OSX/freetype/Products\"",
-					"\"$(SRCROOT)/../../Lua5.2/OSX/Lua/Products\"",
-					"\"$(SRCROOT)/../../PicoGame/OSX/PicoGame/Products\"",
+					"$(SRCROOT)/../../Box2D/OSX/Box2D/Products",
+					"$(SRCROOT)/../../CocosDenshion/OSX/CocosDenshion/Products",
+					"$(SRCROOT)/../../FlMML/OSX/FlMML/Products",
+					"$(SRCROOT)/../../freetype/OSX/freetype/Products",
+					"$(SRCROOT)/../../Lua5.2/OSX/Lua/Products",
+					"$(SRCROOT)/../../PicoGame/OSX/PicoGame/Products",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PicoGame/PicoGame-Prefix.pch";
@@ -465,12 +465,12 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../../Box2D/OSX/Box2D/Products\"",
-					"\"$(SRCROOT)/../../CocosDenshion/OSX/CocosDenshion/Products\"",
-					"\"$(SRCROOT)/../../FlMML/OSX/FlMML/Products\"",
-					"\"$(SRCROOT)/../../freetype/OSX/freetype/Products\"",
-					"\"$(SRCROOT)/../../Lua5.2/OSX/Lua/Products\"",
-					"\"$(SRCROOT)/../../PicoGame/OSX/PicoGame/Products\"",
+					"$(SRCROOT)/../../Box2D/OSX/Box2D/Products",
+					"$(SRCROOT)/../../CocosDenshion/OSX/CocosDenshion/Products",
+					"$(SRCROOT)/../../FlMML/OSX/FlMML/Products",
+					"$(SRCROOT)/../../freetype/OSX/freetype/Products",
+					"$(SRCROOT)/../../Lua5.2/OSX/Lua/Products",
+					"$(SRCROOT)/../../PicoGame/OSX/PicoGame/Products",
 				);
 				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -491,6 +491,7 @@
 		6BA522BD15B9548A006749D7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -498,6 +499,7 @@
 		6BA522BE15B9548A006749D7 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

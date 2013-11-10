@@ -30,9 +30,13 @@ class QBGame;
 class PPAnimationData;
 class PPLuaScript;
 
+#ifdef __LUAJIT__
+#include <lua.hpp>
+#else
 extern "C" {
 #include <lua/lua.h>
 }
+#endif
 
 class PPObject : public PPStep {
 public:
@@ -192,7 +196,7 @@ protected:
 	
 public:
 	virtual void __directTouchUp(PPPoint pos) {
-		bool t = false;
+		//bool t = false;
 		{
 			PPRect b = bounds();
 			PPPoint p = convertToScreen();
@@ -201,7 +205,7 @@ public:
 			if (pos.hitCheck(b)) {
 				touchDown(pos);
 				touchUp(pos);
-				t = true;
+				//t = true;
 			}
 		}
 		//if (!t) 

@@ -14,9 +14,19 @@
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
+		<key>UniversalLuaJIT.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>6B876AD0182E619C003D651B</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>6BAC243015B284FA0051C16B</key>
 		<dict>
 			<key>primary</key>

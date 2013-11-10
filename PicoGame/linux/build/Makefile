@@ -2,7 +2,7 @@ CC = gcc
 CPP = g++
 AR = ar
 
-CPPFLAGS = -D_LINUX -O3 -DNO_COCOSDENSHION -march=armv6 -mfpu=vfp -mfloat-abi=hard -ffast-math -fstrict-aliasing -fomit-frame-pointer
+CPPFLAGS = -D__LUAJIT__ -D_LINUX -O3 -DNO_COCOSDENSHION -march=armv6 -mfpu=vfp -mfloat-abi=hard -ffast-math -fstrict-aliasing -fomit-frame-pointer
 
 BUILD_DIR = objects
 
@@ -13,6 +13,7 @@ CPPFLAGS += \
 -I/opt/vc/include/interface/vcos/pthreads \
 -I/opt/vc/include/interface/vmcs_host/l\
 -I/usr/include/libxml2/\
+-I/usr/local/include/luajit-2.0/\
 -I../../../CocosDenshion/sources/CocosDenshion/include/ \
 -I../../../CocosDenshion/sources/CocosDenshion/ \
 -I../../../FlMML/include/flmml/ \
@@ -26,7 +27,6 @@ CPPFLAGS += \
 -I../../sources/Logic/ \
 -I../../sources/PPGame/ \
 -I../../sources/PPImage/ \
--I../../../Lua5.2/sources/ \
 -I../../../Box2D/sources/Box2D_v2.2.1/ \
 -I../../../Box2D/sources/Box2D_v2.2.1/Box2D/ \
 -I../../../Box2D/sources/Box2D_v2.2.1/Box2D/Collision/ \

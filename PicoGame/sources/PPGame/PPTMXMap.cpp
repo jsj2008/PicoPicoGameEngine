@@ -2246,8 +2246,12 @@ static int funcCheck(lua_State* L)
 			if (!lua_isnil(L,-1)) {
 				
 				if (lua_istable(L,3)) {
+#ifdef __LUAJIT__
+					int l= (int)lua_objlen(L,3);
+#else
 					lua_len(L,3);
 					int l=(int)lua_tointeger(L,-1);
+#endif
 					for (int j=1;j<=l;j++) {
 						lua_rawgeti(L,3,j);
 						int i=(int)lua_tointeger(L,-1);

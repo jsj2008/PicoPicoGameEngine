@@ -9,6 +9,11 @@
 			<key>orderHint</key>
 			<integer>1</integer>
 		</dict>
+		<key>PicoPicoGames LuaJIT.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
 		<key>PicoPicoGames.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -18,6 +23,11 @@
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
 		<key>6B70CDB315F03E190074710A</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>6B876AE5182E78D8003D651B</key>
 		<dict>
 			<key>primary</key>
 			<true/>

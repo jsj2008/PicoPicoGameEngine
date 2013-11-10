@@ -185,7 +185,13 @@ static int funcb2WorldStep(lua_State *L)
 static int findObjectIndex(lua_State* L,int n,void* data)
 {
 	int top = lua_gettop(L);
+#ifdef __LUAJIT__
+	lua_objlen(L,n);
+	int e=(int)lua_tointeger(L,-1);
+	lua_settop(L,top);
+#else
 	int e = luaL_len(L,n);
+#endif
 	for (int i=0;i<e;i++) {
 		lua_rawgeti(L,n,i+1);
 		lua_getmetatable(L,-1);
@@ -200,7 +206,14 @@ static int findObjectIndex(lua_State* L,int n,void* data)
 }
 static void removeTable(lua_State* L,int n,int pos)
 {
+#ifdef __LUAJIT__
+	int top = lua_gettop(L);
+	lua_objlen(L,n);
+	int e=(int)lua_tointeger(L,-1);
+	lua_settop(L,top);
+#else
 	int e = luaL_len(L,n);
+#endif
 //	lua_rawgeti(L,n,pos);  /* result = t[pos] */
 	for ( ;pos<e; pos++) {
 		lua_rawgeti(L,n,pos+1);
@@ -269,7 +282,11 @@ static bool findObject(lua_State* L,const char* field,void* tbody,int n=-1)
 	if (!lua_isnil(L,n) && lua_istable(L,n)) {
 		lua_getfield(L,n,field);
 		int result = lua_gettop(L);
+#ifdef __LUAJIT__
+		size_t len = lua_objlen(L,-1);
+#else
 		size_t len = lua_rawlen(L,-1);
+#endif
 		for (int i=0;i<len;i++) {
 			int vtop = lua_gettop(L);
 			lua_rawgeti(L,-1,i+1);
@@ -538,7 +555,11 @@ static int funcb2WorldCreateBody(lua_State *L)
 			}
 			lua_getfield(L,1,"_body");
 			
+#ifdef __LUAJIT__
+			size_t len = lua_objlen(L,-1);
+#else
 			size_t len = lua_rawlen(L,-1);
+#endif
 			b2Body* body = m->CreateBody(&def);
 			PPLuaScript::newObject(L,"b2Body",body,NULL);
 			lua_pushvalue(L,1);
@@ -740,7 +761,11 @@ static int funcb2WorldCreateJoint(lua_State *L) {
 				}
 				lua_getfield(L,1,"_joint");
 
+#ifdef __LUAJIT__
+				size_t len = lua_objlen(L,-1);
+#else
 				size_t len = lua_rawlen(L,-1);
+#endif
 				b2Joint* joint = m->CreateJoint(def);
 				PPLuaScript::newObject(L,"b2Joint",joint,NULL);
 				lua_pushvalue(L,1);
@@ -1094,7 +1119,11 @@ public:
 			int top = lua_gettop(L);
 			lua_pushvalue(L,1);
 			if (findObject(L,"_body",body)) {
+#ifdef __LUAJIT__
+				int n = (int)lua_objlen(L,top);
+#else
 				int n = (int)lua_rawlen(L,top);
+#endif
 				lua_rawseti(L,top,n+1);
 			}
 			lua_settop(L,top);
@@ -1125,7 +1154,11 @@ public:
 		int top = lua_gettop(L);
 		lua_pushvalue(L,1);
 		if (findObject(L,"_body",body)) {
+#ifdef __LUAJIT__
+			int n = (int)lua_objlen(L,top);
+#else
 			int n = (int)lua_rawlen(L,top);
+#endif
 			lua_rawseti(L,top,n+1);
 		}
 		lua_settop(L,top);
@@ -1306,7 +1339,11 @@ static int funcb2BodyCreateFixture(lua_State *L)
 			n++;
 			PPPoint p[2];
 			if (s->isTable(L,n)) {
+#ifdef __LUAJIT__
+				int len = (int)lua_objlen(L,n+2);
+#else
 				int len = (int)lua_rawlen(L,n+2);
+#endif
 				int top = lua_gettop(L);
 				for (int i=0,m=0;i<len&m<2;i+=2,m++) {
 					lua_rawgeti(L,n+2,i+1);
@@ -1324,7 +1361,11 @@ static int funcb2BodyCreateFixture(lua_State *L)
 			n++;
 			PPPoint p;
 			if (s->isTable(L,n)) {
+#ifdef __LUAJIT__
+				int len = (int)lua_objlen(L,n+2);
+#else
 				int len = (int)lua_rawlen(L,n+2);
+#endif
 				if (len >= 2) {
 					lua_rawgeti(L,n+2,1);
 					p.x = luaL_optnumber(L,-1,0);
@@ -1339,7 +1380,11 @@ static int funcb2BodyCreateFixture(lua_State *L)
 		if (strcmp(s->args(n),"polygon") == 0) {
 			n++;
 			if (s->argCount > n) {
+#ifdef __LUAJIT__
+				int len = (int)lua_objlen(L,n+2);
+#else
 				int len = (int)lua_rawlen(L,n+2);
+#endif
 				int top = lua_gettop(L);
 				b2Vec2* p = (b2Vec2*)malloc((len/2)*sizeof(b2Vec2));
 				if (p) {
@@ -1361,7 +1406,11 @@ static int funcb2BodyCreateFixture(lua_State *L)
 		if (strcmp(s->args(n),"chain") == 0) {
 			n++;
 			if (s->argCount > n) {
+#ifdef __LUAJIT__
+				int len = (int)lua_objlen(L,n+2);
+#else
 				int len = (int)lua_rawlen(L,n+2);
+#endif
 				int top = lua_gettop(L);
 				b2Vec2* p = (b2Vec2*)malloc((len/2)*sizeof(b2Vec2));
 				if (p) {
@@ -1400,7 +1449,11 @@ static int funcb2BodyCreateFixture(lua_State *L)
 			}
 			lua_getfield(L,1,"_fixture");
 			
+#ifdef __LUAJIT__
+			size_t len = lua_objlen(L,-1);
+#else
 			size_t len = lua_rawlen(L,-1);
+#endif
 			b2Fixture* fix = m->CreateFixture(&def);
 			PPLuaScript::newObject(L,"b2Fixture",fix,NULL);
 			PPLuaScript::newObject(L,"b2Shape",fix->GetShape(),NULL);

@@ -30,9 +30,13 @@ class QBGame;
 class PPAnimationData;
 class PPLuaScript;
 
+#ifdef __LUAJIT__
+#include <lua.hpp>
+#else
 extern "C" {
 #include <lua/lua.h>
 }
+#endif
 
 class PPObject : public PPStep {
 public:

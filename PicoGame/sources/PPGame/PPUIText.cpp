@@ -769,7 +769,11 @@ static int funcSelectedLines(lua_State* L)
 	if (s->argCount > 0) {
 		m->selectedLines.clear();
 		if (s->isTable(L,0)) {
+#ifdef __LUAJIT__
+			int n= (int)lua_objlen(L,2);
+#else
 			int n = luaL_len(L,2);
+#endif
 			for (int i=0;i<n;i++) {
 				int top = lua_gettop(L);
 				lua_rawgeti(L,2,i+1);

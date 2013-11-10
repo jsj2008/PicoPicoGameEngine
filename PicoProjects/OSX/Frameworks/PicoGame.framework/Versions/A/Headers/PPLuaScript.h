@@ -17,10 +17,14 @@
 #include "PPGameTexture.h"
 #include <string>
 
+#ifdef __LUAJIT__
+#include <lua.hpp>
+#else
 extern "C" {
 #include <lua/lua.h>
 #include <lua/lauxlib.h>
 }
+#endif
 
 #define USERMETA
 #define PPGAMEINSTNACE "__ppgame_ins__"
