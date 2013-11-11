@@ -1101,8 +1101,8 @@ static int funcSet(lua_State* L)
 #else
 				lua_len(L,-1);
 				int len = (int)lua_tointeger(L,-1);
-#endif
 				lua_pop(L,1);
+#endif
 				if (m->animationData) free(m->animationData);
 				m->animationData = (int*)calloc(1,sizeof(int)*len);
 				m->animationDataLength = len;

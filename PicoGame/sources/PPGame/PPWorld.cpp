@@ -33,6 +33,13 @@ PPWorld::PPWorld() : ot(NULL),projector(NULL),userdata(NULL),scale_factor(1)
 PPWorld::~PPWorld()
 {
 //	instance = NULL;
+  if (ot) {
+    for (int i=0;i<depthOT()-1;i++) {
+      delete ot[i];
+    }
+    delete ot;
+    ot=NULL;
+  }
 }
 
 unsigned long PPWorld::getKey()

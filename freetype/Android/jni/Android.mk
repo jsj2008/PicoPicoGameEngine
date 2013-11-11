@@ -1,7 +1,7 @@
 LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 LOCAL_MODULE := freetype
-SOURCE_PATH := ../../sources/freetype-2.4.10
+SOURCE_PATH := ../../sources/freetype-2.4.12
 
 LOCAL_CFLAGS := $(JNI_CFLAGS)
 
@@ -40,31 +40,31 @@ LOCAL_C_INCLUDES := \
 					$(LOCAL_PATH)/$(SOURCE_PATH)/include/freetype/ \
 					$(LOCAL_PATH)/$(SOURCE_PATH)/include/freetype/config/ \
 					$(LOCAL_PATH)/$(SOURCE_PATH)/include/freetype/internal/ \
-                    $(LOCAL_PATH)/$(SOURCE_PATH)/src/autofit/ \
-                    $(LOCAL_PATH)/$(SOURCE_PATH)/src/base/ \
-                    $(LOCAL_PATH)/$(SOURCE_PATH)/src/bdf/ \
-                    $(LOCAL_PATH)/$(SOURCE_PATH)/src/bzip2/ \
-                    $(LOCAL_PATH)/$(SOURCE_PATH)/src/cache/ \
-                    $(LOCAL_PATH)/$(SOURCE_PATH)/src/cff/ \
-                    $(LOCAL_PATH)/$(SOURCE_PATH)/src/cid/ \
-                    $(LOCAL_PATH)/$(SOURCE_PATH)/src/gxvalid/ \
-                    $(LOCAL_PATH)/$(SOURCE_PATH)/src/gzip/ \
-                    $(LOCAL_PATH)/$(SOURCE_PATH)/src/lzw/ \
-                    $(LOCAL_PATH)/$(SOURCE_PATH)/src/otvalid/ \
-                    $(LOCAL_PATH)/$(SOURCE_PATH)/src/pcf/ \
-                    $(LOCAL_PATH)/$(SOURCE_PATH)/src/pfr/ \
-                    $(LOCAL_PATH)/$(SOURCE_PATH)/src/psaux/ \
-                    $(LOCAL_PATH)/$(SOURCE_PATH)/src/pshinter/ \
-                    $(LOCAL_PATH)/$(SOURCE_PATH)/src/psnames/ \
-                    $(LOCAL_PATH)/$(SOURCE_PATH)/src/raster/ \
-                    $(LOCAL_PATH)/$(SOURCE_PATH)/src/sfnt/ \
-                    $(LOCAL_PATH)/$(SOURCE_PATH)/src/smooth/ \
-                    $(LOCAL_PATH)/$(SOURCE_PATH)/src/tools/ \
-                    $(LOCAL_PATH)/$(SOURCE_PATH)/src/truetype/ \
-                    $(LOCAL_PATH)/$(SOURCE_PATH)/src/type1/ \
-                    $(LOCAL_PATH)/$(SOURCE_PATH)/src/type42/ \
-                    $(LOCAL_PATH)/$(SOURCE_PATH)/src/winfonts/ \
-                    $(LOCAL_PATH)/
+					$(LOCAL_PATH)/$(SOURCE_PATH)/src/autofit/ \
+					$(LOCAL_PATH)/$(SOURCE_PATH)/src/base/ \
+					$(LOCAL_PATH)/$(SOURCE_PATH)/src/bdf/ \
+					$(LOCAL_PATH)/$(SOURCE_PATH)/src/bzip2/ \
+					$(LOCAL_PATH)/$(SOURCE_PATH)/src/cache/ \
+					$(LOCAL_PATH)/$(SOURCE_PATH)/src/cff/ \
+					$(LOCAL_PATH)/$(SOURCE_PATH)/src/cid/ \
+					$(LOCAL_PATH)/$(SOURCE_PATH)/src/gxvalid/ \
+					$(LOCAL_PATH)/$(SOURCE_PATH)/src/gzip/ \
+					$(LOCAL_PATH)/$(SOURCE_PATH)/src/lzw/ \
+					$(LOCAL_PATH)/$(SOURCE_PATH)/src/otvalid/ \
+					$(LOCAL_PATH)/$(SOURCE_PATH)/src/pcf/ \
+					$(LOCAL_PATH)/$(SOURCE_PATH)/src/pfr/ \
+					$(LOCAL_PATH)/$(SOURCE_PATH)/src/psaux/ \
+					$(LOCAL_PATH)/$(SOURCE_PATH)/src/pshinter/ \
+					$(LOCAL_PATH)/$(SOURCE_PATH)/src/psnames/ \
+					$(LOCAL_PATH)/$(SOURCE_PATH)/src/raster/ \
+					$(LOCAL_PATH)/$(SOURCE_PATH)/src/sfnt/ \
+					$(LOCAL_PATH)/$(SOURCE_PATH)/src/smooth/ \
+					$(LOCAL_PATH)/$(SOURCE_PATH)/src/tools/ \
+					$(LOCAL_PATH)/$(SOURCE_PATH)/src/truetype/ \
+					$(LOCAL_PATH)/$(SOURCE_PATH)/src/type1/ \
+					$(LOCAL_PATH)/$(SOURCE_PATH)/src/type42/ \
+					$(LOCAL_PATH)/$(SOURCE_PATH)/src/winfonts/ \
+					$(LOCAL_PATH)/
 
 LOCAL_CFLAGS += -O3
 

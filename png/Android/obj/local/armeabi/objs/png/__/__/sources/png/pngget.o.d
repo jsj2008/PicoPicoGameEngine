@@ -1,6 +1,7 @@
 obj/local/armeabi/objs/png/__/__/sources/png/pngget.o: \
  jni/../../sources/png/pngget.c jni/../../sources/png/png.h \
- jni/../../sources/png/zlib.h jni/../../sources/png/zconf.h \
+ /Users/yamagame/Developer/GameDev/Android/android-ndk-r8c/platforms/android-8/arch-arm/usr/include/zlib.h \
+ /Users/yamagame/Developer/GameDev/Android/android-ndk-r8c/platforms/android-8/arch-arm/usr/include/zconf.h \
  jni/../../sources/png/pngconf.h \
  /Users/yamagame/Developer/GameDev/Android/android-ndk-r8c/platforms/android-8/arch-arm/usr/include/stdio.h \
  /Users/yamagame/Developer/GameDev/Android/android-ndk-r8c/platforms/android-8/arch-arm/usr/include/sys/cdefs.h \
@@ -41,9 +42,9 @@ obj/local/armeabi/objs/png/__/__/sources/png/pngget.o: \
 
 jni/../../sources/png/png.h:
 
-jni/../../sources/png/zlib.h:
+/Users/yamagame/Developer/GameDev/Android/android-ndk-r8c/platforms/android-8/arch-arm/usr/include/zlib.h:
 
-jni/../../sources/png/zconf.h:
+/Users/yamagame/Developer/GameDev/Android/android-ndk-r8c/platforms/android-8/arch-arm/usr/include/zconf.h:
 
 jni/../../sources/png/pngconf.h:
 

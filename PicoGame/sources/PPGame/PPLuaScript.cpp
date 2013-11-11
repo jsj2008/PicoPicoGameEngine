@@ -345,7 +345,7 @@ void PPLuaScript::openModule(const char* name,void* userdata,lua_CFunction gc,co
 	if (userdata) {
 		lua_pushlightuserdata(L,userdata);
 #ifdef __LUAJIT__
-		luaJIT_setmode(L, -1, LUAJIT_MODE_ON);
+//		luaJIT_setmode(L, -1, LUAJIT_MODE_ON);
 #endif
 		lua_setfield(L,metatable,PPGAMEINSTNACE);
 	}
@@ -455,7 +455,7 @@ void PPLuaScript::addMetaTable(const char* name,lua_CFunction func)
 //		lua_pushstring(L,name);
 		lua_pushcfunction(L,func);
 #ifdef __LUAJIT__
-		luaJIT_setmode(L, -1, LUAJIT_MODE_ON);
+//		luaJIT_setmode(L, -1, LUAJIT_MODE_ON);
 #endif
 		lua_setfield(L,-2,name);
 //		lua_rawset(L,-3);
@@ -470,7 +470,7 @@ void PPLuaScript::addCommand(const char* name,lua_CFunction func)
 	if (strcmp(_module->c_str(),"") == 0) {
 		lua_pushcfunction(L,func);
 #ifdef __LUAJIT__
-		luaJIT_setmode(L, -1, LUAJIT_MODE_ON);
+//		luaJIT_setmode(L, -1, LUAJIT_MODE_ON);
 #endif
 		lua_setglobal(L,name);
 	} else {
@@ -584,6 +584,7 @@ PPLuaScript::PPLuaScript(PPWorld* world) : PPLuaArg(world),_module(NULL)
   lua_gc(L, LUA_GCSTOP, 0);  /* stop collector during initialization */
   luaL_openlibs(L);  /* open libraries */
   lua_gc(L, LUA_GCRESTART, -1);
+  luaJIT_setmode(L, 0, LUAJIT_MODE_ENGINE | LUAJIT_MODE_ON);
 #else
 	luaL_openlibs(L);
 #endif
@@ -605,22 +606,8 @@ PPLuaScript::PPLuaScript(PPWorld* world) : PPLuaArg(world),_module(NULL)
 PPLuaScript::~PPLuaScript()
 {
 	lua_close(L);
-//	if (flags) delete flags;
 	if (_module) delete _module;
 }
-
-//void PPLuaScript::start()
-//{
-//	//PPObject::start();
-//}
-
-//void PPLuaScript::startWithFlag()
-//{
-//	//PPObject::start();
-////	if (flags == NULL) {
-////		flags = new PPScriptFlag();
-////	}
-//}
 
 bool PPLuaScript::load(const char* scriptfile)
 {

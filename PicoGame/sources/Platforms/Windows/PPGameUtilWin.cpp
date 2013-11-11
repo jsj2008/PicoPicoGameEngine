@@ -434,6 +434,7 @@ unsigned char* PPGame_DecodePNG(unsigned char* bytes,unsigned long size,unsigned
 		free(png_buff.data);
 		return NULL;
 	}
+	
 	png_infop PNG_info = png_create_info_struct(PNG_reader);
 	if (!PNG_info) {
 		fprintf(stderr, "can't create info_struct\n");

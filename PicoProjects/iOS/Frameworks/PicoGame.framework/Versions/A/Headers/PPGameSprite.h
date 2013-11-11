@@ -79,6 +79,23 @@ class PPLuaScript;
 #define PP_DEPTH_COMPONENT GL_DEPTH_COMPONENT16_OES
 #define PP_FRAMEBUFFER_BINDING GL_FRAMEBUFFER_BINDING_OES
 #else
+#ifdef _LINUX
+#define ppGenRenderbuffers glGenRenderbuffersOES
+#define ppBindRenderbuffer glBindRenderbufferOES
+#define ppRenderbufferStorage glRenderbufferStorageOES
+#define ppGenFramebuffers glGenFramebuffersOES
+#define ppBindFramebuffer glBindFramebufferOES
+#define ppFramebufferTexture2D glFramebufferTexture2DOES
+#define ppFramebufferRenderbuffer glFramebufferRenderbufferOES
+#define ppDeleteRenderbuffers glDeleteRenderbuffersOES
+#define ppDeleteFramebuffers glDeleteFramebuffersOES
+#define PP_FRAMEBUFFER GL_FRAMEBUFFER_OES
+#define PP_RENDERBUFFER GL_RENDERBUFFER_OES
+#define PP_COLOR_ATTACHMENT0 GL_COLOR_ATTACHMENT0_OES
+#define PP_DEPTH_ATTACHMENT GL_DEPTH_ATTACHMENT_OES
+#define PP_DEPTH_COMPONENT GL_DEPTH_COMPONENT16_OES
+#define PP_FRAMEBUFFER_BINDING GL_FRAMEBUFFER_BINDING_OES
+#else
 #define ppGenRenderbuffers glGenRenderbuffersEXT
 #define ppBindRenderbuffer glBindRenderbufferEXT
 #define ppRenderbufferStorage glRenderbufferStorageEXT
@@ -94,6 +111,7 @@ class PPLuaScript;
 #define PP_DEPTH_ATTACHMENT GL_DEPTH_ATTACHMENT_EXT
 #define PP_DEPTH_COMPONENT GL_DEPTH_COMPONENT
 #define PP_FRAMEBUFFER_BINDING GL_FRAMEBUFFER_BINDING_EXT
+#endif
 #endif
 #endif
 

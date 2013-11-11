@@ -24,7 +24,7 @@ include $(PREBUILT_SHARED_LIBRARY)
 
 include $(CLEAR_VARS)
 LOCAL_MODULE    := prebuild-cocosdenshion
-LOCAL_SRC_FILES := /lib/$(TARGET_ARCH_ABI)/libcocosdenshion.so
+LOCAL_SRC_FILES := lib/$(TARGET_ARCH_ABI)/libcocosdenshion.so
 include $(PREBUILT_SHARED_LIBRARY)
 
 include $(CLEAR_VARS)

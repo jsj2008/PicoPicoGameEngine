@@ -45,7 +45,6 @@
 		6B876AEC182E78D8003D651B /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B8930DC15B8180100402E76 /* QuartzCore.framework */; };
 		6B876AED182E78D8003D651B /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B8930D615B8155600402E76 /* AudioUnit.framework */; };
 		6B876AEE182E78D8003D651B /* PicoGame.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B876AE3182E759E003D651B /* PicoGame.framework */; };
-		6B876AEF182E78D8003D651B /* libluajit-5.1.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B876AE1182E7354003D651B /* libluajit-5.1.a */; };
 		6B876AF0182E78D8003D651B /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B8930D215B814DE00402E76 /* IOKit.framework */; };
 		6B876AF1182E78D8003D651B /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B8930D015B814CA00402E76 /* OpenGL.framework */; };
 		6B876AF2182E78D8003D651B /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B8930CE15B814BB00402E76 /* AudioToolbox.framework */; };
@@ -64,6 +63,7 @@
 		6B876B00182E78D8003D651B /* PPIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 6BA522C815B95789006749D7 /* PPIcon.icns */; };
 		6B876B01182E78D8003D651B /* PPImageFont.png in Resources */ = {isa = PBXBuildFile; fileRef = 6B89310415B81D8900402E76 /* PPImageFont.png */; };
 		6B876B07182E790A003D651B /* Lua.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B03D4CD15B98112000D2FD5 /* Lua.framework */; };
+		6B876B1C18309008003D651B /* libluajit-5.1.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B876B1B18309008003D651B /* libluajit-5.1.a */; };
 		6B8930A115B813D700402E76 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B8930A015B813D700402E76 /* Cocoa.framework */; };
 		6B8930AB15B813D700402E76 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6B8930A915B813D700402E76 /* InfoPlist.strings */; };
 		6B8930AD15B813D700402E76 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B8930AC15B813D700402E76 /* main.m */; };
@@ -108,10 +108,10 @@
 		6B18AC4F162C336900A42322 /* PicoGameViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PicoGameViewController.mm; sourceTree = "<group>"; };
 		6B70CDDE15F03E190074710A /* PicoPicoGames.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PicoPicoGames.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B70CDE015F03E190074710A /* PicoPicoGames-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "PicoPicoGames-Info.plist"; path = "/Users/yamagame/Developer/GameDev/PicoPicoGameEngine/PicoProjects/OSX/PicoPicoGames-Info.plist"; sourceTree = "<absolute>"; };
-		6B876AE1182E7354003D651B /* libluajit-5.1.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libluajit-5.1.a"; path = "../../../LuaJIT/LuaJIT2/lib/libluajit-5.1.a"; sourceTree = "<group>"; };
 		6B876AE3182E759E003D651B /* PicoGame.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PicoGame.framework; path = ../Frameworks/PicoGame.framework; sourceTree = "<group>"; };
 		6B876B05182E78D8003D651B /* PicoPicoGames LuaJIT.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "PicoPicoGames LuaJIT.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B876B06182E78D8003D651B /* PicoPicoGames copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "PicoPicoGames copy-Info.plist"; path = "/Users/yamagame/Developer/GameDev/PicoPicoGameEngine/PicoProjects/OSX/PicoPicoGames copy-Info.plist"; sourceTree = "<absolute>"; };
+		6B876B1B18309008003D651B /* libluajit-5.1.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libluajit-5.1.a"; path = "../../../LuaJIT/sources/output-mac/lib/libluajit-5.1.a"; sourceTree = "<group>"; };
 		6B89309C15B813D700402E76 /* PicoGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PicoGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B8930A015B813D700402E76 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		6B8930A315B813D700402E76 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -176,11 +176,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6B876B1C18309008003D651B /* libluajit-5.1.a in Frameworks */,
 				6B876AEB182E78D8003D651B /* Carbon.framework in Frameworks */,
 				6B876AEC182E78D8003D651B /* QuartzCore.framework in Frameworks */,
 				6B876AED182E78D8003D651B /* AudioUnit.framework in Frameworks */,
 				6B876AEE182E78D8003D651B /* PicoGame.framework in Frameworks */,
-				6B876AEF182E78D8003D651B /* libluajit-5.1.a in Frameworks */,
 				6B876AF0182E78D8003D651B /* IOKit.framework in Frameworks */,
 				6B876AF1182E78D8003D651B /* OpenGL.framework in Frameworks */,
 				6B876AF2182E78D8003D651B /* AudioToolbox.framework in Frameworks */,
@@ -225,7 +225,7 @@
 		6B03D4D515B98116000D2FD5 /* PicoPicoEngine */ = {
 			isa = PBXGroup;
 			children = (
-				6B876AE1182E7354003D651B /* libluajit-5.1.a */,
+				6B876B1B18309008003D651B /* libluajit-5.1.a */,
 				6B03D4C915B98112000D2FD5 /* Box2D.framework */,
 				6B03D4CA15B98112000D2FD5 /* CocosDenshion.framework */,
 				6B03D4CB15B98112000D2FD5 /* FlMML.framework */,
@@ -612,6 +612,7 @@
 					"$(SRCROOT)/../../Lua5.2/OSX/Lua/Products",
 					"$(SRCROOT)/../../PicoGame/OSX/PicoGame/Products",
 					"$(SRCROOT)/../../PicoProjects/OSX/Frameworks",
+					/Users/yamagame/Developer/GameDev/PicoPicoGameEngine/PicoProjects/OSX/Frameworks,
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PicoGame/PicoGame-Prefix.pch";
@@ -620,16 +621,23 @@
 					"$(inherited)",
 					__LUAJIT__,
 				);
-				HEADER_SEARCH_PATHS = "$(SRCROOT)/../../LuaJIT/LuaJIT2/include/luajit-2.0";
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/../../LuaJIT/sources/output-mac/include/luajit-2.0";
 				INFOPLIST_FILE = "PicoPicoGames copy-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/../../LuaJIT/LuaJIT2/lib",
+					"$(SRCROOT)/../../LuaJIT/sources/output-mac/lib",
+					"/Users/yamagame/Developer/GameDev/PicoPicoGameEngine/LuaJIT/sources/output-mac/lib",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				ORDER_FILE = "";
 				OTHER_LDFLAGS = (
 					"-lz",
 					"-lxml2",
+					"-lluajit-5.1",
+					"-pagezero_size",
+					10000,
+					"-image_base",
+					100000000,
 				);
 				PRODUCT_NAME = "PicoPicoGames LuaJIT";
 				USER_HEADER_SEARCH_PATHS = "";
@@ -652,6 +660,7 @@
 					"$(SRCROOT)/../../Lua5.2/OSX/Lua/Products",
 					"$(SRCROOT)/../../PicoGame/OSX/PicoGame/Products",
 					"$(SRCROOT)/../../PicoProjects/OSX/Frameworks",
+					/Users/yamagame/Developer/GameDev/PicoPicoGameEngine/PicoProjects/OSX/Frameworks,
 				);
 				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -660,16 +669,23 @@
 					"$(inherited)",
 					__LUAJIT__,
 				);
-				HEADER_SEARCH_PATHS = "$(SRCROOT)/../../LuaJIT/LuaJIT2/include/luajit-2.0";
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/../../LuaJIT/sources/output-mac/include/luajit-2.0";
 				INFOPLIST_FILE = "PicoPicoGames copy-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/../../LuaJIT/LuaJIT2/lib",
+					"$(SRCROOT)/../../LuaJIT/sources/output-mac/lib",
+					"/Users/yamagame/Developer/GameDev/PicoPicoGameEngine/LuaJIT/sources/output-mac/lib",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				ORDER_FILE = "";
 				OTHER_LDFLAGS = (
 					"-lz",
 					"-lxml2",
+					"-lluajit-5.1",
+					"-pagezero_size",
+					10000,
+					"-image_base",
+					100000000,
 				);
 				PRODUCT_NAME = "PicoPicoGames LuaJIT";
 				USER_HEADER_SEARCH_PATHS = "";

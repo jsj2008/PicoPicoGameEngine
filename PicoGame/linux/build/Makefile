@@ -37,8 +37,8 @@ CPPFLAGS += \
 -I../../../Box2D/sources/Box2D_v2.2.1/Box2D/Dynamics/Joints/ \
 -I../../../Box2D/sources/Box2D_v2.2.1/Box2D/Rope/ \
 -I../../../freetype/sources/ \
--I../../../freetype/sources/freetype-2.4.10/ \
--I../../../freetype/sources/freetype-2.4.10/include/ \
+-I../../../freetype/sources/freetype-2.4.12/ \
+-I../../../freetype/sources/freetype-2.4.12/include/ \
 -I../../../png/sources/png/
 
 CFLAGS = $(CPPFLAGS) -std=gnu99

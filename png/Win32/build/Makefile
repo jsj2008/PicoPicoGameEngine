@@ -9,9 +9,10 @@ BUILD_DIR = objects
 LIBNAME = libpng.ar
 
 CFLAGS +=  \
+-I../../sources/zlib/ \
 -I../../sources/png/
 
-VPATH = ../../sources/png/:
+VPATH = ../../sources/png/:../../sources/zlib/:
 
 OBJS = \
 adler32.o \
@@ -22,6 +23,9 @@ infback.o \
 inffast.o \
 inflate.o \
 inftrees.o \
+trees.o \
+uncompr.o \
+zutil.o \
 png.o \
 pngerror.o \
 pngget.o \
@@ -36,10 +40,7 @@ pngtrans.o \
 pngwio.o \
 pngwrite.o \
 pngwtran.o \
-pngwutil.o \
-trees.o \
-uncompr.o \
-zutil.o
+pngwutil.o
 
 $(BUILD_DIR)/%.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@

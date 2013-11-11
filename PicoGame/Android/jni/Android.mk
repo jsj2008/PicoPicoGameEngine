@@ -80,19 +80,26 @@ LOCAL_C_INCLUDES := $(COCOS2D_PATH)/cocos2dx \
                   	$(LOCAL_PATH)/../../../Lua5.2/sources/lua/ \
                     $(LOCAL_PATH)/../../../Box2D/sources/Box2D_v2.2.1/ \
                   	$(LOCAL_PATH)/../../../freetype/sources/ \
-                  	$(LOCAL_PATH)/../../../freetype/sources/freetype-2.4.10/ \
-                  	$(LOCAL_PATH)/../../../freetype/sources/freetype-2.4.10/include/ \
+                  	$(LOCAL_PATH)/../../../freetype/sources/freetype-2.4.12/ \
+                  	$(LOCAL_PATH)/../../../freetype/sources/freetype-2.4.12/include/ \
                   	$(LOCAL_PATH)/.
 
+#                  	$(LOCAL_PATH)/../../../LuaJIT/sources/output-android/$(TARGET_ARCH_ABI)/include/luajit-2.0/
+
+#LOCAL_PREBUILT_LIBS := cocos2d cocosdenshion
+
+#LOCAL_STATIC_LIBRARIES := png flmml freetype lua box2d xml2
+
 LOCAL_CFLAGS += -O3
+#LOCAL_CFLAGS += -O3 -D__LUAJIT__
 
 # it is used for ndk-r5  
 # if you build with ndk-r4, comment it  
 # because the new Windows toolchain doesn't support Cygwin's drive
 # mapping (i.e /cygdrive/c/ instead of C:/)  
 LOCAL_LDLIBS := -L$(call host-path, $(JNI_PATH)/../libs/$(TARGET_ARCH_ABI)) \
-				-L$(call host-path, $(LOCAL_PATH)/../lib) \
-				-L$(call host-path, $(COCOS2D_PATH)/cocos2dx/platform/third_party/android/libraries/$(TARGET_ARCH_ABI)) \
-                -lGLESv1_CM -lpng -lflmml -lfreetype -llua -lz -lxml2 -llog -lbox2d -lcocos2d -lcocosdenshion
+                -L$(call host-path, $(LOCAL_PATH)/../lib) \
+                -L$(call host-path, $(COCOS2D_PATH)/cocos2dx/platform/third_party/android/libraries/$(TARGET_ARCH_ABI)) \
+                -lGLESv1_CM -lz -llog -lpng -lflmml -lfreetype -llua -lbox2d -lxml2 -lcocos2d -lcocosdenshion
 
 include $(BUILD_SHARED_LIBRARY)

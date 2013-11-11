@@ -990,7 +990,7 @@ static int funcLoopAnime(lua_State* L)
 			m->animationTime = lua_tonumber(L,-1);
 
 #ifdef __LUAJIT__
-			int n=lua_objlen(L,3);
+			int n=(int)lua_objlen(L,3);
 #else
 			lua_len(L,3);
 			int n=(int)lua_tointeger(L,-1);
@@ -1027,7 +1027,7 @@ static int funcPlayAnime(lua_State* L)
 			m->animationTime = lua_tonumber(L,-1);
 
 #ifdef __LUAJIT__
-			int n=lua_objlen(L,3);
+			int n=(int)lua_objlen(L,3);
 #else
 			lua_len(L,3);
 			int n=(int)lua_tointeger(L,-1);

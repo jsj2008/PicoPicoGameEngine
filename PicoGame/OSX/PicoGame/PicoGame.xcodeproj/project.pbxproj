@@ -870,14 +870,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../../../FlMML/OSX/FlMML/Products\"",
-					"\"$(SRCROOT)/../../../Lua5.2/OSX/Lua/Products\"",
-					"\"$(SRCROOT)/../../../freetype/OSX/freetype/Products\"",
-					"\"$(SRCROOT)/../../../CocosDenshion/OSX/CocosDenshion/Products\"",
-					"\"$(SRCROOT)/../../../Box2D/OSX/Box2D/Products\"",
-				);
-				"FRAMEWORK_SEARCH_PATHS[arch=*]" = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../../../FlMML/OSX/FlMML/Products\"",
 					"\"$(SRCROOT)/../../../freetype/OSX/freetype/Products\"",
 					"\"$(SRCROOT)/../../../CocosDenshion/OSX/CocosDenshion/Products\"",
 					"\"$(SRCROOT)/../../../Box2D/OSX/Box2D/Products\"",
@@ -887,9 +879,10 @@
 				GCC_PREFIX_HEADER = "PicoGame/PicoGame-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = __LUAJIT__;
 				HEADER_SEARCH_PATHS = (
-					"../../../freetype/sources/freetype-2.4.10/include",
+					../../../freetype/sources,
+					../../../freetype/sources/freetype,
 					"$(SDKROOT)/usr/include/libxml2/",
-					"../../../LuaJIT/LuaJIT2/include/luajit-2.0/",
+					"../../../LuaJIT/sources/output-mac/include/luajit-2.0",
 				);
 				INFOPLIST_FILE = "";
 				INFOPLIST_OUTPUT_FORMAT = "same-as-input";
@@ -901,7 +894,7 @@
 				PLIST_FILE_OUTPUT_FORMAT = "same-as-input";
 				PRODUCT_NAME = PicoGame;
 				SDKROOT = macosx;
-				USER_HEADER_SEARCH_PATHS = "../../../freetype/sources/freetype-2.4.10/include";
+				USER_HEADER_SEARCH_PATHS = ../../../freetype/sources/freetype;
 				VALID_ARCHS = "i386 x86_64";
 				WRAPPER_EXTENSION = framework;
 			};
@@ -982,7 +975,8 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PicoGame/PicoGame-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
-					"../../../freetype/sources/freetype-2.4.10/include",
+					../../../freetype/sources,
+					../../../freetype/sources/freetype,
 					"$(SDKROOT)/usr/include/libxml2/",
 				);
 				INFOPLIST_FILE = "";
@@ -996,7 +990,7 @@
 				PLIST_FILE_OUTPUT_FORMAT = "same-as-input";
 				PRODUCT_NAME = PicoGame;
 				SDKROOT = macosx;
-				USER_HEADER_SEARCH_PATHS = "../../../freetype/sources/freetype-2.4.10/include";
+				USER_HEADER_SEARCH_PATHS = ../../../freetype/sources/freetype;
 				VALID_ARCHS = "i386 x86_64";
 				WRAPPER_EXTENSION = framework;
 			};
@@ -1019,7 +1013,8 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PicoGame/PicoGame-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
-					"../../../freetype/sources/freetype-2.4.10/include",
+					../../../freetype/sources,
+					../../../freetype/sources/freetype,
 					"$(SDKROOT)/usr/include/libxml2/",
 				);
 				INFOPLIST_FILE = "";
@@ -1032,7 +1027,7 @@
 				PLIST_FILE_OUTPUT_FORMAT = "same-as-input";
 				PRODUCT_NAME = PicoGame;
 				SDKROOT = macosx;
-				USER_HEADER_SEARCH_PATHS = "../../../freetype/sources/freetype-2.4.10/include";
+				USER_HEADER_SEARCH_PATHS = ../../../freetype/sources/freetype;
 				VALID_ARCHS = "i386 x86_64";
 				WRAPPER_EXTENSION = framework;
 			};

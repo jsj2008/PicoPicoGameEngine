@@ -9,9 +9,10 @@ BUILD_DIR = objects
 LIBNAME = libpng.ar
 
 CFLAGS +=  \
--I../../sources/png/
+-I../../sources/png/ \
+-I../../sources/zlib/
 
-VPATH = ../../sources/png/:
+VPATH = ../../sources/png/:../../sources/zlib/:
 
 OBJS = \
 adler32.o \

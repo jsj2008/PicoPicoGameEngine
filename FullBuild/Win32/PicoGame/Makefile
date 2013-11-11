@@ -34,7 +34,8 @@ CFLAGS = -DFT2_BUILD_LIBRARY -DFT_CONFIG_MODULES_H="<ftmodule.h>" -D_WIN32 -DIGN
 -I../../../freetype/sources/ \
 -I../../../freetype/sources/freetype-2.4.10/ \
 -I../../../freetype/sources/freetype-2.4.10/include/ \
--I../../../png/sources/png/
+-I../../../png/sources/png/ \
+-I../../../png/sources/zlib/
 
 VPATH = \
 ../../../PicoGame/sources/Platforms/Windows/:

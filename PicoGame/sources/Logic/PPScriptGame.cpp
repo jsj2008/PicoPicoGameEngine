@@ -34,6 +34,12 @@ PPScriptGame::~PPScriptGame()
 	if (script) delete script;
 	if (vKey) delete vKey;
 	if (stick) delete stick;
+  if (spriteObject) delete spriteObject;
+  if (tmxObject) delete tmxObject;
+  if (particleObject) delete particleObject;
+  if (offscreenObject) delete offscreenObject;
+  if (scrollViewObject) delete scrollViewObject;
+  if (textObject) delete textObject;
 }
 
 void PPScriptGame::stepInit()
@@ -555,7 +561,7 @@ void PPScriptGame::reloadData()
 	}
 
 	openAudioEngineSEMML(script,"ppsewave");
-	
+
 	if (vKey) delete vKey;
 	vKey = new PPVertualKey(this);
 	vKey->openLibrary(script,"ppvkey");
@@ -566,13 +572,19 @@ void PPScriptGame::reloadData()
 	stick->start();
 	stick->openLibrary(script,"ppjoystick");
 	
+  if (spriteObject) delete spriteObject;
 	spriteObject = PPObject::registClass(script,"ppobject");
+  if (tmxObject) delete tmxObject;
 	tmxObject = (PPTMXMap*)PPTMXMap::registClass(script,"ppmap","ppobject");
+  if (particleObject) delete particleObject;
 	particleObject = (PPParticleEmitter*)PPParticleEmitter::registClass(script,"ppparticle","ppobject");
+  if (offscreenObject) delete offscreenObject;
 	offscreenObject = (PPOffscreenTexture*)PPOffscreenTexture::registClass(script,"ppoffscreen","ppobject");
+  if (scrollViewObject) delete scrollViewObject;
 	scrollViewObject = (PPUIScrollView*)PPUIScrollView::registClass(script,"ppscroll","ppobject");
+  if (textObject) delete textObject;
 	textObject = (PPUIText*)PPUIText::registClass(script,"pptext","ppobject");
-	
+
 	projector->openLibrary(script,"ppscreen");
 	projector->animationFrameInterval=1;
 
@@ -621,7 +633,7 @@ void PPScriptGame::reloadData()
 
 void PPScriptGame::stepIdle()
 {
-	stick->read();
+	if (stick) stick->read();
 	
 	locate(PPPointZero);
 	vKey->idle();

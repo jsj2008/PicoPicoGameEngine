@@ -1,6 +1,7 @@
 obj/local/x86/objs/png/__/__/sources/png/pngrtran.o: \
  jni/../../sources/png/pngrtran.c jni/../../sources/png/png.h \
- jni/../../sources/png/zlib.h jni/../../sources/png/zconf.h \
+ /Users/yamagame/Developer/GameDev/Android/android-ndk-r8c/platforms/android-9/arch-x86/usr/include/zlib.h \
+ /Users/yamagame/Developer/GameDev/Android/android-ndk-r8c/platforms/android-9/arch-x86/usr/include/zconf.h \
  jni/../../sources/png/pngconf.h \
  /Users/yamagame/Developer/GameDev/Android/android-ndk-r8c/platforms/android-9/arch-x86/usr/include/stdio.h \
  /Users/yamagame/Developer/GameDev/Android/android-ndk-r8c/platforms/android-9/arch-x86/usr/include/sys/cdefs.h \
@@ -41,9 +42,9 @@ obj/local/x86/objs/png/__/__/sources/png/pngrtran.o: \
 
 jni/../../sources/png/png.h:
 
-jni/../../sources/png/zlib.h:
+/Users/yamagame/Developer/GameDev/Android/android-ndk-r8c/platforms/android-9/arch-x86/usr/include/zlib.h:
 
-jni/../../sources/png/zconf.h:
+/Users/yamagame/Developer/GameDev/Android/android-ndk-r8c/platforms/android-9/arch-x86/usr/include/zconf.h:
 
 jni/../../sources/png/pngconf.h:
 

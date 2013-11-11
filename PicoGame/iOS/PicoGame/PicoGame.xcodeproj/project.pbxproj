@@ -7,6 +7,17 @@
 	objects = {
 
 /* Begin PBXAggregateTarget section */
+		6B876B201830ADFA003D651B /* UniversalLuaJIT */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 6B876B221830ADFA003D651B /* Build configuration list for PBXAggregateTarget "UniversalLuaJIT" */;
+			buildPhases = (
+				6B876B211830ADFA003D651B /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = UniversalLuaJIT;
+			productName = Universal;
+		};
 		6BAC25C015B290070051C16B /* Universal */ = {
 			isa = PBXAggregateTarget;
 			buildConfigurationList = 6BAC25C315B290070051C16B /* Build configuration list for PBXAggregateTarget "Universal" */;
@@ -721,6 +732,7 @@
 			targets = (
 				6BAC243015B284FA0051C16B /* PicoGame */,
 				6BAC25C015B290070051C16B /* Universal */,
+				6B876B201830ADFA003D651B /* UniversalLuaJIT */,
 			);
 		};
 /* End PBXProject section */
@@ -737,6 +749,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		6B876B211830ADFA003D651B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Sets the target folders and the final framework product.\nFMK_NAME=PicoGame\nFMK_VERSION=A\n\n# Install dir will be the final output to the framework.\n# The following line create it in the root folder of the current project.\nINSTALL_DIR=${SRCROOT}/Products/${FMK_NAME}.framework\n\n# Working dir will be deleted after the framework creation.\nWRK_DIR=build\nDEVICE_DIR=${WRK_DIR}/ReleaseLuaJIT-iphoneos/${FMK_NAME}.framework\nSIMULATOR_DIR=${WRK_DIR}/ReleaseLuaJIT-iphonesimulator/${FMK_NAME}.framework\n\n# Building both architectures.\nxcodebuild -configuration \"ReleaseLuaJIT\" -target \"${FMK_NAME}\" -sdk iphoneos\nxcodebuild -configuration \"ReleaseLuaJIT\" -target \"${FMK_NAME}\" -sdk iphonesimulator\n\n# Cleaning the oldest.\nif [ -d \"${INSTALL_DIR}\" ]\nthen\nrm -rf \"${INSTALL_DIR}\"\nfi\n\n# Creates and renews the final product folder.\nmkdir -p \"${INSTALL_DIR}\"\nmkdir -p \"${INSTALL_DIR}/Versions\"\nmkdir -p \"${INSTALL_DIR}/Versions/${FMK_VERSION}\"\nmkdir -p \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources\"\nmkdir -p \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Headers\"\n\n# Creates the internal links.\n# It MUST uses relative path, otherwise will not work when the folder is copied/moved.\nln -s \"${FMK_VERSION}\" \"${INSTALL_DIR}/Versions/Current\"\nln -s \"Versions/Current/Headers\" \"${INSTALL_DIR}/Headers\"\nln -s \"Versions/Current/Resources\" \"${INSTALL_DIR}/Resources\"\nln -s \"Versions/Current/${FMK_NAME}\" \"${INSTALL_DIR}/${FMK_NAME}\"\n\n# Copies the headers and resources files to the final product folder.\ncp -R \"${DEVICE_DIR}/Headers/\" \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Headers/\"\ncp -R \"${DEVICE_DIR}/\" \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources/\"\n\n# Removes the binary and header from the resources folder.\nrm -r \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources/Headers\" \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources/${FMK_NAME}\"\n\n# Uses the Lipo Tool to merge both binary files (i386 + armv6/armv7) into one Universal final product.\nlipo -create \"${DEVICE_DIR}/${FMK_NAME}\" \"${SIMULATOR_DIR}/${FMK_NAME}\" -output \"${INSTALL_DIR}/Versions/${FMK_VERSION}/${FMK_NAME}\"\n\nrm -r \"${WRK_DIR}\"\n\n${SRCROOT}/../../../PicoProjects/iOS/copy-frameworks.command";
+		};
 		6BAC25C515B2900C0051C16B /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -825,6 +850,94 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		6B876B1D1830ADEC003D651B /* ReleaseLuaJIT */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+			};
+			name = ReleaseLuaJIT;
+		};
+		6B876B1E1830ADEC003D651B /* ReleaseLuaJIT */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DEAD_CODE_STRIPPING = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../../FlMML/iOS/FlMML/Products\"",
+					"\"$(SRCROOT)/../../../Lua5.2/iOS/Lua/Products\"",
+					"\"$(SRCROOT)/../../../freetype/iOS/freetype/Products\"",
+					"\"$(SRCROOT)/../../../CocosDenshion/iOS/CocosDenshion/Products\"",
+					"\"$(SRCROOT)/../../../Box2D/iOS/Box2D/Products\"",
+				);
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "PicoPicoGameEngine/PicoGame-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = __LUAJIT__;
+				HEADER_SEARCH_PATHS = (
+					../../../freetype/sources,
+					../../../freetype/sources/freetype,
+					"$(SDKROOT)/usr/include/libxml2/",
+					"../../../LuaJIT/sources/output-ios/include/luajit-2.0",
+				);
+				INFOPLIST_FILE = "";
+				INFOPLIST_OUTPUT_FORMAT = "same-as-input";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				LINK_WITH_STANDARD_LIBRARIES = NO;
+				MACH_O_TYPE = mh_object;
+				MACOSX_DEPLOYMENT_TARGET = "";
+				OTHER_LDFLAGS = "-ObjC";
+				PLIST_FILE_OUTPUT_FORMAT = "same-as-input";
+				PRODUCT_NAME = PicoGame;
+				SDKROOT = iphoneos;
+				USER_HEADER_SEARCH_PATHS = ../../../freetype/sources/freetype;
+				VALID_ARCHS = "i386 armv7";
+				WRAPPER_EXTENSION = framework;
+			};
+			name = ReleaseLuaJIT;
+		};
+		6B876B1F1830ADEC003D651B /* ReleaseLuaJIT */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = ReleaseLuaJIT;
+		};
+		6B876B231830ADFA003D651B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "Universal copy";
+			};
+			name = Debug;
+		};
+		6B876B241830ADFA003D651B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "Universal copy";
+			};
+			name = Release;
+		};
+		6B876B251830ADFA003D651B /* ReleaseLuaJIT */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "Universal copy";
+			};
+			name = ReleaseLuaJIT;
+		};
 		6BAC244115B284FA0051C16B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -886,7 +999,8 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PicoPicoGameEngine/PicoGame-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
-					"../../../freetype/sources/freetype-2.4.10/include",
+					../../../freetype/sources,
+					../../../freetype/sources/freetype,
 					"$(SDKROOT)/usr/include/libxml2/",
 				);
 				INFOPLIST_FILE = "";
@@ -900,7 +1014,7 @@
 				PLIST_FILE_OUTPUT_FORMAT = "same-as-input";
 				PRODUCT_NAME = PicoGame;
 				SDKROOT = iphoneos;
-				USER_HEADER_SEARCH_PATHS = "../../../freetype/sources/freetype-2.4.10/include";
+				USER_HEADER_SEARCH_PATHS = ../../../freetype/sources/freetype;
 				VALID_ARCHS = "i386 armv7";
 				WRAPPER_EXTENSION = framework;
 			};
@@ -924,7 +1038,8 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PicoPicoGameEngine/PicoGame-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
-					"../../../freetype/sources/freetype-2.4.10/include",
+					../../../freetype/sources,
+					../../../freetype/sources/freetype,
 					"$(SDKROOT)/usr/include/libxml2/",
 				);
 				INFOPLIST_FILE = "";
@@ -938,7 +1053,7 @@
 				PLIST_FILE_OUTPUT_FORMAT = "same-as-input";
 				PRODUCT_NAME = PicoGame;
 				SDKROOT = iphoneos;
-				USER_HEADER_SEARCH_PATHS = "../../../freetype/sources/freetype-2.4.10/include";
+				USER_HEADER_SEARCH_PATHS = ../../../freetype/sources/freetype;
 				VALID_ARCHS = "i386 armv7";
 				WRAPPER_EXTENSION = framework;
 			};
@@ -961,11 +1076,22 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		6B876B221830ADFA003D651B /* Build configuration list for PBXAggregateTarget "UniversalLuaJIT" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6B876B231830ADFA003D651B /* Debug */,
+				6B876B241830ADFA003D651B /* Release */,
+				6B876B251830ADFA003D651B /* ReleaseLuaJIT */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		6BAC242B15B284FA0051C16B /* Build configuration list for PBXProject "PicoGame" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6BAC244115B284FA0051C16B /* Debug */,
 				6BAC244215B284FA0051C16B /* Release */,
+				6B876B1D1830ADEC003D651B /* ReleaseLuaJIT */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -975,6 +1101,7 @@
 			buildConfigurations = (
 				6BAC244415B284FA0051C16B /* Debug */,
 				6BAC244515B284FA0051C16B /* Release */,
+				6B876B1E1830ADEC003D651B /* ReleaseLuaJIT */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -984,6 +1111,7 @@
 			buildConfigurations = (
 				6BAC25C115B290070051C16B /* Debug */,
 				6BAC25C215B290070051C16B /* Release */,
+				6B876B1F1830ADEC003D651B /* ReleaseLuaJIT */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
