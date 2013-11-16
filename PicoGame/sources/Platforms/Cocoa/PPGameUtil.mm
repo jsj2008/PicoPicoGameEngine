@@ -13,8 +13,8 @@
 #include "PPGameBGM.h"
 #include "PPGameSound.h"
 #include "QBGame.h"
-#if TARGET_OS_IPHONE
 #include "PPGamePreference.h"
+#if TARGET_OS_IPHONE
 #import <GameController/GCController.h>
 #endif
 
@@ -35,35 +35,10 @@ const char* PPGameResourcePath(const char* name)
 
 	NSString* n = [NSString stringWithUTF8String:name];
 
-//NSLog([n stringByDeletingPathExtension]);
-//NSLog([n pathExtension]);
-
 	const char* f = [[[NSBundle mainBundle] pathForResource:[n stringByDeletingPathExtension] ofType:[n pathExtension]] fileSystemRepresentation];
 	if (f == NULL) return "";
 	return f;
 }
-
-//int PPGame_SetDefault(const char* name)
-//{
-//	if (strcmp(name,PPGAME_KEY_SIDE_RIGHT) == 0) {
-//		keySide = 1;
-//	} else
-//	if (strcmp(name,PPGAME_KEY_SIDE_LEFT) == 0) {
-//		keySide = 0;
-//	}
-//	return keySide;
-//}
-
-//int PPGame_GetDefault(const char* name)
-//{
-//	if (strcmp(name,PPGAME_KEY_SIDE_RIGHT) == 0) {
-//		if (keySide == 1) return 1;
-//	} else
-//	if (strcmp(name,PPGAME_KEY_SIDE_LEFT) == 0) {
-//		if (keySide == 0) return 1;
-//	}
-//	return 0;
-//}
 
 const char* PPGameLoadShader(const char* name)
 {
@@ -129,31 +104,34 @@ unsigned char* PPGame_DecodePNG(unsigned char* bytes,unsigned long size,unsigned
 	return pixel;
 }
 
-#if TARGET_OS_IPHONE
-static PPGamePreference* customPrefernce=nil;
+static PPGamePreference* customPreference=nil;
+static NSString* customPreferencePath=nil;
 
-void PPSetCustomPlistPath(NSString* path);
-
-void PPSetCustomPlistPath(NSString* path)
+const char* PPGetCustomPlistPath(void)
 {
-	[customPrefernce release];
-	customPrefernce = nil;
+  if (customPreferencePath) {
+    return [customPreferencePath fileSystemRepresentation];
+  }
+  return NULL;
+}
+
+void PPSetCustomPlistPath(const char* path)
+{
+	[customPreference release];
+	customPreference = nil;
+  [customPreferencePath release];
+  customPreferencePath = nil;
 	if (path) {
-		customPrefernce = [[PPGamePreference alloc] initWithPath:path];
+    customPreferencePath = [[NSString stringWithUTF8String:path] retain];
+		customPreference = [[PPGamePreference alloc] initWithPath:customPreferencePath];
 	}
 }
 
 static id PPPrefreceObject()
 {
-	if (customPrefernce) return customPrefernce;
+	if (customPreference) return customPreference;
 	return [NSUserDefaults standardUserDefaults];
 }
-#else
-static id PPPrefreceObject()
-{
-	return [NSUserDefaults standardUserDefaults];
-}
-#endif
 
 int PPGetInteger(const char* key,int defaultValue)
 {
@@ -208,7 +186,6 @@ void PPSync()
 
 unsigned char* PPGame_GetData(const char* key,int* dataSize)
 {
-//	NSData* data = [[NSDictionary dictionaryWithContentsOfFile:[NSString stringWithUTF8String:PPGameResourcePath("com.yamagame.PicoPicoQuest.plist")]] objectForKey:[NSString stringWithUTF8String:key]];
 	NSData* data = [PPPrefreceObject() objectForKey:[NSString stringWithUTF8String:key]];
 	*dataSize = (int)[data length];
 	return (unsigned char*)[data bytes];
@@ -217,12 +194,21 @@ unsigned char* PPGame_GetData(const char* key,int* dataSize)
 const char* PPGameDocumentPath(const char* dbfile)
 {
 #if TARGET_OS_IPHONE
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    return [[documentsDirectory stringByAppendingPathComponent:[NSString stringWithUTF8String:dbfile]] fileSystemRepresentation];
+  NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+  NSString *documentsDirectory = [paths objectAtIndex:0];
+  return [[documentsDirectory stringByAppendingPathComponent:[NSString stringWithUTF8String:dbfile]] fileSystemRepresentation];
 #else
-	NSString* p = [[[NSBundle mainBundle] bundlePath] stringByDeletingLastPathComponent];
-	return [[p stringByAppendingPathComponent:[NSString stringWithUTF8String:dbfile]] fileSystemRepresentation];
+  NSFileManager* fileManager = [NSFileManager defaultManager];
+  NSArray* paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory,NSUserDomainMask,YES);
+  NSString* basePath = nil;
+  if ([paths count] > 0) {
+    basePath = [[paths objectAtIndex:0] stringByAppendingPathComponent:@"Application Support"];
+  } else {
+    basePath = NSTemporaryDirectory();
+  }
+  basePath = [basePath stringByAppendingPathComponent:[[[[NSBundle mainBundle] bundlePath] lastPathComponent] stringByDeletingPathExtension]];
+  [fileManager createDirectoryAtPath:basePath withIntermediateDirectories:YES attributes:nil error:nil];
+	return [[basePath stringByAppendingPathComponent:[NSString stringWithUTF8String:dbfile]] fileSystemRepresentation];
 #endif
 }
 
@@ -318,10 +304,7 @@ void PPGame_IdleBGM(void* controller,int playBGM,bool playBGMOneTime,int chooseB
 
 int PPGame_GetLocale()
 {
-	//return QBGAME_LOCALE_OTHER;
-	//NSLog([[NSLocale currentLocale] objectForKey:NSLocaleLanguageCode]);
 	NSString* code = NSLocalizedString(@"language",@"");
-//NSLog(code);
 	if ([code isEqualToString:@"jp"]) {
 		return QBGAME_LOCALE_JAPANESE;
 	}
@@ -427,13 +410,11 @@ void PPGameSetMainLua(const char* luaname)
 	__luaFilePath = nil;
 	if (luaname) {
 		__luaFilePath = [[NSString stringWithUTF8String:luaname] retain];
-//NSLog(@"PPGameSetMainLua %@",__luaFilePath);
 	}
 }
 
 const char* PPGameDataPath(const char* name)
 {
-//#if !TARGET_OS_IPHONE
 	if (__watchDataPath) {
 		NSFileManager* f = [NSFileManager defaultManager];
 		NSString* n = [__watchDataPath stringByAppendingPathComponent:[NSString stringWithUTF8String:name]];
@@ -441,7 +422,6 @@ const char* PPGameDataPath(const char* name)
 			return [n fileSystemRepresentation];
 		}
 	}
-//#endif
 	return PPGameResourcePath(name);
 }
 

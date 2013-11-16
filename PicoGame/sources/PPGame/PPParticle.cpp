@@ -396,6 +396,11 @@ PPParticleEmitter::PPParticleEmitter(PPWorld* world) : PPObject(world),particles
 	animationData = NULL;
 	animationDataLength = 0;
 	animationLoopPoint = 1;
+#ifdef _OBJMEM_DEBUG_
+  objname="PPParticleEmitter";
+  printf("alloc %s\n",objname);
+  fflush(stdout);
+#endif
 }
 
 PPParticleEmitter::~PPParticleEmitter()
@@ -1315,7 +1320,7 @@ PPObject* PPParticleEmitter::registClass(PPLuaScript* script,const char* name,co
 PPObject* PPParticleEmitter::registClass(PPLuaScript* s,const char* name,PPObject* obj,const char* superclass)
 {
 //	PPObject::registClass(s,name,obj);
-	s->openModule(name,obj,funcDelete,superclass);
+	s->openModule(name,obj,0,superclass);
 		s->addCommand("new",funcNew);
 		s->addCommand("load",funcLoad);
 //		s->addCommand("reset",funcReset);

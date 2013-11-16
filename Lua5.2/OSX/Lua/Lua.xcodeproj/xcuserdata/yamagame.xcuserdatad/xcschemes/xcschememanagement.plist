@@ -9,10 +9,10 @@
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
-		<key>Universal copy.xcscheme</key>
+		<key>Universal no I/O.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>2</integer>
+			<integer>3</integer>
 		</dict>
 		<key>Universal.xcscheme</key>
 		<dict>
@@ -23,6 +23,11 @@
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
 		<key>6B45725815B27AEA007AC75A</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>6B876B5F1831A461003D651B</key>
 		<dict>
 			<key>primary</key>
 			<true/>

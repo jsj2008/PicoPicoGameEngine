@@ -4,6 +4,13 @@ sc=ppscreen
 base=pprect(0,0,320,480)
 score_key="shooting-hiscore"
 
+print(ppgame:documentPath());
+
+f = io.open (ppgame:documentPath().."/text.txt","a")
+f:write("Hello")
+io.close(f)
+
+
 bang=ppparticle.new()
 bang:property({
   startColor={r=240,g=240,b=0,a=255},

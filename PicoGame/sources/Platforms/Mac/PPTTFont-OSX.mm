@@ -2,7 +2,7 @@
 //  PPTTFont-OSX.m
 //  PicoGame
 //
-//  Created by 山口 博光 on 2012/11/09.
+//  Created by H.Yamaguchi on 2012/11/09.
 //
 //
 
@@ -53,17 +53,13 @@ int PPTTFont::load(const char* name,int size)
 					break;
 				}
 				error = FT_Set_Pixel_Sizes(f->face, size, size);
-//printf("face->bbox.yMax %d,h %d,height %d\n",(int)face->bbox.yMax,h,face->height);
-//printf("face->size->height %d\n",(int)face->size->metrics.height);
 				baseline = (int)(-f->face->size->metrics.descender+(f->face->size->metrics.height-(f->face->size->metrics.ascender-f->face->size->metrics.descender)));
-//printf("baseline %d\n",baseline);
 			}
 			_gridX = size;
 			_gridY = (int)(f->face->size->metrics.height>>6);
 			if (baseline < 0) {
 				_gridY -= baseline;
 			}
-//printf("gridx %d,gridy %d\n",_gridX,_gridY);
 			f->type = 1;
 			break;
 		}
@@ -87,7 +83,6 @@ int PPTTFont::load(const char* name,int size)
 PPTTFontTile* PPTTFont::image(const char* string)
 {
 	FTFONT* f=(FTFONT*)ftfont;
-//printf("draw %s\n",string);
 	for (int i=0;i<maxTile;i++) {
 		if (fontTile[i]) {
 			if (strcmp(fontTile[i]->str->c_str(),string)==0) {
@@ -99,8 +94,6 @@ PPTTFontTile* PPTTFont::image(const char* string)
 
 	if (f->type==1) {
 		if (f->face == NULL) return NULL;
-
-//NSLog(@"TTFFont");
 
 		FT_Error error = 0;
 		FT_GlyphSlot slot = f->face->glyph;
@@ -116,7 +109,7 @@ PPTTFontTile* PPTTFont::image(const char* string)
 		FT_Vector min={0,0};
 		FT_Vector max={0,0};
 
-		int target_height = f->face->size->metrics.height>>6;
+		int target_height = (int)(f->face->size->metrics.height>>6);
 
 		pen.x = 0;
 		pen.y = baseline;
@@ -203,66 +196,28 @@ PPTTFontTile* PPTTFont::image(const char* string)
 			}
 		}
 
-	//	make(width,height);
-	//	clear();
-
 		pen.x = -min.x*64;
 		pen.y = baseline;
 
-//		int h = 0;
 		for (int n=0;string[n]!=0;) {
 			int len;
 			unsigned int ch = ConvertCharUTF8toUTF32(&string[n],&len);
 			FT_Set_Transform(f->face,&matrix,&pen);
 			error = FT_Load_Char(f->face,ch,FT_LOAD_RENDER);
-#if 1
+
 			drawbitmap(ntile,slot->bitmap.width,slot->bitmap.rows,slot->bitmap.buffer,slot->bitmap_left,target_height-slot->bitmap_top);
-//			int t = drawbitmap(ntile,slot->bitmap.width,slot->bitmap.rows,slot->bitmap.buffer,slot->bitmap_left,target_height-slot->bitmap_top);
-//			if (h < t) h = t;
-#else
-//
-//		{
-//			int x=slot->bitmap_left;
-//			int y=target_height-slot->bitmap_top;
-//			signed int  i, j, p, q;
-//			signed int  x_max = x + slot->bitmap.width;
-//			signed int  y_max = y + slot->bitmap.rows;
-//			unsigned char* buffer = slot->bitmap.buffer;
-//
-//NSLog(@"-+ x:%d,y:%d,x_max:%d,y_max:%d",x,y,x_max,y_max);
-//
-//			for (j=y,q=0;j < y_max;j++,q++) {
-//				for (i=x,p=0;i < x_max;i++,p++) {
-//					printf("%02x,",buffer[q*x_max+p]);
-//				}
-//				printf("\n");
-//			}
-//
-//			int h = 0;
-//			for (j=y,q=0;j < y_max;j++,q++) {
-//				for (i=x,p=0;i < x_max;i++,p++) {
-//					ntile->setPixel(i,j,ntile->getPixel(i,j) | buffer[q*x_max+p]);
-//					if (h < j) h = j;
-//				}
-//			}
-//		}
-#endif
+
 			pen.x += slot->advance.x;
 			pen.y += slot->advance.y;
 			if (n == 0) {
-				ntile->bearingX = f->face->glyph->metrics.horiBearingX>>6;
+				ntile->bearingX = (int)(f->face->glyph->metrics.horiBearingX>>6);
 			}
 			n += getCharBytesUTF8(&string[n]);
 		}
 		
-		ntile->advanceX = (pen.x>>6);//+min.x;
+		ntile->advanceX = (int)(pen.x>>6);//+min.x;
 		
-	//	height = h+1;
 		ntile->checkEmptyBlock();
-	//	ntile->show();
-	//	printf("-------- after\n");
-	//	tile[97]->show();
-	//	resize(width,height);
 
 		newFontCount++;
 		_updated = true;
@@ -275,9 +230,6 @@ PPTTFontTile* PPTTFont::image(const char* string)
 
 		int width  = (int)textSize.width;//-min.x;
 		int height = (int)textSize.height;//-min.y;
-
-//NSLog(@"System %@",nsstring);
-//NSLog(@"-- %@",NSStringFromCGSize(textSize));
 
 		PPTTFontTile* ntile = new PPTTFontTile(this,string,width,height);
 		for (int y=0;y<ntile->gheight();y++) {
@@ -299,7 +251,6 @@ PPTTFontTile* PPTTFont::image(const char* string)
 			for (int i=0;i<maxTile;i++) {
 				if (fontTile[i] == NULL) {
 					fontTile[i] = ntile;
-	//				tile->index = i;
 					t = true;
 					break;
 				}
@@ -322,10 +273,7 @@ PPTTFontTile* PPTTFont::image(const char* string)
 			}
 		}
 		
-//		NSRect offscreenRect = NSMakeRect(0,0,textSize.width,textSize.height);
 		NSBitmapImageRep* image = nil;
-		
-//		unsigned char* buffer = (unsigned char*)calloc(1,offscreenRect.size.width*offscreenRect.size.height*4);
 		
 		image = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:nil
                         pixelsWide:width
@@ -358,15 +306,6 @@ PPTTFontTile* PPTTFont::image(const char* string)
 			signed int  x_max = x + width;
 			signed int  y_max = y + height;
 
-//NSLog(@"-+ x_max:%d,y_max:%d",x_max,y_max);
-//
-//			for (j=y,q=0;j < y_max;j++,q++) {
-//				for (i=x,p=0;i < x_max;i++,p++) {
-//					printf("%02x,",buffer[q*bytesPerRow+p*bytePerPixel+1]);
-//				}
-//				printf("\n");
-//			}
-
 			int h = 0;
 			for (j=y,q=0;j < y_max;j++,q++) {
 				for (i=x,p=0;i < x_max;i++,p++) {
@@ -376,18 +315,12 @@ PPTTFontTile* PPTTFont::image(const char* string)
 			}
 		}
 
-//		CFRelease(data);
 		[image release];
 		
 		ntile->bearingX = 0;
 		ntile->advanceX = width;//+min.x;
 		
-	//	height = h+1;
 		ntile->checkEmptyBlock();
-	//	ntile->show();
-	//	printf("-------- after\n");
-	//	tile[97]->show();
-	//	resize(width,height);
 
 		newFontCount++;
 		_updated = true;

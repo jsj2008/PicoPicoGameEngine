@@ -634,6 +634,15 @@ void PPGameOpenWeb(const char* url,const char* title)
 {
 }
 
+void PPSetCustomPlistPath(const char* path)
+{
+}
+
+const char* PPGetCustomPlistPath(void)
+{
+  return NULL;
+}
+
 /*-----------------------------------------------------------------------------------------------
 	このファイルはここまで
 -----------------------------------------------------------------------------------------------*/

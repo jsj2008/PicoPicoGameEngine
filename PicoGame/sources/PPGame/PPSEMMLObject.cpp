@@ -16,6 +16,11 @@ PPSEMMLObject::PPSEMMLObject(PPWorld* world) : PPObject(world)
 {
 	play=false;
 	semml="";
+#ifdef _OBJMEM_DEBUG_
+  objname="PPSEMMLObject";
+  printf("alloc %s\n",objname);
+  fflush(stdout);
+#endif
 }
 
 PPSEMMLObject::~PPSEMMLObject()

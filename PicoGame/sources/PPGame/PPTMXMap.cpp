@@ -411,7 +411,12 @@ PPTMXMap::PPTMXMap(PPWorld* world) : PPObject(world),curLayer(-1),editPos(PPPoin
 	_layer->chip = (PPTMXChip*)calloc(1,_layer->mapSize.width*_layer->mapSize.height*sizeof(PPTMXChip));
 	layer.push_back(_layer);
 	curLayer = (int)layer.size()-1;
+#ifdef _OBJMEM_DEBUG_
 //printf("PPTMXMap new\n");
+  objname="PPTMXMap";
+  printf("alloc %s\n",objname);
+  fflush(stdout);
+#endif
 }
 
 PPTMXMap::~PPTMXMap()
@@ -2298,7 +2303,7 @@ static int funcCheck(lua_State* L)
 PPObject* PPTMXMap::registClass(PPLuaScript* s,const char* name,PPObject* obj,const char* superclass)
 {
 //	PPObject::registClass(s,name,obj);
-	s->openModule(name,obj,funcDelete,superclass);
+	s->openModule(name,obj,0,superclass);
 		s->addCommand("new",funcNew);
 //		s->addCommand("start",funcLoad);
 		s->addCommand("load",funcLoad);

@@ -29,7 +29,7 @@
   [window setFrame:frameRect display:YES];
 	
 	[game1 startGame:self];
-	[game2 startGame:self];
+	//[game2 startGame:self];
 	
 	[window orderFront:self];
 

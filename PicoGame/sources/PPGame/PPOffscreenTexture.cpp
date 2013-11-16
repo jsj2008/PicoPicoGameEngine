@@ -18,7 +18,12 @@ PPOffscreenTexture::PPOffscreenTexture(PPWorld* world) : PPObject(world),imageSi
 	colorbuffer_name = 0;
 	framebuffer_name = 0;
 	_pixel = NULL;
+#ifdef _OBJMEM_DEBUG_
 //printf("new PPOffscreenTexture\n");
+  objname="PPOffscreenTexture";
+  printf("alloc %s\n",objname);
+  fflush(stdout);
+#endif
 }
 
 PPOffscreenTexture::~PPOffscreenTexture()
@@ -938,7 +943,7 @@ static int funcVFlip(lua_State *L)
 PPObject* PPOffscreenTexture::registClass(PPLuaScript* s,const char* name,PPObject* obj,const char* superclass)
 {
 //	PPObject::registClass(s,name,obj);
-	s->openModule(name,obj,funcDelete,superclass);
+	s->openModule(name,obj,0,superclass);
 		s->addCommand("new",funcNew);
 		s->addCommand("create",funcCreate);
 		s->addCommand("lock",funcLock);

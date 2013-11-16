@@ -53,6 +53,11 @@ void PPWorld::allocOT()
 		ot = new PPObject*[depthOT()];
 		for (int i=0;i<depthOT();i++) {
 			ot[i] = new PPObject(this);
+#ifdef _OBJMEM_DEBUG_
+      ot[i]->objname = "allocOT";
+      printf("alloc %s\n",ot[i]->objname);
+      fflush(stdout);
+#endif
 		}
 		for (int i=0;i<depthOT()-1;i++) {
 			ot[i]->__otnext = ot[i+1];

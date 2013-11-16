@@ -340,25 +340,55 @@ void PPLuaScript::openModule(const char* name,void* userdata,lua_CFunction gc,co
 		lua_getglobal(L,name);
 	}
 	int methods = lua_gettop(L);
+
+#if 0
 	luaL_newmetatable(L,name);
 	int metatable = lua_gettop(L);
-	if (userdata) {
-		lua_pushlightuserdata(L,userdata);
-#ifdef __LUAJIT__
-//		luaJIT_setmode(L, -1, LUAJIT_MODE_ON);
-#endif
-		lua_setfield(L,metatable,PPGAMEINSTNACE);
-	}
-	if (gc) {
-		lua_pushcfunction(L,gc);
-		lua_setfield(L,metatable,"__gc");
-	}
+  if (userdata) {
+    lua_pushlightuserdata(L,userdata);
+    lua_setfield(L,metatable,PPGAMEINSTNACE);
+  }
+//	if (gc) {
+//		lua_pushcfunction(L,gc);
+//		lua_setfield(L,metatable,"__gc");
+//	}
 	if (superclass) {
 		lua_getglobal(L,superclass);
 		lua_setfield(L,metatable,"__index");
 	}
 	lua_setmetatable(L,methods);
-	lua_settop(L,0);
+
+//  if (userdata && gc) {
+//    void** ptr = (void**)lua_newuserdata(L,sizeof(userdata));
+////printf("openModule:%08x\n",(long)userdata);
+//    *ptr = userdata;
+//    lua_createtable(L,0,2);
+////    if (gc) {
+////      lua_pushcfunction(L,gc);
+////      lua_setfield(L,-2,"__gc");
+////    }
+//    lua_setmetatable(L,-2);
+//    lua_setfield(L,methods,"_udata");
+//  }
+#else
+	luaL_newmetatable(L,name);
+	int metatable = lua_gettop(L);
+  if (userdata) {
+    lua_pushlightuserdata(L,userdata);
+    lua_setfield(L,metatable,PPGAMEINSTNACE);
+  }
+//	if (gc) {
+//		lua_pushcfunction(L,gc);
+//		lua_setfield(L,metatable,"__gc");
+//	}
+	if (superclass) {
+		lua_getglobal(L,superclass);
+		lua_setfield(L,metatable,"__index");
+	}
+	lua_setmetatable(L,methods);
+#endif
+
+	lua_settop(L,top);
 	_module = new std::string(name);
 }
 
@@ -581,8 +611,8 @@ PPLuaScript::PPLuaScript(PPWorld* world) : PPLuaArg(world),_module(NULL)
 #endif
 	coL = NULL;
 #ifdef __LUAJIT__
-  lua_gc(L, LUA_GCSTOP, 0);  /* stop collector during initialization */
-  luaL_openlibs(L);  /* open libraries */
+  lua_gc(L, LUA_GCSTOP, 0);
+  luaL_openlibs(L);
   lua_gc(L, LUA_GCRESTART, -1);
   luaJIT_setmode(L, 0, LUAJIT_MODE_ENGINE | LUAJIT_MODE_ON);
 #else

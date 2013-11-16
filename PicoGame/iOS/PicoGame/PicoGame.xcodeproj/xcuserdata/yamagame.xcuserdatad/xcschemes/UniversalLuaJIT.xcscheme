@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "6B876B201830ADFA003D651B"
-               BuildableName = "Universal copy"
+               BuildableName = "UniversalLuaJIT"
                BlueprintName = "UniversalLuaJIT"
                ReferencedContainer = "container:PicoGame.xcodeproj">
             </BuildableReference>

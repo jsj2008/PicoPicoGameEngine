@@ -26,6 +26,10 @@
 #define PPOBJECT_AUTO_LAYOUT	0x0400
 #define PPOBJECT_VIEW_PORT		0x0800
 
+#ifdef _OBJMEM_DEBUG_
+static int dealloc_count=0;
+#endif
+
 PPObject::PPObject(PPWorld* world) : target(world)
 {
 	flags = 0;
@@ -43,6 +47,11 @@ PPObject::PPObject(PPWorld* world) : target(world)
 	selector = NULL;
 	dragStep = 0;
 	init(world);
+#ifdef _OBJMEM_DEBUG_
+  printf("alloc PPObject %d\n",dealloc_count);
+  fflush(stdout);
+  dealloc_count++;
+#endif
 }
 
 PPObject::~PPObject()
@@ -53,6 +62,15 @@ PPObject::~PPObject()
 		delete c;
 		c = p;
 	}
+#ifdef _OBJMEM_DEBUG_
+  dealloc_count--;
+  if (objname) {
+    printf("dealloc PPObject %d,%s\n",dealloc_count,objname);
+  } else {
+    printf("dealloc PPObject %d\n",dealloc_count);
+  }
+  fflush(stdout);
+#endif
 }
 
 void PPObject::init(PPWorld* world)
@@ -1281,6 +1299,10 @@ static int funcFog(lua_State *L)
 
 static int funcDelete(lua_State *L)
 {
+#ifdef _OBJMEM_DEBUG_
+  printf("funcDelete\n");
+  fflush(stdout);
+#endif
 	delete (PPObject*)(PPLuaScript::DeleteObject(L));
 	return 0;
 }
@@ -1300,12 +1322,38 @@ static int funcNew(lua_State *L)
 			obj->poly._texture = world->projector->textureManager->defaultTexture;
 			PPLuaScript::newObject(L,PPObject::className.c_str(),obj,funcDelete);
 			lua_rawseti(L,table,i+1);
+
+//#ifdef __LUAJIT__
+//      int top=lua_gettop(L);
+//      
+//      lua_getglobal(L,"ffi");
+//      lua_getfield(L, -1, "gc");
+//      lua_pushlightuserdata(L, obj);
+//      lua_pushcfunction(L,funcDelete);
+//      lua_call(L, 2, 0);
+//      
+//      lua_settop(L,top);
+//#endif
+
 		}
 	} else {
 		PPObject* obj = new PPObject(world);
 		obj->start();
 		obj->poly._texture =world->projector->textureManager->defaultTexture;
 		PPLuaScript::newObject(L,PPObject::className.c_str(),obj,funcDelete);
+
+//#ifdef __LUAJIT__
+//    int top=lua_gettop(L);
+//    
+//    lua_getglobal(L,"ffi");
+//    lua_getfield(L, -1, "gc");
+//    lua_pushlightuserdata(L, obj);
+//    lua_pushcfunction(L,funcDelete);
+//    lua_call(L, 2, 0);
+//    
+//    lua_settop(L,top);
+//#endif
+
 	}
 	return 1;
 }
@@ -1324,7 +1372,7 @@ PPObject* PPObject::registClass(PPLuaScript* script,const char* name,const char*
 
 PPObject* PPObject::registClass(PPLuaScript* script,const char* name,PPObject* obj,const char* superclass)
 {
-	script->openModule(name,obj,funcDelete,superclass);
+	script->openModule(name,obj,0,superclass);
 		script->addCommand("new",funcNew);
 		script->addCommand("show",funcShow);
 		script->addCommand("hide",funcHide);

@@ -140,6 +140,11 @@ PPFont::PPFont(PPWorld* world,const char* name,int size,int width,int height,int
 	lineWrap = false;
 	world->projector->textureManager->fontManager->addFont(this);
 	setName(name);
+#ifdef _OBJMEM_DEBUG_
+  objname="PPFont";
+  printf("alloc %s\n",objname);
+  fflush(stdout);
+#endif
 }
 
 PPFont::PPFont(PPWorld* world) : PPObject(world),_name(NULL),index(-1)
@@ -150,6 +155,11 @@ PPFont::PPFont(PPWorld* world) : PPObject(world),_name(NULL),index(-1)
 	localScale = PPPoint(1,1);
 	lineWrap = false;
 	world->projector->textureManager->fontManager->addFont(this);
+#ifdef _OBJMEM_DEBUG_
+  objname="PPFont";
+  printf("alloc %s\n",objname);
+  fflush(stdout);
+#endif
 }
 
 PPFont::~PPFont()

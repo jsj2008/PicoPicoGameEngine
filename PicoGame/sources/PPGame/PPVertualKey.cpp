@@ -18,6 +18,11 @@ PPVertualKey::PPVertualKey(PPWorld* world) : PPObject(world)
 {
 //	instance = this;
 	fixed = false;
+#ifdef _OBJMEM_DEBUG_
+  objname="PPVertualKey";
+  printf("alloc %s\n",objname);
+  fflush(stdout);
+#endif
 }
 
 PPVertualKey::~PPVertualKey()

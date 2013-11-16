@@ -34,6 +34,7 @@ PPScriptGame::~PPScriptGame()
 	if (script) delete script;
 	if (vKey) delete vKey;
 	if (stick) delete stick;
+
   if (spriteObject) delete spriteObject;
   if (tmxObject) delete tmxObject;
   if (particleObject) delete particleObject;
@@ -72,7 +73,6 @@ void PPScriptGame::initGraph()
 static int funcPPRect(lua_State *L)
 {
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->initarg(L);
-//	PPLuaScript* s = PPLuaScript::sharedScript();
 
 	PPRect r;
 	if (s->argCount > 0 && s->isTable(L,-1)) {
@@ -82,30 +82,12 @@ static int funcPPRect(lua_State *L)
 		r = PPRect(s->number(0),s->number(1),s->number(2),s->number(3));
 	}
 
-//printf("%d:%f,%f,%f,%f\n",s->argCount,r.x,r.y,r.width,r.height);
-
 	return s->returnRect(L,r);
-	
-//	lua_Number x,y,w,h;
-//	x=y=w=h=0;
-//	if (lua_type(L,1) == LUA_TTABLE) {
-//		x = s->tableNumber(L,-1,1,"x",0);
-//		y = s->tableNumber(L,-1,2,"y",0);
-//		w = s->tableNumber(L,-1,3,"width",0);
-//		h = s->tableNumber(L,-1,4,"height",0);
-//	} else {
-//		x = lua_tonumber(L,1);
-//		y = lua_tonumber(L,2);
-//		w = lua_tonumber(L,3);
-//		h = lua_tonumber(L,4);
-//	}
-//	return s->returnRect(L,PPRect(x,y,w,h));
 }
 
 static int funcPPPoint(lua_State *L)
 {
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->initarg(L);
-//	PPLuaScript* s = PPLuaScript::sharedScript();
 
 	PPPoint p;
 	if (s->argCount > 0 && s->isTable(L,-1)) {
@@ -115,22 +97,7 @@ static int funcPPPoint(lua_State *L)
 		p = PPPoint(s->number(0),s->number(1));
 	}
 
-//printf("%d:%f,%f\n",s->argCount,p.x,p.y);
-
 	return s->returnPoint(L,p);
-
-//	lua_Number x,y;
-//	x=y=0;
-//
-//	if (lua_type(L,1) == LUA_TTABLE) {
-//		x = s->tableNumber(L,-1,1,"x",0);
-//		y = s->tableNumber(L,-1,2,"y",0);
-//	} else {
-//		x = lua_tonumber(L,1);
-//		y = lua_tonumber(L,2);
-//	}
-//
-//	return s->returnPoint(L,PPPoint(x,y));
 }
 
 typedef struct _hitdata {
@@ -165,13 +132,13 @@ static int funcPPHitCheck2(lua_State *L)
 		if (top >= 2) {
 			int n[2];
 #ifdef __LUAJIT__
-			n[0] = lua_objlen(L,1);
+			n[0] = (int)lua_objlen(L,1);
 #else
 			lua_len(L,1);
 			n[0] = (int)lua_tointeger(L,-1);
 #endif
 #ifdef __LUAJIT__
-			n[1] = lua_objlen(L,2);
+			n[1] = (int)lua_objlen(L,2);
 #else
 			lua_len(L,2);
 			n[1] = (int)lua_tointeger(L,-1);
@@ -300,13 +267,13 @@ static int funcPPHitCheck(lua_State *L)
 			int n[2];
 			hitdata* hit[2];
 #ifdef __LUAJIT__
-			n[0] = lua_objlen(L,1);
+			n[0] = (int)lua_objlen(L,1);
 #else
 			lua_len(L,1);
 			n[0] = (int)lua_tointeger(L,-1);
 #endif
 #ifdef __LUAJIT__
-			n[1] = lua_objlen(L,2);
+			n[1] = (int)lua_objlen(L,2);
 #else
 			lua_len(L,2);
 			n[1] = (int)lua_tointeger(L,-1);
@@ -429,7 +396,7 @@ static int funcPPIterator(lua_State *L)
 	if (top>=2) {
 		if (lua_istable(L,1)) {
 #ifdef __LUAJIT__
-			int n=lua_objlen(L,1);
+			int n=(int)lua_objlen(L,1);
 #else
 			lua_len(L,1);
 			int n = (int)lua_tointeger(L,-1);
@@ -566,24 +533,40 @@ void PPScriptGame::reloadData()
 	vKey = new PPVertualKey(this);
 	vKey->openLibrary(script,"ppvkey");
 	vKey->start();
+//  vKey->objname = "vKey";
 
 	if (stick) delete stick;
 	stick = new PPGameStick(this);
 	stick->start();
 	stick->openLibrary(script,"ppjoystick");
-	
+//  stick->objname = "stick";
+
   if (spriteObject) delete spriteObject;
 	spriteObject = PPObject::registClass(script,"ppobject");
+
   if (tmxObject) delete tmxObject;
 	tmxObject = (PPTMXMap*)PPTMXMap::registClass(script,"ppmap","ppobject");
+
   if (particleObject) delete particleObject;
 	particleObject = (PPParticleEmitter*)PPParticleEmitter::registClass(script,"ppparticle","ppobject");
+
   if (offscreenObject) delete offscreenObject;
 	offscreenObject = (PPOffscreenTexture*)PPOffscreenTexture::registClass(script,"ppoffscreen","ppobject");
+
   if (scrollViewObject) delete scrollViewObject;
 	scrollViewObject = (PPUIScrollView*)PPUIScrollView::registClass(script,"ppscroll","ppobject");
+
   if (textObject) delete textObject;
 	textObject = (PPUIText*)PPUIText::registClass(script,"pptext","ppobject");
+
+#ifdef _OBJMEM_DEBUG_
+  spriteObject->objname = "spriteObject";
+  tmxObject->objname = "tmxObject";
+  particleObject->objname = "particleObject";
+  offscreenObject->objname = "offscreenObject";
+  scrollViewObject->objname = "scrollViewObject";
+  textObject->objname = "textObject";
+#endif
 
 	projector->openLibrary(script,"ppscreen");
 	projector->animationFrameInterval=1;
@@ -635,6 +618,7 @@ void PPScriptGame::stepIdle()
 {
 	if (stick) stick->read();
 	
+  if (script==NULL) return;
 	locate(PPPointZero);
 	vKey->idle();
 	if (!script->alive) {

@@ -21,7 +21,7 @@ CFLAGS = -D__LUAJIT__ -DFT2_BUILD_LIBRARY -DFT_CONFIG_MODULES_H="<ftmodule.h>" -
 -I../../../PicoGame/sources/Logic/ \
 -I../../../PicoGame/sources/PPGame/ \
 -I../../../PicoGame/sources/PPImage/ \
--I../../../LuaJIT/sources/output-win/include/luajit-2.0/ \
+-I../../../LuaJIT/Win32/LuaJIT/include/ \
 -I../../../Box2D/sources/Box2D_v2.2.1/ \
 -I../../../Box2D/sources/Box2D_v2.2.1/Box2D/ \
 -I../../../Box2D/sources/Box2D_v2.2.1/Box2D/Collision/ \
@@ -46,7 +46,7 @@ main.o
 LIBS = \
 ../../../PicoGame/Win32/buildLuaJIT/libpicogame.ar \
 ../../../CocosDenshion/Win32/build/libcocosdenshion.ar \
-../../../LuaJIT/sources/output-win/lib/libluajit-5.1.a \
+../../../LuaJIT/Win32/LuaJIT/libluajit-5.1.a \
 ../../../freetype/Win32/build/libfreetype.ar \
 ../../../FlMML/Win32/build/libflmml.ar \
 ../../../png/Win32/build/libpng.ar \

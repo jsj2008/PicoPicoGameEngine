@@ -2310,6 +2310,28 @@ static int funcTileOffset(lua_State* L)
 	return s->returnPoint(L,m->poly.texOffset);
 }
 
+static int funcDocumentPath(lua_State* L)
+{
+  lua_pushstring(L,PPGameDocumentPath(""));
+  return 1;
+}
+
+static int funcPreferncePath(lua_State* L)
+{
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
+	if (s->argCount > 0) {
+		PPSetCustomPlistPath(s->args(0));
+    return 0;
+	}
+  const char* p = PPGetCustomPlistPath();
+  if (p==NULL) {
+    lua_pushnil(L);
+  } else {
+    lua_pushstring(L,p);
+  }
+  return 1;
+}
+
 void QBGame::openGameLibrary(PPLuaScript* script,const char* name)
 {
 	script->openModule(name,this);
@@ -2328,6 +2350,8 @@ void QBGame::openGameLibrary(PPLuaScript* script,const char* name)
 		script->addCommand("getInteger",funcGetDefaultInteger);
 		script->addCommand("setString",funcSetDefaultString);
 		script->addCommand("getString",funcGetDefaultString);
+		script->addCommand("documentPath",funcDocumentPath);
+    //script->addCommand("preferencePath",funcPreferncePath);
 		//script->addCommand("regexReplace",funcRegexReplace);
 	script->closeModule();
 }

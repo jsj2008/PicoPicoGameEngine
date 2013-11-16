@@ -356,7 +356,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/bin/echo ${SRCROOT}\n\ncd ${SRCROOT}\ncd ../../Box2D/iOS/Box2D/\nxcodebuild -target Universal\n\ncd ${SRCROOT}\ncd ../../CocosDenshion/iOS/CocosDenshion/\nxcodebuild -target Universal\n\ncd ${SRCROOT}\ncd ../../FlMML/iOS/FlMML/\nxcodebuild -target Universal\n\ncd ${SRCROOT}\ncd ../../freetype/iOS/freetype/\nxcodebuild -target Universal\n\ncd ${SRCROOT}\ncd ../../Lua5.2/iOS/Lua/\nxcodebuild -target Universal\n\ncd ${SRCROOT}\ncd ../../PicoGame/iOS/PicoGame/\nxcodebuild -target Universal\n";
+			shellScript = "/bin/echo ${SRCROOT}\n\ncd ${SRCROOT}\ncd ../../Box2D/iOS/Box2D/\nxcodebuild -target Universal\n\ncd ${SRCROOT}\ncd ../../CocosDenshion/iOS/CocosDenshion/\nxcodebuild -target Universal\n\ncd ${SRCROOT}\ncd ../../FlMML/iOS/FlMML/\nxcodebuild -target Universal\n\ncd ${SRCROOT}\ncd ../../freetype/iOS/freetype/\nxcodebuild -target Universal\n\ncd ${SRCROOT}\ncd ../../Lua5.2/iOS/Lua/\nxcodebuild -target Universal\n\ncd ${SRCROOT}\ncd ../../Lua5.2/iOS/Lua/\nxcodebuild -target \"Universal no I/O\"\n\ncd ${SRCROOT}\ncd ../../PicoGame/iOS/PicoGame/\nxcodebuild -target Universal\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

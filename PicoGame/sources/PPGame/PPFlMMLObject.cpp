@@ -15,6 +15,11 @@
 PPFlMMLObject::PPFlMMLObject(PPWorld* world) : PPObject(world)
 {
 	noteNo = 60;
+#ifdef _OBJMEM_DEBUG_
+  objname="PPFlMMLObject";
+  printf("alloc %s\n",objname);
+  fflush(stdout);
+#endif
 }
 
 PPFlMMLObject::~PPFlMMLObject()

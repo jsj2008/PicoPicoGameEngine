@@ -203,6 +203,9 @@ PPGameStick::PPGameStick(PPWorld* world) : PPObject(world)
 	stickInstance = this;
 	for (int i=0;i<MAX_JOYSTICK_NUM;i++) {
 		stick[i] = new PPGameStickElement(world);
+#ifdef _OBJMEM_DEBUG_
+    stick[i]->objname = "PPGameStickElement";
+#endif
 	}
 }
 

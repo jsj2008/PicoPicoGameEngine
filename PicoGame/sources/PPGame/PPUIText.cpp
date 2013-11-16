@@ -15,6 +15,11 @@
 
 PPUIText::PPUIText(PPWorld* world) : PPUIScrollView(world)
 {
+#ifdef _OBJMEM_DEBUG_
+  objname="PPUIText";
+  printf("alloc %s\n",objname);
+  fflush(stdout);
+#endif
 }
 
 PPUIText::~PPUIText()
@@ -990,6 +995,10 @@ static int funcHide(lua_State* L)
 
 static int funcDelete(lua_State *L)
 {
+#ifdef _OBJMEM_DEBUG_
+  printf("funcDelete\n");
+  fflush(stdout);
+#endif
 	delete (PPUIText*)(PPLuaScript::DeleteObject(L));
 	return 0;
 }
@@ -1030,7 +1039,7 @@ PPObject* PPUIText::registClass(PPLuaScript* s,const char* name,PPObject* obj,co
 {
 	obj->init(s->world());
 	PPUIScrollView::registClass(s,name,obj);
-	s->openModule(name,obj,funcDelete,superclass);
+	s->openModule(name,obj,0,superclass);
 		s->addCommand("new",funcNew);
 		s->addCommand("idle",funcIdle);
 		s->addCommand("clear",funcClear);

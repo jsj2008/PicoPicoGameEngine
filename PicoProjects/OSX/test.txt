@@ -1,6 +1,0 @@
-/Users/yamagame/Library/Developer/Xcode/DerivedData/PicoGame-enmrtccayngzkghelurlhovfrnnd/Build/Products/Release/PicoPicoGames LuaJIT.app/Contents/SharedSupport/luajit
-hoge
-/Users/yamagame/Library/Developer/Xcode/DerivedData/PicoGame-enmrtccayngzkghelurlhovfrnnd/Build/Products/Release/PicoPicoGames LuaJIT.app/Contents/SharedSupport/luajit
-hoge
-/Users/yamagame/Library/Developer/Xcode/DerivedData/PicoGame-enmrtccayngzkghelurlhovfrnnd/Build/Products/Release/PicoPicoGames LuaJIT.app/Contents/SharedSupport/luajit
-hoge

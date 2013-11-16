@@ -15,6 +15,11 @@ PPUIScrollView::PPUIScrollView(PPWorld* world) : PPObject(world)
 {
 	_frameSize = PPSize(100,100);
 	_contentsRect = PPRect(0,0,100,100);
+#ifdef _OBJMEM_DEBUG_
+  objname="PPUIScrollView";
+  printf("alloc %s\n",objname);
+  fflush(stdout);
+#endif
 }
 
 PPUIScrollView::~PPUIScrollView()
@@ -198,7 +203,7 @@ PPObject* PPUIScrollView::registClass(PPLuaScript* script,const char* name,PPObj
 {
 	obj->init(script->world());
 	PPObject::registClass(script,name,obj);
-	script->openModule(name,obj,funcDelete,superclass);
+	script->openModule(name,obj,0,superclass);
 		script->addCommand("new",funcNew);
 		script->addCommand("frameRect",funcFrameRect);
 		script->addCommand("contentsRect",funcContentsRect);

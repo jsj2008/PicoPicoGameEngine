@@ -2,7 +2,8 @@ CC = gcc
 CPP = g++
 AR = ar
 
-CFLAGS = -O3 -march=armv6 -mfpu=vfp -mfloat-abi=hard -ffast-math -fstrict-aliasing -fomit-frame-pointer
+CFLAGS = -O3 -march=armv6 -mfpu=vfp -mfloat-abi=hard -ffast-math -fstrict-aliasing -fomit-frame-pointer \
+  -DDISABLE_IO_INTERFACE=1
 
 BUILD_DIR = objects
 

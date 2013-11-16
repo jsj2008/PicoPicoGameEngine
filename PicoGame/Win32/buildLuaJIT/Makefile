@@ -22,7 +22,7 @@ CPPFLAGS += -D__LUAJIT__\
 -I../../sources/Logic/ \
 -I../../sources/PPGame/ \
 -I../../sources/PPImage/ \
--I../../../LuaJIT/sources/output-win/include/luajit-2.0/ \
+-I../../../LuaJIT/Win32/LuaJIT/include/ \
 -I../../../Box2D/sources/Box2D_v2.2.1/ \
 -I../../../Box2D/sources/Box2D_v2.2.1/Box2D/ \
 -I../../../Box2D/sources/Box2D_v2.2.1/Box2D/Collision/ \

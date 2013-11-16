@@ -311,6 +311,7 @@
 		6BAC25AD15B287660051C16B /* freetype.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = freetype.framework; path = ../../../freetype/iOS/freetype/Products/freetype.framework; sourceTree = "<group>"; };
 		6BAC25AF15B287710051C16B /* CocosDenshion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocosDenshion.framework; path = ../../../CocosDenshion/iOS/CocosDenshion/Products/CocosDenshion.framework; sourceTree = "<group>"; };
 		6BAC25B115B287790051C16B /* Box2D.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Box2D.framework; path = ../../../Box2D/iOS/Box2D/Products/Box2D.framework; sourceTree = "<group>"; };
+		6BD86A8018337BE6009E6D63 /* LuaJIT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LuaJIT.framework; path = ../../../LuaJIT/iOS/LuaJIT/Products/LuaJIT.framework; sourceTree = "<group>"; };
 		6BE7A49617E153D900FD42D5 /* PPTextToSpeech.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PPTextToSpeech.h; path = ../Platforms/Cocoa/PPTextToSpeech.h; sourceTree = "<group>"; };
 		6BE7A49717E153D900FD42D5 /* PPTextToSpeech.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PPTextToSpeech.mm; path = ../Platforms/Cocoa/PPTextToSpeech.mm; sourceTree = "<group>"; };
 		6BFF2F41164CF10B00767B64 /* PPTTFont-iOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "PPTTFont-iOS.mm"; sourceTree = "<group>"; };
@@ -350,6 +351,7 @@
 			children = (
 				6BAC25A915B286AB0051C16B /* FlMML.framework */,
 				6BAC25AB15B2875C0051C16B /* Lua.framework */,
+				6BD86A8018337BE6009E6D63 /* LuaJIT.framework */,
 				6BAC25AD15B287660051C16B /* freetype.framework */,
 				6BAC25AF15B287710051C16B /* CocosDenshion.framework */,
 				6BAC25B115B287790051C16B /* Box2D.framework */,
@@ -760,7 +762,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Sets the target folders and the final framework product.\nFMK_NAME=PicoGame\nFMK_VERSION=A\n\n# Install dir will be the final output to the framework.\n# The following line create it in the root folder of the current project.\nINSTALL_DIR=${SRCROOT}/Products/${FMK_NAME}.framework\n\n# Working dir will be deleted after the framework creation.\nWRK_DIR=build\nDEVICE_DIR=${WRK_DIR}/ReleaseLuaJIT-iphoneos/${FMK_NAME}.framework\nSIMULATOR_DIR=${WRK_DIR}/ReleaseLuaJIT-iphonesimulator/${FMK_NAME}.framework\n\n# Building both architectures.\nxcodebuild -configuration \"ReleaseLuaJIT\" -target \"${FMK_NAME}\" -sdk iphoneos\nxcodebuild -configuration \"ReleaseLuaJIT\" -target \"${FMK_NAME}\" -sdk iphonesimulator\n\n# Cleaning the oldest.\nif [ -d \"${INSTALL_DIR}\" ]\nthen\nrm -rf \"${INSTALL_DIR}\"\nfi\n\n# Creates and renews the final product folder.\nmkdir -p \"${INSTALL_DIR}\"\nmkdir -p \"${INSTALL_DIR}/Versions\"\nmkdir -p \"${INSTALL_DIR}/Versions/${FMK_VERSION}\"\nmkdir -p \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources\"\nmkdir -p \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Headers\"\n\n# Creates the internal links.\n# It MUST uses relative path, otherwise will not work when the folder is copied/moved.\nln -s \"${FMK_VERSION}\" \"${INSTALL_DIR}/Versions/Current\"\nln -s \"Versions/Current/Headers\" \"${INSTALL_DIR}/Headers\"\nln -s \"Versions/Current/Resources\" \"${INSTALL_DIR}/Resources\"\nln -s \"Versions/Current/${FMK_NAME}\" \"${INSTALL_DIR}/${FMK_NAME}\"\n\n# Copies the headers and resources files to the final product folder.\ncp -R \"${DEVICE_DIR}/Headers/\" \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Headers/\"\ncp -R \"${DEVICE_DIR}/\" \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources/\"\n\n# Removes the binary and header from the resources folder.\nrm -r \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources/Headers\" \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources/${FMK_NAME}\"\n\n# Uses the Lipo Tool to merge both binary files (i386 + armv6/armv7) into one Universal final product.\nlipo -create \"${DEVICE_DIR}/${FMK_NAME}\" \"${SIMULATOR_DIR}/${FMK_NAME}\" -output \"${INSTALL_DIR}/Versions/${FMK_VERSION}/${FMK_NAME}\"\n\nrm -r \"${WRK_DIR}\"\n\n${SRCROOT}/../../../PicoProjects/iOS/copy-frameworks.command";
+			shellScript = "# Sets the target folders and the final framework product.\nFMK_NAME=PicoGame\nFMK_VERSION=A\n\n# Install dir will be the final output to the framework.\n# The following line create it in the root folder of the current project.\nINSTALL_DIR=${SRCROOT}/ProductsLuaJIT/${FMK_NAME}.framework\n\n# Working dir will be deleted after the framework creation.\nWRK_DIR=build\nDEVICE_DIR=${WRK_DIR}/ReleaseLuaJIT-iphoneos/${FMK_NAME}.framework\nSIMULATOR_DIR=${WRK_DIR}/ReleaseLuaJIT-iphonesimulator/${FMK_NAME}.framework\n\n# Building both architectures.\nxcodebuild -configuration \"ReleaseLuaJIT\" -target \"${FMK_NAME}\" -sdk iphoneos\nxcodebuild -configuration \"ReleaseLuaJIT\" -target \"${FMK_NAME}\" -sdk iphonesimulator\n\n# Cleaning the oldest.\nif [ -d \"${INSTALL_DIR}\" ]\nthen\nrm -rf \"${INSTALL_DIR}\"\nfi\n\n# Creates and renews the final product folder.\nmkdir -p \"${INSTALL_DIR}\"\nmkdir -p \"${INSTALL_DIR}/Versions\"\nmkdir -p \"${INSTALL_DIR}/Versions/${FMK_VERSION}\"\nmkdir -p \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources\"\nmkdir -p \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Headers\"\n\n# Creates the internal links.\n# It MUST uses relative path, otherwise will not work when the folder is copied/moved.\nln -s \"${FMK_VERSION}\" \"${INSTALL_DIR}/Versions/Current\"\nln -s \"Versions/Current/Headers\" \"${INSTALL_DIR}/Headers\"\nln -s \"Versions/Current/Resources\" \"${INSTALL_DIR}/Resources\"\nln -s \"Versions/Current/${FMK_NAME}\" \"${INSTALL_DIR}/${FMK_NAME}\"\n\n# Copies the headers and resources files to the final product folder.\ncp -R \"${DEVICE_DIR}/Headers/\" \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Headers/\"\ncp -R \"${DEVICE_DIR}/\" \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources/\"\n\n# Removes the binary and header from the resources folder.\nrm -r \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources/Headers\" \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources/${FMK_NAME}\"\n\n# Uses the Lipo Tool to merge both binary files (i386 + armv6/armv7) into one Universal final product.\nlipo -create \"${DEVICE_DIR}/${FMK_NAME}\" \"${SIMULATOR_DIR}/${FMK_NAME}\" -output \"${INSTALL_DIR}/Versions/${FMK_VERSION}/${FMK_NAME}\"\n\nrm -r \"${WRK_DIR}\"\n\n${SRCROOT}/../../../PicoProjects/iOS/copy-frameworks.command";
 		};
 		6BAC25C515B2900C0051C16B /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -877,11 +879,11 @@
 				DEAD_CODE_STRIPPING = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../../../FlMML/iOS/FlMML/Products\"",
-					"\"$(SRCROOT)/../../../Lua5.2/iOS/Lua/Products\"",
-					"\"$(SRCROOT)/../../../freetype/iOS/freetype/Products\"",
-					"\"$(SRCROOT)/../../../CocosDenshion/iOS/CocosDenshion/Products\"",
-					"\"$(SRCROOT)/../../../Box2D/iOS/Box2D/Products\"",
+					"$(SRCROOT)/../../../FlMML/iOS/FlMML/Products",
+					"$(SRCROOT)/../../../LuaJIT/iOS/LuaJIT/Products",
+					"$(SRCROOT)/../../../freetype/iOS/freetype/Products",
+					"$(SRCROOT)/../../../CocosDenshion/iOS/CocosDenshion/Products",
+					"$(SRCROOT)/../../../Box2D/iOS/Box2D/Products",
 				);
 				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -891,7 +893,7 @@
 					../../../freetype/sources,
 					../../../freetype/sources/freetype,
 					"$(SDKROOT)/usr/include/libxml2/",
-					"../../../LuaJIT/sources/output-ios/include/luajit-2.0",
+					"$(SRCROOT)/../../../LuaJIT/iOS/LuaJIT/Products/LuaJIT.framework/Headers",
 				);
 				INFOPLIST_FILE = "";
 				INFOPLIST_OUTPUT_FORMAT = "same-as-input";
@@ -990,11 +992,11 @@
 				DEAD_CODE_STRIPPING = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../../../FlMML/iOS/FlMML/Products\"",
-					"\"$(SRCROOT)/../../../Lua5.2/iOS/Lua/Products\"",
-					"\"$(SRCROOT)/../../../freetype/iOS/freetype/Products\"",
-					"\"$(SRCROOT)/../../../CocosDenshion/iOS/CocosDenshion/Products\"",
-					"\"$(SRCROOT)/../../../Box2D/iOS/Box2D/Products\"",
+					"$(SRCROOT)/../../../FlMML/iOS/FlMML/Products",
+					"$(SRCROOT)/../../../Lua5.2/iOS/Lua/Products",
+					"$(SRCROOT)/../../../freetype/iOS/freetype/Products",
+					"$(SRCROOT)/../../../CocosDenshion/iOS/CocosDenshion/Products",
+					"$(SRCROOT)/../../../Box2D/iOS/Box2D/Products",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PicoPicoGameEngine/PicoGame-Prefix.pch";
@@ -1028,11 +1030,11 @@
 				DEAD_CODE_STRIPPING = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../../../FlMML/iOS/FlMML/Products\"",
-					"\"$(SRCROOT)/../../../Lua5.2/iOS/Lua/Products\"",
-					"\"$(SRCROOT)/../../../freetype/iOS/freetype/Products\"",
-					"\"$(SRCROOT)/../../../CocosDenshion/iOS/CocosDenshion/Products\"",
-					"\"$(SRCROOT)/../../../Box2D/iOS/Box2D/Products\"",
+					"$(SRCROOT)/../../../FlMML/iOS/FlMML/Products",
+					"$(SRCROOT)/../../../Lua5.2/iOS/Lua/Products",
+					"$(SRCROOT)/../../../freetype/iOS/freetype/Products",
+					"$(SRCROOT)/../../../CocosDenshion/iOS/CocosDenshion/Products",
+					"$(SRCROOT)/../../../Box2D/iOS/Box2D/Products",
 				);
 				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
