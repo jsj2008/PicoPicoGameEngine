@@ -20,7 +20,9 @@ class PPJoyReaderElement
 {
 public:
 	int exist;
+#ifdef __MACOSX_APP__
 	IOHIDElementRef elem;
+#endif
 	int value;
 
 	PPJoyReaderElement();
