@@ -231,7 +231,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6B8930BA15B813D700402E76 /* Build configuration list for PBXNativeTarget "PicoGame" */;
 			buildPhases = (
-				6BC178BE162E44D900AE9E3C /* ShellScript */,
 				6B89309815B813D700402E76 /* Sources */,
 				6B89309915B813D700402E76 /* Frameworks */,
 				6B89309A15B813D700402E76 /* Resources */,
@@ -310,20 +309,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/bin/echo ${SRCROOT}\n\ncd ${SRCROOT}\ncd ../../Box2D/OSX/Box2D/\nxcodebuild -target Universal\n\ncd ${SRCROOT}\ncd ../../CocosDenshion/OSX/CocosDenshion/\nxcodebuild -target Universal\n\ncd ${SRCROOT}\ncd ../../FlMML/OSX/FlMML/\nxcodebuild -target Universal\n\ncd ${SRCROOT}\ncd ../../freetype/OSX/freetype/\nxcodebuild -target Universal\n\ncd ${SRCROOT}\ncd ../../Lua5.2/OSX/Lua/\nxcodebuild -target Universal\n\ncd ${SRCROOT}\ncd ../../Lua5.2/OSX/Lua/\nxcodebuild -target \"Universal no I/O\"\n\ncd ${SRCROOT}\ncd ../../PicoGame/OSX/PicoGame/\nxcodebuild -target Universal\n";
-		};
-		6BC178BE162E44D900AE9E3C /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "cd ../../PicoGame/OSX/PicoGame\nxcodebuild -configuration \"Release\" -target \"Universal\"\n";
+			shellScript = "/bin/echo ${SRCROOT}\n\ncd ${SRCROOT}\ncd ../../Box2D/OSX/Box2D/\nxcodebuild -target Universal\n\ncd ${SRCROOT}\ncd ../../CocosDenshion/OSX/CocosDenshion/\nxcodebuild -target Universal\n\ncd ${SRCROOT}\ncd ../../FlMML/OSX/FlMML/\nxcodebuild -target Universal\n\ncd ${SRCROOT}\ncd ../../freetype/OSX/freetype/\nxcodebuild -target Universal\n\ncd ${SRCROOT}\ncd ../../Lua5.2/OSX/Lua/\nxcodebuild -target Universal\n\ncd ${SRCROOT}\ncd ../../Lua5.2/OSX/Lua/\nxcodebuild -target \"Universal no I/O\"\n\ncd ${SRCROOT}\ncd ../../PicoGame/OSX/PicoGame/\nxcodebuild -target Universal\n\ncd ${SRCROOT}\ncd ../../PicoGame/OSX/PicoGame/\nxcodebuild -target UniversalLuaJIT\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

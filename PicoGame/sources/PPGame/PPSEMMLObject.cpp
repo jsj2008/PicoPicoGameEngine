@@ -120,44 +120,44 @@ static int funcVolume(lua_State* L)
 	return 1;
 }
 
-static int funcWav9(lua_State* L)
-{
-//	PPSEMMLObject* m = (PPSEMMLObject*)PPLuaScript::UserData(L);
-	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPLuaScript* s = PPLuaScript::sharedScript(L);
-//	PPSEMMLObject* m = (PPSEMMLObject*)s->userdata;
-	QBSound* snd = QBSound::sharedSound();
-	if (s->argCount > 3) {
-		snd->setWav9((int)s->integer(0),(int)s->integer(1),s->boolean(2),s->args(3));
-	}
-	return 0;
-}
+//static int funcWav9(lua_State* L)
+//{
+////	PPSEMMLObject* m = (PPSEMMLObject*)PPLuaScript::UserData(L);
+//	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
+////	PPLuaScript* s = PPLuaScript::sharedScript(L);
+////	PPSEMMLObject* m = (PPSEMMLObject*)s->userdata;
+//	QBSound* snd = QBSound::sharedSound();
+//	if (s->argCount > 3) {
+//		snd->setWav9((int)s->integer(0),(int)s->integer(1),s->boolean(2),s->args(3));
+//	}
+//	return 0;
+//}
 
-static int funcWav10(lua_State* L)
-{
-//	PPSEMMLObject* m = (PPSEMMLObject*)PPLuaScript::UserData(L);
-	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPLuaScript* s = PPLuaScript::sharedScript(L);
-//	PPSEMMLObject* m = (PPSEMMLObject*)s->userdata;
-	QBSound* snd = QBSound::sharedSound();
-	if (s->argCount > 1) {
-		snd->setWav10((int)s->integer(0),s->args(1));
-	}
-	return 0;
-}
+//static int funcWav10(lua_State* L)
+//{
+////	PPSEMMLObject* m = (PPSEMMLObject*)PPLuaScript::UserData(L);
+//	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
+////	PPLuaScript* s = PPLuaScript::sharedScript(L);
+////	PPSEMMLObject* m = (PPSEMMLObject*)s->userdata;
+//	QBSound* snd = QBSound::sharedSound();
+//	if (s->argCount > 1) {
+//		snd->setWav10((int)s->integer(0),s->args(1));
+//	}
+//	return 0;
+//}
 
-static int funcWav13(lua_State* L)
-{
-//	PPSEMMLObject* m = (PPSEMMLObject*)PPLuaScript::UserData(L);
-	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPLuaScript* s = PPLuaScript::sharedScript(L);
-//	PPSEMMLObject* m = (PPSEMMLObject*)s->userdata;
-	QBSound* snd = QBSound::sharedSound();
-	if (s->argCount > 1) {
-		snd->setWav13((int)s->integer(0),s->args(1));
-	}
-	return 0;
-}
+//static int funcWav13(lua_State* L)
+//{
+////	PPSEMMLObject* m = (PPSEMMLObject*)PPLuaScript::UserData(L);
+//	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
+////	PPLuaScript* s = PPLuaScript::sharedScript(L);
+////	PPSEMMLObject* m = (PPSEMMLObject*)s->userdata;
+//	QBSound* snd = QBSound::sharedSound();
+//	if (s->argCount > 1) {
+//		snd->setWav13((int)s->integer(0),s->args(1));
+//	}
+//	return 0;
+//}
 
 void PPSEMMLObject::openLibrary(PPLuaScript* s,const char* name,const char* superclass)
 {

@@ -1,7 +1,7 @@
 #ifndef _MCI_PLAYER_WIN32_H_
 #define _MCI_PLAYER_WIN32_H_
 
-#include<windows.h>
+#include <windows.h>
 #include <mmsystem.h>
 
 namespace CocosDenshion {
@@ -21,7 +21,7 @@ public:
     */
     void Open(const char* pFileName, UINT uId);
 
-	void Play(UINT uTimes = 1);
+	void Play(UINT uTimes = 1,float pitch=1.0f,float pan=0.0f,float gain=1.0f);
 
     /**
     @brief ‘›Õ£≤•∑≈…˘“Ù

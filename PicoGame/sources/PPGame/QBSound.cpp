@@ -21,7 +21,6 @@
 #include "PPSEMMLObject.h"
 #include <FlMML/FlMML_Math.h>
 #include <FlMML/FlMML.h>
-//#include <regex.h>
 
 #define RING_SIZE (1024*64)
 
@@ -39,7 +38,6 @@ QBSound* QBSound::sharedSound()
 
 void QBSound::exitSound()
 {
-//printf("QBSound::exitSound()\n");
 	if (snd) {
 		snd->Exit();
 		delete snd;
@@ -49,13 +47,6 @@ void QBSound::exitSound()
 
 QBSound::QBSound(int maxChannel) : mTrack(NULL),mMaxTrack(maxChannel),mMasterVolume(1.0),mFlMMLNum(3)
 {
-//regex_t preg;
-//if (regcomp(&preg, "([[:digit:]]+), ([[:digit:]]+), ([[:digit:]]+)", REG_EXTENDED|REG_NEWLINE) != 0) {
-//printf("regex compile failed.\n");
-//exit(1);
-//}
-//printf("QBSound::QBSound()\n");
-
 	snd = this;
 
 	if (flmmlEngine == NULL) {
@@ -76,14 +67,12 @@ QBSound::QBSound(int maxChannel) : mTrack(NULL),mMaxTrack(maxChannel),mMasterVol
 
 int QBSound::Init()
 {
-//printf("QBSound::Init()\n");
 	init_track(mMaxTrack);
 	return 0;
 }
 
 int QBSound::Exit()
 {
-//printf("QBSound::Exit()\n");
 	return 0;
 }
 
@@ -91,8 +80,6 @@ static void reset_track(PSGTrack* track)
 {
 	track->notect  = 0;
 	track->noteoff = 0;
-	
-//	track->channel->reset();
 	
 	track->m_velocity = 127;
 	track->m_noteShift = 0;
@@ -102,7 +89,6 @@ static void reset_track(PSGTrack* track)
 	track->m_gate = 15.0;
 	track->m_maxGate = 16.0;
 	track->m_gate2 = 0;
-//	track->m_bpm=0;
 	track->m_spt=0;
 	track->m_relativeDir=true;
 	track->m_velDir=true;
@@ -124,7 +110,6 @@ int QBSound::Reset()
 		mTrack[i].channel->reset();
 		reset_track(&mTrack[i]);
 	}
-//printf("QBSound::Reset()\n");
 	return 0;
 }
 
@@ -140,7 +125,6 @@ int QBSound::init_track(int maxChannel)
 			mTrack[i].loopptr = NULL;
 			mTrack[i].end = true;
 			mTrack[i].channel = new FlMML::MChannel(&waveData);
-//			mTrack[i].channel->reset();
 			mTrack[i]._note = -1;
 			mTrack[i].volume = 1.0;
 			reset_track(&mTrack[i]);
@@ -171,7 +155,6 @@ int QBSound::play(const char *_note,int trackindex,bool loop)
 {
 	startAUGraph();
 	int i=trackindex;
-//	char* nptr = mTrack[i].ptr;
 
 #if 1	
 	std::string m_string=_note;
@@ -212,11 +195,6 @@ int QBSound::play(const char *_note,int trackindex,bool loop)
 			}
 		}
 	}
-//	if (loop) {
-//		mTrack[i].loopptr = nptr;
-//	} else {
-//		mTrack[i].loopptr = NULL;
-//	}
 	mTrack[i].end     = false;
 	return 0;
 }
@@ -243,7 +221,6 @@ int QBSound::stop(int trackindex)
 			mTrack[i].ptr = mTrack[i].noteptr;
 			mTrack[i].loopptr = NULL;
 			mTrack[i].end = true;
-//			mTrack[i].channel->reset();
 			mTrack[i].notect = 0;
 		}
 	} else {
@@ -252,7 +229,6 @@ int QBSound::stop(int trackindex)
 		mTrack[i].ptr = mTrack[i].noteptr;
 		mTrack[i].loopptr = NULL;
 		mTrack[i].end = true;
-//		mTrack[i].channel->reset();
 		mTrack[i].notect = 0;
 	}
 	return 0;
@@ -284,7 +260,6 @@ int QBSound::fill_sound_buffer(void* buffer,int size)
 	{
 		float* b = (float*)buffer;
 		VNumber vbuffer[2];
-//		vbuffer.reserve(2);
 		for (int i=0;i<size/sizeof(float);i+=2) {
 			for (int j=0;j<2;j++) {
 				vbuffer[j] = 0;
@@ -294,7 +269,7 @@ int QBSound::fill_sound_buffer(void* buffer,int size)
 				mTrack[j].channel->getSamples(vbuffer,1,0,1);
 			}
 			for (int j=0;j<2;j++) {
-				Number n = vbuffer[j]*mMasterVolume;	//*mTrack[j].volume;
+				Number n = vbuffer[j]*mMasterVolume;
 				if (n < -1.0f) n = -1.0f;
 				if (n >  1.0f) n =  1.0f;
 				b[i+j] = n;

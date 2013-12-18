@@ -1,13 +1,13 @@
 /*-----------------------------------------------------------------------------------------------
-	名前	PPGameView_App.mm
-	説明		        
-	作成	2012.07.22 by H.Yamaguchi
-	更新
------------------------------------------------------------------------------------------------*/
+ 名前	PPGameView_App.mm
+ 説明
+ 作成	2012.07.22 by H.Yamaguchi
+ 更新
+ -----------------------------------------------------------------------------------------------*/
 
 /*-----------------------------------------------------------------------------------------------
-	インクルードファイル
------------------------------------------------------------------------------------------------*/
+ インクルードファイル
+ -----------------------------------------------------------------------------------------------*/
 
 #import <Carbon/Carbon.h>
 #import "PPGameView_App.h"
@@ -16,6 +16,7 @@
 #import "PPGame.h"
 #import "PPGameUtil.h"
 #import "PPGameController.h"
+#import "QBGame.h"
 
 #define JOY_PAD_UP		0x01
 #define JOY_PAD_DOWN	0x02
@@ -74,7 +75,6 @@
 #define JOY_AY2 53
 
 static int joy[256];
-static bool _initialize=false;
 
 class DisplayLinkLocker {
 public:
@@ -116,7 +116,7 @@ static unsigned long H_GetImdKey(void)
 			{1,0x00000010,JOY_PAD_SPACE},	//RETURN
 			{1,0x01000000,JOY_PAD_SPACE},	//SHIFT
 			{1,0x08000000,JOY_PAD_SPACE},	//CONTROL
-
+      
 			{2,0x00000800,JOY_PAD_LEFT},	//テンキーの1
 			{2,0x00000800,JOY_PAD_DOWN},	//テンキーの1
 			{2,0x00000800,JOY_PAD_1},		//テンキーの1
@@ -144,7 +144,7 @@ static unsigned long H_GetImdKey(void)
 			{1,0x20000000,JOY_PAD_RIGHT},	//L
 			{1,0x00400000,JOY_PAD_DOWN},	//M
 			{1,0x00000004,JOY_PAD_OPTION},	//M
-
+      
 			{0,0x00000001,JOY_PAD_A},	//A
 			{0,0x00000800,JOY_PAD_B},	//B
 			{0,0x00000100,JOY_PAD_C},	//C
@@ -157,7 +157,7 @@ static unsigned long H_GetImdKey(void)
 		KeyMap theKeys;
 		unsigned long *ptr;
 		int i;
-
+    
 		GetKeys(theKeys);
 		ptr = (unsigned long *)&theKeys;
 		for (i=0;i<sizeof(PadTbl)/sizeof(struct TPADTBL);i++) {
@@ -206,22 +206,17 @@ static unsigned long H_GetImdKey(void)
 {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	
-	// Update the animation
-	//CFAbsoluteTime currentTime = CFAbsoluteTimeGetCurrent();
-	//[[controller scene] advanceTimeBy:(currentTime - [controller renderTime])];
-	//[controller setRenderTime:currentTime];
-	
 	[self drawView];
 	
 	[pool release];
-    return kCVReturnSuccess;
+  return kCVReturnSuccess;
 }
 
 // This is the renderer output callback function
 static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeStamp* now, const CVTimeStamp* outputTime, CVOptionFlags flagsIn, CVOptionFlags* flagsOut, void* displayLinkContext)
 {
-    CVReturn result = [(PPGameView*)displayLinkContext getFrameForTime:outputTime];
-    return result;
+  CVReturn result = [(PPGameView*)displayLinkContext getFrameForTime:outputTime];
+  return result;
 }
 
 - (void)setupDisplayLink
@@ -230,7 +225,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 		pthread_mutex_init(&mMutex,NULL);
 		__boot=true;
 	}
-
+  
 	// Create a display link capable of being used with all active displays
 	CVDisplayLinkCreateWithActiveCGDisplays(&displayLink);
 	
@@ -251,8 +246,8 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 
 - (id)initWithFrame:(NSRect)frameRect shareContext:(NSOpenGLContext*)context
 {
-    NSOpenGLPixelFormatAttribute attribs[] =
-    {
+  NSOpenGLPixelFormatAttribute attribs[] =
+  {
 		kCGLPFAAccelerated,
 		kCGLPFANoRecovery,
 		kCGLPFADoubleBuffer,
@@ -260,11 +255,11 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 		kCGLPFAColorSize, 24,
 		kCGLPFADepthSize, 16,
 		0
-    };
+  };
 	
-    pixelFormat = [[NSOpenGLPixelFormat alloc] initWithAttributes:attribs];
+  pixelFormat = [[NSOpenGLPixelFormat alloc] initWithAttributes:attribs];
 	
-    if (!pixelFormat)
+  if (!pixelFormat)
 		NSLog(@"No OpenGL pixel format");
 	
 	// NSOpenGLView does not handle context sharing, so we draw to a custom NSView instead
@@ -275,18 +270,18 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 		
 		// Synchronize buffer swaps with vertical refresh rate
 		animationFrameInterval = 1;
-		[[self openGLContext] setValues:&animationFrameInterval forParameter:NSOpenGLCPSwapInterval]; 
+		[[self openGLContext] setValues:&animationFrameInterval forParameter:NSOpenGLCPSwapInterval];
 		
 		[self setupDisplayLink];
 		
 		// Look for changes in view size
-		// Note, -reshape will not be called automatically on size changes because NSView does not export it to override 
-		[[NSNotificationCenter defaultCenter] addObserver:self 
-												 selector:@selector(reshape) 
-													 name:NSViewGlobalFrameDidChangeNotification
-												   object:self];
+		// Note, -reshape will not be called automatically on size changes because NSView does not export it to override
+		[[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(reshape)
+                                                 name:NSViewGlobalFrameDidChangeNotification
+                                               object:self];
 	}
-
+  
 	[self registerForDraggedTypes:[NSArray arrayWithObject:NSFilenamesPboardType]];
 	return self;
 }
@@ -319,7 +314,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 			}
 		}
 	}
-    return YES;
+  return YES;
 }
 
 - (void)lockFocus
@@ -338,11 +333,11 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 	
 	// Delegate to the scene object to update for a change in the view size
 	//[[controller scene] setViewportRect:[self bounds]];
-
+  
 	viewPort = [self bounds];
-
+  
 	[[self openGLContext] update];
-    [self render];
+  [self render];
 	[[self openGLContext] flushBuffer];
 	
 	CGLUnlockContext((CGLContextObj)[[self openGLContext] CGLContextObj]);
@@ -374,7 +369,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 //	viewPort = rect;
 //
 ////	glViewport(0, 0, rect.size.width, rect.size.height);
-////	
+////
 ////	glMatrixMode(GL_PROJECTION);
 ////    glLoadIdentity();
 ////    gluPerspective(30, rect.size.width / rect.size.height, 1.0, 1000.0);
@@ -385,9 +380,9 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 {
 	if (!CVDisplayLinkIsRunning(displayLink)) {
 		viewPort = [self bounds];
-//		[self setViewPort:rect];
-//		[self drawView];
-
+    //		[self setViewPort:rect];
+    //		[self drawView];
+    
 		DisplayLinkLocker locker(&mMutex,"reset");
 		CGLLockContext((CGLContextObj)[[self openGLContext] CGLContextObj]);
 		
@@ -401,12 +396,12 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 		
 		CGLUnlockContext((CGLContextObj)[[self openGLContext] CGLContextObj]);
 	}
-
+  
 }
 
 - (void)render
 {
-
+  
 	if (_initialWait < 10) {
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
@@ -416,36 +411,33 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 		_initialWait ++;
 		return;
 	}
-
+  
 	viewPort = [self bounds];
 	int h = viewPort.size.height;
 	h %= 2;
 	viewPort.origin.y = h;
 	viewPort.size.width = floorf(viewPort.size.width/2)*2;
 	viewPort.size.height = floorf(viewPort.size.height/2)*2;
-
+  
 	if (game) {
-//		PPGameSprite* oldprojector = PPGameSprite::select(self.projector);
-//		game.game->projector = self.projector;
+    //		PPGameSprite* oldprojector = PPGameSprite::select(self.projector);
+    //		game.game->projector = self.projector;
 		self.projector->setWorld(game.game);
-//		PPGameTextureManager::select(self.projector->textureManager);
-
-//		[game setView:self];
-
+    //		PPGameTextureManager::select(self.projector->textureManager);
+    
+    //		[game setView:self];
+    
 		unsigned long key = H_GetImdKey();
-
-		if (_initialize == false) {
-		
-			_initialize = true;
-			
-			QBSoundMac* snd = new QBSoundMac(5);
-			if (snd) {
-				snd->Init();
-				snd->Reset();
-				snd->setMasterVolume(0.5);
-			}
-		}
-
+    
+    if (QBSound::sharedSound()==NULL) {
+      QBSoundMac* snd = new QBSoundMac(5);
+      if (snd) {
+        snd->Init();
+        snd->Reset();
+        snd->setMasterVolume(0.5);
+      }
+    }
+    
 		if (joy[JOY_RIGHT2]) {
 			key |= JOY_PAD_SPACE;
 		}
@@ -454,20 +446,20 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 		}
 		
 		if (![NSApp isActive]) key = 0;
-
-	//	glMatrixMode(GL_PROJECTION);
-	//	glLoadIdentity();
+    
+    //	glMatrixMode(GL_PROJECTION);
+    //	glLoadIdentity();
 		glViewport((GLsizei)viewPort.origin.x, (GLsizei)viewPort.origin.y, (GLsizei)viewPort.size.width, (GLsizei)viewPort.size.height);
-	//	glLoadIdentity();
-	//
-	//	glOrtho(-1.0f,1.0f,-1.0f,1.0f,-1.0f,1.0f);
-	//
-	//	glMatrixMode(GL_MODELVIEW);
-	//	glLoadIdentity();
-
+    //	glLoadIdentity();
+    //
+    //	glOrtho(-1.0f,1.0f,-1.0f,1.0f,-1.0f,1.0f);
+    //
+    //	glMatrixMode(GL_MODELVIEW);
+    //	glLoadIdentity();
+    
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-
+    
 		glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 		glEnable(GL_BLEND);
 		
@@ -475,9 +467,9 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 			self.projector->textureManager->reloadAllTexture();
 			reloadTexture = false;
 		}
-
+    
 		staticKey = key;
-
+    
 		if (game.initFlag == NO) {
 			[game start];
 			game.initFlag = YES;
@@ -491,18 +483,18 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 		if (self.projector) {
 			[game textureIdle];
 		}
-
+    
 		if (self.projector) {
-		
+      
 			self.projector->st.screenWidth = viewPort.size.width;//self.width;//160;
 			self.projector->st.screenHeight = viewPort.size.height;//self.height;//416/2;
-		
+      
 			self.projector->ClearScreen2D(0.0f, 0.0f, 0.0f);
 		}
-
+    
 		self.projector->SetViewPort();
 		self.projector->InitOT();
-
+    
 		if ([game idle] != 0) {
 			
 		}
@@ -522,13 +514,13 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 				self.projector->ResetOT();
 			}
 		}
-
+    
 		if (self.projector) {
 			if (animationFrameInterval!=self.projector->animationFrameInterval) {
 				animationFrameInterval=self.projector->animationFrameInterval;
 			}
 		}
-
+    
 		self.touchUpScreen = game.touchUpScreen;
 		self.touchScreen = game.touchScreen;
 	}
@@ -542,14 +534,14 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 
 - (void)keyDown:(NSEvent *)theEvent
 {
-    unichar c = [[theEvent charactersIgnoringModifiers] characterAtIndex:0];
-    switch (c) {
-        case 27:
+  unichar c = [[theEvent charactersIgnoringModifiers] characterAtIndex:0];
+  switch (c) {
+    case 27:
 			[controller goWindow:self];
-            break;
-        default:
-            break;
-    }
+      break;
+    default:
+      break;
+  }
 }
 
 - (unsigned long)staticButton
@@ -562,7 +554,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 	if (staticKey & JOY_PAD_Z) key |= PAD_A;
 	if (staticKey & JOY_PAD_X) key |= PAD_B;
 	if (staticKey & JOY_PAD_SPACE) key |= PAD_A;
-
+  
 	if (staticKey & JOY_PAD_A) key |= PAD_A;
 	if (staticKey & JOY_PAD_B) key |= PAD_B;
 	if (staticKey & JOY_PAD_C) key |= PAD_C;
@@ -586,11 +578,11 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 	}
 	touchLocation.x = pt.x;
 	touchLocation.y = size.height-pt.y;
-
+  
 	NSPoint ptt;
 	ptt.x = touchLocation.x;
 	ptt.y = touchLocation.y;
-
+  
 	touchScreen = true;
 	[touchesSet release];
 	touchesSet = nil;
@@ -610,11 +602,11 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 	}
 	touchLocation.x = pt.x;
 	touchLocation.y = size.height-pt.y;
-
+  
 	NSPoint ptt;
 	ptt.x = touchLocation.x;
 	ptt.y = touchLocation.y;
-
+  
 	[touchesSet release];
 	touchesSet = nil;
 	if (touchesSet == nil) touchesSet = [[NSMutableSet set] retain];
@@ -623,7 +615,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 
 - (void)mouseUp:(NSEvent *)theEvent
 {
-//	touchScreen = false;
+  //	touchScreen = false;
 	DisplayLinkLocker locker(&mMutex,"reset");
 	touchUpScreen = true;
 	[touchesSet release];
@@ -646,26 +638,26 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 	if (_projector) {
 		delete _projector;
 	}
-//	if (self.projector) {
-//		self.projector->Exit();
-//		delete self.projector;
-//		self.projector = NULL;
-//	}
-
+  //	if (self.projector) {
+  //		self.projector->Exit();
+  //		delete self.projector;
+  //		self.projector = NULL;
+  //	}
+  
 	// Stop and release the display link
 	CVDisplayLinkStop(displayLink);
-    CVDisplayLinkRelease(displayLink);
+  CVDisplayLinkRelease(displayLink);
 	
 	// Destroy the context
 	[openGLContext release];
 	[pixelFormat release];
 	
-	[[NSNotificationCenter defaultCenter] removeObserver:self 
-													name:NSViewGlobalFrameDidChangeNotification
-												  object:self];
-
+	[[NSNotificationCenter defaultCenter] removeObserver:self
+                                                  name:NSViewGlobalFrameDidChangeNotification
+                                                object:self];
+  
 	pthread_mutex_destroy(&mMutex);
-
+  
 	[super dealloc];
 }
 
@@ -680,5 +672,5 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 @end
 
 /*-----------------------------------------------------------------------------------------------
-	このファイルはここまで
------------------------------------------------------------------------------------------------*/
+ このファイルはここまで
+ -----------------------------------------------------------------------------------------------*/

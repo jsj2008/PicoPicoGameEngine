@@ -11,6 +11,10 @@
 
 #include "PPFont.h"
 #include "PPGameSprite.h"
+#include "PPGameUtil.h"
+#ifdef __COCOS2DX__
+#include "Cocos2dxWrapper.h"
+#endif
 
 PPFontManager::PPFontManager() : fontTable(NULL),_tableCount(0)
 {
@@ -133,7 +137,41 @@ int PPFontManager::registCount()
 PPFont::PPFont(PPWorld* world,const char* name,int size,int width,int height,int tilenum) : PPObject(world),_name(NULL),index(-1)
 {
 #ifndef NO_TTFONT
-	ttfont = new PPTTFont(world,name,size,width,height,tilenum);
+#ifdef __COCOS2DX__
+  {
+    std::string p;
+    if (strcasecmp(name,"System") == 0) {
+      p = systemFontFilePath();
+    } else {
+      unsigned long datasize;
+      unsigned char* data;
+      data = ccGetFileData(name,"r",&datasize);
+      p = p+name;
+      if (data) {
+        std::string p = ccGetWriteablePath();
+        {
+          FILE* fp = fopen(p.c_str(),"w");
+          if (fp) {
+            fwrite(data, datasize,1,fp);
+            fclose(fp);
+          }
+        }
+        free(data);
+      }
+    }
+    ttfont = new PPTTFont(world,p.c_str(),size,width,height,tilenum);
+  }
+#else
+  {
+    std::string p;
+    if (strcasecmp(name,"System") == 0) {
+      p = systemFontFilePath();
+    } else {
+      p = PPGameDataSubPath(name);
+    }
+    ttfont = new PPTTFont(world,p.c_str(),size,width,height,tilenum);
+  }
+#endif
 #endif
 	poly._texture = -1;
 	localScale = PPPoint(1,1);

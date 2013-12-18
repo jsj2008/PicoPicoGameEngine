@@ -612,9 +612,18 @@ void PPGameSetDataPath(const char* datapath)
 	__watchDataPath = datapath;
 }
 
+void PPGameSetDataSubPath(const char* datapath)
+{
+}
+
 const char* PPGameDataPath(const char* name)
 {
 	return PPGameResourcePath(name);
+}
+
+const char* PPGameDataSubPath(const char* name)
+{
+  return PPGameDataPath(name);
 }
 
 void PPGameControllerStartDiscoverty()

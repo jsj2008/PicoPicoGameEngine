@@ -18,7 +18,7 @@
 
 #ifdef __COCOS2DX__
 #include "Cocos2dxLuaLoader.h"
-#include "CCFileUtils.h"
+#include "Cocos2dxWrapper.h"
 #endif
 
 #ifdef __LUAJIT__
@@ -646,7 +646,7 @@ bool PPLuaScript::load(const char* scriptfile)
 	errorMessage = "";
 #ifdef _ANDROID
 	unsigned long size;
-	char *pFileContent = (char*)cocos2d::CCFileUtils::getFileData(scriptfile,"r",&size);
+	char *pFileContent = (char*)ccGetFileData(scriptfile,"r",&size);
 	if (pFileContent) {
 	    char *pCodes = new char[size + 1];
 	    pCodes[size] = '\0';

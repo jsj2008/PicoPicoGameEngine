@@ -88,13 +88,13 @@ typedef struct _PPGameTextureInfo {
 #endif
 #endif
 
-#ifdef _ANDROID
-#include <android/log.h>
-#define LOG_TAG "PicoPicoGames"
-#define LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG,LOG_TAG,__VA_ARGS__)
-#else
-#define LOGD(...)
-#endif
+//#ifdef _ANDROID
+//#include <android/log.h>
+//#define LOG_TAG "PicoPicoGames"
+//#define LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG,LOG_TAG,__VA_ARGS__)
+//#else
+//#define LOGD(...)
+//#endif
 
 /*-----------------------------------------------------------------------------------------------
 	このファイルはここまで

@@ -65,7 +65,9 @@ int PPGame_3GSLater();
 const char* PPGameMainLua();
 void PPGameSetMainLua(const char* luaname);
 void PPGameSetDataPath(const char* datapath);
+void PPGameSetDataSubPath(const char* datapath);
 const char* PPGameDataPath(const char* name);
+const char* PPGameDataSubPath(const char* name);
 
 void PPGameControllerStartDiscoverty();
 void PPGameControllerStopDiscoverty();

@@ -274,38 +274,25 @@ void PPGameTextureManager::enableTexture(int texNo)
 	}
 }
 
-//void PPGameTexture::EnableTexture(int texNo)
-//{
-//	if (__m->texId != texNo) {
-//		__m->texId=texNo;
-//	}
-//}
-
 int PPGameTexture::bindTexture()
 {
-//	if (sharedTexture >= 0) {
-//		BindTexture(sharedTexture);
-//	} else
 	if (texture_name == 0) {
-		//if (pixel) {
+
 			glGenTextures(1,&texture_name);
+
 			glBindTexture(GL_TEXTURE_2D,texture_name);
 			if (option.linear) {
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-//#if TARGET_OS_IPHONE
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, option.wrap_s);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, option.wrap_t);
-//#else
-//				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-//				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-//#endif
 			} else {
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, option.wrap_s);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, option.wrap_t);
 			}
+
 			if (compressed) {
 				texImage2DPVRTC(0,4,false,width,height,pixel);
 			} else {
@@ -318,12 +305,11 @@ int PPGameTexture::bindTexture()
 					glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,width,height,0,GL_RGBA,GL_UNSIGNED_BYTE,pixel);
 				}
 			}
-			//bind = true;
-//printf("glTexImage2D %d,texid %d\n",index,texid);
-		//}
+
 	} else {
-//printf("bindTexture %d\n",i);
+
 		glBindTexture(GL_TEXTURE_2D,texture_name);
+
 	}
 	manager->texId = index;
 	return 0;

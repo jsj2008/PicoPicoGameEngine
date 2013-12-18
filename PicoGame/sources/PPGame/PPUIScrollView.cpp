@@ -102,13 +102,6 @@ static int funcFrameRect(lua_State* L)
 		PPRect rect = PPRect(m->pos.x,m->pos.y,m->frameSize().width,m->frameSize().height);
 		r = s->getRect(L,0,rect);
 		t = true;
-//	} else
-//	if (s->argCount > 3) {
-//		r = PPRect(s->number(0),s->number(1),s->number(2),s->number(3));
-//		t = true;
-//	} else {
-//		r = m->viewPort();
-//		t = true;
 	}
 	if (t) {
 		if (m->frameSize().width != r.width || m->frameSize().height != r.height) {
@@ -130,13 +123,14 @@ static int funcContentsRect(lua_State* L)
 {
 	PPUIScrollView* m = (PPUIScrollView*)PPLuaScript::UserData(L);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPUIScrollView* m = (PPUIScrollView*)s->userdata;
 	if (m==NULL) {
 		return luaL_argerror(L,1,"invalid argument.");
 	}
 	PPRect r;
 	if (s->argCount > 0) {
 		m->_contentsRect = s->getRect(L,0,m->_contentsRect);
+    m->cpos=m->_contentsRect.pos();
+    m->dpos=m->_contentsRect.pos();
 		return 0;
 	}
 	return s->returnRect(L,m->_contentsRect);
@@ -145,8 +139,6 @@ static int funcContentsRect(lua_State* L)
 static int funcIsDiragging(lua_State* L)
 {
 	PPUIScrollView* m = (PPUIScrollView*)PPLuaScript::UserData(L);
-//	PPLuaScript* s = PPLuaScript::SharedScript(m->world(),L);
-//	PPUIScrollView* m = (PPUIScrollView*)s->userdata;
 	if (m==NULL) {
 		return luaL_argerror(L,1,"invalid argument.");
 	}
@@ -167,11 +159,7 @@ static int funcDelete(lua_State *L)
 static int funcNew(lua_State *L)
 {
 	PPWorld* world = PPLuaScript::World(L);
-//	PPUIScrollView* o = (PPUIScrollView*)PPLuaScript::UserData(L);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPUIScrollView* m = (PPUIScrollView*)s->userdata;
-//	PPLuaScript* s = PPLuaScript::sharedScript(L);
-//	PPObject* o = (PPObject*)s->userdata;
 	if (s->argCount > 0) {
 		lua_createtable(L,(int)s->integer(0),0);
 		int table = lua_gettop(L);

@@ -388,25 +388,25 @@ PPSize PPObject::tileSize()
 
 #pragma mark -
 
-static int funcInit(lua_State* L)
-{
-	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
-	m->init(NULL);
-	return 0;
-}
+//static int funcInit(lua_State* L)
+//{
+//	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
+//	if (m==NULL) {
+//		return luaL_argerror(L,1,"invalid argument.");
+//	}
+//	m->init(NULL);
+//	return 0;
+//}
 
-static int funcStart(lua_State* L)
-{
-	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
-	m->start();
-	return 0;
-}
+//static int funcStart(lua_State* L)
+//{
+//	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
+//	if (m==NULL) {
+//		return luaL_argerror(L,1,"invalid argument.");
+//	}
+//	m->start();
+//	return 0;
+//}
 
 static int funcShow(lua_State* L)
 {
@@ -754,6 +754,8 @@ static PPRect calcAABB(lua_State* L)
 	}
 
 	m->poly.pos = p;
+  
+  PPPoint org = m->poly.origin;
 	m->poly.origin = p+m->origin;
 
 	PPPoint delta=PPPointZero;
@@ -774,6 +776,8 @@ static PPRect calcAABB(lua_State* L)
 	}
 	
 	lua_settop(L,top);
+  
+  m->poly.origin = org;
 	
 	return PPRect(minx,miny,maxx-minx,maxy-miny);
 }

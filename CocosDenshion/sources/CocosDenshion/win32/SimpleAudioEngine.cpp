@@ -124,7 +124,7 @@ bool SimpleAudioEngine::isBackgroundMusicPlaying()
 // effect function
 //////////////////////////////////////////////////////////////////////////
 
-unsigned int SimpleAudioEngine::playEffect(const char* pszFilePath, bool bLoop)
+unsigned int SimpleAudioEngine::playEffect(const char* pszFilePath,bool bLoop,float pitch,float pan,float gain)
 {
     unsigned int nRet = _Hash(pszFilePath);
 
@@ -133,7 +133,7 @@ unsigned int SimpleAudioEngine::playEffect(const char* pszFilePath, bool bLoop)
     EffectList::iterator p = sharedList().find(nRet);
     if (p != sharedList().end())
     {
-        p->second->Play((bLoop) ? -1 : 1);
+        p->second->Play((bLoop) ? -1 : 1,pitch,pan,gain);
     }
 
     return nRet;

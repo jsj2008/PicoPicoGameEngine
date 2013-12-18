@@ -8,6 +8,7 @@
 
 #import "MainViewController.h"
 #import <PicoGame/PPGame.h>
+#import <PicoGame/PPGameView.h>
 
 @interface MainViewController ()
 

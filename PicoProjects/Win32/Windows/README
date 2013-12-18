@@ -1,0 +1,21 @@
+PicoPicoGameEngine Simulator Ver. 1.0.15
+
+luaスクリプトを書いてゲームを作る事ができるシミュレータです。
+ピコピコゲームエンジンについては下記を参照してください。
+
+http://yamagame.secret.jp/picopicoengine/
+
+Windows版
+
+  動作確認はWindowsXPとWindows8 Proで行っています。
+  標準の文字を表示するには、Resourcesフォルダに PPImageFont.png が入ってる必要があります。
+  Control+Rでスクリプトのリロードが行えます。
+
+MacOSX版
+
+  動作確認は OSX 10.9 Marvericks で行っています。
+
+
+本ソフトウエアは無保証です。本ソフトウエアによって生じた、いかなる損害についても保証いたしません。 自己の責任の範囲で使用してください。
+
+2013/11/06 H.Yamaguchi

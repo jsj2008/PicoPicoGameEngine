@@ -226,6 +226,7 @@ public:
 	int InitOT();
 
 	virtual int DrawOT();
+	virtual int DrawOT2();
 	virtual void RestartOT();
 	virtual void ResetOT();
 

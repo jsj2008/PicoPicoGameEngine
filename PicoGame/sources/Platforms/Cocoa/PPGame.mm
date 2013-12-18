@@ -11,10 +11,15 @@
 
 #import "PPGame.h"
 #import "PPGameStart.h"
+#import "PPGamePoly.h"
+#import "PPGameSprite.h"
+#if TARGET_OS_IPHONE
+#import "PPGameView.h"
+#else
+#import "PPGameView_App.h"
+#endif
 
-@interface PPGame ()
-
-- (void)setupResourceFolder;
+@interface PPGame ()  <PPGameViewDelegate>
 
 @end
 
@@ -213,6 +218,7 @@
 	if (useResFolder) {
 		NSString* p = [[[[NSBundle mainBundle] bundlePath] stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"Resources"];
 		PPGameSetDataPath([p fileSystemRepresentation]);
+		PPGameSetDataSubPath([p fileSystemRepresentation]);
 	}
 }
 

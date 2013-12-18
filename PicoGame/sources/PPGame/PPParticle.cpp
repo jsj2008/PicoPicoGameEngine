@@ -31,7 +31,7 @@ typedef xmlChar PPXmlChar;
 #endif
 
 #ifdef __COCOS2DX__
-#include "CCFileUtils.h"
+#include "Cocos2dxWrapper.h"
 #endif
 
 #define MAXIMUM_UPDATE_RATE 90.0f	// The maximum number of updates that occur per frame
@@ -548,9 +548,9 @@ bool PPParticleEmitter::config(const char* xmlpath)
 	unsigned long size=0;
 
 #ifdef __COCOS2DX__
-	str = (char*)cocos2d::CCFileUtils::getFileData(PPGameResourcePath(xmlpath),"r",&size);
+	str = (char*)ccGetFileData(PPGameResourcePath(xmlpath),"r",&size);
 	if (str == NULL) {
-		str = (char*)cocos2d::CCFileUtils::getFileData(xmlpath,"r",&size);
+		str = (char*)ccGetFileData(xmlpath,"r",&size);
 	}
 #else
 	FILE* fp = fopen(PPGameDataPath(xmlpath),"r");

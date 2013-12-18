@@ -35,8 +35,8 @@ MciPlayer::MciPlayer()
 		wc.lpszMenuName   = NULL;                           // We Don't Want A Menu
 		wc.lpszClassName  = WIN_CLASS_NAME;                 // Set The Class Name
 
-		if (! RegisterClass(&wc)		// ×¢²á ´°¿ÚÀà Ê§°Ü
-			&& 1410 != GetLastError())		// ²¢ÇÒÊ§°ÜµÄÔ­Òò²»ÊÇ´°¿ÚÀàÒÑ×¢²á   
+		if (! RegisterClass(&wc)		// Ã—Â¢Â²Ã¡ Â´Â°Â¿ÃšÃ€Ã  ÃŠÂ§Â°Ãœ
+			&& 1410 != GetLastError())		// Â²Â¢Ã‡Ã’ÃŠÂ§Â°ÃœÂµÃ„Ã”Â­Ã’Ã²Â²Â»ÃŠÃ‡Â´Â°Â¿ÃšÃ€Ã Ã’Ã‘Ã—Â¢Â²Ã¡   
 		{
 			return;
 		}
@@ -94,19 +94,27 @@ void MciPlayer::Open(const char* pFileName, UINT uId)
 	} while (0);
 }
 
-void MciPlayer::Play(UINT uTimes /* = 1 */)
+void MciPlayer::Play(UINT uTimes /* = 1 */,float pitch,float pan,float gain)
 {
 	if (! m_hDev)
 	{
 		return;
 	}
+
+#if 0
+	MCI_DGV_SETAUDIO_PARMS mci_vol = {0};
+	mci_vol.dwItem = MCI_DGV_SETAUDIO_VOLUME ;
+	mci_vol.dwValue = 1000*gain;
+	mciSendCommand(m_hDev,MCI_SETAUDIO,MCI_DGV_SETAUDIO_ITEM | MCI_DGV_SETAUDIO_VALUE,(DWORD)&mci_vol);
+#endif
+
 	MCI_PLAY_PARMS mciPlay = {0};
 	mciPlay.dwCallback = (DWORD_PTR)m_hWnd;
 	s_mciError = mciSendCommand(m_hDev,MCI_PLAY, MCI_FROM|MCI_NOTIFY,(DWORD)&mciPlay);
-	if (! s_mciError)
+	if (!s_mciError)
 	{
 		m_bPlaying = true;
-        m_uTimes = uTimes;
+    m_uTimes = uTimes;
 	}
 }
 

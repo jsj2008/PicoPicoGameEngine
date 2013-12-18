@@ -10,10 +10,14 @@
 -----------------------------------------------------------------------------------------------*/
 
 #import "PPGameViewController.h"
+#import "QBSoundMac.h"
+#import "PPSensoriOS.h"
+#import "iCadeReaderView.h"
+#import "PPGameView.h"
 
 #define kAccelerometerFrequency     10
 
-@interface PPGameViewController ()
+@interface PPGameViewController ()  <iCadeEventDelegate,PPGameViewDelegate>
 {
 }
 
@@ -45,6 +49,17 @@
 	selector:@selector(applicationWillEnterForeground:)
 	name:UIApplicationWillEnterForegroundNotification
 	object:[UIApplication sharedApplication]];
+
+  if (QBSound::sharedSound()==NULL) {
+    QBSoundMac* snd = new QBSoundMac(5);
+    if (snd) {
+      snd->Init();
+      snd->Reset();
+      snd->setMasterVolume(0.5);
+    }
+  }
+
+	PPSensor::instance = new PPSensoriOS();
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application

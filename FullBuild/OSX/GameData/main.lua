@@ -1,21 +1,7 @@
-g=ppgraph
-sc=ppscreen
-base=pprect(0,0,320,480)
-function start()
- sc:viewport(sc:layout(base))
- g:scale(2)
- g:pos(0,100)
- g:print("がぎぐげご")
-end
-
---[[
 ti=require("tileinfo")
 g=ppgraph
 sc=ppscreen
 base=pprect(0,0,320,480)
-
-ppfont:loadTTF("System","System",24)
-ppfont:set("System")
 
 sgameover="GAME OVER"
 score_key="carrace-hiscore"
@@ -245,7 +231,7 @@ function mainloop()
       e:set()
       t=0
     end
-    mycar:drag(pptouch(),base)
+    mycar:drag(sc:arrayto(pptouch()),base)
     mapy=mapy+scrollspeed
     if mapy>=maph then mapy=0 end
     ppforeach(ecar,function(i,v)
@@ -302,7 +288,7 @@ function start()
   ppflmml[1]:play()
   while ppflmml[1]:isPlaying() do
     sc:viewport(sc:layout(base))
-    mycar:drag(pptouch(),base)
+    mycar:drag(sc:arrayto(pptouch()),base)
     draw()
     dsc("SCORE",score)
     g:update()
@@ -311,19 +297,3 @@ function start()
   mainloop()
   gameover()
 end
-]]
-
---[[
-g=ppgraph
---ppfont:loadTTF("MikachanPB.ttf","System",18)
-ppfont:loadTTF("System","System",18)
-ppfont:set("System")
-
-function start()
-  g:fill(ppscreen:size(),g.blue)
-  g:locate(0,0)
-  g:print("HELLOあいうえおiiixxxgg")
-  g:locate(0,24)
-  g:print("abcdefgモスバーガー")
-end
-]]

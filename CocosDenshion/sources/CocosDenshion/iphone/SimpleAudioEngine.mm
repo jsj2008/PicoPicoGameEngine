@@ -92,9 +92,9 @@ static void static_setEffectsVolume(float volume)
     [SimpleAudioEngine sharedEngine].effectsVolume = volume;
 }
      
-static unsigned int static_playEffect(const char* pszFilePath, bool bLoop)
+static unsigned int static_playEffect(const char* pszFilePath,bool bLoop,float pitch,float pan,float gain)
 {
-    return [[SimpleAudioEngine sharedEngine] playEffect:[NSString stringWithUTF8String: pszFilePath] loop:bLoop]; 
+    return [[SimpleAudioEngine sharedEngine] playEffect:[NSString stringWithUTF8String: pszFilePath] loop:bLoop pitch:pitch pan:pan gain:gain]; 
 }
      
 static void static_stopEffect(int nSoundId)
@@ -212,9 +212,9 @@ namespace CocosDenshion
                 static_setEffectsVolume(volume);
 	}
 
-	unsigned int SimpleAudioEngine::playEffect(const char* pszFilePath, bool bLoop)
+	unsigned int SimpleAudioEngine::playEffect(const char* pszFilePath,bool bLoop,float pitch,float pan,float gain)
 	{
-                return static_playEffect(pszFilePath, bLoop);
+                return static_playEffect(pszFilePath, bLoop, pitch, pan, gain);
 	}
 
 	void SimpleAudioEngine::stopEffect(unsigned int nSoundId)

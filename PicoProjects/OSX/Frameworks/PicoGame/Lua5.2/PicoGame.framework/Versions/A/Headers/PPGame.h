@@ -10,20 +10,15 @@
 -----------------------------------------------------------------------------------------------*/
 
 #import <Foundation/Foundation.h>
-#import "PPGamePoly.h"
-#import "PPGameSprite.h"
-#if TARGET_OS_IPHONE
-#import "PPGameView.h"
-#else
-#import "PPGameView_App.h"
-#endif
-#import "QBGame.h"
+#import "PPGameDef.h"
+
+class QBGame;
 
 /*-----------------------------------------------------------------------------------------------
 	クラス
 -----------------------------------------------------------------------------------------------*/
 
-@interface PPGame : NSObject <PPGameViewDelegate> {
+@interface PPGame : NSObject {
 #if TARGET_OS_IPHONE
 	UIViewController* controller;
 #else
@@ -88,6 +83,8 @@
 - (void)setAccelerometerX:(float)x Y:(float)y Z:(float)z;
 - (void)setGyroX:(float)x Y:(float)y Z:(float)z;
 - (void)setMagnetometerX:(float)x Y:(float)y Z:(float)z;
+
+- (void)setupResourceFolder;
 
 @end
 

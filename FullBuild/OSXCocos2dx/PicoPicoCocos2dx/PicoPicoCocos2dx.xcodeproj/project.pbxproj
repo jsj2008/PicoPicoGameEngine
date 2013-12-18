@@ -1,0 +1,479 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		6BF2AC2A1859571B00414672 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BF2AC291859571B00414672 /* Cocoa.framework */; };
+		6BF2AC341859571B00414672 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6BF2AC321859571B00414672 /* InfoPlist.strings */; };
+		6BF2AC361859571B00414672 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BF2AC351859571B00414672 /* main.m */; };
+		6BF2AC3A1859571B00414672 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 6BF2AC381859571B00414672 /* Credits.rtf */; };
+		6BF2AC3D1859571B00414672 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BF2AC3C1859571B00414672 /* AppDelegate.m */; };
+		6BF2AC401859571B00414672 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6BF2AC3E1859571B00414672 /* MainMenu.xib */; };
+		6BF2AC421859571B00414672 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6BF2AC411859571B00414672 /* Images.xcassets */; };
+		6BF2AC491859571B00414672 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BF2AC481859571B00414672 /* XCTest.framework */; };
+		6BF2AC4A1859571B00414672 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BF2AC291859571B00414672 /* Cocoa.framework */; };
+		6BF2AC521859571B00414672 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6BF2AC501859571B00414672 /* InfoPlist.strings */; };
+		6BF2AC541859571B00414672 /* PicoPicoCocos2dxTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BF2AC531859571B00414672 /* PicoPicoCocos2dxTests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		6BF2AC4B1859571B00414672 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6BF2AC1E1859571B00414672 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6BF2AC251859571B00414672;
+			remoteInfo = PicoPicoCocos2dx;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		6BF2AC261859571B00414672 /* PicoPicoCocos2dx.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PicoPicoCocos2dx.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6BF2AC291859571B00414672 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		6BF2AC2C1859571B00414672 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		6BF2AC2D1859571B00414672 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		6BF2AC2E1859571B00414672 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		6BF2AC311859571B00414672 /* PicoPicoCocos2dx-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PicoPicoCocos2dx-Info.plist"; sourceTree = "<group>"; };
+		6BF2AC331859571B00414672 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		6BF2AC351859571B00414672 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		6BF2AC371859571B00414672 /* PicoPicoCocos2dx-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PicoPicoCocos2dx-Prefix.pch"; sourceTree = "<group>"; };
+		6BF2AC391859571B00414672 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
+		6BF2AC3B1859571B00414672 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		6BF2AC3C1859571B00414672 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		6BF2AC3F1859571B00414672 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		6BF2AC411859571B00414672 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		6BF2AC471859571B00414672 /* PicoPicoCocos2dxTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PicoPicoCocos2dxTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		6BF2AC481859571B00414672 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		6BF2AC4F1859571B00414672 /* PicoPicoCocos2dxTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PicoPicoCocos2dxTests-Info.plist"; sourceTree = "<group>"; };
+		6BF2AC511859571B00414672 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		6BF2AC531859571B00414672 /* PicoPicoCocos2dxTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PicoPicoCocos2dxTests.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		6BF2AC231859571B00414672 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6BF2AC2A1859571B00414672 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6BF2AC441859571B00414672 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6BF2AC4A1859571B00414672 /* Cocoa.framework in Frameworks */,
+				6BF2AC491859571B00414672 /* XCTest.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		6BF2AC1D1859571B00414672 = {
+			isa = PBXGroup;
+			children = (
+				6BF2AC2F1859571B00414672 /* PicoPicoCocos2dx */,
+				6BF2AC4D1859571B00414672 /* PicoPicoCocos2dxTests */,
+				6BF2AC281859571B00414672 /* Frameworks */,
+				6BF2AC271859571B00414672 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		6BF2AC271859571B00414672 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6BF2AC261859571B00414672 /* PicoPicoCocos2dx.app */,
+				6BF2AC471859571B00414672 /* PicoPicoCocos2dxTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		6BF2AC281859571B00414672 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				6BF2AC291859571B00414672 /* Cocoa.framework */,
+				6BF2AC481859571B00414672 /* XCTest.framework */,
+				6BF2AC2B1859571B00414672 /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		6BF2AC2B1859571B00414672 /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				6BF2AC2C1859571B00414672 /* AppKit.framework */,
+				6BF2AC2D1859571B00414672 /* CoreData.framework */,
+				6BF2AC2E1859571B00414672 /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		6BF2AC2F1859571B00414672 /* PicoPicoCocos2dx */ = {
+			isa = PBXGroup;
+			children = (
+				6BF2AC3B1859571B00414672 /* AppDelegate.h */,
+				6BF2AC3C1859571B00414672 /* AppDelegate.m */,
+				6BF2AC3E1859571B00414672 /* MainMenu.xib */,
+				6BF2AC411859571B00414672 /* Images.xcassets */,
+				6BF2AC301859571B00414672 /* Supporting Files */,
+			);
+			path = PicoPicoCocos2dx;
+			sourceTree = "<group>";
+		};
+		6BF2AC301859571B00414672 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				6BF2AC311859571B00414672 /* PicoPicoCocos2dx-Info.plist */,
+				6BF2AC321859571B00414672 /* InfoPlist.strings */,
+				6BF2AC351859571B00414672 /* main.m */,
+				6BF2AC371859571B00414672 /* PicoPicoCocos2dx-Prefix.pch */,
+				6BF2AC381859571B00414672 /* Credits.rtf */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		6BF2AC4D1859571B00414672 /* PicoPicoCocos2dxTests */ = {
+			isa = PBXGroup;
+			children = (
+				6BF2AC531859571B00414672 /* PicoPicoCocos2dxTests.m */,
+				6BF2AC4E1859571B00414672 /* Supporting Files */,
+			);
+			path = PicoPicoCocos2dxTests;
+			sourceTree = "<group>";
+		};
+		6BF2AC4E1859571B00414672 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				6BF2AC4F1859571B00414672 /* PicoPicoCocos2dxTests-Info.plist */,
+				6BF2AC501859571B00414672 /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		6BF2AC251859571B00414672 /* PicoPicoCocos2dx */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6BF2AC571859571B00414672 /* Build configuration list for PBXNativeTarget "PicoPicoCocos2dx" */;
+			buildPhases = (
+				6BF2AC221859571B00414672 /* Sources */,
+				6BF2AC231859571B00414672 /* Frameworks */,
+				6BF2AC241859571B00414672 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PicoPicoCocos2dx;
+			productName = PicoPicoCocos2dx;
+			productReference = 6BF2AC261859571B00414672 /* PicoPicoCocos2dx.app */;
+			productType = "com.apple.product-type.application";
+		};
+		6BF2AC461859571B00414672 /* PicoPicoCocos2dxTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6BF2AC5A1859571B00414672 /* Build configuration list for PBXNativeTarget "PicoPicoCocos2dxTests" */;
+			buildPhases = (
+				6BF2AC431859571B00414672 /* Sources */,
+				6BF2AC441859571B00414672 /* Frameworks */,
+				6BF2AC451859571B00414672 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				6BF2AC4C1859571B00414672 /* PBXTargetDependency */,
+			);
+			name = PicoPicoCocos2dxTests;
+			productName = PicoPicoCocos2dxTests;
+			productReference = 6BF2AC471859571B00414672 /* PicoPicoCocos2dxTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		6BF2AC1E1859571B00414672 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0500;
+				ORGANIZATIONNAME = "your name or company";
+				TargetAttributes = {
+					6BF2AC461859571B00414672 = {
+						TestTargetID = 6BF2AC251859571B00414672;
+					};
+				};
+			};
+			buildConfigurationList = 6BF2AC211859571B00414672 /* Build configuration list for PBXProject "PicoPicoCocos2dx" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 6BF2AC1D1859571B00414672;
+			productRefGroup = 6BF2AC271859571B00414672 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				6BF2AC251859571B00414672 /* PicoPicoCocos2dx */,
+				6BF2AC461859571B00414672 /* PicoPicoCocos2dxTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		6BF2AC241859571B00414672 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6BF2AC341859571B00414672 /* InfoPlist.strings in Resources */,
+				6BF2AC421859571B00414672 /* Images.xcassets in Resources */,
+				6BF2AC3A1859571B00414672 /* Credits.rtf in Resources */,
+				6BF2AC401859571B00414672 /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6BF2AC451859571B00414672 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6BF2AC521859571B00414672 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		6BF2AC221859571B00414672 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6BF2AC3D1859571B00414672 /* AppDelegate.m in Sources */,
+				6BF2AC361859571B00414672 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6BF2AC431859571B00414672 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6BF2AC541859571B00414672 /* PicoPicoCocos2dxTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		6BF2AC4C1859571B00414672 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 6BF2AC251859571B00414672 /* PicoPicoCocos2dx */;
+			targetProxy = 6BF2AC4B1859571B00414672 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		6BF2AC321859571B00414672 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6BF2AC331859571B00414672 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		6BF2AC381859571B00414672 /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6BF2AC391859571B00414672 /* en */,
+			);
+			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+		6BF2AC3E1859571B00414672 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6BF2AC3F1859571B00414672 /* Base */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+		6BF2AC501859571B00414672 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6BF2AC511859571B00414672 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		6BF2AC551859571B00414672 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		6BF2AC561859571B00414672 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		6BF2AC581859571B00414672 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "PicoPicoCocos2dx/PicoPicoCocos2dx-Prefix.pch";
+				INFOPLIST_FILE = "PicoPicoCocos2dx/PicoPicoCocos2dx-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		6BF2AC591859571B00414672 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "PicoPicoCocos2dx/PicoPicoCocos2dx-Prefix.pch";
+				INFOPLIST_FILE = "PicoPicoCocos2dx/PicoPicoCocos2dx-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		6BF2AC5B1859571B00414672 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/PicoPicoCocos2dx.app/Contents/MacOS/PicoPicoCocos2dx";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "PicoPicoCocos2dx/PicoPicoCocos2dx-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "PicoPicoCocos2dxTests/PicoPicoCocos2dxTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		6BF2AC5C1859571B00414672 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/PicoPicoCocos2dx.app/Contents/MacOS/PicoPicoCocos2dx";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "PicoPicoCocos2dx/PicoPicoCocos2dx-Prefix.pch";
+				INFOPLIST_FILE = "PicoPicoCocos2dxTests/PicoPicoCocos2dxTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		6BF2AC211859571B00414672 /* Build configuration list for PBXProject "PicoPicoCocos2dx" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6BF2AC551859571B00414672 /* Debug */,
+				6BF2AC561859571B00414672 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6BF2AC571859571B00414672 /* Build configuration list for PBXNativeTarget "PicoPicoCocos2dx" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6BF2AC581859571B00414672 /* Debug */,
+				6BF2AC591859571B00414672 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		6BF2AC5A1859571B00414672 /* Build configuration list for PBXNativeTarget "PicoPicoCocos2dxTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6BF2AC5B1859571B00414672 /* Debug */,
+				6BF2AC5C1859571B00414672 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 6BF2AC1E1859571B00414672 /* Project object */;
+}

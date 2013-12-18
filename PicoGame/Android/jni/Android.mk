@@ -1,8 +1,86 @@
 LOCAL_PATH := $(call my-dir)
+
+PG_ENGINE_PATH := ../../..
+
+ifneq ($(call set_is_member,$(__ndk_modules),cocos2d),$(true))
+  include $(CLEAR_VARS)
+  LOCAL_MODULE    := cocos2d
+  LOCAL_SRC_FILES := $(PG_ENGINE_PATH)/Cocos2dx/libraries/Android/$(TARGET_ARCH_ABI)/libcocos2d.so
+  include $(PREBUILT_SHARED_LIBRARY)
+endif
+
+ifneq ($(call set_is_member,$(__ndk_modules),cocosdenshion),$(true))
+  include $(CLEAR_VARS)
+  LOCAL_MODULE    := cocosdenshion
+  LOCAL_SRC_FILES := $(PG_ENGINE_PATH)/CocosDenshion/Android/libs/$(TARGET_ARCH_ABI)/libcocosdenshion.so
+  include $(PREBUILT_SHARED_LIBRARY)
+endif
+
+ifneq ($(call set_is_member,$(__ndk_modules),cocos2dwrapper),$(true))
+  include $(CLEAR_VARS)
+  LOCAL_MODULE    := cocos2dwrapper
+  LOCAL_SRC_FILES := $(PG_ENGINE_PATH)/Cocos2dx/Android/libs/$(TARGET_ARCH_ABI)/libcocos2dwrapper.so
+  include $(PREBUILT_STATIC_LIBRARY)
+endif
+
+ifneq ($(call set_is_member,$(__ndk_modules),freetype),$(true))
+  include $(CLEAR_VARS)
+  LOCAL_MODULE    := freetype
+  LOCAL_SRC_FILES := $(PG_ENGINE_PATH)/freetype/Android/libs/$(TARGET_ARCH_ABI)/libfreetype.so
+  include $(PREBUILT_STATIC_LIBRARY)
+endif
+
+ifneq ($(call set_is_member,$(__ndk_modules),lua),$(true))
+  include $(CLEAR_VARS)
+  LOCAL_MODULE    := liblua
+  LOCAL_SRC_FILES := $(PG_ENGINE_PATH)/Lua5.2/Android/libs/$(TARGET_ARCH_ABI)/liblua.so
+  include $(PREBUILT_STATIC_LIBRARY)
+endif
+
+ifneq ($(call set_is_member,$(__ndk_modules),box2d),$(true))
+  include $(CLEAR_VARS)
+  LOCAL_MODULE    := box2d
+  LOCAL_SRC_FILES := $(PG_ENGINE_PATH)/Box2D/Android/libs/$(TARGET_ARCH_ABI)/libbox2d.so
+  include $(PREBUILT_STATIC_LIBRARY)
+endif
+
+ifneq ($(call set_is_member,$(__ndk_modules),flmml),$(true))
+  include $(CLEAR_VARS)
+  LOCAL_MODULE    := flmml
+  LOCAL_SRC_FILES := $(PG_ENGINE_PATH)/FlMML/Android/libs/$(TARGET_ARCH_ABI)/libflmml.so
+  include $(PREBUILT_STATIC_LIBRARY)
+endif
+
+ifneq ($(call set_is_member,$(__ndk_modules),png),$(true))
+  include $(CLEAR_VARS)
+  LOCAL_MODULE    := libpng
+  LOCAL_SRC_FILES := $(PG_ENGINE_PATH)/Cocos2dx/libraries/Android/$(TARGET_ARCH_ABI)/libpng.a
+  include $(PREBUILT_STATIC_LIBRARY)
+endif
+
+ifneq ($(call set_is_member,$(__ndk_modules),xml2),$(true))
+  include $(CLEAR_VARS)
+  LOCAL_MODULE    := libxml2
+  LOCAL_SRC_FILES := $(PG_ENGINE_PATH)/Cocos2dx/libraries/Android/$(TARGET_ARCH_ABI)/libxml2.a
+  include $(PREBUILT_STATIC_LIBRARY)
+endif
+
 include $(CLEAR_VARS)
-LOCAL_MODULE := picogame
+LOCAL_MODULE := libpicogame
 SOURCE_PATH := ../../sources/
-#COCOS2DX_PATH := $(LOCAL_PATH)/../../../cocos2d-1.0.1-x-0.9.2/
+COCOS2D_PATH := $(LOCAL_PATH)/../../../Cocos2dx/sources/cocos2d-1.0.1-x-0.9.2
+
+JNI_CFLAGS := \
+        -DFT_CONFIG_MODULES_H="<ftmodule.h>" \
+        -DFT2_BUILD_LIBRARY \
+        -D__COCOS2DX__ \
+        -DLUA_COMPAT_ALL \
+        -D_ANDROID \
+        -D_STLP_NO_EXCEPTIONS \
+        -D_STLP_USE_SIMPLE_NODE_ALLOC \
+        -DCOCOS2D_DEBUG=0 \
+        -DGL_GLEXT_PROTOTYPES=1 \
+        -D__USE_OPENGL10__
 
 LOCAL_CFLAGS := $(JNI_CFLAGS)
 
@@ -14,7 +92,6 @@ LOCAL_SRC_FILES := \
 				$(SOURCE_PATH)/PPGame/PPFlMMLSeq.cpp \
 				$(SOURCE_PATH)/PPGame/PPFont.cpp \
 				$(SOURCE_PATH)/PPGame/PPFontTable.cpp \
-				$(SOURCE_PATH)/PPGame/PPGameButton.cpp \
 				$(SOURCE_PATH)/PPGame/PPGameGeometry.cpp \
 				$(SOURCE_PATH)/PPGame/PPGameMapData.cpp \
 				$(SOURCE_PATH)/PPGame/PPGameMapEvent.cpp \
@@ -26,7 +103,6 @@ LOCAL_SRC_FILES := \
 				$(SOURCE_PATH)/PPGame/PPGameTexture.cpp \
 				$(SOURCE_PATH)/PPGame/PPImageFont.cpp \
 				$(SOURCE_PATH)/PPGame/PPLuaScript.cpp \
-				$(SOURCE_PATH)/PPGame/PPMap.cpp \
 				$(SOURCE_PATH)/PPGame/PPNormalFont.cpp \
 				$(SOURCE_PATH)/PPGame/PPObject.cpp \
 				$(SOURCE_PATH)/PPGame/PPOffscreenTexture.cpp \
@@ -49,20 +125,20 @@ LOCAL_SRC_FILES := \
 				$(SOURCE_PATH)/Platforms/Android/PPGameSoundAndroid.cpp \
 				$(SOURCE_PATH)/Platforms/Android/QBSoundAndroid.cpp \
 				$(SOURCE_PATH)/Platforms/Android/PPSensorAndroid.cpp \
+				$(SOURCE_PATH)/Platforms/Android/PPTTFont-Android.cpp \
 				$(SOURCE_PATH)/Platforms/Windroid/PPGameMapCocos2dx.cpp \
 				$(SOURCE_PATH)/Platforms/Windroid/QBNodeBase64.c \
 				$(SOURCE_PATH)/Platforms/Windroid/QBNodeSystemCore.c \
 				$(SOURCE_PATH)/Platforms/Windroid/QBNodeSystemPlist.c \
 				$(SOURCE_PATH)/Platforms/Windroid/QBNodeSystemUtil.c \
-				$(SOURCE_PATH)/Platforms/Windroid/QBNodeSystemValue.c \
-                ./Cocos2dxLuaLoader.cpp
+				$(SOURCE_PATH)/Platforms/Windroid/QBNodeSystemValue.c
 
-LOCAL_C_INCLUDES := $(COCOS2D_PATH)/cocos2dx \
+LOCAL_C_INCLUDES := \
+                    $(COCOS2D_PATH)/cocos2dx \
                     $(COCOS2D_PATH)/cocos2dx/platform \
                     $(COCOS2D_PATH)/cocos2dx/platform/third_party/android/libxml2 \
                     $(COCOS2D_PATH)/cocos2dx/platform/third_party/android/libpng \
                     $(COCOS2D_PATH)/cocos2dx/include \
-                  	$(COCOS2D_PATH)/CocosDenshion/include \
                   	$(LOCAL_PATH)/../../../CocosDenshion/sources/CocosDenshion/ \
                   	$(LOCAL_PATH)/../../../FlMML/Android/jni/ \
                   	$(LOCAL_PATH)/../../../FlMML/include/flmml/ \
@@ -84,22 +160,9 @@ LOCAL_C_INCLUDES := $(COCOS2D_PATH)/cocos2dx \
                   	$(LOCAL_PATH)/../../../freetype/sources/freetype-2.4.12/include/ \
                   	$(LOCAL_PATH)/.
 
-#                  	$(LOCAL_PATH)/../../../LuaJIT/sources/output-android/$(TARGET_ARCH_ABI)/include/luajit-2.0/
-
-#LOCAL_PREBUILT_LIBS := cocos2d cocosdenshion
-
-#LOCAL_STATIC_LIBRARIES := png flmml freetype lua box2d xml2
-
 LOCAL_CFLAGS += -O3
-#LOCAL_CFLAGS += -O3 -D__LUAJIT__
 
-# it is used for ndk-r5  
-# if you build with ndk-r4, comment it  
-# because the new Windows toolchain doesn't support Cygwin's drive
-# mapping (i.e /cygdrive/c/ instead of C:/)  
-LOCAL_LDLIBS := -L$(call host-path, $(JNI_PATH)/../libs/$(TARGET_ARCH_ABI)) \
-                -L$(call host-path, $(LOCAL_PATH)/../lib) \
-                -L$(call host-path, $(COCOS2D_PATH)/cocos2dx/platform/third_party/android/libraries/$(TARGET_ARCH_ABI)) \
-                -lGLESv1_CM -lz -llog -lpng -lflmml -lfreetype -llua -lbox2d -lxml2 -lcocos2d -lcocosdenshion
+LOCAL_STATIC_LIBRARIES := libpng libxml2 liblua libbox2d libfreetype libflmml libcocos2dwrapper
+LOCAL_SHARED_LIBRARIES := cocos2d cocosdenshion
 
-include $(BUILD_SHARED_LIBRARY)
+include $(BUILD_STATIC_LIBRARY)

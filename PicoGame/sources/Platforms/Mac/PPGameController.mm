@@ -12,6 +12,11 @@
 #import "PPGameController.h"
 #import "PPGameView_App.h"
 #import "PPGame.h"
+#import "QBGame.h"
+
+#ifndef NO_COCOSDENSHION
+#include <CocosDenshion/SimpleAudioEngine.h>
+#endif
 
 @implementation PPGameController
 @synthesize game=_game;
@@ -23,7 +28,6 @@
 	if (_isInitialized == NO) {
 		_isInitialized = YES;
 
-		// Allocate the scene object
 		if (self.game == nil) {
 			PPGame* game = [[PPGame alloc] init];
 			self.game = game;
@@ -37,10 +41,8 @@
 		[openGLView.game game]->scale_factor = [density intValue]/10.0;
 		[openGLView setNeedsDisplay:YES];
 		
-		// Assign the view's MainController to self
 		[openGLView setMainController:self];
 		
-		// Activate the display link now
 		[openGLView startAnimation];
 		isAnimating = YES;
 	}
@@ -332,15 +334,16 @@
 
 - (IBAction)reloadData:(id)sender
 {
-//	projector->animationFrameInterval=1;
 	[self stopAnimation];
+#ifndef NO_COCOSDENSHION
+	CocosDenshion::SimpleAudioEngine::sharedEngine()->end();
+#endif
 	[self.game reloadData];
 	[self startAnimation];
 }
 
 - (IBAction)changeWindowSize:(NSMenuItem*)sender
 {
-#if 1
 	NSString* title = [sender title];
 	NSArray* a = [title componentsSeparatedByString:@"x"];
 	NSRect frameRect = [window frame];
@@ -350,50 +353,6 @@
 		frameRect = [window frameRectForContentRect:frameRect];
 		[window setFrame:frameRect display:YES];
 	}
-#else
-//	if ([sender tag] == 320) {
-//		NSRect frameRect = [window frame];
-//		frameRect.size.width = 320;
-//		frameRect.size.height = 480;
-//		frameRect = [window frameRectForContentRect:frameRect];
-//		[window setFrame:frameRect display:YES];
-//	}
-//	if ([sender tag] == 260) {
-//		NSRect frameRect = [window frame];
-//		frameRect.size.width = 260;
-//		frameRect.size.height = 240;
-//		frameRect = [window frameRectForContentRect:frameRect];
-//		[window setFrame:frameRect display:YES];
-//	}
-//	if ([sender tag] == 480) {
-//		NSRect frameRect = [window frame];
-//		frameRect.size.width = 480;
-//		frameRect.size.height = 320;
-//		frameRect = [window frameRectForContentRect:frameRect];
-//		[window setFrame:frameRect display:YES];
-//	}
-//	if ([sender tag] == 640) {
-//		NSRect frameRect = [window frame];
-//		frameRect.size.width = 640;
-//		frameRect.size.height = 480;
-//		frameRect = [window frameRectForContentRect:frameRect];
-//		[window setFrame:frameRect display:YES];
-//	}
-//	if ([sender tag] == 768) {
-//		NSRect frameRect = [window frame];
-//		frameRect.size.width = 768;
-//		frameRect.size.height = 1024;
-//		frameRect = [window frameRectForContentRect:frameRect];
-//		[window setFrame:frameRect display:YES];
-//	}
-//	if ([sender tag] == 1024) {
-//		NSRect frameRect = [window frame];
-//		frameRect.size.width = 1024;
-//		frameRect.size.height = 768;
-//		frameRect = [window frameRectForContentRect:frameRect];
-//		[window setFrame:frameRect display:YES];
-//	}
-#endif
 }
 
 - (IBAction)deleteAllTexture:(id)sender

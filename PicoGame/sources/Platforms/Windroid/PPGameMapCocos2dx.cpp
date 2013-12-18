@@ -13,7 +13,7 @@
 #include "QBNodeSystemPlist.h"
 #include "PPGameUtil.h"
 #ifdef __COCOS2DX__
-#include "CCFileUtils.h"
+#include "Cocos2dxWrapper.h"
 #endif
 
 PPGameMap::PPGameMap(const char* path) : texture(NULL),loadError(false)
@@ -23,9 +23,9 @@ PPGameMap::PPGameMap(const char* path) : texture(NULL),loadError(false)
 		
 #ifdef __COCOS2DX__
 		unsigned long size;
-		char* str = (char*)cocos2d::CCFileUtils::getFileData(PPGameResourcePath(path),"r",&size);
+		char* str = (char*)ccGetFileData(PPGameResourcePath(path),"r",&size);
 		if (str == NULL) {
-			str = (char*)cocos2d::CCFileUtils::getFileData(path,"r",&size);
+			str = (char*)ccGetFileData(path,"r",&size);
 		}
 		if (str == NULL) {
 			loadError = true;

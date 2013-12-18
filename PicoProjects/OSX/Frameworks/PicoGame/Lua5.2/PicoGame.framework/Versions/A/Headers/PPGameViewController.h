@@ -11,13 +11,12 @@
 
 #import <UIKit/UIKit.h>
 #import "PPGame.h"
-#import "iCadeReaderView.h"
 
 /*-----------------------------------------------------------------------------------------------
 	クラス
 -----------------------------------------------------------------------------------------------*/
 
-@interface PPGameViewController : UIViewController <iCadeEventDelegate,PPGameViewDelegate>
+@interface PPGameViewController : UIViewController
 
 @property (nonatomic,retain) IBOutlet PPGame* game;
 

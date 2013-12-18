@@ -114,9 +114,9 @@ jint Java_org_cocos2dx_lib_QBSound_exitSound( JNIEnv*  env,jobject obj)
 jint Java_org_cocos2dx_lib_QBSound_fillSoundBuffer(JNIEnv* env,jobject obj,jshortArray buffer,jint size)
 {
 //#if 1
- 	jshort *const arrSrc=(jshort*)env->GetPrimitiveArrayCritical(buffer,NULL);
+ 	jshort *const arrSrc=(jshort*)env->GetPrimitiveArrayCritical(buffer,0);
 	FILLSoundBuffer(arrSrc,size*sizeof(jshort));
-	env->ReleasePrimitiveArrayCritical(buffer,arrSrc,NULL); 
+	env->ReleasePrimitiveArrayCritical(buffer,arrSrc,0);
 //#else
 //	jboolean b;
 //	int i, nSize;

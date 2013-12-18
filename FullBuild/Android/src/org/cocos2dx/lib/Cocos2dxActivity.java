@@ -183,8 +183,8 @@ public class Cocos2dxActivity extends Activity{
     	backgroundMusicPlayer.setBackgroundVolume(volume);
     }
     
-    public static int playEffect(String path, boolean isLoop){
-    	return soundPlayer.playEffect(path, isLoop);
+    public static int playEffect(String path, boolean isLoop, float pitch, float pan, float gain){
+    	return soundPlayer.playEffect(path, isLoop, pitch, pan, gain);
     }
     
     public static void stopEffect(int soundId){
@@ -238,7 +238,7 @@ public class Cocos2dxActivity extends Activity{
     	// resume background music
     	resumeBackgroundMusic();
     	
-    	soundPlayer.resumeAllEffect();
+    	soundPlayer.resumeAllEffects();
     	
     	startSoundThread();
     }
@@ -252,7 +252,7 @@ public class Cocos2dxActivity extends Activity{
     	
     	// pause background music
     	pauseBackgroundMusic();
-    	soundPlayer.pauseAllEffect();
+    	soundPlayer.pauseAllEffects();
     	stopSoundThread();
     }
 

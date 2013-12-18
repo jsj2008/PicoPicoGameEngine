@@ -90,16 +90,16 @@ static int funcFlMMLPreload(lua_State* L)
 	return 0;
 }
 
-static int funcFlMMLStop(lua_State* L)
-{
-	PPFlMMLObject* m = (PPFlMMLObject*)PPLuaScript::UserData(L);
-//	PPLuaScript* s = PPLuaScript::SharedScript(m->world(),L);
-//	PPLuaScript* s = PPLuaScript_sharedScript(L);
-//	PPFlMMLObject* m = (PPFlMMLObject*)s->userdata;
-	QBSound* snd = QBSound::sharedSound();
-	snd->stopMML(m->index);
-	return 0;
-}
+//static int funcFlMMLStop(lua_State* L)
+//{
+//	PPFlMMLObject* m = (PPFlMMLObject*)PPLuaScript::UserData(L);
+////	PPLuaScript* s = PPLuaScript::SharedScript(m->world(),L);
+////	PPLuaScript* s = PPLuaScript_sharedScript(L);
+////	PPFlMMLObject* m = (PPFlMMLObject*)s->userdata;
+//	QBSound* snd = QBSound::sharedSound();
+//	snd->stopMML(m->index);
+//	return 0;
+//}
 
 static int funcFlMMLPause(lua_State* L)
 {

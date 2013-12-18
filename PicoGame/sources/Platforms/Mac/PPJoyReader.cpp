@@ -36,6 +36,7 @@ static int32_t get_int_property(IOHIDDeviceRef device, CFStringRef key)
 	return 0;
 }
 
+/*
 static int get_string_property_utf8(IOHIDDeviceRef device, CFStringRef prop, char *buf, size_t len)
 {
 	CFStringRef str;
@@ -70,6 +71,7 @@ static int get_string_property_utf8(IOHIDDeviceRef device, CFStringRef prop, cha
 	else
 		return 0;
 }
+*/
 
 PPJoyReader::PPJoyReader()
 {

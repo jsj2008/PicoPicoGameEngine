@@ -32,10 +32,6 @@
 		6B06B01515B5012100D2EFF6 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B06B00B15B5012100D2EFF6 /* SystemConfiguration.framework */; };
 		6B06B01615B5012100D2EFF6 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B06B00C15B5012100D2EFF6 /* MediaPlayer.framework */; };
 		6B06B01715B5012100D2EFF6 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B06B00D15B5012100D2EFF6 /* CoreMotion.framework */; };
-		6B06B01815B5012100D2EFF6 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B06B00E15B5012100D2EFF6 /* AudioToolbox.framework */; };
-		6B06B01915B5012100D2EFF6 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B06B00F15B5012100D2EFF6 /* QuartzCore.framework */; };
-		6B06B01A15B5012100D2EFF6 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B06B01015B5012100D2EFF6 /* AVFoundation.framework */; };
-		6B06B01B15B5012100D2EFF6 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B06B01115B5012100D2EFF6 /* OpenAL.framework */; };
 		6B06B02015B5014300D2EFF6 /* PicoGameAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6B06B01E15B5014300D2EFF6 /* PicoGameAppDelegate.mm */; };
 		6B06B02F15B501EC00D2EFF6 /* freetype.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B06B02915B501EC00D2EFF6 /* freetype.framework */; };
 		6B06B03015B501EC00D2EFF6 /* CocosDenshion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B06B02A15B501EC00D2EFF6 /* CocosDenshion.framework */; };
@@ -58,13 +54,17 @@
 		6B110A9216585B2800202C89 /* sample.png in Resources */ = {isa = PBXBuildFile; fileRef = 6B110A8316585B2800202C89 /* sample.png */; };
 		6B110A9316585B2800202C89 /* tile.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6B110A8416585B2800202C89 /* tile.plist */; };
 		6B110A9416585B2800202C89 /* tileinfo.lua in Resources */ = {isa = PBXBuildFile; fileRef = 6B110A8516585B2800202C89 /* tileinfo.lua */; };
+		6B15C454185710FB009898CF /* GameController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B15C453185710FB009898CF /* GameController.framework */; };
+		6B15C4561857111C009898CF /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B15C4551857111C009898CF /* OpenAL.framework */; };
+		6B15C4581857112D009898CF /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B15C4571857112D009898CF /* AVFoundation.framework */; };
+		6B15C45A18571144009898CF /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B15C45918571144009898CF /* QuartzCore.framework */; };
+		6B15C45C1857115C009898CF /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B15C45B1857115C009898CF /* AudioToolbox.framework */; };
 		6BC178D0162E7BF600AE9E3C /* MainViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6BC178CF162E7BF600AE9E3C /* MainViewController.mm */; };
 		6BC178DD162EA32D00AE9E3C /* PPScriptGameEngine.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6BC178DC162EA32D00AE9E3C /* PPScriptGameEngine.mm */; };
 		6BC178E5162EA4B500AE9E3C /* StartViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BC178E4162EA4B500AE9E3C /* StartViewController.m */; };
 		6BC387721626CDAF00D112A2 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BC387711626CDAF00D112A2 /* Default.png */; };
 		6BC387741626CDB200D112A2 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BC387731626CDB200D112A2 /* Default-568h@2x.png */; };
 		6BC3877A1626CED000D112A2 /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6BC387791626CED000D112A2 /* MainStoryboard.storyboard */; };
-		6BD1C9F81661B31E000D7171 /* vkeytest.lua in Resources */ = {isa = PBXBuildFile; fileRef = 6BD1C9F71661B31E000D7171 /* vkeytest.lua */; };
 		6BD1C9FB1661CE44000D7171 /* button.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BD1C9FA1661CE44000D7171 /* button.png */; };
 		6BD1C9FD1661EA4B000D7171 /* Default-Landscape~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BD1C9FC1661EA4B000D7171 /* Default-Landscape~ipad.png */; };
 /* End PBXBuildFile section */
@@ -84,10 +84,6 @@
 		6B06B00B15B5012100D2EFF6 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		6B06B00C15B5012100D2EFF6 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		6B06B00D15B5012100D2EFF6 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
-		6B06B00E15B5012100D2EFF6 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/AudioToolbox.framework; sourceTree = DEVELOPER_DIR; };
-		6B06B00F15B5012100D2EFF6 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/QuartzCore.framework; sourceTree = DEVELOPER_DIR; };
-		6B06B01015B5012100D2EFF6 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/AVFoundation.framework; sourceTree = DEVELOPER_DIR; };
-		6B06B01115B5012100D2EFF6 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/OpenAL.framework; sourceTree = DEVELOPER_DIR; };
 		6B06B01D15B5014300D2EFF6 /* PicoGameAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PicoGameAppDelegate.h; sourceTree = "<group>"; };
 		6B06B01E15B5014300D2EFF6 /* PicoGameAppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PicoGameAppDelegate.mm; sourceTree = "<group>"; };
 		6B06B02315B5016000D2EFF6 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainWindow.xib; sourceTree = "<group>"; };
@@ -113,6 +109,11 @@
 		6B110A8316585B2800202C89 /* sample.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = sample.png; path = GameData/sample.png; sourceTree = "<group>"; };
 		6B110A8416585B2800202C89 /* tile.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = tile.plist; path = GameData/tile.plist; sourceTree = "<group>"; };
 		6B110A8516585B2800202C89 /* tileinfo.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = tileinfo.lua; path = GameData/tileinfo.lua; sourceTree = "<group>"; };
+		6B15C453185710FB009898CF /* GameController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameController.framework; path = System/Library/Frameworks/GameController.framework; sourceTree = SDKROOT; };
+		6B15C4551857111C009898CF /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
+		6B15C4571857112D009898CF /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		6B15C45918571144009898CF /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		6B15C45B1857115C009898CF /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		6BC178CE162E7BF600AE9E3C /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
 		6BC178CF162E7BF600AE9E3C /* MainViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MainViewController.mm; sourceTree = "<group>"; };
 		6BC178DB162EA32D00AE9E3C /* PPScriptGameEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPScriptGameEngine.h; sourceTree = "<group>"; };
@@ -122,7 +123,6 @@
 		6BC387711626CDAF00D112A2 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = ../Default.png; sourceTree = "<group>"; };
 		6BC387731626CDB200D112A2 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "../Default-568h@2x.png"; sourceTree = "<group>"; };
 		6BC387791626CED000D112A2 /* MainStoryboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MainStoryboard.storyboard; sourceTree = "<group>"; };
-		6BD1C9F71661B31E000D7171 /* vkeytest.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = vkeytest.lua; path = GameData/vkeytest.lua; sourceTree = "<group>"; };
 		6BD1C9FA1661CE44000D7171 /* button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = button.png; path = GameData/button.png; sourceTree = "<group>"; };
 		6BD1C9FC1661EA4B000D7171 /* Default-Landscape~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape~ipad.png"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -132,6 +132,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6B15C45C1857115C009898CF /* AudioToolbox.framework in Frameworks */,
+				6B15C45A18571144009898CF /* QuartzCore.framework in Frameworks */,
+				6B15C4581857112D009898CF /* AVFoundation.framework in Frameworks */,
+				6B15C4561857111C009898CF /* OpenAL.framework in Frameworks */,
+				6B15C454185710FB009898CF /* GameController.framework in Frameworks */,
 				6B06AFE415B500D300D2EFF6 /* UIKit.framework in Frameworks */,
 				6B06AFE615B500D300D2EFF6 /* Foundation.framework in Frameworks */,
 				6B06AFE815B500D300D2EFF6 /* CoreGraphics.framework in Frameworks */,
@@ -141,10 +146,6 @@
 				6B06B01515B5012100D2EFF6 /* SystemConfiguration.framework in Frameworks */,
 				6B06B01615B5012100D2EFF6 /* MediaPlayer.framework in Frameworks */,
 				6B06B01715B5012100D2EFF6 /* CoreMotion.framework in Frameworks */,
-				6B06B01815B5012100D2EFF6 /* AudioToolbox.framework in Frameworks */,
-				6B06B01915B5012100D2EFF6 /* QuartzCore.framework in Frameworks */,
-				6B06B01A15B5012100D2EFF6 /* AVFoundation.framework in Frameworks */,
-				6B06B01B15B5012100D2EFF6 /* OpenAL.framework in Frameworks */,
 				6B06B02F15B501EC00D2EFF6 /* freetype.framework in Frameworks */,
 				6B06B03015B501EC00D2EFF6 /* CocosDenshion.framework in Frameworks */,
 				6B06B03115B501EC00D2EFF6 /* FlMML.framework in Frameworks */,
@@ -179,6 +180,11 @@
 		6B06AFE215B500D300D2EFF6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6B15C45B1857115C009898CF /* AudioToolbox.framework */,
+				6B15C45918571144009898CF /* QuartzCore.framework */,
+				6B15C4571857112D009898CF /* AVFoundation.framework */,
+				6B15C4551857111C009898CF /* OpenAL.framework */,
+				6B15C453185710FB009898CF /* GameController.framework */,
 				6B06AFE315B500D300D2EFF6 /* UIKit.framework */,
 				6B06AFE515B500D300D2EFF6 /* Foundation.framework */,
 				6B06AFE715B500D300D2EFF6 /* CoreGraphics.framework */,
@@ -188,10 +194,6 @@
 				6B06B00B15B5012100D2EFF6 /* SystemConfiguration.framework */,
 				6B06B00C15B5012100D2EFF6 /* MediaPlayer.framework */,
 				6B06B00D15B5012100D2EFF6 /* CoreMotion.framework */,
-				6B06B00E15B5012100D2EFF6 /* AudioToolbox.framework */,
-				6B06B00F15B5012100D2EFF6 /* QuartzCore.framework */,
-				6B06B01015B5012100D2EFF6 /* AVFoundation.framework */,
-				6B06B01115B5012100D2EFF6 /* OpenAL.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -250,7 +252,6 @@
 				6B110A7916585B2800202C89 /* font.lua */,
 				6B110A7A16585B2800202C89 /* icon.png */,
 				6B110A7B16585B2800202C89 /* main.lua */,
-				6BD1C9F71661B31E000D7171 /* vkeytest.lua */,
 				6BD1C9FA1661CE44000D7171 /* button.png */,
 				6B110A7C16585B2800202C89 /* main.png */,
 				6B110A7D16585B2800202C89 /* map.plist */,
@@ -336,7 +337,6 @@
 				6B110A9216585B2800202C89 /* sample.png in Resources */,
 				6B110A9316585B2800202C89 /* tile.plist in Resources */,
 				6B110A9416585B2800202C89 /* tileinfo.lua in Resources */,
-				6BD1C9F81661B31E000D7171 /* vkeytest.lua in Resources */,
 				6BD1C9FB1661CE44000D7171 /* button.png in Resources */,
 				6BD1C9FD1661EA4B000D7171 /* Default-Landscape~ipad.png in Resources */,
 			);
@@ -356,7 +356,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/bin/echo ${SRCROOT}\n\ncd ${SRCROOT}\ncd ../../Box2D/iOS/Box2D/\nxcodebuild -target Universal\n\ncd ${SRCROOT}\ncd ../../CocosDenshion/iOS/CocosDenshion/\nxcodebuild -target Universal\n\ncd ${SRCROOT}\ncd ../../FlMML/iOS/FlMML/\nxcodebuild -target Universal\n\ncd ${SRCROOT}\ncd ../../freetype/iOS/freetype/\nxcodebuild -target Universal\n\ncd ${SRCROOT}\ncd ../../Lua5.2/iOS/Lua/\nxcodebuild -target Universal\n\ncd ${SRCROOT}\ncd ../../Lua5.2/iOS/Lua/\nxcodebuild -target \"Universal no I/O\"\n\ncd ${SRCROOT}\ncd ../../PicoGame/iOS/PicoGame/\nxcodebuild -target Universal\n";
+			shellScript = "/bin/echo ${SRCROOT}\n\ncd ${SRCROOT}\ncd ../../Box2D/iOS/Box2D/\nxcodebuild -target Universal\n\ncd ${SRCROOT}\ncd ../../CocosDenshion/iOS/CocosDenshion/\nxcodebuild -target Universal\n\ncd ${SRCROOT}\ncd ../../FlMML/iOS/FlMML/\nxcodebuild -target Universal\n\ncd ${SRCROOT}\ncd ../../freetype/iOS/freetype/\nxcodebuild -target Universal\n\ncd ${SRCROOT}\ncd ../../Lua5.2/iOS/Lua/\nxcodebuild -target Universal\n\ncd ${SRCROOT}\ncd ../../Lua5.2/iOS/Lua/\nxcodebuild -target \"Universal no I/O\"\n\ncd ${SRCROOT}\ncd ../../PicoGame/iOS/PicoGame/\nxcodebuild -target Universal\n\ncd ${SRCROOT}\ncd ../../PicoGame/iOS/PicoGame/\nxcodebuild -target UniversalLuaJIT\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -450,6 +450,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../../freetype/iOS/freetype/Products\"",
@@ -480,6 +481,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../../freetype/iOS/freetype/Products\"",

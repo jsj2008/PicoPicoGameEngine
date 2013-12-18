@@ -184,6 +184,20 @@ int PPGameSprite::DrawCore(PPGamePoly* poly,PPPoint uvpos,PPSize size,PPPoint de
 			}
 		}
 		
+    
+#if 0   //for dev
+    p[0].x = poly->pos.x;
+    p[0].y = poly->pos.y;
+
+    p[1].x = poly->pos.x+size.width*st.scale.x;
+    p[1].y = poly->pos.y;
+
+    p[2].x = poly->pos.x+size.width*st.scale.x;
+    p[2].y = poly->pos.y+size.height*st.scale.y;
+
+    p[3].x = poly->pos.x;
+    p[3].y = poly->pos.y+size.height*st.scale.y;
+#else
 		{
 			int nx=0;
 			int ny=0;
@@ -197,6 +211,7 @@ int PPGameSprite::DrawCore(PPGamePoly* poly,PPPoint uvpos,PPSize size,PPPoint de
 				return -1;
 			}
 		}
+#endif
 		
 		float tw = tex->width;
 		float th = tex->height;
@@ -624,6 +639,78 @@ int PPGameSprite::DrawOT()
 	return 1;
 }
 
+int PPGameSprite::DrawOT2()
+{
+#ifndef __USE_OPENGL10__
+	textureManager->idle();
+	if (st.start_stack_ptr == st.b_stack_ptr) return 0;
+	int p = st.start_ptr;
+	if (st.b_stack_ptr > 0) b_stack[st.b_stack_ptr-1].ptr = st.b_ptr;
+	for (int i=st.start_stack_ptr;i<st.b_stack_ptr;i++) {
+		//if (i >= start_ptr) 
+		{
+			switch (b_stack[i].type) {
+			case QBFILL_TAG:
+	//		case QBPOLY_TAG:
+				glDisable(GL_TEXTURE_2D);
+				glVertexAttribPointer(0, VN,GL_FLOAT,GL_FALSE, 0, (void*)&b_vert[p*VN]);
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, (void*)&b_uv[p*2]);
+        glVertexAttribPointer(1, 4, GL_UNSIGNED_BYTE, GL_TRUE, 0, (void*)&b_color[p*4]);
+				BlendOn(b_stack[i].alphaValue,b_stack[i].blendType);
+				glPushMatrix();
+				glDrawArrays(GL_TRIANGLES,0,(b_stack[i].ptr-p));
+				glPopMatrix();
+				break;
+			case QBBOX_TAG:
+				glDisable(GL_TEXTURE_2D);
+				glVertexAttribPointer(0, VN,GL_FLOAT,GL_FALSE, 0, (void*)&b_vert[p*VN]);
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, (void*)&b_uv[p*2]);
+        glVertexAttribPointer(1, 4, GL_UNSIGNED_BYTE, GL_TRUE, 0, (void*)&b_color[p*4]);
+				BlendOn(b_stack[i].alphaValue,b_stack[i].blendType);
+				glPushMatrix();
+				glLineWidth(1);
+				glDrawArrays(GL_LINE_STRIP,0,(b_stack[i].ptr-p));
+				glPopMatrix();
+				break;
+			case QBLINE_TAG:
+				glDisable(GL_TEXTURE_2D);
+				glVertexAttribPointer(0, VN,GL_FLOAT,GL_FALSE, 0, (void*)&b_vert[p*VN]);
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, (void*)&b_uv[p*2]);
+        glVertexAttribPointer(1, 4, GL_UNSIGNED_BYTE, GL_TRUE, 0, (void*)&b_color[p*4]);
+				BlendOn(b_stack[i].alphaValue,b_stack[i].blendType);
+				glPushMatrix();
+				glLineWidth(1);
+				glDrawArrays(GL_LINES,0,(b_stack[i].ptr-p));
+				glPopMatrix();
+				break;
+			case QBVIEW_TAG:
+				{
+					int t=p*2;//b_vert[p*VN];
+					glViewport(b_vert[t+0],b_vert[t+1],b_vert[t+2],b_vert[t+3]);
+				}
+				break;
+			default:
+				if (b_stack[i].type >= 0) 
+				{
+					glEnable(GL_TEXTURE_2D);
+					textureManager->bindTexture(b_stack[i].type);
+          glVertexAttribPointer(0, VN, GL_FLOAT, GL_FALSE, 0, (void*)&b_vert[p*VN]);
+          glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, (void*)&b_uv[p*2]);
+          glVertexAttribPointer(1, 4, GL_UNSIGNED_BYTE, GL_TRUE, 0, (void*)&b_color[p*4]);
+          BlendOn(b_stack[i].alphaValue,b_stack[i].blendType);
+					glPushMatrix();
+					glDrawArrays(GL_TRIANGLES,0,(b_stack[i].ptr-p));
+					glPopMatrix();
+				}
+				break;
+			}
+		}
+		p = b_stack[i].ptr;
+	}
+#endif
+	return 1;
+}
+
 void PPGameSprite::RestartOT()
 {
 	st.start_stack_ptr = st.b_stack_ptr;
@@ -677,7 +764,7 @@ int PPGameSprite::BlendOn(float alpha,int type)
 		glFogf(GL_FOG_START, -1.0f);
 		glFogf(GL_FOG_END,0.0f);
 		{
-			GLfloat fogc[]={b->fogColor.r,b->fogColor.g,b->fogColor.b,b->fogColor.a};
+			GLfloat fogc[]={(GLfloat)b->fogColor.r,(GLfloat)b->fogColor.g,(GLfloat)b->fogColor.b,(GLfloat)b->fogColor.a};
 			glFogfv(GL_FOG_COLOR,fogc);
 		}
 	} else {

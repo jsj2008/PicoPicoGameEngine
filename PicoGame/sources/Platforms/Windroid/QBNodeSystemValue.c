@@ -436,10 +436,10 @@ static void bsNodeValueDescription(QBNode* node,int level)
 {
 	switch (node->value.type) {
 	case QBNODE_TYPE_ULONG:
-		printf("%u",node->value.d.u);
+		printf("%lu",node->value.d.u);
 		break;
 	case QBNODE_TYPE_SLONG:
-		printf("%d",node->value.d.s);
+		printf("%ld",node->value.d.s);
 		break;
 	case QBNODE_TYPE_DOUBLE:
 		printf("%lf",node->value.d.d);
@@ -457,7 +457,7 @@ static void bsNodeValueDescription(QBNode* node,int level)
 					if (i>0) printf("\n");
 					for (j=0;j<level+1;j++) printf(BS_LOG_SPACE);
 					printf(BS_LOG_SPACE);
-					printf("%u",ptr[i]);
+					printf("%lu",ptr[i]);
 				}
 			}
 		}
@@ -472,7 +472,7 @@ static void bsNodeValueDescription(QBNode* node,int level)
 					if (i>0) printf("\n");
 					for (j=0;j<level+1;j++) printf(BS_LOG_SPACE);
 					printf(BS_LOG_SPACE);
-					printf("%d",ptr[i]);
+					printf("%ld",ptr[i]);
 				}
 			}
 		}

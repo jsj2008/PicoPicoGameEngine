@@ -35,7 +35,7 @@ typedef xmlChar PPXmlChar;
 #endif
 
 #ifdef __COCOS2DX__
-#include "CCFileUtils.h"
+#include "Cocos2dxWrapper.h"
 #endif
 
 static void PPTMXMap_startElement(void *ctx, const PPXmlChar *name, const PPXmlChar **atts);
@@ -536,9 +536,9 @@ bool PPTMXMap::load(const char* path)
 	_curobject = NULL;
 
 #ifdef __COCOS2DX__
-	str = (char*)cocos2d::CCFileUtils::getFileData(PPGameResourcePath(path),"r",&size);
+	str = (char*)ccGetFileData(PPGameResourcePath(path),"r",&size);
 	if (str == NULL) {
-		str = (char*)cocos2d::CCFileUtils::getFileData(path,"r",&size);
+		str = (char*)ccGetFileData(path,"r",&size);
 	}
 #else
 	FILE* fp = fopen(PPGameDataPath(path),"r");
@@ -604,6 +604,7 @@ void PPTMXMap::drawSelf(PPPoint _pos)
 {
 	if (!layer.empty()) {
 //		PPPoint p = autoLayout(pos);
+    poly.origin = PPPointZero;
 		for (int i=0;i<layer.size();i++) {
 			if (layer[i]) {
 				if (layer[i]->visible) {

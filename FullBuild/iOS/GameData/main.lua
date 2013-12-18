@@ -159,8 +159,6 @@ function title()
     g:pivot(0,0)
     if b:idle(sc:arrayto(pptouch())) then break end
     b:draw()
-	g:pos(0,16)
-	g:print(sc:size().width..","..sc:size().height)
     g:update()
   end
 end

@@ -1,2 +1,0 @@
-objects/PicoGame.o
-objects/main.o

@@ -734,10 +734,10 @@ static int funcDone(lua_State* L)
 	return 1;
 }
 
-static int funcWaiting(lua_State* L)
-{
-	return 0;
-}
+//static int funcWaiting(lua_State* L)
+//{
+//	return 0;
+//}
 
 static int funcCurPos(lua_State* L)
 {

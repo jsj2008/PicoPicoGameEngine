@@ -12,8 +12,6 @@
 #import <Cocoa/Cocoa.h>
 #import <QuartzCore/CVDisplayLink.h>
 #import "PPGameSprite.h"
-//#import "PPGameSprite2.h"
-#import "PPGameButton.h"
 #import "PPGameController.h"
 
 @class PPGame;

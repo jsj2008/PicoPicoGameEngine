@@ -14,29 +14,13 @@
 
 #include "PPGamePoly.h"
 #include "PPGameDef.h"
-#include "PPGameMapData.h"
 #include "PPGameUtil.h"
-//#include "QBMenu.h"
-//#include "QBUtil.h"
-//#include "PPGameText.h"
 #include "PPGameSprite.h"
 #include "PPWorld.h"
 #include "PPTextureArray.h"
-
-//#include "PPArray.h"
-//#include "PPKeyFrame.h"
-//#include "PPFrame.h"
-#include "PPGameMap.h"
-//#include "PPAnimationMap.h"
-#include "PPTextureArray.h"
-#include "PPMap.h"
-//#include "PPButton.h"
-//#include "PPViewPort.h"
-#include "PPAttributeMap.h"
-#include "PPTTFont.h"
-#include "PPFont.h"
 #include <sys/time.h>
 
+class PPFont;
 class PPNormalFont;
 class PPMiniFont;
 
@@ -310,9 +294,9 @@ public:
 	virtual int SaveData(const char* name,void* data,unsigned long dataSize);
 
 	//マップデータ//
-	virtual bool LoadMap(const char* mapname);		//マップの読み込み//
-	PPGameMapData* GetMapData(int layer) {return map[layer];}
-	PPGameMapData* GetEventData() {return map[0];}
+//	virtual bool LoadMap(const char* mapname);		//マップの読み込み//
+//	PPGameMapData* GetMapData(int layer) {return map[layer];}
+//	PPGameMapData* GetEventData() {return map[0];}
 
 	//描画系パラメータ//
 	float locatex,locatey;							//文字描画位置//
@@ -416,13 +400,7 @@ public:
   virtual void openGameController(PPLuaScript* script,const char* name);
   virtual void openTextToSpeech(PPLuaScript* script,const char* name);
 
-	virtual void drawPattern(PPPoint pos,unsigned short gid,void* userdata)
-	{
-		PPObject* o = (PPObject*)userdata;
-		unsigned char r,g,b,a;
-		GetRGBColor(colorIndex,&r,&g,&b,&a);
-		Put(pos.x*GetScale().x,pos.y*GetScale().y,gid,0,o->poly._texture,r,g,b,a);
-	}
+	virtual void drawPattern(PPPoint pos,unsigned short gid,void* userdata);
 
 //	unsigned short splite_flags;
 	float rotate_value;
@@ -461,7 +439,7 @@ protected:
 	
 //	int __alpha;
 	
-	PPGameMapData* map[3];							//マップデータ//
+//	PPGameMapData* map[3];							//マップデータ//
 
 	PPTextureArray* __tarray;
 	

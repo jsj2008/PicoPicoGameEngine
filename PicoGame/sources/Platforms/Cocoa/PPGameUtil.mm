@@ -396,6 +396,17 @@ void PPGameSetDataPath(const char* datapath)
 	}
 }
 
+static NSString* __watchDataPath2 = nil;
+
+void PPGameSetDataSubPath(const char* datapath)
+{
+	[__watchDataPath2 release];
+	__watchDataPath2 = nil;
+	if (datapath) {
+		__watchDataPath2 = [[NSString stringWithUTF8String:datapath] retain];
+	}
+}
+
 static NSString* __luaFilePath = nil;
 
 const char* PPGameMainLua()
@@ -423,6 +434,18 @@ const char* PPGameDataPath(const char* name)
 		}
 	}
 	return PPGameResourcePath(name);
+}
+
+const char* PPGameDataSubPath(const char* name)
+{
+	if (__watchDataPath2) {
+		NSFileManager* f = [NSFileManager defaultManager];
+		NSString* n = [__watchDataPath2 stringByAppendingPathComponent:[NSString stringWithUTF8String:name]];
+		if ([f fileExistsAtPath:n]) {
+			return [n fileSystemRepresentation];
+		}
+	}
+  return PPGameDataPath(name);
 }
 
 void PPGameControllerStartDiscoverty()

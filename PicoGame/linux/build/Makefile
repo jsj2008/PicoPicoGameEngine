@@ -2,7 +2,7 @@ CC = gcc
 CPP = g++
 AR = ar
 
-CPPFLAGS = -D__LUAJIT__ -D_LINUX -O3 -DNO_COCOSDENSHION -march=armv6 -mfpu=vfp -mfloat-abi=hard -ffast-math -fstrict-aliasing -fomit-frame-pointer
+CPPFLAGS = -D__LUAJIT__ -D_LINUX -O3 -DNO_COCOSDENSHION -D__USE_OPENGL10__ -march=armv6 -mfpu=vfp -mfloat-abi=hard -ffast-math -fstrict-aliasing -fomit-frame-pointer
 
 BUILD_DIR = objects
 
@@ -58,7 +58,6 @@ PPFlMMLObject.o \
 PPFlMMLSeq.o \
 PPFont.o \
 PPFontTable.o \
-PPGameButton.o \
 PPGameGeometry.o \
 PPGameMapData.o \
 PPGameMapEvent.o \
@@ -70,7 +69,6 @@ PPGameStick.o \
 PPGameTexture.o \
 PPImageFont.o \
 PPLuaScript.o \
-PPMap.o \
 PPNormalFont.o \
 PPObject.o \
 PPOffscreenTexture.o \

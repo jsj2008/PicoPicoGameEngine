@@ -19,3 +19,4 @@
 #endif
 
 #define __MACOSX_APP__
+#define __USE_BOUNCE__

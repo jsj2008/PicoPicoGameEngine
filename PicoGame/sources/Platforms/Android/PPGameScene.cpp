@@ -14,13 +14,13 @@
 #include "PPSensorAndroid.h"
 #include <jni.h>
 
-// #if 0
-// #include <android/log.h>
-// #define  LOG_TAG    "PPGameScene"
-// #define  LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG,LOG_TAG,__VA_ARGS__)
-// #else
-// #define  LOGD(...) 
-// #endif
+ #if 1
+ #include <android/log.h>
+ #define  LOG_TAG    "PPGameScene"
+ #define  LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG,LOG_TAG,__VA_ARGS__)
+ #else
+ #define  LOGD(...) 
+ #endif
 
 using namespace cocos2d;
 
@@ -172,6 +172,7 @@ void PPGameScene::draw()
 	glGetFloatv(GL_PROJECTION_MATRIX,pm);
 	glEnable(GL_TEXTURE_2D);
 	glDisable(GL_DEPTH_TEST);
+  glDisable(GL_CULL_FACE);
 	if (g) {
 		animationFrameInterval=g->animationFrameInterval;
 		if (game) game->scale_factor=scale_factor;
