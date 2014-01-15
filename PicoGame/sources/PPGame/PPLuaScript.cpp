@@ -15,6 +15,13 @@
 #include <string.h>
 #include <string>
 #include <time.h>
+#include <FlMML/FlMML_Regex.h>
+
+#if TARGET_OS_MAC
+#include <regex.h>
+#else
+#include "regex.h"
+#endif
 
 #ifdef __COCOS2DX__
 #include "Cocos2dxLuaLoader.h"
@@ -30,22 +37,76 @@ extern "C" {
 #include <lua/lualib.h>
 #include <lua/lauxlib.h>
 #include <lua/ldebug.h>
-#include <lua/luaApiHook.h>
 }
 #endif
 
-//PPLuaScript* PPLuaScript::script = NULL;
-//int PPLuaScript::timeoutCount = 0;
+#define PICO_GETTER "__getter"
+#define PICO_SETTER "__setter"
+#define PICO_SUPER "__super"
+#define PICO_CLASSNAME "__classname"
 
-static int l_setErrorMessage(lua_State* L)
-{
-	//lua_getglobal(L,"PPLuaScript");
-	//PPLuaScript* script = PPLuaScript::script;//(PPLuaScript*)lua_touserdata(L,-1);
-	PPLuaArg* script = PPLuaArg::ErrorTarget(L);
-	int top = lua_gettop(L);
-	const char* name = lua_tostring(L,-top);
-	script->errorMessage = name;
-	return 0;
+static int error_handler(lua_State* L) {
+  int top=lua_gettop(L);
+  printf("top = %d\n",top);
+
+  std::string err = lua_tostring(L,-1);
+
+#if 1   //lua_getinfoではうまく取れないときがあるので、エラーメッセージから取り出す方式に変更
+  std::string err_path = "";
+  std::string err_name = "";
+  std::string err_line = "-1";
+  std::string err_reason = "";
+  
+  {
+    FlMML::regex exp("^(.*):([[:digit:]]+):[[:space:]]+(.*)$");
+    std::string::const_iterator start=err.begin();
+    std::string::const_iterator end=err.end();
+    FlMML::smatch result;
+    while (FlMML::regex_search(start, end, result, exp,FlMML::regex_constants::match_not_dot_newline)) {
+      err_path = result.str(1);
+      err_line = result.str(2);
+      err_reason = result.str(3);
+      start = result[0].second;
+    }
+  }
+  
+  {
+    FlMML::regex exp("((.*)/)*(.*)");
+    std::string::const_iterator start=err_path.begin();
+    std::string::const_iterator end=err_path.end();
+    FlMML::smatch result;
+    while (FlMML::regex_search(start, end, result, exp,FlMML::regex_constants::match_not_dot_newline)) {
+      err_name = result.str(3);
+      break;
+    }
+  }
+
+  PPLuaArg* script = PPLuaArg::ErrorTarget(L);
+  script->errorLine = atoi(err_line.c_str());
+  script->errorMessage = err;
+  script->errorPath = err_path;
+  script->errorName = err_name;
+  script->errorReason = err_reason;
+  lua_pushstring(L,err.c_str());
+#else
+  lua_Debug d;
+  int level = 0;
+  while (lua_getstack(L, level, &d)) {
+    lua_getinfo(L, "Sln", &d);
+    printf("##\nerorr level %d what %s line %s:%d\n##\n",level,d.what,d.short_src,d.currentline);
+    if (d.what[0] != 'C') {
+      PPLuaArg* script = PPLuaArg::ErrorTarget(L);
+      script->errorLine = d.currentline;
+      script->errorMessage = err;
+      script->errorSrc = d.short_src;
+      lua_pushstring(L,err.c_str());
+      break;
+    }
+    ++level;
+  }
+#endif
+
+  return 1;
 }
 
 static void dumpStack(lua_State* L)
@@ -87,68 +148,162 @@ static void dumpStack(lua_State* L)
 	printf("\n");
 }
 
-void* PPLuaArg::init(lua_State* L)
+//static int setter_error_handler(lua_State* L) {
+//printf("## setter_error_handler\n");
+//  return error_handler(L);
+//}
+
+static bool callsetter(lua_State* L)
 {
-	int top = lua_gettop(L);
-	resetWord();
-	int n=1;
-	userdata = NULL;
-	if (lua_type(L,1) == LUA_TTABLE) {
-#ifdef USERMETA
-		lua_getmetatable(L,1);
-		lua_getfield(L,-1,PPGAMEINSTNACE);
-		userdata = lua_touserdata(L,-1);
-#else
-		lua_pushstring(L,PPGAMEINSTNACE);
-		lua_rawget(L,1);
-		userdata = lua_touserdata(L,-1);
-#endif
-		if (userdata) {
-			n=2;
-		}
-	}
-	for (int i=n;i<=top;i++) {
-		_number[argCount] = lua_tonumber(L,i);
-		_integer[argCount] = lua_tointeger(L,i);
-		_boolean[argCount] = lua_toboolean(L,i);
-		const char* str = lua_tostring(L,i);
-		if (str) {
-			addWord(str);
-		} else {
-			addWord("");
-		}
-	}
-	for (int i=top+1;i<MAX_ARG;i++) {
-		_number[i] = 0;
-		_integer[i] = 0;
-		_boolean[i] = false;
-	}
-	return userdata;
+  int top=lua_gettop(L);
+  int s=top-3;
+  int k=top-2;
+  int v=top-1;
+  int n=top;
+  do {
+    if (lua_isnil(L,n)) break;
+    
+//    lua_pushvalue(L,k);
+//    lua_rawget(L,n);
+//    if (lua_isnil(L,-1)) break;
+    
+    lua_getmetatable(L,n);
+    if (lua_isnil(L,-1)) break;
+    if (!lua_istable(L,-1)) break;
+
+//    lua_pushstring(L, PICO_CLASSNAME);
+//    lua_rawget(L,-2);
+//    printf("callsetter class %s\n",lua_tostring(L, -1));
+//    lua_pop(L,1);
+    
+//    printf(" -- %s\n",lua_typename(L,-1));
+    
+    lua_pushstring(L, PICO_SETTER);
+    lua_rawget(L,-2);
+    if (!lua_isnil(L,-1)) {
+      lua_pushvalue(L,s);
+      lua_pushvalue(L,k);
+      lua_pushvalue(L,v);
+      if (lua_pcall(L, 3, 1, 0)!=0) {
+        return false;
+      }
+      if (lua_toboolean(L,-1)) {
+        return true;
+      }
+    }
+    lua_pop(L,1);
+
+    lua_pushstring(L, PICO_SUPER);
+    lua_rawget(L,-2);
+    if (!lua_isnil(L,-1)) {
+      lua_pushvalue(L,s);
+      lua_pushvalue(L,k);
+      lua_pushvalue(L,v);
+      lua_pushvalue(L,-4);
+      return callsetter(L);
+    }
+    lua_pop(L,1);
+  } while (false);
+  
+  lua_pushboolean(L,false);
+  return true;
 }
 
-void* PPLuaArg::initarg(lua_State* L)
+static int funcSetter(lua_State* L)
 {
-	int top = lua_gettop(L);
-	resetWord();
-	int n=1;
-	userdata = NULL;
-	for (int i=n;i<=top;i++) {
-		_number[argCount] = lua_tonumber(L,i);
-		_integer[argCount] = lua_tointeger(L,i);
-		_boolean[argCount] = lua_toboolean(L,i);
-		const char* str = lua_tostring(L,i);
-		if (str) {
-			addWord(str);
-		} else {
-			addWord("");
+  lua_pushvalue(L,1);
+  if (!callsetter(L)) {
+    return luaL_error(L,lua_tostring(L,-1));
+  }
+  if (lua_toboolean(L,-1)) {
+    return 0;
+  }
+  lua_pushvalue(L,2);
+  lua_pushvalue(L,3);
+  lua_rawset(L,1);
+  return 0;
+}
+
+static void callgetter(lua_State* L)
+{
+  int top=lua_gettop(L);
+  int s=top-2;
+  int k=top-1;
+  int n=top;
+  do {
+    if (lua_isnil(L,n)) break;
+
+//printf("%s\n",lua_tostring(L,k));
+//printf("%s\n",lua_typename(L,1));
+   
+    lua_pushvalue(L,k);
+    lua_rawget(L,n);
+    if (!lua_isnil(L,-1)) break;
+    
+    lua_getmetatable(L,n);
+    if (lua_isnil(L,-1)) break;
+    if (!lua_istable(L,-1)) break;
+
+//    lua_pushstring(L, PICO_CLASSNAME);
+//    lua_rawget(L,-2);
+//    printf("callgetter class %s\n",lua_tostring(L, -1));
+//    lua_pop(L,1);
+    
+    lua_pushstring(L, PICO_GETTER);
+    lua_rawget(L,-2);
+    if (!lua_isnil(L,-1)) {
+      lua_pushvalue(L,s);
+      lua_pushvalue(L,k);
+      if (lua_pcall(L, 2, 1, 0)!=0) {
+      }
+      if (!lua_isnil(L,-1)) {
+        break;
+      }
+    }
+    lua_pop(L,1);
+
+    lua_pushstring(L, PICO_SUPER);
+    lua_rawget(L,-2);
+    if (!lua_isnil(L,-1)) {
+      lua_pushvalue(L,s);
+      lua_pushvalue(L,k);
+      lua_pushvalue(L,-3);
+      callgetter(L);
+    }
+  } while (false);
+  
+  return;
+}
+
+static int funcGetter(lua_State* L)
+{
+  lua_pushvalue(L,1);
+  callgetter(L);
+  return 1;
+}
+
+void PPLuaArg::init(lua_State* L)
+{
+  Lua = L;
+  int top=lua_gettop(L);
+  argCount = top;
+  argShift = 1;
+	if (lua_type(L,1) == LUA_TTABLE) {
+		lua_getmetatable(L,1);
+		lua_getfield(L,-1,PPGAMEINSTNACE);
+		if (lua_touserdata(L,-1)) {
+			argShift=2;
+      argCount -= (argShift-1);
 		}
 	}
-	for (int i=top+1;i<MAX_ARG;i++) {
-		_number[i] = 0;
-		_integer[i] = 0;
-		_boolean[i] = false;
-	}
-	return userdata;
+  lua_settop(L,top);
+}
+
+void PPLuaArg::initarg(lua_State* L)
+{
+  Lua = L;
+  argCount = lua_gettop(L);
+  argShift = 1;
 }
 
 bool PPLuaArg::isTable(lua_State* L,int argn)
@@ -286,7 +441,6 @@ const char * PPLuaArg::tableString(lua_State* L,int argn,const char* field,const
 
 PPColor PPLuaArg::tableColor(lua_State* L,int argn,const char* field,PPColor def)
 {
-#if 1
 	argn += 2;
 	if (lua_istable(L,argn)) {
 		lua_getfield(L, argn, field);
@@ -295,37 +449,12 @@ PPColor PPLuaArg::tableColor(lua_State* L,int argn,const char* field,PPColor def
     }
 		lua_pop(L,1);
   }
-#else
-	def.r = tableTableNumber(L,argn,field,"r",def.r);
-	def.g = tableTableNumber(L,argn,field,"g",def.g);
-	def.b = tableTableNumber(L,argn,field,"b",def.b);
-	def.a = tableTableNumber(L,argn,field,"a",def.a);
-#endif
 	return def;
 }
 
-void PPLuaArg::resetWord()
+void PPLuaScript::openModule(std::string name,void* userdata,lua_CFunction gc,const char* superclass)
 {
-	for (int i=0;i<argCount;i++) {
-		_str[i] = "";
-	}
-	argCount = 0;
-}
-
-void PPLuaArg::addWord(const char* str)
-{
-	if (argCount >= MAX_ARG) {
-printf("error !! arg buffer is overflow\n");
-	} else {
-		if (str == NULL) {
-			_str[argCount] = "";
-//printf("NULL argCount %d\n",argCount+1);
-		} else {
-			_str[argCount] = str;
-//printf("%s argCount %d\n",str,argCount+1);
-		}
-		argCount ++;
-	}
+  openModule(name.c_str(),userdata,gc,superclass);
 }
 
 void PPLuaScript::openModule(const char* name,void* userdata,lua_CFunction gc,const char* superclass)
@@ -341,184 +470,151 @@ void PPLuaScript::openModule(const char* name,void* userdata,lua_CFunction gc,co
 	}
 	int methods = lua_gettop(L);
 
-#if 0
 	luaL_newmetatable(L,name);
 	int metatable = lua_gettop(L);
   if (userdata) {
     lua_pushlightuserdata(L,userdata);
     lua_setfield(L,metatable,PPGAMEINSTNACE);
   }
-//	if (gc) {
-//		lua_pushcfunction(L,gc);
-//		lua_setfield(L,metatable,"__gc");
-//	}
 	if (superclass) {
 		lua_getglobal(L,superclass);
-		lua_setfield(L,metatable,"__index");
+		lua_setfield(L,metatable,PICO_SUPER);
 	}
+  lua_pushcfunction(L,funcGetter);
+  lua_setfield(L,metatable,"__index");
+  lua_pushcfunction(L,funcSetter);
+  lua_setfield(L,metatable,"__newindex");
+  lua_pushstring(L,name);
+  lua_setfield(L,metatable,PICO_CLASSNAME);
 	lua_setmetatable(L,methods);
-
-//  if (userdata && gc) {
-//    void** ptr = (void**)lua_newuserdata(L,sizeof(userdata));
-////printf("openModule:%08x\n",(long)userdata);
-//    *ptr = userdata;
-//    lua_createtable(L,0,2);
-////    if (gc) {
-////      lua_pushcfunction(L,gc);
-////      lua_setfield(L,-2,"__gc");
-////    }
-//    lua_setmetatable(L,-2);
-//    lua_setfield(L,methods,"_udata");
-//  }
-#else
-	luaL_newmetatable(L,name);
-	int metatable = lua_gettop(L);
-  if (userdata) {
-    lua_pushlightuserdata(L,userdata);
-    lua_setfield(L,metatable,PPGAMEINSTNACE);
-  }
-//	if (gc) {
-//		lua_pushcfunction(L,gc);
-//		lua_setfield(L,metatable,"__gc");
-//	}
-	if (superclass) {
-		lua_getglobal(L,superclass);
-		lua_setfield(L,metatable,"__index");
-	}
-	lua_setmetatable(L,methods);
-#endif
 
 	lua_settop(L,top);
 	_module = new std::string(name);
+
+//  printf(" ---- %s <= %s\n",_module->c_str(),superclass);
+}
+
+void PPLuaScript::addAccessor(lua_CFunction setter,lua_CFunction getter)
+{
+  int top=lua_gettop(L);
+	if (strcmp(_module->c_str(),"") == 0) {
+  } else {
+		lua_getglobal(L,_module->c_str());
+    if (getter) {
+      PPLuaScript::setGetter(L,-1,getter);
+    }
+    if (setter) {
+      PPLuaScript::setSetter(L,-1,setter);
+    }
+  }
+  lua_settop(L,top);
+}
+
+void PPLuaScript::makeReadOnlyMetatable()
+{
+  int top=lua_gettop(L);
+	if (strcmp(_module->c_str(),"") == 0) {
+  } else {
+		lua_getglobal(L,_module->c_str());
+    lua_getmetatable(L,-1);
+    lua_createtable(L, 0, 0);
+    lua_setfield(L,-2,"__metatable");
+  }
+  lua_settop(L,top);
 }
 
 void PPLuaScript::addIntegerValue(const char* name,int value)
 {
+  int top=lua_gettop(L);
 	if (strcmp(_module->c_str(),"") == 0) {
 		lua_pushinteger(L, value);
 		lua_setglobal(L,name);
 	} else {
 		lua_getglobal(L,_module->c_str());
-		if (!lua_istable(L,-1)) {
-			lua_settop(L,0);
-			lua_createtable(L,0,0);
-			lua_setglobal(L,_module->c_str());
-		}
 		lua_pushstring(L,name);
 		lua_pushinteger(L,value);
 		lua_rawset(L,-3);
-		lua_settop(L,0);
 	}
+  lua_settop(L,top);
 }
 
 void PPLuaScript::addNumberValue(const char* name,float value)
 {
+  int top=lua_gettop(L);
 	if (strcmp(_module->c_str(),"") == 0) {
 		lua_pushinteger(L, value);
 		lua_setglobal(L,name);
 	} else {
 		lua_getglobal(L,_module->c_str());
-		if (!lua_istable(L,-1)) {
-			lua_settop(L,0);
-			lua_createtable(L,0,0);
-			lua_setglobal(L,_module->c_str());
-		}
 		lua_pushstring(L,name);
 		lua_pushnumber(L,value);
 		lua_rawset(L,-3);
-		lua_settop(L,0);
 	}
+  lua_settop(L,top);
 }
 
 void PPLuaScript::addBoolValue(const char* name,bool value)
 {
+  int top=lua_gettop(L);
 	if (strcmp(_module->c_str(),"") == 0) {
 		lua_pushboolean(L,value);
 		lua_setglobal(L,name);
 	} else {
 		lua_getglobal(L,_module->c_str());
-		if (!lua_istable(L,-1)) {
-			lua_settop(L,0);
-			lua_createtable(L,0,0);
-			lua_setglobal(L,_module->c_str());
-		}
 		lua_pushstring(L,name);
 		lua_pushboolean(L,value);
 		lua_rawset(L,-3);
-		lua_settop(L,0);
 	}
+  lua_settop(L,top);
 }
 
 void PPLuaScript::addStringValue(const char* name,const char* str)
 {
+  int top=lua_gettop(L);
 	if (strcmp(_module->c_str(),"") == 0) {
 		lua_pushstring(L,str);
 		lua_setglobal(L,name);
 	} else {
 		lua_getglobal(L,_module->c_str());
-		if (!lua_istable(L,-1)) {
-			lua_settop(L,0);
-			lua_createtable(L,0,0);
-			lua_setglobal(L,_module->c_str());
-		}
 		lua_pushstring(L,name);
 		lua_pushstring(L,str);
 		lua_rawset(L,-3);
-		lua_settop(L,0);
 	}
+  lua_settop(L,top);
 }
 
 void PPLuaScript::addMetaTable(const char* name,lua_CFunction func)
 {
+  int top=lua_gettop(L);
 	if (strcmp(_module->c_str(),"") == 0) {
-//		lua_pushcfunction(L,func);
-//		lua_setglobal(L,name);
 	} else {
 		lua_getglobal(L,_module->c_str());
-		if (!lua_istable(L,-1)) {
-			lua_settop(L,0);
-			lua_createtable(L,0,0);
-			lua_setglobal(L,_module->c_str());
-		}
-
 		lua_createtable(L,0,0);
-//		lua_pushstring(L,name);
 		lua_pushcfunction(L,func);
-#ifdef __LUAJIT__
-//		luaJIT_setmode(L, -1, LUAJIT_MODE_ON);
-#endif
 		lua_setfield(L,-2,name);
-//		lua_rawset(L,-3);
 		lua_setmetatable(L,-2);
-		lua_settop(L,0);
 	}
+  lua_settop(L,top);
 }
 
 void PPLuaScript::addCommand(const char* name,lua_CFunction func)
 {
-//printf("    %s\n",name);
+  int top=lua_gettop(L);
 	if (strcmp(_module->c_str(),"") == 0) {
 		lua_pushcfunction(L,func);
-#ifdef __LUAJIT__
-//		luaJIT_setmode(L, -1, LUAJIT_MODE_ON);
-#endif
 		lua_setglobal(L,name);
 	} else {
 		lua_getglobal(L,_module->c_str());
-		if (!lua_istable(L,-1)) {
-			lua_settop(L,0);
-			lua_createtable(L,0,0);
-			lua_setglobal(L,_module->c_str());
-		}
 		lua_pushstring(L,name);
 		lua_pushcfunction(L,func);
 		lua_rawset(L,-3);
-		lua_settop(L,0);
 	}
+  lua_settop(L,top);
 }
 
 void PPLuaScript::closeModule()
 {
+  makeReadOnlyMetatable();
 	if (_module) delete _module;
 	_module = new std::string("");
 }
@@ -531,7 +627,8 @@ const char* PPLuaArg::word(int line)
 const char* PPLuaArg::args(int index)
 {
 	if (index < argCount) {
-		return _str[index].c_str();
+    const char* s=lua_tostring(Lua,index+argShift);
+    if (s) return s;
 	}
 	return "";
 }
@@ -550,25 +647,14 @@ PPGameTextureOption PPLuaArg::getTextureOption(lua_State* L,int index,PPGameText
 static lua_Number startclock;
 
 extern "C" {
-void myCountHook(lua_State* L);
-void mySetErrorLineNumber(lua_State* L,const char* src,int line);
+static void myCountHook(lua_State* L,lua_Debug *ar);
+
 static lua_Number os_clock()
 {
 	return ((lua_Number)clock())/((lua_Number)CLOCKS_PER_SEC);
 }
-void mySetErrorLineNumber(lua_State* L,const char* src,int line)
-{
-	PPLuaArg* s = PPLuaArg::ErrorTarget(L);
-	if (s->errorLine < 0) {
-		s->errorLine = line;
-		if (src) {
-			s->errorSrc = src;
-		} else {
-			s->errorSrc = "";
-		}
-	}
-}
-void myCountHook(lua_State* L)
+
+static void myCountHook(lua_State* L, lua_Debug *ar)
 {
 	PPLuaArg* target = PPLuaArg::ErrorTarget(L);
 	target->timeoutCount ++;
@@ -580,7 +666,6 @@ void myCountHook(lua_State* L)
 			if (target) target->errorMessage = s;
 			luaL_error(L,s.c_str());
 		}
-//		PPLuaScript::timeoutCount = 0;
 	}
 }
 };
@@ -599,16 +684,104 @@ void PPLuaArg::resetTimeout()
 	timeoutCount = 0;
 }
 
+void PPLuaArg::setSetter(lua_State* L,int idx,lua_CFunction funcSetter) {
+  int top=lua_gettop(L);
+  lua_getmetatable(L,idx);
+  lua_pushstring(L,PICO_SETTER);
+  lua_pushcfunction(L,funcSetter);
+  lua_rawset(L,-3);
+  lua_settop(L,top);
+}
+
+void PPLuaArg::setGetter(lua_State* L,int idx,lua_CFunction funcGetter) {
+  int top=lua_gettop(L);
+  lua_getmetatable(L,idx);
+  lua_pushstring(L,PICO_GETTER);
+  lua_pushcfunction(L,funcGetter);
+  lua_rawset(L,-3);
+  lua_settop(L,top);
+}
+
+int PPLuaArg::setterReadOnlyError(lua_State* L,const char* name)
+{
+  return luaL_error(L,"%s is read only.",name);
+}
+
+void PPLuaArg::newObject(lua_State* L,const char* class_name,void* userdata,lua_CFunction gc)
+{
+  int top=lua_gettop(L);
+  bool err=false;
+  
+  lua_getglobal(L,class_name);
+  if (!lua_istable(L,-1)) {
+    err=true;
+  } else {
+    lua_getmetatable(L, -1);
+    lua_getfield(L, -1, PICO_CLASSNAME);
+    if (lua_isnoneornil(L,-1)) {
+      err=true;
+    }
+  }
+  
+  if (err) {
+    std::string name = "invaild class name '";
+    name += class_name;
+    name += "'";
+    luaL_error(L,name.c_str());
+  }
+  
+  lua_settop(L,top);
+
+
+  lua_createtable(L,0,1);
+
+  lua_createtable(L,0,2);
+  lua_pushlightuserdata(L,userdata);
+  lua_setfield(L,-2,PPGAMEINSTNACE);
+
+#ifdef  __LUAJIT__
+  void** ptr = (void**)lua_newuserdata(L,sizeof(userdata));
+  *ptr = userdata;
+  lua_createtable(L,0,2);
+  if (gc) {
+    lua_pushcfunction(L,gc);
+    lua_setfield(L,-2,"__gc");
+  }
+  lua_setmetatable(L,-2);
+  lua_setfield(L,-2,"__systemdata__");
+#else
+  if (gc) {
+    lua_pushcfunction(L,gc);
+    lua_setfield(L,-2,"__gc");
+  }
+#endif
+
+  lua_getglobal(L,class_name);
+#if 0   //setter & getter test
+  lua_setfield(L,-2,"__index");
+#else
+  lua_setfield(L,-2,PICO_SUPER);
+  lua_pushcfunction(L,funcGetter);
+  lua_setfield(L,-2,"__index");
+  lua_pushcfunction(L,funcSetter);
+  lua_setfield(L,-2,"__newindex");
+  lua_pushstring(L,class_name);
+  lua_setfield(L,-2,PICO_CLASSNAME);
+  lua_createtable(L,0,0);
+  lua_setfield(L,-2,"__metatable");
+#endif
+
+  lua_setmetatable(L,-2);
+
+}
+
+#pragma mark -
+
 PPLuaScript::PPLuaScript(PPWorld* world) : PPLuaArg(world),_module(NULL)
 {
 	resetTimeout();
-	
-	//script = this;
 	L = luaL_newstate();
-#ifdef __LUAJIT__
-#else
-	luaApiHook_Init(L,myCountHook,mySetErrorLineNumber);
-#endif
+  lua_sethook(L,&myCountHook,LUA_MASKCOUNT,1000);
 	coL = NULL;
 #ifdef __LUAJIT__
   lua_gc(L, LUA_GCSTOP, 0);
@@ -623,14 +796,10 @@ PPLuaScript::PPLuaScript(PPWorld* world) : PPLuaArg(world),_module(NULL)
 #endif
 	_module = new std::string("");
 	world->userdata = this;
-
-
 	int top=lua_gettop(L);
 	lua_pushlightuserdata(L,world);
 	lua_setglobal(L,"__PPWorld");
 	lua_settop(L,top);
-
-	lua_register(L,"__PPLuaScriptSetErrorMessage",l_setErrorMessage);
 }
 
 PPLuaScript::~PPLuaScript()
@@ -641,37 +810,42 @@ PPLuaScript::~PPLuaScript()
 
 bool PPLuaScript::load(const char* scriptfile)
 {
-//printf("PPLuaScript::load %s\n",scriptfile);
 	bool r = true;
 	errorMessage = "";
 #ifdef _ANDROID
 	unsigned long size;
 	char *pFileContent = (char*)ccGetFileData(scriptfile,"r",&size);
 	if (pFileContent) {
-	    char *pCodes = new char[size + 1];
-	    pCodes[size] = '\0';
-	    memcpy(pCodes, pFileContent, size);
-	    delete[] pFileContent;
-	    execString(pCodes);
-	    delete []pCodes;
+    char *pCodes = new char[size + 1];
+    pCodes[size] = '\0';
+    memcpy(pCodes, pFileContent, size);
+    delete[] pFileContent;
+    r = execString(pCodes);
+    delete []pCodes;
 	}
 #else
-	int nRet = luaL_dofile(L,scriptfile);
-	lua_gc(L, LUA_GCCOLLECT, 0);
-	if (nRet != 0)
-	{		        
-		printf("%s", lua_tostring(L, -1));
-		errorMessage = lua_tostring(L, -1);
-		lua_pop(L, 1);
-printf("Error %d\n",errorLine);
-		r = false;
-	}
-//printf("PPLuaScript::load 2\n");
+  lua_pushcfunction(L,error_handler);
+  int nRet;
+  nRet = luaL_loadfile(L,scriptfile);
+	if (nRet != 0) {
+    errorMessage = lua_tostring(L,-1);
+    printf("%s\n",errorMessage.c_str());
+    lua_pop(L, 1);
+    r = false;
+  } else {
+
+    nRet = lua_pcall(L,0,LUA_MULTRET,-2);
+    //lua_gc(L, LUA_GCCOLLECT, 0);
+    if (nRet != 0)
+    {
+      printf("%s\n",errorMessage.c_str());
+      lua_pop(L, 1);
+      r = false;
+    }
+  }
 #endif
 	alive = false;
 	resetTimeout();
-	//NEXT(PPLuaScript::stepIdle);
-//printf("PPLuaScript::load 3\n");
 	return r;
 }
 
@@ -690,8 +864,8 @@ void PPLuaScript::startProcess()
 		coL = lua_newthread(L);
 		lua_getglobal(L,"___scriptIdleFunc");
 		luaL_checktype(L,-1, LUA_TFUNCTION);
-		lua_xmove(L, coL, 1);  /* move function from L to NL */
-		lua_setglobal(L,"___scriptCorutine");
+		lua_xmove(L, coL, 1);       //スタックの値をLからcoLに1つプッシュ
+    lua_setglobal(L,"___scriptCorutine");
 	}
 	lua_settop(L,top);
 	alive = checkProcess();
@@ -701,19 +875,16 @@ bool PPLuaScript::doProcess()
 {
 	if (checkProcess()) {
 		int top=lua_gettop(L);
-		//lua_getglobal(L,"___scriptCorutine");
-		lua_State *co = coL;//lua_tothread(L,-1);
-		if (co) {
+		if (coL) {
 #ifdef __LUAJIT__
-			int status = lua_resume(co,0);
+			int status = lua_resume(coL,0);
 #else
-			int status = lua_resume(co,L,0);
+			int status = lua_resume(coL,L,0);
 #endif
 			if (status == LUA_OK || status == LUA_YIELD) {
 			} else {
-				lua_xmove(co, L, 1);
-				PPLuaArg* target = PPLuaArg::ErrorTarget(L);
- 				if (target) target->errorMessage = lua_tostring(L,-1);
+				lua_xmove(coL, L, 1);    //スタックの値をcoLからLに1つプッシュ
+        error_handler(coL);
 			}
 		}
 		lua_settop(L,top);
@@ -727,7 +898,7 @@ bool PPLuaScript::checkProcess()
 {
 	bool ret=false;
 	int top=lua_gettop(L);
-//	lua_getglobal(L,"___scriptCorutine");
+//	lua_getglobal(L,"___scriptCoroutine");
 	lua_State *co = coL;//lua_tothread(L,-1);
 	if (co) {
 		ret=true;
@@ -736,8 +907,8 @@ bool PPLuaScript::checkProcess()
 			break;
 		case LUA_OK:
 			{
-				lua_Debug ar;
-				if (lua_getstack(co, 0, &ar) > 0) {
+				lua_Debug d;
+				if (lua_getstack(co, 0, &d) > 0) {
 				} else if (lua_gettop(co) == 0) {
 					ret = false;
 				} else {
@@ -757,23 +928,15 @@ bool PPLuaScript::checkProcess()
 
 bool PPLuaScript::execString(const char* script)
 {
-	// load code into lua and call it
-	int error =	luaL_dostring(L, script);
-	
-	// Collect
-	lua_gc(L, LUA_GCCOLLECT, 0);
-	
-	// handle errors
+  lua_pushcfunction(L,error_handler);
+  int error = (luaL_loadstring(L,script) || lua_pcall(L,0,LUA_MULTRET,-2));
+	//lua_gc(L, LUA_GCCOLLECT, 0);
 	if (error)
 	{
-		// print error message and pop it
-		printf("%s", lua_tostring(L, -1));
-		errorMessage = lua_tostring(L, -1);
-		lua_pop(L, 1);
-		
+    printf("%s\n",errorMessage.c_str());
+    lua_pop(L, 1);
 		return false;
 	}
-	
 	return true;
 }
 
@@ -869,22 +1032,79 @@ PPWorld* PPLuaArg::World(lua_State* L)
 	return world;
 }
 
-void* PPLuaArg::UserData(lua_State* L)
+static bool isKindOfClass(lua_State* L,std::string &classname)
 {
 	int top = lua_gettop(L);
+  int classtop = top;
+  bool collectclass=false;
+  do {
+    lua_getfield(L,classtop,PICO_CLASSNAME);
+    if (lua_isnil(L,-1)) {
+      break;
+    }
+    std::string name = lua_tostring(L,-1);
+    if (name == classname) {
+      collectclass = true;
+      break;
+    }
+    lua_getfield(L,classtop,PICO_SUPER);
+    if (lua_isnil(L,-1)) {
+      break;
+    }
+    lua_getmetatable(L,-1);
+    if (lua_isnil(L,-1)) {
+      break;
+    }
+    classtop = lua_gettop(L);
+  } while (true);
+  lua_settop(L,top);
+  return collectclass;
+}
+
+void* PPLuaArg::UserData(lua_State* L,std::string &classname,bool nullcheck)
+{
+  return UserData(L,1,classname,nullcheck);
+}
+
+void* PPLuaArg::UserData(lua_State* L,int idx,std::string &classname,bool nullcheck)
+{
+  std::string err;
+	int top = lua_gettop(L);
 	void* userdata = NULL;
-	if (lua_type(L,1) == LUA_TTABLE) {
-#ifdef USERMETA
-		lua_getmetatable(L,1);
+	if (lua_type(L,idx) == LUA_TTABLE) {
+		lua_getmetatable(L,idx);
+    if (!isKindOfClass(L,classname)) {
+      lua_settop(L,top);
+      lua_Debug ar;
+      lua_getstack(L,0,&ar);
+      lua_getinfo(L, "Snl", &ar);
+      err = "illegal instance method '";
+      err += ar.name;
+      err += "' call.";
+      lua_pushstring(L,err.c_str());
+      return NULL;
+    }
 		lua_getfield(L,-1,PPGAMEINSTNACE);
 		userdata = lua_touserdata(L,-1);
-#else
-		lua_pushstring(L,PPGAMEINSTNACE);
-		lua_rawget(L,1);
-		userdata = lua_touserdata(L,-1);
-#endif
 	}
 	lua_settop(L,top);
+
+  if (nullcheck) {
+    if (userdata == NULL) {
+      lua_Debug ar;
+      lua_getstack(L,0,&ar);
+      lua_getinfo(L, "Snl", &ar);
+      std::string err;
+      if (ar.name) {
+        err = "illegal instance method '";
+        err += ar.name;
+        err += "' call.";
+      } else {
+        err = "illegal instance method call.";
+      }
+      lua_pushstring(L,err.c_str());
+    }
+  }
 	return userdata;
 }
 
@@ -894,6 +1114,966 @@ void PPLuaScript::idle()
 		alive = doProcess();
 	}
 	alive = checkProcess();
+}
+
+void PPLuaScript::makeObjectTable(PPObject** object,int num,const char* valuename,const char* classname)
+{
+  lua_createtable(L, num, 0);
+  for (int i=0;i<num;i++) {
+    int top=lua_gettop(L);
+    PPLuaScript::newObject(L,classname,object[i],NULL);
+    lua_rawseti(L,-2,i+1);
+    lua_settop(L,top);
+  }
+  lua_setglobal(L,valuename);
+}
+
+#pragma mark -
+
+#define PPAssert(LUA_IDX,LUA_TYPE) if (lua_gettop(L)<LUA_IDX || lua_type(L,LUA_IDX)!=LUA_TYPE) return luaL_error(L,"illegal instance method call.");
+
+static int funcPPLength(lua_State *L)
+{
+	int n=0;
+	lua_Number len=0;
+	lua_Number x1,y1;
+	{
+		if (lua_istable(L,n+1)) {
+			lua_getfield(L,n+1,"x");
+			if (lua_isnil(L,-1)) {
+				lua_rawgeti(L,n+1,1);
+			}
+			x1 = lua_tonumber(L,-1);
+      
+			lua_getfield(L,n+1,"y");
+			if (lua_isnil(L,-1)) {
+				lua_rawgeti(L,n+1,2);
+			}
+			y1 = lua_tonumber(L,-1);
+		} else {
+			x1 = lua_tonumber(L,n+1);
+			y1 = lua_tonumber(L,n+2);
+			n=1;
+		}
+	}
+  
+	if (lua_isnil(L,n+2)) {
+		len = sqrt(x1*x1+y1*y1);
+	} else {
+		lua_Number x2,y2;
+		x2=y2=0;
+		if (lua_istable(L,n+2)) {
+			lua_getfield(L,n+2,"x");
+			if (lua_isnil(L,-1)) {
+				lua_rawgeti(L,n+2,1);
+			}
+			x2 = lua_tonumber(L,-1);
+      
+			lua_getfield(L,n+2,"y");
+			if (lua_isnil(L,-1)) {
+				lua_rawgeti(L,n+2,2);
+			}
+			y2 = lua_tonumber(L,-1);
+		} else {
+			x2 = lua_tonumber(L,n+2);
+			y2 = lua_tonumber(L,n+3);
+		}
+		len = sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
+	}
+  
+	lua_pushnumber(L,len);
+	return 1;
+}
+
+static int funcPPRect(lua_State *L)
+{
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->initarg(L);
+	PPRect r;
+	if (s->argCount > 0 && s->isTable(L,-1)) {
+		r = s->getRect(L,-1);
+	} else
+  if (s->argCount > 1) {
+    r = PPRect(s->number(0),s->number(1),s->number(2),s->number(3));
+  }
+  
+	return s->returnRect(L,r);
+}
+
+static int getPPPoint(lua_State *L,int idx,PPPoint &p)
+{
+  int n=0;
+  float v[2]={0};
+  int top=lua_gettop(L);
+  for (int i=idx;i<=top&&n<2;i++) {
+    if (lua_type(L,i)==LUA_TTABLE) {
+      lua_getfield(L,i,"x");
+      if (!lua_isnil(L,-1)) {
+        v[n++]=lua_tonumber(L,-1);
+      }
+      lua_getfield(L,i,"y");
+      if (!lua_isnil(L,-1)) {
+        v[n++]=lua_tonumber(L,-1);
+      }
+      if (n<2) {
+#ifdef __LUAJIT__
+        size_t len = lua_objlen(L,i);
+#else
+        size_t len = lua_rawlen(L,i);
+#endif
+        for (int j=0;j<len;j++) {
+          lua_rawgeti(L,i,j+1);
+          if (!lua_isnil(L,-1)) {
+            v[n++]=lua_tonumber(L,-1);
+            if (n>=2) {
+              break;
+            }
+          }
+        }
+      }
+    } else {
+      v[n++]=lua_tonumber(L,i);
+    }
+  }
+  if (n>=1) {
+    p.x=v[0];
+  }
+  if (n>=2) {
+    p.y=v[1];
+  }
+  return n;
+}
+
+static int getPPSize(lua_State *L,int idx,float &w,float &h)
+{
+  int n=0;
+  float v[2]={0};
+  int top=lua_gettop(L);
+  for (int i=idx;i<=top&&n<2;i++) {
+    if (lua_type(L,i)==LUA_TTABLE) {
+      lua_getfield(L,i,"width");
+      if (!lua_isnil(L,-1)) {
+        v[n++]=lua_tonumber(L,-1);
+      }
+      lua_getfield(L,i,"height");
+      if (!lua_isnil(L,-1)) {
+        v[n++]=lua_tonumber(L,-1);
+      }
+      lua_getfield(L,i,"x");
+      if (!lua_isnil(L,-1)) {
+        v[n++]=lua_tonumber(L,-1);
+      }
+      lua_getfield(L,i,"y");
+      if (!lua_isnil(L,-1)) {
+        v[n++]=lua_tonumber(L,-1);
+      }
+      if (n<2) {
+#ifdef __LUAJIT__
+        size_t len = lua_objlen(L,i);
+#else
+        size_t len = lua_rawlen(L,i);
+#endif
+        for (int j=0;j<len;j++) {
+          lua_rawgeti(L,i,j+1);
+          if (!lua_isnil(L,-1)) {
+            v[n++]=lua_tonumber(L,-1);
+            if (n>=2) {
+              break;
+            }
+          }
+        }
+      }
+    } else {
+      v[n++]=lua_tonumber(L,i);
+    }
+  }
+  if (n>=1) {
+    w=v[0];
+    h=v[0];
+  }
+  if (n>=2) {
+    h=v[1];
+  }
+  return n;
+}
+
+static int getPPRect(lua_State *L,int idx,PPRect &r)
+{
+  int n=0;
+  float v[4]={0};
+  int top=lua_gettop(L);
+  for (int i=idx;i<=top&&n<4;i++) {
+    if (lua_type(L,i)==LUA_TTABLE) {
+      lua_getfield(L,i,"x");
+      if (!lua_isnil(L,-1)) {
+        v[n++]=lua_tonumber(L,-1);
+      }
+      lua_getfield(L,i,"y");
+      if (!lua_isnil(L,-1)) {
+        v[n++]=lua_tonumber(L,-1);
+      }
+      lua_getfield(L,i,"width");
+      if (!lua_isnil(L,-1)) {
+        v[n++]=lua_tonumber(L,-1);
+      }
+      lua_getfield(L,i,"height");
+      if (!lua_isnil(L,-1)) {
+        v[n++]=lua_tonumber(L,-1);
+      }
+      if (n<2) {
+#ifdef __LUAJIT__
+        size_t len = lua_objlen(L,i);
+#else
+        size_t len = lua_rawlen(L,i);
+#endif
+        for (int j=0;j<len;j++) {
+          lua_rawgeti(L,i,j+1);
+          if (!lua_isnil(L,-1)) {
+            v[n++]=lua_tonumber(L,-1);
+            if (n>=4) {
+              break;
+            }
+          }
+        }
+      }
+    } else {
+      v[n++]=lua_tonumber(L,i);
+    }
+  }
+  if (n>=1) {
+    r.x=v[0];
+  }
+  if (n>=2) {
+    r.y=v[1];
+  }
+  if (n>=3) {
+    r.width=v[2];
+  }
+  if (n>=4) {
+    r.height=v[3];
+  }
+  return n;
+}
+
+static int funcPPPoint(lua_State *L)
+{
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->initarg(L);
+	PPPoint p;
+  getPPPoint(L,1,p);
+	return s->returnPoint(L,p);
+}
+
+typedef struct _hitdata {
+	int index;
+	int mask;
+	unsigned long type;
+	PPPoint pos;
+	PPPoint center;
+	PPRect rect;
+	lua_Number length;
+} hitdata;
+
+static lua_Number getNumber(lua_State* L,int stack,int index,const char* field)
+{
+	lua_getfield(L,stack,field);
+	if (lua_isnil(L,-1)) {
+		lua_rawgeti(L,stack,index);
+		if (lua_isnil(L,-1)) {
+			return 0;
+		}
+	}
+	return lua_tonumber(L,-1);
+}
+
+static int funcPPHitCheck(lua_State *L)
+{
+	int top=lua_gettop(L);
+	if (lua_isfunction(L,3)) {
+		if (top >= 2) {
+			int n[2];
+			hitdata* hit[2];
+#ifdef __LUAJIT__
+			n[0] = (int)lua_objlen(L,1);
+			n[1] = (int)lua_objlen(L,2);
+#else
+			n[0] = (int)lua_rawlen(L,1);
+			n[1] = (int)lua_rawlen(L,2);
+#endif
+			lua_settop(L,top);
+			
+			if (n[0] > 0 && n[1] > 0) {
+				hit[0] = (hitdata*)malloc(n[0]*sizeof(hitdata));
+				hit[1] = (hitdata*)malloc(n[1]*sizeof(hitdata));
+        
+				for (int i=0;i<2;i++) {
+					for (int j=0;j<n[i];j++) {
+						int top=lua_gettop(L);
+						hit[i][j].index = j+1;
+						hit[i][j].mask = 0;
+						hit[i][j].length = 0;
+						hit[i][j].type = 0;
+						hit[i][j].center = PPPoint(0,0);
+						lua_rawgeti(L,1+i,j+1);
+						int table=lua_gettop(L);
+						{
+							lua_getfield(L,table,"hitmask");
+							if (!lua_isnil(L,-1)) {
+								hit[i][j].mask = (int)lua_tointeger(L,-1);
+							}
+							lua_pop(L,1);
+						}
+						if (hit[i][j].mask != 0) {
+							lua_getfield(L,table,"hitlength");
+							if (!lua_isnil(L,-1)) {
+								hit[i][j].length = lua_tonumber(L,-1);
+							}
+							lua_pop(L,1);
+						}
+						if (hit[i][j].mask != 0) {
+							lua_getfield(L,table,"hitcenter");
+							if (lua_istable(L,-1)) {
+								int center=lua_gettop(L);
+								hit[i][j].center.x = getNumber(L,center,1,"x");
+								hit[i][j].center.y = getNumber(L,center,2,"y");
+							}
+							{
+								lua_getfield(L,table,"x");
+								hit[i][j].pos.x = lua_tonumber(L,-1);
+								lua_getfield(L,table,"y");
+								hit[i][j].pos.y = lua_tonumber(L,-1);
+							}
+							lua_settop(L,table);
+						}
+						if (hit[i][j].mask != 0) {
+							lua_getfield(L,table,"hitpos");
+							if (lua_istable(L,-1)) {
+								int center=lua_gettop(L);
+								hit[i][j].pos.x = getNumber(L,center,1,"x");
+								hit[i][j].pos.y = getNumber(L,center,2,"y");
+								lua_settop(L,table);
+							}
+						}
+						if (hit[i][j].mask != 0) {
+							lua_getfield(L,table,"hitrect");
+							if (lua_istable(L,-1)) {
+								int s=lua_gettop(L);
+								PPRect r;
+								r.x = getNumber(L,s,1,"x");
+								r.y = getNumber(L,s,2,"y");
+								r.width = getNumber(L,s,3,"width");
+								r.height = getNumber(L,s,4,"height");
+								hit[i][j].rect = PPRect(hit[i][j].pos.x+r.x,hit[i][j].pos.y+r.y,r.width,r.height);
+								hit[i][j].pos.x += r.x+r.width/2;
+								hit[i][j].pos.y += r.y+r.height/2;
+								hit[i][j].length=sqrt(r.width*r.width/4+r.height*r.height/4);
+								hit[i][j].type = 1;
+							}
+						}
+						lua_settop(L,top);
+					}
+				}
+				
+				for (int i=0;i<n[0];i++) {
+					hitdata* a = &hit[0][i];
+					if (a->mask != 0 && a->length > 0) {
+						for (int j=0;j<n[1];j++) {
+							hitdata* b = &hit[1][j];
+							if (b->mask != 0 && b->length > 0) {
+								if (a->mask & b->mask) {
+									bool hitcheck = false;
+									if (b->type && a->type) {
+										if (b->rect.hitCheck(a->rect)) {
+											hitcheck = true;
+										}
+									} else
+                    if ((b->pos+b->center).length(a->pos+a->center) < a->length+b->length) {
+                      hitcheck = true;
+                    }
+									if (hitcheck) {
+										lua_pushvalue(L,3);
+										lua_rawgeti(L,1,a->index);
+										lua_rawgeti(L,2,b->index);
+										lua_call(L,2,0);
+										lua_settop(L,top);
+									}
+								}
+							}
+						}
+					}
+				}
+				
+				free(hit[0]);
+				free(hit[1]);
+        
+			}
+		}
+	}
+	return 0;
+}
+
+static int funcPPIterator(lua_State *L)
+{
+	int top=lua_gettop(L);
+	if (top>=2) {
+		if (lua_istable(L,1)) {
+#ifdef __LUAJIT__
+			int n=(int)lua_objlen(L,1);
+#else
+			int n=(int)lua_rawlen(L,1);
+#endif
+			lua_settop(L,top);
+			if (lua_isfunction(L,2)) {
+				for (int i=0;i<n;i++) {
+					lua_pushvalue(L,2);
+					lua_pushinteger(L,i+1);
+					lua_rawgeti(L,1,i+1);
+					lua_call(L,2,1);
+					if (!lua_isnil(L,-1)) {
+						return 1;
+					}
+					lua_settop(L,top);
+				}
+			}
+		}
+	}
+	lua_pushnil(L);
+	return 1;
+}
+
+static void getMyPoint(lua_State* L,int idx,PPPoint& p)
+{
+  int top=lua_gettop(L);
+  lua_getfield(L,idx,"x");
+  if (!lua_isnil(L,-1)) {
+    p.x=lua_tonumber(L,-1);
+  }
+  lua_getfield(L,idx,"y");
+  if (!lua_isnil(L,-1)) {
+    p.y=lua_tonumber(L,-1);
+  }
+  lua_settop(L,top);
+}
+
+static int funcPPPointLength(lua_State *L)
+{
+  PPAssert(1,LUA_TTABLE);
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->initarg(L);
+  PPPoint m;
+  getMyPoint(L,1,m);
+	PPPoint p;
+  int r=getPPPoint(L,2,p);
+  if (r<2) {
+    lua_pushnumber(L,m.length());
+  } else {
+    lua_pushnumber(L,m.length(p));
+  }
+  return 1;
+}
+
+static int funcPPPointMove(lua_State* L)
+{
+  PPAssert(1,LUA_TTABLE);
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->initarg(L);
+	PPPoint p;
+  getPPPoint(L,2,p);
+  PPPoint m;
+  getMyPoint(L,1,m);
+  m=m+p;
+  lua_pushnumber(L,m.x);
+  lua_setfield(L,1,"x");
+  lua_pushnumber(L,m.y);
+  lua_setfield(L,1,"y");
+  return s->returnPoint(L,m);
+}
+
+static int funcPPPointUnm(lua_State* L)
+{
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->initarg(L);
+  PPPoint m;
+  getMyPoint(L,1,m);
+  return s->returnPoint(L,PPPoint(-m.x,-m.y));
+}
+
+static int funcPPPointAdd(lua_State* L)
+{
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->initarg(L);
+  PPPoint m;
+  getMyPoint(L,1,m);
+	PPPoint p;
+  int r=getPPPoint(L,2,p);
+  if (r<2) {
+    return s->returnPoint(L,PPPoint(m.x+p.x,m.y+p.x));
+  }
+  return s->returnPoint(L,m+p);
+}
+
+static int funcPPPointSub(lua_State* L)
+{
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->initarg(L);
+  PPPoint m;
+  getMyPoint(L,1,m);
+	PPPoint p;
+  int r=getPPPoint(L,2,p);
+  if (r<2) {
+    return s->returnPoint(L,PPPoint(m.x-p.x,m.y-p.x));
+  }
+  return s->returnPoint(L,m-p);
+}
+
+static int funcPPPointDiv(lua_State* L)
+{
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->initarg(L);
+  PPPoint m;
+  getMyPoint(L,1,m);
+	PPPoint p;
+  int r=getPPPoint(L,2,p);
+  if (r<2) {
+    if (p.x == 0) {
+      return luaL_error(L,"divide by zero");
+    }
+    return s->returnPoint(L,PPPoint(m.x/p.x,m.y/p.x));
+  }
+  if (p.x == 0 || p.y == 0) {
+    return luaL_error(L,"divide by zero");
+  }
+  return s->returnPoint(L,m/p);
+}
+
+static int funcPPPointMul(lua_State* L)
+{
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->initarg(L);
+  PPPoint m;
+  getMyPoint(L,1,m);
+	PPPoint p;
+  int r=getPPPoint(L,2,p);
+  if (r<2) {
+    return s->returnPoint(L,PPPoint(m.x*p.x,m.y*p.x));
+  }
+  return s->returnPoint(L,m*p);
+}
+
+static void getMyRect(lua_State* L,PPRect &r)
+{
+  int top=lua_gettop(L);
+  lua_getfield(L,1,"x");
+  if (!lua_isnil(L,-1)) {
+    r.x=lua_tonumber(L,-1);
+  }
+  lua_getfield(L,1,"y");
+  if (!lua_isnil(L,-1)) {
+    r.y=lua_tonumber(L,-1);
+  }
+  lua_getfield(L,1,"width");
+  if (!lua_isnil(L,-1)) {
+    r.width=lua_tonumber(L,-1);
+  }
+  lua_getfield(L,1,"height");
+  if (!lua_isnil(L,-1)) {
+    r.height=lua_tonumber(L,-1);
+  }
+  lua_settop(L,top);
+}
+
+static int funcPPRectMin(lua_State* L)
+{
+  PPAssert(1,LUA_TTABLE);
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->initarg(L);
+  PPRect r;
+  getMyRect(L,r);
+  return s->returnPoint(L,r.min());
+}
+
+static int funcPPRectMax(lua_State* L)
+{
+  PPAssert(1,LUA_TTABLE);
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->initarg(L);
+  PPRect r;
+  getMyRect(L,r);
+  return s->returnPoint(L,r.max());
+}
+
+static int funcPPRectCenter(lua_State* L)
+{
+  PPAssert(1,LUA_TTABLE);
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->initarg(L);
+  PPRect r;
+  getMyRect(L,r);
+  return s->returnPoint(L,PPPoint(r.x+r.width/2,r.y+r.height/2));
+}
+
+static int funcPPRectEqualToSize(lua_State* L)
+{
+  PPAssert(1,LUA_TTABLE);
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->initarg(L);
+  PPRect r;
+  getMyRect(L,r);
+  PPRect t;
+  getPPRect(L,2,t);
+  bool b=(r.width==t.width && r.height==t.height);
+  lua_pushboolean(L,b);
+  return 1;
+}
+
+static int funcPPRectEqualToRect(lua_State* L)
+{
+  PPAssert(1,LUA_TTABLE);
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->initarg(L);
+  PPRect r;
+  getMyRect(L,r);
+  PPRect t;
+  getPPRect(L,2,t);
+  bool b=(r.x==t.x && r.y==t.y && r.width==t.width && r.height==t.height);
+  lua_pushboolean(L,b);
+  return 1;
+}
+
+static int funcPPRectIsEmpty(lua_State* L)
+{
+  PPAssert(1,LUA_TTABLE);
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->initarg(L);
+  PPRect r;
+  getMyRect(L,r);
+  bool b=(r.width==0 && r.height==0);
+  lua_pushboolean(L,b);
+  return 1;
+}
+
+static int funcPPRectMove(lua_State* L)
+{
+  PPAssert(1,LUA_TTABLE);
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->initarg(L);
+  PPRect r;
+  getMyRect(L,r);
+	PPPoint p;
+  getPPPoint(L,2,p);
+  r=r+p;
+  lua_pushnumber(L,r.x);
+  lua_setfield(L,1,"x");
+  lua_pushnumber(L,r.y);
+  lua_setfield(L,1,"y");
+  lua_pushnumber(L,r.width);
+  lua_setfield(L,1,"width");
+  lua_pushnumber(L,r.height);
+  lua_setfield(L,1,"height");
+  return s->returnRect(L,r);
+}
+
+static int funcPPRectPosition(lua_State* L)
+{
+  PPAssert(1,LUA_TTABLE);
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->initarg(L);
+  PPRect r;
+  getMyRect(L,r);
+	PPPoint p;
+  int q=getPPPoint(L,2,p);
+  if (q>0) {
+    lua_pushnumber(L,p.x);
+    lua_setfield(L,1,"x");
+    lua_pushnumber(L,p.y);
+    lua_setfield(L,1,"y");
+    return 0;
+  }
+  return s->returnPoint(L,PPPoint(r.x,r.y));
+}
+
+static int funcPPRectSize(lua_State* L)
+{
+  PPAssert(1,LUA_TTABLE);
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->initarg(L);
+  PPRect r;
+  getMyRect(L,r);
+  float w=0,h=0;
+  int q=getPPSize(L,2,w,h);
+  if (q>0) {
+    lua_pushnumber(L,w);
+    lua_setfield(L,1,"width");
+    lua_pushnumber(L,h);
+    lua_setfield(L,1,"height");
+    return 0;
+  }
+  return s->returnRect(L,PPRect(0,0,r.width,r.height));
+}
+
+static int funcPPRectScale(lua_State* L)
+{
+  PPAssert(1,LUA_TTABLE);
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->initarg(L);
+  PPRect r;
+  getMyRect(L,r);
+	PPPoint p;
+  int q=getPPPoint(L,2,p);
+  if (q>0) {
+    if (q==1) {
+      p.y=p.x;
+    }
+    r.width=r.width*p.x;
+    r.height=r.height*p.y;
+    lua_pushnumber(L,r.width);
+    lua_setfield(L,1,"width");
+    lua_pushnumber(L,r.height);
+    lua_setfield(L,1,"height");
+    return 0;
+  }
+  return s->returnRect(L,r);
+}
+
+static int funcPPRectInset(lua_State* L)
+{
+  PPAssert(1,LUA_TTABLE);
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->initarg(L);
+  PPRect r;
+  getMyRect(L,r);
+	PPPoint p;
+  int q=getPPPoint(L,2,p);
+  if (q>0) {
+    if (q==1) {
+      p.y=p.x;
+    }
+    r.x+=p.x;
+    r.y+=p.y;
+    r.width-=p.x*2;
+    r.height-=p.y*2;
+    lua_pushnumber(L,r.x);
+    lua_setfield(L,1,"x");
+    lua_pushnumber(L,r.y);
+    lua_setfield(L,1,"y");
+    lua_pushnumber(L,r.width);
+    lua_setfield(L,1,"width");
+    lua_pushnumber(L,r.height);
+    lua_setfield(L,1,"height");
+    return 0;
+  }
+  return s->returnRect(L,r);
+}
+
+static int funcPPRectContain(lua_State* L)
+{
+  PPAssert(1,LUA_TTABLE);
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->initarg(L);
+  PPRect r;
+  getMyRect(L,r);
+	PPPoint p;
+  int q=getPPPoint(L,2,p);
+  bool ret=false;
+  if (q>0) {
+    ret = (r.x <= p.x && r.y <= p.y && p.x < r.x+r.width && p.y < r.y+r.height);
+  }
+  lua_pushboolean(L,ret);
+  return 1;
+}
+
+static int funcPPRectIntersect(lua_State* L)
+{
+  PPAssert(1,LUA_TTABLE);
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->initarg(L);
+  PPRect r;
+  getMyRect(L,r);
+  PPRect t;
+  getPPRect(L,2,t);
+  float wx=r.x-t.x+r.width;
+  float wy=r.y-t.y+r.height;
+  bool ret = (wx>=0 && wx<r.width+t.width && wy>=0 && wy<r.height+t.height);
+  lua_pushboolean(L,ret);
+  return 1;
+}
+
+static int funcPPRectUnion(lua_State* L)
+{
+  PPAssert(1,LUA_TTABLE);
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->initarg(L);
+  PPRect r;
+  getMyRect(L,r);
+  PPRect t;
+  getPPRect(L,2,t);
+  PPPoint min1=r.min();
+  PPPoint max1=r.max();
+  PPPoint min2=t.min();
+  PPPoint max2=t.max();
+  if (min1.x > min2.x) { min1.x = min2.x; }
+  if (min1.y > min2.y) { min1.y = min2.y; }
+  if (max1.x < max2.x) { max1.x = max2.x; }
+  if (max1.y < max2.y) { max1.y = max2.y; }
+  return s->returnRect(L,PPRect(min1.x,min1.y,max1.x-min1.x,max1.y-min1.y));
+}
+
+static int funcPPRectUnm(lua_State* L)
+{
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->initarg(L);
+  PPRect m;
+  getMyRect(L,m);
+  return s->returnRect(L,PPRect(-m.x,-m.y,m.width,m.height));
+}
+
+static int funcPPRectAdd(lua_State* L)
+{
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->initarg(L);
+  PPRect m;
+  getMyRect(L,m);
+  PPRect t;
+  int r=getPPRect(L,2,t);
+  if (r>0) {
+    if (r<2) {
+      m.x=m.x+t.x;
+      m.y=m.y+t.x;
+    } else {
+      m=m+t.min();
+    }
+  }
+  return s->returnRect(L,m);
+}
+
+static int funcPPRectSub(lua_State* L)
+{
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->initarg(L);
+  PPRect m;
+  getMyRect(L,m);
+  PPRect t;
+  int r=getPPRect(L,2,t);
+  if (r>0) {
+    if (r<2) {
+      m.x=m.x-t.x;
+      m.y=m.y-t.x;
+    } else {
+      m=m-t.min();
+    }
+  }
+  return s->returnRect(L,m);
+}
+
+static int funcPPRectDiv(lua_State* L)
+{
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->initarg(L);
+  PPRect m;
+  getMyRect(L,m);
+  PPRect t;
+  int r=getPPRect(L,2,t);
+  if (r>0) {
+    if (r<2) {
+      if (t.x == 0) {
+        return luaL_error(L,"divide by zero");
+      }
+      m.x=m.x/t.x;
+      m.y=m.y/t.x;
+    } else {
+      if (t.x == 0 || t.y == 0) {
+        return luaL_error(L,"divide by zero");
+      }
+      m.x=m.x/t.x;
+      m.y=m.y/t.y;
+    }
+  }
+  return s->returnRect(L,m);
+}
+
+static int funcPPRectMul(lua_State* L)
+{
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->initarg(L);
+  PPRect m;
+  getMyRect(L,m);
+  PPRect t;
+  int r=getPPRect(L,2,t);
+  if (r>0) {
+    if (r<2) {
+      m.x=m.x*t.x;
+      m.y=m.y*t.x;
+      m.width=m.width*t.x;
+      m.height=m.height*t.x;
+    } else {
+      m.x=m.x*t.x;
+      m.y=m.y*t.y;
+      m.width=m.width*t.x;
+      m.height=m.height*t.y;
+    }
+  }
+  return s->returnRect(L,m);
+}
+
+void PPLuaScript::setupGeometryCommand()
+{
+  int top=lua_gettop(L);
+  
+  lua_createtable(L,0,2);
+  lua_pushcfunction(L,funcPPPointLength);
+  lua_setfield(L,-2,"length");
+  lua_pushcfunction(L,funcPPPointMove);
+  lua_setfield(L,-2,"move");
+  lua_setglobal(L,"pppointImp");
+
+  lua_createtable(L,0,6);
+  lua_pushcfunction(L,funcPPPointUnm);
+  lua_setfield(L,-2,"__unm");
+  lua_pushcfunction(L,funcPPPointAdd);
+  lua_setfield(L,-2,"__add");
+  lua_pushcfunction(L,funcPPPointSub);
+  lua_setfield(L,-2,"__sub");
+  lua_pushcfunction(L,funcPPPointDiv);
+  lua_setfield(L,-2,"__div");
+  lua_pushcfunction(L,funcPPPointMul);
+  lua_setfield(L,-2,"__mul");
+  lua_getglobal(L,"pppointImp");
+  lua_setfield(L,-2,"__index");
+  lua_setglobal(L,"pppoint_mt");
+
+  lua_createtable(L,0,17);
+  lua_pushcfunction(L,funcPPRectMin);
+  lua_setfield(L,-2,"min");
+  lua_pushcfunction(L,funcPPRectMax);
+  lua_setfield(L,-2,"max");
+  lua_pushcfunction(L,funcPPRectCenter);
+  lua_setfield(L,-2,"center");
+  lua_pushcfunction(L,funcPPRectEqualToSize);
+  lua_setfield(L,-2,"equalToSize");
+  lua_pushcfunction(L,funcPPRectEqualToRect);
+  lua_setfield(L,-2,"equalToRect");
+  lua_pushcfunction(L,funcPPRectIsEmpty);
+  lua_setfield(L,-2,"isEmpty");
+  lua_pushcfunction(L,funcPPRectMove);
+  lua_setfield(L,-2,"move");
+  lua_pushcfunction(L,funcPPRectPosition);
+  lua_setfield(L,-2,"position");
+  lua_pushcfunction(L,funcPPRectPosition);
+  lua_setfield(L,-2,"pos");
+  lua_pushcfunction(L,funcPPRectSize);
+  lua_setfield(L,-2,"size");
+  lua_pushcfunction(L,funcPPRectScale);
+  lua_setfield(L,-2,"scale");
+  lua_pushcfunction(L,funcPPRectInset);
+  lua_setfield(L,-2,"inset");
+  lua_pushcfunction(L,funcPPRectContain);
+  lua_setfield(L,-2,"contain");
+  lua_pushcfunction(L,funcPPRectIntersect);
+  lua_setfield(L,-2,"intersect");
+  lua_pushcfunction(L,funcPPRectUnion);
+  lua_setfield(L,-2,"union");
+  lua_pushcfunction(L,funcPPPointLength);
+  lua_setfield(L,-2,"length");
+  lua_getglobal(L,"ppobject");
+  lua_getfield(L,-1,"hitCheck");
+  lua_setfield(L,-3,"hitCheck");
+  lua_pop(L,1);
+  lua_setglobal(L,"pprectImp");
+
+  lua_createtable(L,0,6);
+  lua_pushcfunction(L,funcPPRectUnm);
+  lua_setfield(L,-2,"__unm");
+  lua_pushcfunction(L,funcPPRectAdd);
+  lua_setfield(L,-2,"__add");
+  lua_pushcfunction(L,funcPPRectSub);
+  lua_setfield(L,-2,"__sub");
+  lua_pushcfunction(L,funcPPRectDiv);
+  lua_setfield(L,-2,"__div");
+  lua_pushcfunction(L,funcPPRectMul);
+  lua_setfield(L,-2,"__mul");
+  lua_getglobal(L,"pprectImp");
+  lua_setfield(L,-2,"__index");
+  lua_setglobal(L,"pprect_mt");
+
+	addCommand("pplength",funcPPLength);
+	addCommand("pprect",funcPPRect);
+	addCommand("pppoint",funcPPPoint);
+	addCommand("pphitcheck",funcPPHitCheck);
+	addCommand("ppforeach",funcPPIterator);
+  
+  lua_settop(L,top);
 }
 
 /*-----------------------------------------------------------------------------------------------

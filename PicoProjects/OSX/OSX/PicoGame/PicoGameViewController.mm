@@ -29,6 +29,9 @@
   [window setFrame:frameRect display:YES];
 	
 	[game1 startGame:self];
+#ifndef PICO_USE_LUA_IO
+  [game1 disableIO:self];
+#endif
 	//[game2 startGame:self];
 	
 	[window orderFront:self];

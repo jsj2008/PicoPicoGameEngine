@@ -13,6 +13,7 @@
 #import <OpenGLES/EAGL.h>
 #import <OpenGLES/ES1/gl.h>
 #import <OpenGLES/ES1/glext.h>
+#import <GameController/GameController.h>
 
 class PPGameSprite;
 
@@ -48,7 +49,7 @@ class PPGameSprite;
 	int arrowKeyTouchNo;
   
 	unsigned long staticKey;
-	
+  
 @private
   
   EAGLContext *context;
@@ -70,6 +71,7 @@ class PPGameSprite;
 - (void)startAnimation;
 - (void)stopAnimation;
 - (void)drawView;
+- (void)pauseButtonPushed:(GCController*)controller;
 
 - (unsigned long)staticButton;
 - (NSMutableSet*)touchesSet;

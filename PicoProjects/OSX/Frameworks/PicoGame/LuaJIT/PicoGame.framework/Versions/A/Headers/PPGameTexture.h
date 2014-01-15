@@ -97,6 +97,9 @@ public:
 	int loadTexture();
 	int bindTexture();
 	int unbindTexture();
+  
+  unsigned char* embedpixel;
+  long embedpixel_len;
 
 private:
 	bool loaded;

@@ -68,6 +68,7 @@
 		6B45721015B27671007AC75A /* b2WeldJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6B4571DD15B27671007AC75A /* b2WeldJoint.cpp */; };
 		6B45721115B27671007AC75A /* b2WheelJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6B4571DF15B27671007AC75A /* b2WheelJoint.cpp */; };
 		6B45721215B27671007AC75A /* b2Rope.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6B4571E215B27671007AC75A /* b2Rope.cpp */; };
+		6BC415CC1864346B006B23AA /* b2MotorJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BC415CA1864346B006B23AA /* b2MotorJoint.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -168,6 +169,8 @@
 		6B4571E015B27671007AC75A /* b2WheelJoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = b2WheelJoint.h; sourceTree = "<group>"; };
 		6B4571E215B27671007AC75A /* b2Rope.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = b2Rope.cpp; sourceTree = "<group>"; };
 		6B4571E315B27671007AC75A /* b2Rope.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = b2Rope.h; sourceTree = "<group>"; };
+		6BC415CA1864346B006B23AA /* b2MotorJoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = b2MotorJoint.cpp; sourceTree = "<group>"; };
+		6BC415CB1864346B006B23AA /* b2MotorJoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = b2MotorJoint.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -236,7 +239,7 @@
 				6B4571E115B27671007AC75A /* Rope */,
 			);
 			name = Box2D;
-			path = ../../../sources/Box2D_v2.2.1/Box2D;
+			path = ../../../sources/Box2D_v2.3.0/Box2D/Box2D;
 			sourceTree = "<group>";
 		};
 		6B45718315B27671007AC75A /* Collision */ = {
@@ -354,6 +357,8 @@
 				6B4571D015B27671007AC75A /* b2GearJoint.h */,
 				6B4571D115B27671007AC75A /* b2Joint.cpp */,
 				6B4571D215B27671007AC75A /* b2Joint.h */,
+				6BC415CA1864346B006B23AA /* b2MotorJoint.cpp */,
+				6BC415CB1864346B006B23AA /* b2MotorJoint.h */,
 				6B4571D315B27671007AC75A /* b2MouseJoint.cpp */,
 				6B4571D415B27671007AC75A /* b2MouseJoint.h */,
 				6B4571D515B27671007AC75A /* b2PrismaticJoint.cpp */,
@@ -451,7 +456,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Sets the target folders and the final framework product.\nFMK_NAME=Box2D\nFMK_VERSION=A\n\n# Install dir will be the final output to the framework.\n# The following line create it in the root folder of the current project.\nINSTALL_DIR=${SRCROOT}/Products/${FMK_NAME}.framework\n\n# Working dir will be deleted after the framework creation.\nWRK_DIR=build\nDEVICE_DIR=${WRK_DIR}/Release/${FMK_NAME}.framework\n#SIMULATOR_DIR=${WRK_DIR}/Release-iphonesimulator/${FMK_NAME}.framework\n\n# Building both architectures.\nxcodebuild -configuration \"Release\" -target \"${FMK_NAME}\" -arch i386 -sdk macosx10.8\nmkdir -p \"${WRK_DIR}/i386\"\ncp \"${WRK_DIR}/Release/${FMK_NAME}.framework/Contents/MacOS/${FMK_NAME}\" \"${WRK_DIR}/i386/\"\nxcodebuild -configuration \"Release\" -target \"${FMK_NAME}\" -arch x86_64 -sdk macosx10.8\nmkdir -p \"${WRK_DIR}/x86_64\"\ncp \"${WRK_DIR}/Release/${FMK_NAME}.framework/Contents/MacOS/${FMK_NAME}\" \"${WRK_DIR}/x86_64/\"\n\n# Cleaning the oldest.\nif [ -d \"${INSTALL_DIR}\" ]\nthen\nrm -rf \"${INSTALL_DIR}\"\nfi\n\n# Creates and renews the final product folder.\nmkdir -p \"${INSTALL_DIR}\"\nmkdir -p \"${INSTALL_DIR}/Versions\"\nmkdir -p \"${INSTALL_DIR}/Versions/${FMK_VERSION}\"\nmkdir -p \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources\"\nmkdir -p \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Headers\"\n\n# Creates the internal links.\n# It MUST uses relative path, otherwise will not work when the folder is copied/moved.\nln -s \"${FMK_VERSION}\" \"${INSTALL_DIR}/Versions/Current\"\nln -s \"Versions/Current/Headers\" \"${INSTALL_DIR}/Headers\"\nln -s \"Versions/Current/Resources\" \"${INSTALL_DIR}/Resources\"\nln -s \"Versions/Current/${FMK_NAME}\" \"${INSTALL_DIR}/${FMK_NAME}\"\n\n# Copies the headers and resources files to the final product folder.\n#cp -R \"${DEVICE_DIR}/Headers/\" \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Headers/\"\n#cp -R \"${DEVICE_DIR}/\" \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources/\"\n\ncp -R \"${SRCROOT}/../../sources/Box2D_v2.2.1/Box2D/\" \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Headers/\"\nfind \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Headers/\" -name *.cpp -exec rm {} \\;\nrm \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Headers/Box2DConfig.cmake\"\nrm \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Headers/CMakeLists.txt\"\n\n# Removes the binary and header from the resources folder.\n#rm -r \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources/Headers\" \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources/${FMK_NAME}\"\n\n# Uses the Lipo Tool to merge both binary files (i386 + armv6/armv7) into one Universal final product.\nlipo -create \"${WRK_DIR}/i386/${FMK_NAME}\" \"${WRK_DIR}/x86_64/${FMK_NAME}\" -output \"${INSTALL_DIR}/Versions/${FMK_VERSION}/${FMK_NAME}\"\n\nrm -r \"${WRK_DIR}\"";
+			shellScript = "# Sets the target folders and the final framework product.\nFMK_NAME=Box2D\nFMK_VERSION=A\n\n# Install dir will be the final output to the framework.\n# The following line create it in the root folder of the current project.\nINSTALL_DIR=${SRCROOT}/Products/${FMK_NAME}.framework\n\n# Working dir will be deleted after the framework creation.\nWRK_DIR=build\nDEVICE_DIR=${WRK_DIR}/Release/${FMK_NAME}.framework\n#SIMULATOR_DIR=${WRK_DIR}/Release-iphonesimulator/${FMK_NAME}.framework\n\n# Building both architectures.\nxcodebuild -configuration \"Release\" -target \"${FMK_NAME}\" -arch i386 -sdk macosx10.8\nmkdir -p \"${WRK_DIR}/i386\"\ncp \"${WRK_DIR}/Release/${FMK_NAME}.framework/Contents/MacOS/${FMK_NAME}\" \"${WRK_DIR}/i386/\"\nxcodebuild -configuration \"Release\" -target \"${FMK_NAME}\" -arch x86_64 -sdk macosx10.8\nmkdir -p \"${WRK_DIR}/x86_64\"\ncp \"${WRK_DIR}/Release/${FMK_NAME}.framework/Contents/MacOS/${FMK_NAME}\" \"${WRK_DIR}/x86_64/\"\n\n# Cleaning the oldest.\nif [ -d \"${INSTALL_DIR}\" ]\nthen\nrm -rf \"${INSTALL_DIR}\"\nfi\n\n# Creates and renews the final product folder.\nmkdir -p \"${INSTALL_DIR}\"\nmkdir -p \"${INSTALL_DIR}/Versions\"\nmkdir -p \"${INSTALL_DIR}/Versions/${FMK_VERSION}\"\nmkdir -p \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources\"\nmkdir -p \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Headers\"\n\n# Creates the internal links.\n# It MUST uses relative path, otherwise will not work when the folder is copied/moved.\nln -s \"${FMK_VERSION}\" \"${INSTALL_DIR}/Versions/Current\"\nln -s \"Versions/Current/Headers\" \"${INSTALL_DIR}/Headers\"\nln -s \"Versions/Current/Resources\" \"${INSTALL_DIR}/Resources\"\nln -s \"Versions/Current/${FMK_NAME}\" \"${INSTALL_DIR}/${FMK_NAME}\"\n\n# Copies the headers and resources files to the final product folder.\n#cp -R \"${DEVICE_DIR}/Headers/\" \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Headers/\"\n#cp -R \"${DEVICE_DIR}/\" \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources/\"\n\ncp -R \"${SRCROOT}/../../sources/Box2D_v2.3.0/Box2D/Box2D/\" \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Headers/\"\nfind \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Headers/\" -name *.cpp -exec rm {} \\;\nrm \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Headers/Box2DConfig.cmake\"\nrm \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Headers/CMakeLists.txt\"\n\n# Removes the binary and header from the resources folder.\n#rm -r \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources/Headers\" \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources/${FMK_NAME}\"\n\n# Uses the Lipo Tool to merge both binary files (i386 + armv6/armv7) into one Universal final product.\nlipo -create \"${WRK_DIR}/i386/${FMK_NAME}\" \"${WRK_DIR}/x86_64/${FMK_NAME}\" -output \"${INSTALL_DIR}/Versions/${FMK_VERSION}/${FMK_NAME}\"\n\nrm -r \"${WRK_DIR}\"";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -490,6 +495,7 @@
 				6B45720115B27671007AC75A /* b2Contact.cpp in Sources */,
 				6B45720215B27671007AC75A /* b2ContactSolver.cpp in Sources */,
 				6B45720315B27671007AC75A /* b2EdgeAndCircleContact.cpp in Sources */,
+				6BC415CC1864346B006B23AA /* b2MotorJoint.cpp in Sources */,
 				6B45720415B27671007AC75A /* b2EdgeAndPolygonContact.cpp in Sources */,
 				6B45720515B27671007AC75A /* b2PolygonAndCircleContact.cpp in Sources */,
 				6B45720615B27671007AC75A /* b2PolygonContact.cpp in Sources */,
@@ -576,7 +582,7 @@
 				DEAD_CODE_STRIPPING = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = "Box2D/Box2D-Prefix.pch";
-				HEADER_SEARCH_PATHS = ../../sources/Box2D_v2.2.1;
+				HEADER_SEARCH_PATHS = ../../sources/Box2D_v2.3.0/Box2D;
 				INFOPLIST_FILE = "";
 				INFOPLIST_OUTPUT_FORMAT = "same-as-input";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
@@ -602,7 +608,8 @@
 				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = "Box2D/Box2D-Prefix.pch";
-				HEADER_SEARCH_PATHS = ../../sources/Box2D_v2.2.1;
+				GCC_PREPROCESSOR_DEFINITIONS = NDEBUG;
+				HEADER_SEARCH_PATHS = ../../sources/Box2D_v2.3.0/Box2D;
 				INFOPLIST_FILE = "";
 				INFOPLIST_OUTPUT_FORMAT = "same-as-input";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";

@@ -165,18 +165,21 @@ LOGD("PPGame_DecodePNG");
 	cocos2d::CCImage* img = new cocos2d::CCImage();
 	if (img==NULL) {
 LOGD("PPGame_DecodePNG error1");
+    free(bytes);
 		return NULL;
 	}
 	img->initWithImageData(bytes,datalen);
 	unsigned char *pix = img->getData();
 	if (pix==NULL) {
 LOGD("PPGame_DecodePNG error2");
+    free(bytes);
 		return NULL;
 	}
 	unsigned long size = img->getWidth()*img->getHeight()*4;
 	unsigned char * pixel = (unsigned char*)malloc(size);
 	if (pixel==NULL) {
 LOGD("PPGame_DecodePNG error3");
+    free(bytes);
 		return NULL;
 	}
 	if (img->hasAlpha()) {
@@ -213,6 +216,7 @@ LOGD("PPGame_DecodePNG error3");
 	int width = img->getWidth();
 	int height = img->getHeight();
 	delete img;
+  free(bytes);
 LOGD("PPGame_DecodePNG out");
 	return convert(pixel,width,height);
 }

@@ -17,6 +17,7 @@
 #import "PPGameUtil.h"
 #import "PPGameController.h"
 #import "QBGame.h"
+#import <GameController/GCController.h>
 
 #define JOY_PAD_UP		0x01
 #define JOY_PAD_DOWN	0x02
@@ -304,14 +305,29 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 	pboard = [sender draggingPasteboard];
 	
 	if ( [[pboard types] containsObject:NSFilenamesPboardType] ) {
+    NSFileManager* fm = [NSFileManager defaultManager];
 		NSArray *files = [pboard propertyListForType:NSFilenamesPboardType];
 		for (NSString* s in files) {
-			if ([[s pathExtension] compare:@"lua" options:NSCaseInsensitiveSearch]==NSOrderedSame) {
-				PPGameSetDataPath((const char*)[[s stringByDeletingLastPathComponent] fileSystemRepresentation]);
-				PPGameSetMainLua((const char*)[[s lastPathComponent] fileSystemRepresentation]);
-				[controller reloadData:self];
-				break;
-			}
+      BOOL dir;
+      if ([fm fileExistsAtPath:s isDirectory:&dir]) {
+        if (dir) {
+          NSString* l = [s stringByAppendingPathComponent:@"main.lua"];
+          s=nil;
+          if ([fm fileExistsAtPath:l isDirectory:&dir]) {
+            if (!dir) {
+              s=l;
+            }
+          }
+        }
+        if (s) {
+          if ([[s pathExtension] compare:@"lua" options:NSCaseInsensitiveSearch]==NSOrderedSame) {
+            PPGameSetDataPath((const char*)[[s stringByDeletingLastPathComponent] fileSystemRepresentation]);
+            PPGameSetMainLua((const char*)[[s lastPathComponent] fileSystemRepresentation]);
+            [controller reloadData:self];
+            break;
+          }
+        }
+      }
 		}
 	}
   return YES;
@@ -544,6 +560,11 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
   }
 }
 
+- (void)pauseButtonPushed:(GCController*)controller
+{
+  pauseButtonPushed = true;
+}
+
 - (unsigned long)staticButton
 {
 	unsigned long key = 0;
@@ -563,6 +584,27 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 	if (staticKey & JOY_PAD_F) key |= PAD_F;
 	if (staticKey & JOY_PAD_G) key |= PAD_G;
 	if (staticKey & JOY_PAD_H) key |= PAD_H;
+
+#ifdef __LP64__
+  if ([GCController class]!=nil) {
+    if ([GCController controllers].count>0) {
+      GCController* gc = [[GCController controllers] objectAtIndex:0];
+      if (gc.gamepad.buttonA.pressed) key |= PAD_A;
+      if (gc.gamepad.buttonB.pressed) key |= PAD_B;
+      if (gc.gamepad.buttonX.pressed) key |= PAD_X;
+      if (gc.gamepad.buttonY.pressed) key |= PAD_Y;
+      if (gc.gamepad.leftShoulder.pressed) key |= PAD_L;
+      if (gc.gamepad.rightShoulder.pressed) key |= PAD_R;
+      if (pauseButtonPushed) key |= PAD_Pause;
+      pauseButtonPushed = false;
+      if (gc.gamepad.dpad.up.pressed) key |= PAD_UP;
+      if (gc.gamepad.dpad.down.pressed) key |= PAD_DOWN;
+      if (gc.gamepad.dpad.left.pressed) key |= PAD_LEFT;
+      if (gc.gamepad.dpad.right.pressed) key |= PAD_RIGHT;
+    }
+  }
+#endif
+  
 	return key;
 }
 

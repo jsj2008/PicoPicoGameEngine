@@ -130,7 +130,7 @@ PPTTFont::PPTTFont(PPWorld* world,const char* name,int size,int basewidth,int ba
 	}
 	newFontCount = 0;
 	tileCount = 0;
-	texture = 0;
+	texture = -1;
 	ftfont = calloc(1,sizeof(FTFONT));
 	FTFONT* f=(FTFONT*)ftfont;
 	if (load(path,size)) {

@@ -13,17 +13,16 @@
 #import <OpenGLES/EAGLDrawable.h>
 #import "PPGame.h"
 #import "PPGameView.h"
-#if TARGET_OS_IPHONE
 #import <GameController/GCController.h>
-#endif
 #import "QBSound.h"
 #import "QBGame.h"
-
-void __PPGame_Set3GSLater(int later);
 
 #define USE_DEPTH_BUFFER 1
 
 @interface PPGameView ()
+{
+  bool pauseButtonPushed;
+}
 
 @property (nonatomic, retain) EAGLContext *context;
 @property (nonatomic, assign) NSTimer *animationTimer;
@@ -85,7 +84,6 @@ void __PPGame_Set3GSLater(int later);
 		}
 #else
 		context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1];
-		__PPGame_Set3GSLater(0);
 #endif
     if (!context || ![EAGLContext setCurrentContext:context]) {
 			context = nil;
@@ -357,6 +355,11 @@ void __PPGame_Set3GSLater(int later);
 
 #import "iCadeState.h"
 
+- (void)pauseButtonPushed:(GCController*)controller
+{
+  pauseButtonPushed = true;
+}
+
 - (unsigned long)staticButton
 {
 	unsigned long key = 0;
@@ -376,7 +379,7 @@ void __PPGame_Set3GSLater(int later);
 	if (staticKey & iCadeButtonSetup) key |= PAD_SetUP;
 	if (staticKey & iCadeButtonStart) key |= PAD_Start;
   
-  if ([[[UIDevice currentDevice] systemVersion] floatValue]>=7.0) {
+  if ([GCController class]!=nil) {
     if ([GCController controllers].count>0) {
       GCController* gc = [[GCController controllers] objectAtIndex:0];
       if (gc.gamepad.buttonA.pressed) key |= PAD_A;
@@ -385,6 +388,10 @@ void __PPGame_Set3GSLater(int later);
       if (gc.gamepad.buttonY.pressed) key |= PAD_Y;
       if (gc.gamepad.leftShoulder.pressed) key |= PAD_L;
       if (gc.gamepad.rightShoulder.pressed) key |= PAD_R;
+//      if (gc.gamepad.rightShoulder.pressed) key |= PAD_Start;
+//      if (gc.gamepad.rightShoulder.pressed) key |= PAD_SetUP;
+      if (pauseButtonPushed) key |= PAD_Pause;
+      pauseButtonPushed = false;
       if (gc.gamepad.dpad.up.pressed) key |= PAD_UP;
       if (gc.gamepad.dpad.down.pressed) key |= PAD_DOWN;
       if (gc.gamepad.dpad.left.pressed) key |= PAD_LEFT;

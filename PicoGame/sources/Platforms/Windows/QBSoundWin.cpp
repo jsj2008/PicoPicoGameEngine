@@ -12,11 +12,18 @@
 #include "QBSoundWin.h"
 #include <math.h>
 
-//static QBSoundWin* snd = NULL;
+#ifdef __USE_OGG_VORBIS__
+#include <map>
+#include "QBStreamSound.h"
+
+typedef map<unsigned int,QBStreamSound*> PlayerList;
+static PlayerList streamTrack;
+static int soundID = 1;
+#endif
 
 class QBSoundLocker {
 public:
-	QBSoundLocker(CRITICAL_SECTION *_locker) {
+	QBSoundLocker(CRITICAL_SECTION *_locker,const char* name=NULL) {
 		locker = _locker;
 		EnterCriticalSection(locker);
 	}
@@ -60,6 +67,26 @@ static void CALLBACK waveOutProc(
 		break;
 	}
 }
+
+#ifdef __USE_OGG_VORBIS__
+static DWORD WINAPI LoaderThreadProc(LPVOID vdParam)
+{
+	QBSoundWin* snd = (QBSoundWin*)vdParam;
+	bool r=false;
+	while (!r) {
+    {
+      QBSoundLocker locker(&snd->mMutex);
+      PlayerList::iterator it = streamTrack.begin();
+      while(it != streamTrack.end()) {
+        (*it).second->streamLoad();
+        ++it;
+      }
+      r = snd->mThreadEnd;
+    }
+		Sleep(10);
+	}
+}
+#endif
 
 MMRESULT QBSoundWin::openWave()
 {
@@ -247,10 +274,13 @@ int QBSoundWin::Init()
 	playSound();
 	playSound();
 	//writeWave(m_nCurPBuff);
-//	DWORD dwID;
+	DWORD dwID;
 	InitializeCriticalSection(&mMutex);
 	//DeleteCriticalSection(&mCriticalSection);
-//	CreateThread(NULL , 0 , LoaderThreadProc , (LPVOID)this , 0 , &dwID);
+  mThreadEnd = false;
+#ifdef __USE_OGG_VORBIS__
+  CreateThread(NULL , 0 , LoaderThreadProc , (LPVOID)this , 0 , &dwID);
+#endif
 	return 0;
 }
 
@@ -260,98 +290,10 @@ int QBSoundWin::play(const char *note,int track,bool loop)
 	return QBSound::play(note,track,loop);
 }
 
-////int QBSoundWin::playpcm(signed short* dataPtr,unsigned long dataSize,int dataChannel,int track,bool loop)
-////{
-////	int r=0;
-////	EnterCriticalSection(&mCriticalSection);
-////	r = QBSound::playpcm(dataPtr,dataSize,dataChannel,track,loop);
-////	LeaveCriticalSection(&mCriticalSection);
-////	return r;
-////}
-//
-////int QBSoundWin::playpcm(const char* filename,int track,bool loop,ogg_int64_t looppoint)
-////{
-////	int r=0;
-////	EnterCriticalSection(&mCriticalSection);
-////	r = QBSound::playpcm(filename,track,loop,looppoint);
-////	LeaveCriticalSection(&mCriticalSection);
-////	return r;
-////}
-//
-////int QBSoundWin::playmempcm(unsigned char* data,unsigned long size,int track,bool loop,ogg_int64_t looppoint)
-////{
-////	int r=0;
-////	EnterCriticalSection(&mCriticalSection);
-////	r = QBSound::playmempcm(data,size,track,loop,looppoint);
-////	LeaveCriticalSection(&mCriticalSection);
-////	return r;
-////}
-//
-//int QBSoundWin::fill_sound_buffer(void* buffer,int size)
-//{
-//	int r;
-//	EnterCriticalSection(&mCriticalSection);
-//	r = QBSound::fill_sound_buffer(buffer,size);
-//	LeaveCriticalSection(&mCriticalSection);
-//	return r;
-//}
-//
-//int QBSoundWin::stop(int track)
-//{
-//	int r=0;
-//	EnterCriticalSection(&mCriticalSection);
-//	r = QBSound::stop(track);
-//	LeaveCriticalSection(&mCriticalSection);
-//	return r;
-//}
-//
-//int QBSoundWin::isPlaying(int track)
-//{
-//	int r=0;
-//	EnterCriticalSection(&mCriticalSection);
-//	r = QBSound::isPlaying(track);
-//	LeaveCriticalSection(&mCriticalSection);
-//	return r;
-//}
-//
-////int QBSoundWin::fadeOut(int track,int speed)
-////{
-////	int r=0;
-////	EnterCriticalSection(&mCriticalSection);
-////	r = QBSound::fadeOut(track,speed);
-////	LeaveCriticalSection(&mCriticalSection);
-////	return r;
-////}
-//
-////void QBSoundWin::streamLoad()
-////{
-////	int i;
-////	for (i=0;i<mMaxTrack;i++) {
-////		EnterCriticalSection(&mCriticalSection);
-////		QBSound::streamOpen(i);
-////		if (mTrack[i].streamplay && mTrack[i].streamdone==false) {
-////			int p1 = mTrack[i].streamp1;
-////			int p2 = mTrack[i].streamp2;
-////			int done = 0;
-////			LeaveCriticalSection(&mCriticalSection);
-////			p2 = QBSound::streamLoad(i,p1,p2,&done);
-////			EnterCriticalSection(&mCriticalSection);
-////			if (done) {
-////				if (!mTrack[i].streamloop) {
-////					mTrack[i].streamdone = true;
-////				}
-////			}
-////			mTrack[i].streamp2 = p2;
-////			mTrack[i].streamplayrun = true;
-////			LeaveCriticalSection(&mCriticalSection);
-////		} else {
-////			LeaveCriticalSection(&mCriticalSection);
-////		}
-////	}
-////}
-//
 int QBSoundWin::Exit()
 {
+	QBSoundLocker locker(&mMutex);
+  mThreadEnd=true;
 	return 0;
 }
 
@@ -361,20 +303,25 @@ int QBSoundWin::Reset()
 	return QBSound::Reset();
 }
 
-//
-//int QBSoundWin::setVolume(int track,float volume)
-//{
-//	int r=0;
-//	EnterCriticalSection(&mCriticalSection);
-//	r = QBSound::setVolume(track,volume);
-//	LeaveCriticalSection(&mCriticalSection);
-//	return r;
-//}
-
 int QBSoundWin::fill_sound_buffer(void* buffer,int size)
 {
 	QBSoundLocker locker(&mMutex);
-	return QBSound::fill_sound_buffer(buffer,size);
+	int r = QBSound::fill_sound_buffer(buffer,size);
+
+#ifdef __USE_OGG_VORBIS__
+  PlayerList::iterator it = streamTrack.begin();
+  while(it != streamTrack.end()) {
+    if ((*it).second->streamdone && (*it).first > 0) {
+      delete (*it).second;
+      streamTrack.erase(it++);
+    } else {
+      (*it).second->fill_sound_buffer(buffer,size,mMasterVolume);
+      ++it;
+    }
+  }
+#endif
+
+  return r;
 }
 
 int QBSoundWin::stop(int track)
@@ -508,6 +455,241 @@ void QBSoundWin::setWav13(int no,const char* data)
 	QBSoundLocker locker(&mMutex);
 	QBSound::setWav13(no,data);
 }
+
+#pragma mark -
+
+#ifdef __USE_OGG_VORBIS__
+static QBStreamSound* findPlayer(int track)
+{
+  QBStreamSound* player=NULL;
+  PlayerList::iterator p = streamTrack.find(track);
+  if (p != streamTrack.end()) {
+    player = p->second;
+  } else {
+    player = new QBStreamSound();
+    streamTrack.insert(make_pair(track,player));
+printf("findPlayer\n");
+  }
+  return player;
+}
+
+void QBSoundWin::streamPlay(const char* filename,int track)
+{
+	QBSoundLocker locker(&mMutex,"streamPlay");
+  findPlayer(track)->play(filename);
+}
+
+void QBSoundWin::streamLoopPlay(const char* filename,long long looppoint,int track)
+{
+	QBSoundLocker locker(&mMutex,"streamPlay");
+  findPlayer(track)->play(filename,looppoint);
+}
+
+void QBSoundWin::streamStop(int track)
+{
+	QBSoundLocker locker(&mMutex,"streamStop");
+  findPlayer(track)->stop();
+}
+
+void QBSoundWin::streamPause(int track)
+{
+	QBSoundLocker locker(&mMutex,"streamStop");
+  findPlayer(track)->pause();
+}
+
+void QBSoundWin::streamResume(int track)
+{
+	QBSoundLocker locker(&mMutex,"streamStop");
+  streamTrack[track]->resume();
+}
+
+void QBSoundWin::streamRewind(int track)
+{
+	QBSoundLocker locker(&mMutex,"streamStop");
+  findPlayer(track)->rewind();
+}
+
+void QBSoundWin::streamWillPlay(int track)
+{
+	QBSoundLocker locker(&mMutex,"streamStop");
+  findPlayer(track)->willplay();
+}
+
+bool QBSoundWin::streamIsPlaying(int track)
+{
+	QBSoundLocker locker(&mMutex,"streamStop");
+  PlayerList::iterator p = streamTrack.find(track);
+  if (p == streamTrack.end()) {
+    return false;
+  }
+  return findPlayer(track)->isPlaying();
+}
+
+void QBSoundWin::streamSetVolume(float volume,int track)
+{
+	QBSoundLocker locker(&mMutex,"streamStop");
+  findPlayer(track)->setVolume(volume);
+}
+
+float QBSoundWin::streamGetVolume(int track)
+{
+	QBSoundLocker locker(&mMutex,"streamStop");
+  return findPlayer(track)->getVolume();
+}
+
+bool QBSoundWin::streamTest(const char* filename)
+{
+  return QBStreamSound::test(filename);
+}
+
+#pragma mark -
+
+class EffectBuffer {
+public:
+	signed short* pcmbuffer;
+	unsigned long pcmsize;
+	int pcmchannel;
+  std::string fname;
+
+  EffectBuffer() : pcmbuffer(NULL) {
+    
+  }
+  virtual ~EffectBuffer() {
+    if (pcmbuffer) free(pcmbuffer);
+printf("unload effect %s\n",fname.c_str());
+  }
+
+  bool load(const char* filename) {
+    fname=filename;
+    int ret=-1;
+		FILE* fp = fopen(filename,"r");
+    if (fp) {
+      do {
+        fseek(fp,0,SEEK_END);
+        size_t size = ftell(fp);
+        if (size==0) {
+          fclose(fp);
+          return -1;
+        }
+        fseek(fp,0,SEEK_SET);
+        pcmbuffer = (signed short*)malloc(size);
+        if (pcmbuffer) {
+          pcmsize = size;
+          fread(pcmbuffer,size,1,fp);
+          ret=0;
+        }
+      } while (0);
+      fclose(fp);
+    }
+printf("load effect %s\n",filename);
+    return ret;
+  }
+};
+
+typedef map<unsigned int, EffectBuffer *> EffectList;
+
+static unsigned int _Hash(const char *key)
+{
+    size_t len = strlen(key);
+    const char *end=key+len;
+    unsigned int hash;
+
+    for (hash = 0; key < end; key++)
+    {
+        hash *= 16777619;
+        hash ^= (unsigned int) (unsigned char) toupper(*key);
+    }
+    return (hash);
+}
+
+static EffectList& sharedList()
+{
+    static EffectList s_List;
+    return s_List;
+}
+
+void QBSoundWin::preloadEffect(const char* filename)
+{
+	QBSoundLocker locker(&mMutex,"preloadEffect");
+  do {
+    if (filename==NULL) break;
+  
+    unsigned int nRet = _Hash(filename);
+    
+    if (sharedList().end() != sharedList().find(nRet)) break;
+    
+    sharedList().insert(make_pair(nRet,new EffectBuffer()));
+    EffectBuffer* buffer = sharedList()[nRet];
+    
+    if (buffer->load(filename)!=0) {
+      sharedList().erase(nRet);
+    }
+
+  } while (0);
+}
+
+unsigned int QBSoundWin::playEffect(const char* filename,bool bLoop,float pitch, float pan, float gain)
+{
+	QBSoundLocker locker(&mMutex,"playEffect");
+  if (filename) {
+    unsigned int nRet = _Hash(filename);
+  
+    do {
+      if (filename==NULL) break;
+    
+      unsigned int nRet = _Hash(filename);
+      
+      if (sharedList().end() != sharedList().find(nRet)) break;
+      
+      sharedList().insert(make_pair(nRet,new EffectBuffer()));
+      EffectBuffer* buffer = sharedList()[nRet];
+      
+      if (buffer->load(filename)!=0) {
+        sharedList().erase(nRet);
+      }
+
+    } while (0);
+
+    EffectList::iterator p = sharedList().find(nRet);
+    if (p != sharedList().end())
+    {
+      EffectBuffer* effect = p->second;
+      findPlayer(soundID)->setVolume(gain);
+      findPlayer(soundID)->play((unsigned char*)effect->pcmbuffer,effect->pcmsize);
+      soundID ++;
+      if (soundID > 9999) soundID = 1;
+    }
+
+    return soundID;
+  }
+  return 0;
+}
+
+void QBSoundWin::stopEffect(unsigned int nSoundId)
+{
+	QBSoundLocker locker(&mMutex,"stopEffect");
+  PlayerList::iterator p = streamTrack.find(nSoundId);
+  if (p != streamTrack.end()) {
+    findPlayer(nSoundId)->stop();
+  }
+}
+
+void QBSoundWin::unloadEffect(const char* filename)
+{
+	QBSoundLocker locker(&mMutex,"unloadEffect");
+  if (filename) {
+    unsigned int nRet = _Hash(filename);
+
+    EffectList::iterator p = sharedList().find(nRet);
+    if (p != sharedList().end())
+    {
+      delete p->second;
+      p->second = NULL;
+      sharedList().erase(nRet);
+    }
+  }
+}
+#endif
 
 /*-----------------------------------------------------------------------------------------------
 	このファイルはここまで

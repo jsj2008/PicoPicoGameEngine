@@ -152,59 +152,9 @@ fflush(stdout);
     return userdata;
 	}
 
-	static void newObject(lua_State* L,const char* class_name,void* userdata,lua_CFunction gc) {
-#ifdef  __LUAJIT__
-
-		lua_createtable(L,0,1);
-
-		lua_createtable(L,0,2);
-		lua_pushlightuserdata(L,userdata);
-		lua_setfield(L,-2,PPGAMEINSTNACE);
-
-		if (gc) {
-			lua_pushcfunction(L,gc);
-			lua_setfield(L,-2,"__gc");
-		}
-
-		lua_getglobal(L,class_name);
-		if (!lua_isnil(L,-1)) {
-			lua_setfield(L,-2,"__index");
-		}
-		lua_pushstring(L,class_name);
-		lua_setfield(L,-2,class_name);
-		lua_setmetatable(L,-2);
-
-    void** ptr = (void**)lua_newuserdata(L,sizeof(userdata));
-    *ptr = userdata;
-    lua_createtable(L,0,2);
-    if (gc) {
-      lua_pushcfunction(L,gc);
-      lua_setfield(L,-2,"__gc");
-    }
-    lua_setmetatable(L,-2);
-    lua_setfield(L,-2,"_udata");
-#else
-
-		lua_createtable(L,0,1);
-
-		lua_createtable(L,0,2);
-		lua_pushlightuserdata(L,userdata);
-		lua_setfield(L,-2,PPGAMEINSTNACE);
-		if (gc) {
-			lua_pushcfunction(L,gc);
-			lua_setfield(L,-2,"__gc");
-		}
-
-		lua_getglobal(L,class_name);
-		if (!lua_isnil(L,-1)) {
-			lua_setfield(L,-2,"__index");
-		}
-		lua_pushstring(L,class_name);
-		lua_setfield(L,-2,class_name);
-		lua_setmetatable(L,-2);
-
-#endif
-	}
+	static void newObject(lua_State* L,const char* class_name,void* userdata,lua_CFunction gc);
+	static void setSetter(lua_State* L,int idx,lua_CFunction funcSetter);
+	static void setGetter(lua_State* L,int idx,lua_CFunction funcGetter);
 	
 	PPPoint getPoint(lua_State* L,int index,float x=0,float y=0) {
 		int n=index;
@@ -416,9 +366,6 @@ public:
 
 	virtual void idle();
 	
-//	virtual void start();
-//	virtual void startWithFlag();
-
 	virtual bool addSearchPath(const char* path);
 
 	virtual bool load(const char* scriptfile);
@@ -431,6 +378,7 @@ public:
 	virtual void addStringValue(const char* name,const char* str);
 	virtual void addCommand(const char* name,lua_CFunction func);
 	virtual void addMetaTable(const char* name,lua_CFunction func);
+  virtual void addAccessor(lua_CFunction getter,lua_CFunction setter);
 	virtual void addYieldCommand(const char* name,lua_CFunction func) {
 		addCommand(name,func);
 	}
@@ -450,22 +398,15 @@ public:
 		execString(cmd);
 	}
 	
-	
 	virtual int getErrorLine();
 	
 	virtual bool isFunction(const char* functon_name);
-//	virtual void call(const char* functon_name);
 	
 	virtual void startProcess();
 	virtual bool doProcess();
 	virtual bool checkProcess();
 	
-//	int execFunction(const char* function_name);
 	bool execString(const char* script);
-
-
-//	void* callScriptFunc2(lua_State* L);
-
 	void addLuaLoader(lua_CFunction func);
 
 	lua_State* L;
@@ -473,17 +414,11 @@ public:
 	
 	std::string* _module;
 
-//	std::string _str[MAX_ARG];
-//	lua_Number _number[MAX_ARG];
-//	lua_Integer _integer[MAX_ARG];
-//	int _boolean[MAX_ARG];
-//	int argCount;
-	
 	bool alive;
 
-//	PPScriptFlag* flags;
-	
-	void drawDisplayList(const char* ppgraph);	
+	void drawDisplayList(const char* ppgraph);
+
+  static int setterReadOnlyError(lua_State* L,std::string name);
 };
 
 #endif

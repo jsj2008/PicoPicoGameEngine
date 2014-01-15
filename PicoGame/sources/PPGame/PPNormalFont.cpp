@@ -18,6 +18,7 @@ float PPNormalFont::__print(PPWorld* _target,float x,float y,float _scale,const 
 //	if (_target) {
 //		poly.color = _target->color();
 //	}
+  if (_str==NULL) return cur.x;
 	PPPoint s = localScale;
 	cur = PPPoint(x,y);
 	const signed char* str = (signed char*)_str;

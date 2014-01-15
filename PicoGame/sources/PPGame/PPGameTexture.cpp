@@ -84,7 +84,7 @@ const char* PPGameTextureOption::wrap(int wrap)
 	return "clamp_to_edge";
 }
 
-PPGameTexture::PPGameTexture() : manager(NULL),notexturefile(false)
+PPGameTexture::PPGameTexture() : manager(NULL),notexturefile(false),embedpixel(NULL)
 {
 //	if (!boot) {
 //		for (int i=0;i<PPGAME_MAX_TEXTURE;i++) {
@@ -425,21 +425,28 @@ int PPGameTextureManager::deleteTexture(int textureid)
 	return 0;
 }
 
-//int PPGameTexture::DeleteTexture(int textureid)
-//{
-//	return __m->deleteTexture(textureid);
-//}
+int PPGameTextureManager::deleteTextureWithName(const char* name,int startTextureId)
+{
+  if (name) {
+    for (int i=startTextureId;i<PPGAME_MAX_TEXTURE;i++) {
+      if (texture[i]) {
+        if (texture[i]->loaded) {
+          if (strcmp(texture[i]->name.c_str(),"") == 0 || texture[i]->notexturefile) {
+          } else {
+            if (strcmp(texture[i]->name.c_str(),name) == 0) {
+              deleteTexture(i);
+              return i;
+            }
+          }
+        }
+      }
+    }
+  }
+  return 0;
+}
 
 int PPGameTexture::loadTexture()
 {
-//	if (sharedTexture >= 0) {
-//		int s = sharedTexture;
-//		LoadTexture(s);
-//		width = texture[s]->width;
-//		height = texture[s]->height;
-//		size = texture[s]->size;
-//		loaded =  true;
-//	} else
 	if (texture_name == 0) {
 		loaded =  true;
 		if (strcmp(name.c_str(),"") == 0 || notexturefile) {
@@ -451,6 +458,40 @@ int PPGameTexture::loadTexture()
 //			//bind = false;
 //			nofree = false;
 //			compressed = false;
+    } else if (embedpixel) {
+				unsigned long w,h,bytesPerRow;
+				unsigned long ow,oh,ob;
+				unsigned char* p=NULL;
+        unsigned char* image = (unsigned char*)malloc(embedpixel_len);
+        memcpy(image,embedpixel,embedpixel_len);
+        p = PPGame_DecodePNG(image,embedpixel_len,&w,&h,&bytesPerRow);
+				if (p == NULL) {
+					PPReadErrorSet(name.c_str());
+				}
+				{
+					ow = w;
+					oh = h;
+					ob = bytesPerRow;
+					pixel = PPGameTextureManager::loadPNG(p,&w,&h,&bytesPerRow);
+					if (pixel) {
+						width = (int)w;
+						height = (int)h;
+						width100 = 1.0/(width*100.0);
+						height100 = 1.0/(height*100.0);
+						invwidth = 1.0/width;
+						invheight = 1.0/height;
+						size = PPSize(ow,oh);
+						rowbytes = (int)bytesPerRow;
+						//bind = false;
+						nofree = false;
+						compressed = false;
+						bindTexture();
+						free(pixel);
+						pixel = NULL;
+					} else {
+						PPReadErrorSet(name.c_str());
+					}
+				}
 		} else if (PPGameDataPath(name.c_str())) {
 			int l = (int)strlen(name.c_str());
 			if (name.c_str()[0] == '.') {
@@ -527,7 +568,6 @@ int PPGameTexture::loadTexture()
 				//PNGファイル
 				unsigned long w,h,bytesPerRow;
 				unsigned long ow,oh,ob;
-//printf("PPGameTexture:%s\n",PPGameDataPath(name.c_str()));
 				unsigned char* p=NULL;
 				p = PPGame_LoadPNG(PPGameDataPath(name.c_str()),&w,&h,&bytesPerRow);
 				if (p == NULL) {
@@ -565,6 +605,7 @@ int PPGameTexture::loadTexture()
 
 int PPGameTextureManager::loadTexture(const char* filename,PPGameTextureOption option)
 {
+  if (filename == NULL) return -1;
 	for (int i=0;i<PPGAME_MAX_TEXTURE;i++) {
 		if (texture[i]) {
 			if (texture[i]->name == filename && texture[i]->option == option) {
@@ -642,7 +683,7 @@ void PPGameTextureManager::idle()
 //				texture[i]->bindTexture();
 //			}
 			if (texture[i]->texture_name == 0) {
-				texture[i]->loadTexture();
+        texture[i]->loadTexture();
 			}
 		}
 	}

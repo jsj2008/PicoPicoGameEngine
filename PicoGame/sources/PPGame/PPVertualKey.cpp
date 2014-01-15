@@ -12,6 +12,8 @@
 #include "PPVertualKey.h"
 #include "PPGameSprite.h"
 
+std::string PPVertualKey::className;
+
 //PPVertualKey* PPVertualKey::instance = NULL;
 
 PPVertualKey::PPVertualKey(PPWorld* world) : PPObject(world)
@@ -231,9 +233,8 @@ int PPVertualKey::calcDir(int div,PPRect area)
 
 static int funcTouch(lua_State* L)
 {
-	PPVertualKey* m = (PPVertualKey*)PPLuaScript::UserData(L);
-	//PPLuaScript* s = PPLuaScript::sharedScript(L);
-	//PPVertualKey* m = PPVertualKey::instance;//(PPVertualKey*)s->userdata;
+	PPVertualKey* m = (PPVertualKey*)PPLuaArg::UserData(L,PPVertualKey::className);
+  PPUserDataAssert(m!=NULL);
 	m->stepTouch();
 	lua_pushboolean(L,m->vKeyTouch);
 	return 1;
@@ -241,21 +242,18 @@ static int funcTouch(lua_State* L)
 
 static int funcDelta(lua_State* L)
 {
-	PPVertualKey* m = (PPVertualKey*)PPLuaScript::UserData(L);
+	PPVertualKey* m = (PPVertualKey*)PPLuaArg::UserData(L,PPVertualKey::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPVertualKey* m = PPVertualKey::instance;//(PPVertualKey*)s->userdata;
 	m->stepTouch();
 	return s->returnPoint(L,m->vKeyDelta);
-//	lua_pushnumber(L,m->vKeyDelta.x);
-//	lua_pushnumber(L,m->vKeyDelta.y);
-//	return 2;
 }
 
 static int funcDir(lua_State* L)
 {
-	PPVertualKey* m = (PPVertualKey*)PPLuaScript::UserData(L);
+	PPVertualKey* m = (PPVertualKey*)PPLuaArg::UserData(L,PPVertualKey::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPVertualKey* m = PPVertualKey::instance;//(PPVertualKey*)s->userdata;
 	if (s->argCount > 0) {
 #if 1
 		if (s->argCount > 1) {
@@ -300,9 +298,9 @@ static int funcDir(lua_State* L)
 
 static int funcCenter(lua_State* L)
 {
-	PPVertualKey* m = (PPVertualKey*)PPLuaScript::UserData(L);
+	PPVertualKey* m = (PPVertualKey*)PPLuaArg::UserData(L,PPVertualKey::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPVertualKey* m = PPVertualKey::instance;//(PPVertualKey*)s->userdata;
 	m->stepTouch();
 	if (s->argCount > 0) {
 		if (s->isTable(L,0)) {
@@ -323,13 +321,8 @@ static int funcCenter(lua_State* L)
 
 static int funcArea(lua_State* L)
 {
-	PPVertualKey* m = (PPVertualKey*)PPLuaScript::UserData(L);
+	PPVertualKey* m = (PPVertualKey*)PPLuaArg::UserData(L,PPVertualKey::className);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPLuaScript* s = PPLuaScript::SharedScript(m->world(),L);
-//	PPVertualKey* m = PPVertualKey::instance;//(PPVertualKey*)s->userdata;
-//	if (s->argCount < 2) {
-//		return luaL_argerror(L,1,"invalid argument.");
-//	}
 	m->stepTouch();
 	if (s->argCount > 0) {
 		m->vKeyArea = s->getRect(L,0,m->vKeyArea);
@@ -339,10 +332,9 @@ static int funcArea(lua_State* L)
 
 static int funcFixed(lua_State* L)
 {
-	PPVertualKey* m = (PPVertualKey*)PPLuaScript::UserData(L);
+	PPVertualKey* m = (PPVertualKey*)PPLuaArg::UserData(L,PPVertualKey::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPLuaScript* s = PPLuaScript::SharedScript(m->world(),L);
-//	PPVertualKey* m = PPVertualKey::instance;//(PPVertualKey*)s->userdata;
 	m->stepTouch();
 	if (s->argCount > 0) {
 		m->fixed = s->boolean(0,m->fixed);
@@ -353,7 +345,7 @@ static int funcFixed(lua_State* L)
 
 void PPVertualKey::openLibrary(PPLuaScript* s,const char* name,const char* superclass)
 {
-	//PPObject::openLibrary(s,name);
+  className = name;
 	s->openModule(name,this,0,superclass);
 		s->addCommand("center",funcCenter);
 		s->addCommand("fixed",funcFixed);

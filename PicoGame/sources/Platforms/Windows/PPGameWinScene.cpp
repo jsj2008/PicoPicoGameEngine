@@ -42,6 +42,10 @@ bool PPGameWinScene::init()
 {
 	if (game == NULL) game = newGame();
 	touchScreen = false;
+  
+  if (game) {
+    game->disableIO();    //ファイルの読み書きを制限
+  }
 	
 	return true;
 }

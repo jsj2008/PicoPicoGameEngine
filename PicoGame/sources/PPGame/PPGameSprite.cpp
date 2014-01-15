@@ -89,6 +89,7 @@ int PPGameSprite::InitOT()
 	BlendOff();
 	st.start_ptr = 0;
 	st.start_stack_ptr = 0;
+  textureManager->idle();   //描画前テクスチャ読み込み
 	return 0;
 }
 
@@ -494,12 +495,12 @@ int PPGameSprite::Box(PPGamePoly* poly)
 		vert[pt++] = p[2].y;
 		vert[pt++] = p[3].x;
 		vert[pt++] = p[3].y;
-		vert[pt++] = p[0].x;
-		vert[pt++] = p[0].y;
+//		vert[pt++] = p[0].x;
+//		vert[pt++] = p[0].y;
 	}
 
 	{
-		for (int i=0;i<5*4;i+=4) {
+		for (int i=0;i<4*4;i+=4) {
 			color[i+0] = poly->color.r;
 			color[i+1] = poly->color.g;
 			color[i+2] = poly->color.b;
@@ -592,7 +593,8 @@ int PPGameSprite::DrawOT()
 				BlendOn(b_stack[i].alphaValue,b_stack[i].blendType);
 				glPushMatrix();
 				glLineWidth(1);
-				glDrawArrays(GL_LINE_STRIP,0,(b_stack[i].ptr-p));
+				glDrawArrays(GL_LINE_LOOP,0,(b_stack[i].ptr-p));
+//				glDrawArrays(GL_LINE_STRIP,0,(b_stack[i].ptr-p));
 				glPopMatrix();
 				break;
 			case QBLINE_TAG:
@@ -669,7 +671,8 @@ int PPGameSprite::DrawOT2()
 				BlendOn(b_stack[i].alphaValue,b_stack[i].blendType);
 				glPushMatrix();
 				glLineWidth(1);
-				glDrawArrays(GL_LINE_STRIP,0,(b_stack[i].ptr-p));
+				glDrawArrays(GL_LINE_LOOP,0,(b_stack[i].ptr-p));
+//				glDrawArrays(GL_LINE_STRIP,0,(b_stack[i].ptr-p));
 				glPopMatrix();
 				break;
 			case QBLINE_TAG:
@@ -808,7 +811,7 @@ int PPGameSprite::PushStack(int type,float alphaValue,int blendType)
 		st.b_ptr += 2;
 	} else
 	if (type == QBBOX_TAG) {
-		st.b_ptr += 5;
+		st.b_ptr += 4;
 	} else {
 		st.b_ptr += 6;
 	}
@@ -947,7 +950,8 @@ PPRect PPGameSprite::viewPort()
 
 static int funcOffset(lua_State* L)
 {
-	PPGameSprite* m = (PPGameSprite*)PPLuaScript::UserData(L);
+	PPGameSprite* m = (PPGameSprite*)PPLuaArg::UserData(L,PPGameSprite::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
 	if (s->argCount > 0) {
 		if (s->isTable(L,0)) {
@@ -968,7 +972,8 @@ static int funcOffset(lua_State* L)
 
 static int funcOrigin(lua_State* L)
 {
-	PPGameSprite* m = (PPGameSprite*)PPLuaScript::UserData(L);
+	PPGameSprite* m = (PPGameSprite*)PPLuaArg::UserData(L,PPGameSprite::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
 	if (s->argCount > 0) {
 		if (s->isTable(L,0)) {
@@ -989,7 +994,8 @@ static int funcOrigin(lua_State* L)
 
 static int funcScale(lua_State* L)
 {
-	PPGameSprite* m = (PPGameSprite*)PPLuaScript::UserData(L);
+	PPGameSprite* m = (PPGameSprite*)PPLuaArg::UserData(L,PPGameSprite::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
 	if (s->argCount > 0) {
 		if (s->isTable(L,0)) {
@@ -1010,7 +1016,8 @@ static int funcScale(lua_State* L)
 
 static int funcRotate(lua_State* L)
 {
-	PPGameSprite* m = (PPGameSprite*)PPLuaScript::UserData(L);
+	PPGameSprite* m = (PPGameSprite*)PPLuaArg::UserData(L,PPGameSprite::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
 	if (s->argCount > 0) {
 		m->st.rotate = s->number(0);//atof(s->args(0))*2*M_PI/360;
@@ -1033,14 +1040,16 @@ static int funcRotate(lua_State* L)
 
 static int funcWinRect(lua_State* L)
 {
-	PPGameSprite* m = (PPGameSprite*)PPLuaScript::UserData(L);
+	PPGameSprite* m = (PPGameSprite*)PPLuaArg::UserData(L,PPGameSprite::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
 	return s->returnRect(L,PPRect(0,0,m->st.windowSize.width,m->st.windowSize.height));
 }
 
 static int funcViewport(lua_State* L)
 {
-	PPGameSprite* m = (PPGameSprite*)PPLuaScript::UserData(L);
+	PPGameSprite* m = (PPGameSprite*)PPLuaArg::UserData(L,PPGameSprite::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
 	if (s->argCount > 0) {
 		if (s->isTable(L,0)) {
@@ -1056,19 +1065,17 @@ static int funcViewport(lua_State* L)
 			} else {
 				r = PPRect(s->number(0),s->number(1),1,1);
 			}
-//			PPRect r = PPRect(s->number(0),s->number(1),s->number(2),s->number(3));
 			m->viewPort(r);
 		}
 	}
-//printf("2:%f,%f\n",m->viewPort().width,m->viewPort().height);
 	return s->returnRect(L,m->viewPort());
 }
 
 static int funcFrameInterval(lua_State* L)
 {
-	PPGameSprite* m = (PPGameSprite*)PPLuaScript::UserData(L);
+	PPGameSprite* m = (PPGameSprite*)PPLuaArg::UserData(L,PPGameSprite::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPGameSprite* m = (PPGameSprite*)s->userdata;
 	if (s->argCount > 0) {
 		int v = (int)s->integer(0);
 		if (v < 1) v = 1;
@@ -1081,10 +1088,10 @@ static int funcFrameInterval(lua_State* L)
 
 static int funcLayout(lua_State* L)
 {
-	PPGameSprite* m = (PPGameSprite*)PPLuaScript::UserData(L);
+	PPGameSprite* m = (PPGameSprite*)PPLuaArg::UserData(L,PPGameSprite::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPGameSprite* m = (PPGameSprite*)s->userdata;
-	QBGame* g = (QBGame*)m->world();//s->userdata;
+	QBGame* g = (QBGame*)m->world();
 	if (lua_istable(L,2)) {
 		PPRect base=s->getRect(L,0);
 		PPRect win=PPRect(0,0,m->st.windowSize.width,m->st.windowSize.height);
@@ -1103,14 +1110,18 @@ static int funcLayout(lua_State* L)
 
 static int funcGetDensity(lua_State* L)
 {
-	PPGameSprite* m = (PPGameSprite*)PPLuaScript::UserData(L);
+	PPGameSprite* m = (PPGameSprite*)PPLuaArg::UserData(L,PPGameSprite::className);
+  PPUserDataAssert(m!=NULL);
 	QBGame* g = (QBGame*)m->world();//s->userdata;
 	lua_pushnumber(L,g->scale_factor);
 	return 1;
 }
 
+std::string PPGameSprite::className = "ppscreen";
+
 void PPGameSprite::openLibrary(PPLuaScript* script,const char* name,const char* superclass)
 {
+  className = name;
 	script->openModule(name,this,0,superclass);
 		script->addCommand("size",funcWinRect);
 //		script->addCommand("rect",funcWinRect);

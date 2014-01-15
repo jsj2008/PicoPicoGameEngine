@@ -92,6 +92,18 @@ PPRect PPRect::operator + (PPPoint a)
 	return n;
 }
 
+void PPRect::operator -= (PPPoint a)
+{
+	x -= a.x;
+	y -= a.y;
+}
+
+PPRect PPRect::operator - (PPPoint a)
+{
+	PPRect n(x-a.x,y-a.y,width,height);
+	return n;
+}
+
 void PPRect::operator = (PPPoint a)
 {
 	x = a.x;
@@ -102,6 +114,15 @@ void PPRect::operator = (PPSize a)
 {
 	width = a.width;
 	height = a.height;
+}
+
+PPPoint PPRect::min()
+{
+  return PPPoint(x,y);
+}
+PPPoint PPRect::max()
+{
+  return PPPoint(x+width,y+height);
 }
 
 #pragma mark -

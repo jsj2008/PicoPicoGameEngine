@@ -7,7 +7,17 @@
 //
 
 #import "PPScriptDebugEngine.h"
+#import "DebugPicoGame.h"
 
 @implementation PPScriptDebugEngine
+
+- (QBGame*)game
+{
+	if (game == NULL) {
+		PPScriptGame* g = new DebugPicoGame();
+		game = g;
+	}
+	return game;
+}
 
 @end

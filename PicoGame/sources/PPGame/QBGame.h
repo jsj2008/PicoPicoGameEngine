@@ -115,6 +115,7 @@ public:
 	virtual void RepeatKey(int firstDelay=20,int secondDelay=15);
 	virtual bool Key(unsigned long mask);			//ボタン入力判定//
 	virtual unsigned long GetKey();					//ボタン入力//
+	virtual unsigned long GetPreKey();			//ボタン入力//
 	virtual void SetKey(unsigned long key);
 	
 	//文字描画関連//
@@ -272,31 +273,8 @@ public:
 	void Stop(int ch=0);							//サウンドの停止//
 	bool IsPlaying(int ch=0);						//サウンド再生中か？//
 
-	//BGM関連//
-	int InitBGM(int no,const char* key);			//BGMの初期化//
-	void PlayBGM(int no,bool repeat=true);			//BGMの再生//
-	void StopBGM();									//BGMの停止//
-	void SelectBGM(int no,int x=0,int y=0,int w=0,int h=0);
-													//BGMの選択//
-	void ResetBGM();								//BGMの初期化//
-	bool IsBGMSelected();							//BGM選択された
-
-	//画面設定 オーバーライドして使う//
-//	virtual unsigned long WindowLayout();			//画面の方向とボタンの配置//
-//	virtual bool HideButton() {return false;}		//ボタンを非表示//
-//	virtual unsigned long VisibleButton();			//表示するボタン//
-
-	//メニュー//
-//	int curMenu;									//アクティブなメニュー//
-//	QBMenu menu[QBGAME_MAX_MENU];					//メニュー//
-
 	virtual void* LoadData(const char* name,unsigned long* outsize);
 	virtual int SaveData(const char* name,void* data,unsigned long dataSize);
-
-	//マップデータ//
-//	virtual bool LoadMap(const char* mapname);		//マップの読み込み//
-//	PPGameMapData* GetMapData(int layer) {return map[layer];}
-//	PPGameMapData* GetEventData() {return map[0];}
 
 	//描画系パラメータ//
 	float locatex,locatey;							//文字描画位置//
@@ -305,21 +283,6 @@ public:
 	//int polyCount;									//描画ポリゴン格納数//
 	PPGamePoly poly;								//描画ポリゴン格納バッファ//
 
-	//その他設定 オーバーライドして使う//
-//	virtual int KeyTextureID();						//十字キーテクスチャのID//
-//	virtual int KeySize();							//十字キーの当たり範囲 64*64:小 96*96:大//
-//	virtual int KeyCount();							//4方向 or 8方向//
-//	virtual int ButtonSize() {return 0;}
-	
-//	int arrowKeyTouchNo;
-
-	//システムフォントの描画 iPhoneでのみ有効//
-//	virtual int StringTextureID() {return -1;}		//文字テクスチャ(システムフォント)のID オーバーライドして使う//
-//	void String(const char* format,...);			//文字の描画(システムフォント)//
-	
-//	virtual int SaveKeyPosition(int x,int y,int index);
-//	virtual int LoadKeyPosition(int* x,int* y,int index);
-	
 	int button_offset_x[3];
 	int button_offset_y[3];
 	
@@ -329,13 +292,6 @@ public:
 	
 	PPPoint mouseLocation;
 
-//	QB_IDLE_SELECTOR idleSelector;
-//	QB_IDLE_SELECTOR curIdleSelector;
-//	int timer;
-//	int step;
-//	float delayTimer;
-//	bool stepNext(QB_IDLE_SELECTOR selector,float delay);
-	
 	virtual unsigned long getKey() {
 		return GetKey();
 	}
@@ -344,8 +300,6 @@ public:
 	}
 
 	int gameIdle(unsigned long key);
-	void releaseBGM();
-	void idleBGM(void* controller);
 	void setTouchCount(int count) {__touchCount = count;}
 	void setTouchPosition(int x,int y) {touchX[__touchCount]=x;touchY[__touchCount]=y;__touchCount++;}
 //	PPGameText* text;
@@ -401,6 +355,7 @@ public:
   virtual void openTextToSpeech(PPLuaScript* script,const char* name);
 
 	virtual void drawPattern(PPPoint pos,unsigned short gid,void* userdata);
+	virtual void disableIO();
 
 //	unsigned short splite_flags;
 	float rotate_value;
@@ -413,10 +368,13 @@ public:
 
 	PPFont* curFont;
 	bool lineWrap;
+  bool pauseButton;
 	
 	int curTexture;
 
 	PPFPS fps;
+  
+	int systemTextureID;
 	
 protected:
 

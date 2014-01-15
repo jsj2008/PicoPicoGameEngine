@@ -762,10 +762,6 @@ bool PPParticleEmitter::loadPNGData(unsigned char* pngZipData,unsigned long leng
 			unsigned char* pixel = PPGame_DecodePNG(pngdata,pnglength,&width,&height,&bytesPerRow);
 
 			if (pixel!=NULL) {
-//				if (poly._texture >= 0) {
-//					world()->projector->textureManager->deleteTexture(poly._texture);
-//					poly._texture = -1;
-//				}
 
 				PPGameTexture* tex = new PPGameTexture();
 				tex->name = particleName;
@@ -773,25 +769,13 @@ bool PPParticleEmitter::loadPNGData(unsigned char* pngZipData,unsigned long leng
 				tex->notexturefile = true;
 
 				poly._texture = world()->projector->textureManager->setTextureWithNameCheck(tex);
-#if 1
+
 				world()->projector->textureManager->setTexture(poly._texture,pixel,width,height,bytesPerRow,option);
 				tex->bindTexture();
-
-//				free(pixel);
-//				tex->pixel = NULL;
 
 				r = true;
 				poly.texTileSize.width = tex->width;
 				poly.texTileSize.height = tex->height;
-#else
-				if (!world()->projector->textureManager->setTexture(poly._texture,pixel,width,height,bytesPerRow)) {
-					PPGameTexture* tex = new PPGameTexture();
-					poly._texture = world()->projector->textureManager->setTexture(tex);
-					world()->projector->textureManager->setTexture(poly._texture,pixel,width,height,bytesPerRow);
-//					world()->projector->textureManager->bindTexture(poly._texture);
-					r = true;
-				}
-#endif
 
 			}
 		}
@@ -998,18 +982,19 @@ static void PPParticle_warning( void * ctx,const char * msg,...)
 
 static int funcLoad(lua_State* L)
 {
-	PPParticleEmitter* m = (PPParticleEmitter*)PPLuaScript::UserData(L);
+	PPParticleEmitter* m = (PPParticleEmitter*)PPLuaArg::UserData(L,PPParticleEmitter::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPParticleEmitter* m = (PPParticleEmitter*)s->userdata;
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	if (s->argCount > 1) {
 		if (s->isTable(L,1)) {
 			m->option = s->getTextureOption(L,1,m->option);
 		}
 	}
 	lua_pushboolean(L,m->config(s->args(0)));
+  if (PPReadError()) {
+    PPReadErrorReset();
+    return luaL_error(L,"particle file read error '%s'",s->args(0));
+  }
 	return 1;
 }
 
@@ -1018,12 +1003,9 @@ static int funcLoad(lua_State* L)
 
 static int funcSet(lua_State* L)
 {
-	PPParticleEmitter* m = (PPParticleEmitter*)PPLuaScript::UserData(L);
+	PPParticleEmitter* m = (PPParticleEmitter*)PPLuaArg::UserData(L,PPParticleEmitter::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPParticleEmitter* m = (PPParticleEmitter*)s->userdata;
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 
 	if (s->isTable(L,0)) {
 		PT_INT("emitterType",emitterType);
@@ -1104,9 +1086,7 @@ static int funcSet(lua_State* L)
 #ifdef __LUAJIT__
 				int len= (int)lua_objlen(L,-1);
 #else
-				lua_len(L,-1);
-				int len = (int)lua_tointeger(L,-1);
-				lua_pop(L,1);
+				int len= (int)lua_rawlen(L,-1);
 #endif
 				if (m->animationData) free(m->animationData);
 				m->animationData = (int*)calloc(1,sizeof(int)*len);
@@ -1231,13 +1211,9 @@ static int funcSet(lua_State* L)
 
 static int funcElapsedTime(lua_State* L)
 {
-	PPParticleEmitter* m = (PPParticleEmitter*)PPLuaScript::UserData(L);
+	PPParticleEmitter* m = (PPParticleEmitter*)PPLuaArg::UserData(L,PPParticleEmitter::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPLuaScript* s = PPLuaScript::sharedScript(L);
-//	PPParticleEmitter* m = (PPParticleEmitter*)s->userdata;
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	if (s->argCount > 0) {
 		m->elapsedTime = s->number(0,m->elapsedTime);
 		return 0;
@@ -1248,10 +1224,11 @@ static int funcElapsedTime(lua_State* L)
 
 static int funcFire(lua_State* L)
 {
-	PPParticleEmitter* m = (PPParticleEmitter*)PPLuaScript::UserData(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
+	PPParticleEmitter* m = (PPParticleEmitter*)PPLuaArg::UserData(L,PPParticleEmitter::className);
+  PPUserDataAssert(m!=NULL);
+//	if (m==NULL) {
+//		return luaL_argerror(L,1,"invalid argument.");
+//	}
 	m->active = true;
 	m->elapsedTime = 0;
 	return 0;
@@ -1259,20 +1236,22 @@ static int funcFire(lua_State* L)
 
 static int funcParticleCount(lua_State* L)
 {
-	PPParticleEmitter* m = (PPParticleEmitter*)PPLuaScript::UserData(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
+	PPParticleEmitter* m = (PPParticleEmitter*)PPLuaArg::UserData(L,PPParticleEmitter::className);
+  PPUserDataAssert(m!=NULL);
+//	if (m==NULL) {
+//		return luaL_argerror(L,1,"invalid argument.");
+//	}
 	lua_pushinteger(L,m->particleCount);
 	return 1;
 }
 
 static int funcStop(lua_State* L)
 {
-	PPParticleEmitter* m = (PPParticleEmitter*)PPLuaScript::UserData(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
+	PPParticleEmitter* m = (PPParticleEmitter*)PPLuaArg::UserData(L,PPParticleEmitter::className);
+  PPUserDataAssert(m!=NULL);
+//	if (m==NULL) {
+//		return luaL_argerror(L,1,"invalid argument.");
+//	}
 	m->particleCount = 0;
 	m->stopParticleEmitter();
 	return 0;
@@ -1287,19 +1266,39 @@ static int funcDelete(lua_State *L)
 static int funcNew(lua_State *L)
 {
 	PPWorld* world = PPLuaScript::World(L);
-//	PPParticleEmitter* o = (PPParticleEmitter*)PPLuaScript::UserData(L);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPObject* o = (PPObject*)s->userdata;
 	if (s->argCount > 0) {
-		lua_createtable(L,(int)s->integer(0),0);
-		int table = lua_gettop(L);
-		for (int i=0;i<s->integer(0);i++) {
-			PPParticleEmitter* obj = new PPParticleEmitter(world);
-			obj->start();
-			obj->poly.initTexture(world->projector->textureManager->defaultTexture);
-			PPLuaScript::newObject(L,PPParticleEmitter::className.c_str(),obj,funcDelete);
-			lua_rawseti(L,table,i+1);
-		}
+    if (lua_isnumber(L,1+s->argShift-1)) {
+      lua_createtable(L,(int)s->integer(0),0);
+      int table = lua_gettop(L);
+      for (int i=0;i<s->integer(0);i++) {
+        PPParticleEmitter* obj = new PPParticleEmitter(world);
+        obj->start();
+        obj->poly.initTexture(world->projector->textureManager->defaultTexture);
+        PPLuaScript::newObject(L,PPParticleEmitter::className.c_str(),obj,funcDelete);
+        lua_rawseti(L,table,i+1);
+      }
+      return 1;
+    } else
+    if (lua_isstring(L,1+s->argShift-1)) {
+      PPParticleEmitter* obj = new PPParticleEmitter(world);
+      obj->start();
+      obj->poly.initTexture(world->projector->textureManager->defaultTexture);
+
+			if (s->argCount > 0 && s->isTable(L,0)) {
+				obj->option = s->getTextureOption(L,0,obj->option);//s->boolean(1);
+			}
+
+      obj->config(s->args(0));
+      
+			if (PPReadError()) {
+				PPReadErrorReset();
+        delete obj;
+				return luaL_error(L,"particle file read error '%s'",s->args(0));
+			}
+      
+      PPLuaScript::newObject(L,PPParticleEmitter::className.c_str(),obj,funcDelete);
+    }
 	} else {
 		PPParticleEmitter* obj = new PPParticleEmitter(world);
 		obj->start();
@@ -1319,11 +1318,11 @@ PPObject* PPParticleEmitter::registClass(PPLuaScript* script,const char* name,co
 
 PPObject* PPParticleEmitter::registClass(PPLuaScript* s,const char* name,PPObject* obj,const char* superclass)
 {
-//	PPObject::registClass(s,name,obj);
 	s->openModule(name,obj,0,superclass);
 		s->addCommand("new",funcNew);
 		s->addCommand("load",funcLoad);
 //		s->addCommand("reset",funcReset);
+		s->addCommand("set",funcSet);
 		s->addCommand("property",funcSet);
 		s->addCommand("fire",funcFire);
 		s->addCommand("elapsedTime",funcElapsedTime);

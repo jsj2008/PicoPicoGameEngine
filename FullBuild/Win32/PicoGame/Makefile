@@ -35,7 +35,10 @@ CFLAGS = -DFT2_BUILD_LIBRARY -DFT_CONFIG_MODULES_H="<ftmodule.h>" -D_WIN32 -DIGN
 -I../../../freetype/sources/freetype-2.4.10/ \
 -I../../../freetype/sources/freetype-2.4.10/include/ \
 -I../../../png/sources/png/ \
--I../../../png/sources/zlib/
+-I../../../png/sources/zlib/ \
+-I../../../Vorbis/sources/libogg-1.3.1/include/ \
+-I../../../Vorbis/sources/libvorbis-1.3.3/include/ \
+-I../../../Vorbis/sources/libvorbis-1.3.3/lib/
 
 VPATH = \
 ../../../PicoGame/sources/Platforms/Windows/:
@@ -50,7 +53,8 @@ LIBS = \
 ../../../freetype/Win32/build/libfreetype.ar \
 ../../../FlMML/Win32/build/libflmml.ar \
 ../../../png/Win32/build/libpng.ar \
-../../../Box2D/Win32/build/libbox2d.ar
+../../../Box2D/Win32/build/libbox2d.ar \
+../../../Vorbis/Win32/build/libvorbis.ar
 
 $(BUILD_DIR)/%.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -79,6 +83,7 @@ buildall:
 	cd ../../../lua5.2/Win32/build; make clean
 	cd ../../../PicoGame/Win32/build; make clean
 	cd ../../../png/Win32/build; make clean
+	cd ../../../Vorbis/Win32/build; make clean
 	cd ./; make clean
 	cd ../../../Box2D/Win32/build; make
 	cd ../../../CocosDenshion/Win32/build; make
@@ -87,6 +92,7 @@ buildall:
 	cd ../../../lua5.2/Win32/build; make
 	cd ../../../PicoGame/Win32/build; make
 	cd ../../../png/Win32/build; make
+	cd ../../../Vorbis/Win32/build; make
 	cd ./; make
 
 cleanall:
@@ -97,6 +103,7 @@ cleanall:
 	cd ../../../lua5.2/Win32/build; make clean
 	cd ../../../PicoGame/Win32/build; make clean
 	cd ../../../png/Win32/build; make clean
+	cd ../../../Vorbis/Win32/build; make clean
 	cd ./; make clean
 
 build:
@@ -107,6 +114,7 @@ build:
 	cd ../../../lua5.2/Win32/build; make
 	cd ../../../PicoGame/Win32/build; make
 	cd ../../../png/Win32/build; make
+	cd ../../../Vorbis/Win32/build; make
 	cd ./; make
 
 clean:

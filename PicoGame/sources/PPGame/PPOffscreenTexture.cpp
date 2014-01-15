@@ -626,8 +626,6 @@ static int funcNew(lua_State *L)
 {
 	PPWorld* world = PPLuaScript::World(L);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPLuaScript* s = PPLuaScript::sharedScript(L);
-//	PPObject* o = (PPObject*)s->userdata;
 	if (s->argCount > 0) {
 		lua_createtable(L,(int)s->integer(0),0);
 		int table = lua_gettop(L);
@@ -660,19 +658,24 @@ PPObject* PPOffscreenTexture::registClass(PPLuaScript* s,const char* name,const 
 static int funcCreate(lua_State *L)
 {
 	PPGameTextureOption option;
-	PPOffscreenTexture* m = (PPOffscreenTexture*)PPLuaScript::UserData(L);
+	PPOffscreenTexture* m = (PPOffscreenTexture*)PPLuaArg::UserData(L,PPOffscreenTexture::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
 	if (s->argCount > 0 && s->isTable(L,0)) {
 		if (s->argCount > 1 && s->isTable(L,1)) {
-			option = s->getTextureOption(L,1,option);//s->boolean(1);
+			option = s->getTextureOption(L,1,option);
 		}
 		m->create(s->getSize(L,0,256,256),option);
 	} else
 	if (s->argCount > 1) {
 		if (s->argCount > 2 && s->isTable(L,2)) {
-			option = s->getTextureOption(L,2,option);//s->boolean(1);
+			option = s->getTextureOption(L,2,option);
 		}
-		m->create(PPSize(s->number(0),s->number(1)),option);
+    if (s->integer(0) <= 0 || s->integer(1) <= 0
+     || s->integer(0) > 2048 || s->integer(1) > 2048) {
+      return luaL_error(L,"illegal offscreen size (%d,%d)",s->integer(0),s->integer(1));
+    }
+    m->create(PPSize(s->integer(0),s->integer(1)),option);
 	} else {
 		m->create(PPSize(256,256),option);
 	}
@@ -682,7 +685,8 @@ static int funcCreate(lua_State *L)
 
 static int funcLock(lua_State *L)
 {
-	PPOffscreenTexture* m = (PPOffscreenTexture*)PPLuaScript::UserData(L);
+	PPOffscreenTexture* m = (PPOffscreenTexture*)PPLuaArg::UserData(L,PPOffscreenTexture::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
 	bool hold = true;
 	if (s->argCount > 0 && s->isBoolean(L,0)) {
@@ -694,7 +698,8 @@ static int funcLock(lua_State *L)
 
 static int funcUnlock(lua_State *L)
 {
-	PPOffscreenTexture* m = (PPOffscreenTexture*)PPLuaScript::UserData(L);
+	PPOffscreenTexture* m = (PPOffscreenTexture*)PPLuaArg::UserData(L,PPOffscreenTexture::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
 	bool hold = true;
 	if (s->argCount > 0 && s->isBoolean(L,0)) {
@@ -706,7 +711,8 @@ static int funcUnlock(lua_State *L)
 
 static int funcPixel(lua_State *L)
 {
-	PPOffscreenTexture* m = (PPOffscreenTexture*)PPLuaScript::UserData(L);
+	PPOffscreenTexture* m = (PPOffscreenTexture*)PPLuaArg::UserData(L,PPOffscreenTexture::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
 	if (m->pixel()) {
 		PPPoint pos = PPPointZero;
@@ -729,7 +735,8 @@ static int funcPixel(lua_State *L)
 
 static int funcBind(lua_State *L)
 {
-	PPOffscreenTexture* m = (PPOffscreenTexture*)PPLuaScript::UserData(L);
+	PPOffscreenTexture* m = (PPOffscreenTexture*)PPLuaArg::UserData(L,PPOffscreenTexture::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
 	if (m->pixel()) {
 		m->lock(true);
@@ -740,7 +747,8 @@ static int funcBind(lua_State *L)
 
 static int funcLine(lua_State *L)
 {
-	PPOffscreenTexture* m = (PPOffscreenTexture*)PPLuaScript::UserData(L);
+	PPOffscreenTexture* m = (PPOffscreenTexture*)PPLuaArg::UserData(L,PPOffscreenTexture::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
 	if (m->pixel()) {
 		int n=0;
@@ -773,7 +781,8 @@ static int funcLine(lua_State *L)
 
 static int funcBox(lua_State *L)
 {
-	PPOffscreenTexture* m = (PPOffscreenTexture*)PPLuaScript::UserData(L);
+	PPOffscreenTexture* m = (PPOffscreenTexture*)PPLuaArg::UserData(L,PPOffscreenTexture::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
 	if (m->pixel()) {
 		int n=0;
@@ -797,7 +806,8 @@ static int funcBox(lua_State *L)
 
 static int funcFill(lua_State *L)
 {
-	PPOffscreenTexture* m = (PPOffscreenTexture*)PPLuaScript::UserData(L);
+	PPOffscreenTexture* m = (PPOffscreenTexture*)PPLuaArg::UserData(L,PPOffscreenTexture::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
 	if (m->pixel()) {
 		int n=0;
@@ -821,7 +831,8 @@ static int funcFill(lua_State *L)
 
 static int funcClear(lua_State *L)
 {
-	PPOffscreenTexture* m = (PPOffscreenTexture*)PPLuaScript::UserData(L);
+	PPOffscreenTexture* m = (PPOffscreenTexture*)PPLuaArg::UserData(L,PPOffscreenTexture::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
 	if (m->pixel()) {
 		int n=0;
@@ -836,7 +847,8 @@ static int funcClear(lua_State *L)
 
 static int funcPaint(lua_State *L)
 {
-	PPOffscreenTexture* m = (PPOffscreenTexture*)PPLuaScript::UserData(L);
+	PPOffscreenTexture* m = (PPOffscreenTexture*)PPLuaArg::UserData(L,PPOffscreenTexture::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
 	if (m->pixel()) {
 		int n=0;
@@ -868,7 +880,8 @@ static int funcPaint(lua_State *L)
 
 static int funcCircle(lua_State *L)
 {
-	PPOffscreenTexture* m = (PPOffscreenTexture*)PPLuaScript::UserData(L);
+	PPOffscreenTexture* m = (PPOffscreenTexture*)PPLuaArg::UserData(L,PPOffscreenTexture::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
 	if (m->pixel()) {
 		int n=0;
@@ -884,7 +897,7 @@ static int funcCircle(lua_State *L)
 		n ++;
 		PPColor col = PPColor::white();
 		if (n < s->argCount) {
-			r = s->number(n);
+			r = s->number(n);   //半径
 			n++;
 			if (n < s->argCount) {
 				col = s->getColor(L,n);
@@ -907,42 +920,33 @@ static int funcCircle(lua_State *L)
 	return 0;
 }
 
-//static int funcRender(lua_State *L)
-//{
-//	PPLuaScript* s = PPLuaScript::sharedScript(L);
-//	PPOffscreenTexture* m = (PPOffscreenTexture*)s->userdata;
-//	m->render();
-//	return 0;
-//}
-
 static int funcTexture(lua_State *L)
 {
-	PPOffscreenTexture* m = (PPOffscreenTexture*)PPLuaScript::UserData(L);
+	PPOffscreenTexture* m = (PPOffscreenTexture*)PPLuaArg::UserData(L,PPOffscreenTexture::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
 	m->pushTextureInfo(L,m->poly._texture);
-//	lua_pushinteger(L,m->poly._texture+1);		//Texture
 	return 1;
 }
 
 static int funcHFlip(lua_State *L)
 {
-	PPOffscreenTexture* m = (PPOffscreenTexture*)PPLuaScript::UserData(L);
-//	PPLuaScript* s = PPLuaScript::SharedScript(m->world(),L);
+	PPOffscreenTexture* m = (PPOffscreenTexture*)PPLuaArg::UserData(L,PPOffscreenTexture::className);
+  PPUserDataAssert(m!=NULL);
 	m->hflip();
 	return 1;
 }
 
 static int funcVFlip(lua_State *L)
 {
-	PPOffscreenTexture* m = (PPOffscreenTexture*)PPLuaScript::UserData(L);
-//	PPLuaScript* s = PPLuaScript::SharedScript(m->world(),L);
+	PPOffscreenTexture* m = (PPOffscreenTexture*)PPLuaArg::UserData(L,PPOffscreenTexture::className);
+  PPUserDataAssert(m!=NULL);
 	m->vflip();
 	return 1;
 }
 
 PPObject* PPOffscreenTexture::registClass(PPLuaScript* s,const char* name,PPObject* obj,const char* superclass)
 {
-//	PPObject::registClass(s,name,obj);
 	s->openModule(name,obj,0,superclass);
 		s->addCommand("new",funcNew);
 		s->addCommand("create",funcCreate);

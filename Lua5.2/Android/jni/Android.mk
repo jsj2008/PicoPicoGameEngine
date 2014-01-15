@@ -1,7 +1,7 @@
 LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 LOCAL_MODULE := liblua
-LUA_SOURCE_PATH := ../../sources/lua5.2
+LUA_SOURCE_PATH := ../../sources/lua-5.2.3/src
 
 JNI_CFLAGS := \
 				-DLUA_COMPAT_ALL \
@@ -42,8 +42,7 @@ LOCAL_SRC_FILES := \
 				$(LUA_SOURCE_PATH)/ltm.c \
 				$(LUA_SOURCE_PATH)/lundump.c \
 				$(LUA_SOURCE_PATH)/lvm.c \
-				$(LUA_SOURCE_PATH)/lzio.c \
-				$(LUA_SOURCE_PATH)/luaApiHook.c
+				$(LUA_SOURCE_PATH)/lzio.c
 
 LOCAL_C_INCLUDES := \
                     $(LOCAL_PATH)/

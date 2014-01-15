@@ -62,9 +62,12 @@
 		6B876B861831B0B9003D651B /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B8930B515B813D700402E76 /* MainMenu.xib */; };
 		6B876B871831B0B9003D651B /* PPIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 6BA522C815B95789006749D7 /* PPIcon.icns */; };
 		6B9D037A1857561F002CE536 /* libpicoengine.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B9D03791857561F002CE536 /* libpicoengine.a */; };
-		6B9D037C18575627002CE536 /* libpicoengineio.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B9D037B18575627002CE536 /* libpicoengineio.a */; };
 		6B9D037E1857562C002CE536 /* libpicoenginejit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B9D037D1857562C002CE536 /* libpicoenginejit.a */; };
 		6BBE10E718333BCD0059EDF8 /* PicoGame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BBE10E518333BCD0059EDF8 /* PicoGame.cpp */; };
+		6BC2FCEA187839B200359E40 /* GameController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BC2FCE9187839B200359E40 /* GameController.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		6BC2FCEB187839BC00359E40 /* GameController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BC2FCE9187839B200359E40 /* GameController.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		6BC2FCEC187839C700359E40 /* GameController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BC2FCE9187839B200359E40 /* GameController.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		6BC2FCED1879325F00359E40 /* libpicoengine.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B9D03791857561F002CE536 /* libpicoengine.a */; };
 		6BD86A7C18337405009E6D63 /* PicoGame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BBE10E518333BCD0059EDF8 /* PicoGame.cpp */; };
 		6BD86A7D18337406009E6D63 /* PicoGame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BBE10E518333BCD0059EDF8 /* PicoGame.cpp */; };
 		6BF2ABEB1857FE3800414672 /* PPImageFont.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BF2ABEA1857FE3800414672 /* PPImageFont.png */; };
@@ -100,12 +103,12 @@
 		6B8930DC15B8180100402E76 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		6B8930F515B81AED00402E76 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
 		6B9D03791857561F002CE536 /* libpicoengine.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpicoengine.a; path = library/libpicoengine.a; sourceTree = SOURCE_ROOT; };
-		6B9D037B18575627002CE536 /* libpicoengineio.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpicoengineio.a; path = library/libpicoengineio.a; sourceTree = SOURCE_ROOT; };
 		6B9D037D1857562C002CE536 /* libpicoenginejit.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpicoenginejit.a; path = library/libpicoenginejit.a; sourceTree = SOURCE_ROOT; };
 		6B9D037F1857574C002CE536 /* GameData */ = {isa = PBXFileReference; lastKnownFileType = folder; path = GameData; sourceTree = "<group>"; };
 		6BA522C815B95789006749D7 /* PPIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = PPIcon.icns; sourceTree = "<group>"; };
 		6BBE10E518333BCD0059EDF8 /* PicoGame.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PicoGame.cpp; sourceTree = "<group>"; };
 		6BBE10E618333BCD0059EDF8 /* PicoGame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PicoGame.h; sourceTree = "<group>"; };
+		6BC2FCE9187839B200359E40 /* GameController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameController.framework; path = System/Library/Frameworks/GameController.framework; sourceTree = SDKROOT; };
 		6BF2ABEA1857FE3800414672 /* PPImageFont.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PPImageFont.png; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -114,15 +117,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6BC2FCEA187839B200359E40 /* GameController.framework in Frameworks */,
 				6B70CDB815F03E190074710A /* Carbon.framework in Frameworks */,
 				6B70CDB915F03E190074710A /* QuartzCore.framework in Frameworks */,
 				6B70CDBA15F03E190074710A /* AudioUnit.framework in Frameworks */,
 				6B70CDBB15F03E190074710A /* IOKit.framework in Frameworks */,
 				6B70CDBC15F03E190074710A /* OpenGL.framework in Frameworks */,
+				6BC2FCED1879325F00359E40 /* libpicoengine.a in Frameworks */,
 				6B70CDBD15F03E190074710A /* AudioToolbox.framework in Frameworks */,
 				6B70CDBE15F03E190074710A /* Cocoa.framework in Frameworks */,
 				6B70CDBF15F03E190074710A /* OpenAL.framework in Frameworks */,
-				6B9D037C18575627002CE536 /* libpicoengineio.a in Frameworks */,
 				6B70CDC015F03E190074710A /* AppKit.framework in Frameworks */,
 				6B70CDC115F03E190074710A /* CoreData.framework in Frameworks */,
 				6B70CDC215F03E190074710A /* Foundation.framework in Frameworks */,
@@ -133,6 +137,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6BC2FCEB187839BC00359E40 /* GameController.framework in Frameworks */,
 				6B9D037E1857562C002CE536 /* libpicoenginejit.a in Frameworks */,
 				6B876AEB182E78D8003D651B /* Carbon.framework in Frameworks */,
 				6B876AEC182E78D8003D651B /* QuartzCore.framework in Frameworks */,
@@ -152,6 +157,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6BC2FCEC187839C700359E40 /* GameController.framework in Frameworks */,
 				6B876B721831B0B9003D651B /* Carbon.framework in Frameworks */,
 				6B876B731831B0B9003D651B /* QuartzCore.framework in Frameworks */,
 				6B876B741831B0B9003D651B /* AudioUnit.framework in Frameworks */,
@@ -174,7 +180,6 @@
 			isa = PBXGroup;
 			children = (
 				6B9D03791857561F002CE536 /* libpicoengine.a */,
-				6B9D037B18575627002CE536 /* libpicoengineio.a */,
 				6B9D037D1857562C002CE536 /* libpicoenginejit.a */,
 			);
 			name = PicoPicoEngine;
@@ -205,6 +210,7 @@
 		6B89309F15B813D700402E76 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6BC2FCE9187839B200359E40 /* GameController.framework */,
 				6B8930A015B813D700402E76 /* Cocoa.framework */,
 				6B8930A215B813D700402E76 /* Other Frameworks */,
 			);
@@ -456,12 +462,14 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
+					PICO_USE_LUA_IO,
 				);
 				HEADER_SEARCH_PATHS = ./include;
 				INFOPLIST_FILE = "PicoPicoGamesIO-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					./library,
+					/Users/yamagame/Developer/GameDev/PicoPicoGameEngine/PicoProjects/OSX/OSX/library,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				OTHER_LDFLAGS = (
@@ -485,12 +493,16 @@
 				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PicoGame/PicoGame-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					PICO_USE_LUA_IO,
+				);
 				HEADER_SEARCH_PATHS = ./include;
 				INFOPLIST_FILE = "PicoPicoGamesIO-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					./library,
+					/Users/yamagame/Developer/GameDev/PicoPicoGameEngine/PicoProjects/OSX/OSX/library,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				OTHER_LDFLAGS = (

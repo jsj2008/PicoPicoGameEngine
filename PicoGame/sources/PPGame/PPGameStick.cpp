@@ -471,27 +471,33 @@ static int functionReset(lua_State* L)
 	return 0;
 }
 
+std::string PPGameStick::className;
+
 void PPGameStick::openLibrary(PPLuaScript* s,const char* name,const char* superclass)
 {
-	s->makeObjectTable((PPObject**)stick,MAX_JOYSTICK_NUM,name);
-	//PPObject::openLibrary(s,name);
-	s->openModule(name,this,0,superclass);
+//  PPGameStick::className = name;
+//  PPGameStick::className += "Element";
+	s->makeObjectTable((PPObject**)stick,MAX_JOYSTICK_NUM,name,PPGameStickElement::className.c_str());
+	s->openModule(name,NULL,0,superclass);
 		s->addCommand("reset",functionReset);
+    s->addNumberValue("count", MAX_JOYSTICK_NUM);
 	s->closeModule();
 }
 
 static int funcNumAxis(lua_State* L)
 {
-//	PPGameStick* o = (PPGameStick*)PPLuaScript::UserData(L);
+//	PPGameStick* o = (PPGameStick*)PPLuaArg::UserData(L);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-	PPGameStickElement* m = (PPGameStickElement*)s->userdata;
+	PPGameStickElement* m = (PPGameStickElement*)PPLuaArg::UserData(L,PPGameStickElement::className);
+  PPUserDataAssert(m!=NULL);
 	lua_pushinteger(L,m->numAxis);
 	return 1;
 }
 
 static int funcAxis(lua_State* L)
 {
-	PPGameStickElement* m = (PPGameStickElement*)PPLuaScript::UserData(L);
+	PPGameStickElement* m = (PPGameStickElement*)PPLuaArg::UserData(L,PPGameStickElement::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
 //	PPGameStickElement* m = (PPGameStickElement*)s->userdata;
 	float value = 0;
@@ -525,7 +531,8 @@ static int funcAxis(lua_State* L)
 
 static int funcAxisInfo(lua_State* L)
 {
-	PPGameStickElement* m = (PPGameStickElement*)PPLuaScript::UserData(L);
+	PPGameStickElement* m = (PPGameStickElement*)PPLuaArg::UserData(L,PPGameStickElement::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
 //	PPGameStickElement* m = (PPGameStickElement*)s->userdata;
 	float value = 0;
@@ -568,14 +575,16 @@ static int funcAxisInfo(lua_State* L)
 static int funcNumButton(lua_State* L)
 {
 //	PPLuaScript* s = PPLuaScript::sharedScript(L);
-	PPGameStickElement* m = (PPGameStickElement*)PPLuaScript::UserData(L);
+	PPGameStickElement* m = (PPGameStickElement*)PPLuaArg::UserData(L,PPGameStickElement::className);
+  PPUserDataAssert(m!=NULL);
 	lua_pushinteger(L,m->numButton);
 	return 1;
 }
 
 static int funcButton(lua_State* L)
 {
-	PPGameStickElement* m = (PPGameStickElement*)PPLuaScript::UserData(L);
+	PPGameStickElement* m = (PPGameStickElement*)PPLuaArg::UserData(L,PPGameStickElement::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
 	bool value = false;
 	if (s->argCount > 0) {
@@ -589,14 +598,16 @@ static int funcButton(lua_State* L)
 
 static int funcNumHatSwitch(lua_State* L)
 {
-	PPGameStickElement* m = (PPGameStickElement*)PPLuaScript::UserData(L);
+	PPGameStickElement* m = (PPGameStickElement*)PPLuaArg::UserData(L,PPGameStickElement::className);
+  PPUserDataAssert(m!=NULL);
 	lua_pushinteger(L,m->numHatSwitch);
 	return 1;
 }
 
 static int funcHatSwitch(lua_State* L)
 {
-	PPGameStickElement* m = (PPGameStickElement*)PPLuaScript::UserData(L);
+	PPGameStickElement* m = (PPGameStickElement*)PPLuaArg::UserData(L,PPGameStickElement::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
 	int value = 0;
 	if (s->argCount > 0) {
@@ -610,7 +621,8 @@ static int funcHatSwitch(lua_State* L)
 
 static int funcStopAxisCalibration(lua_State* L)
 {
-	PPGameStickElement* m = (PPGameStickElement*)PPLuaScript::UserData(L);
+	PPGameStickElement* m = (PPGameStickElement*)PPLuaArg::UserData(L,PPGameStickElement::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
 	if (s->argCount > 0) {
 		if (s->integer(0) >= 1 && s->integer(0) <= m->numAxis) {
@@ -623,7 +635,8 @@ static int funcStopAxisCalibration(lua_State* L)
 
 static int funcCancelAxisCalibration(lua_State* L)
 {
-	PPGameStickElement* m = (PPGameStickElement*)PPLuaScript::UserData(L);
+	PPGameStickElement* m = (PPGameStickElement*)PPLuaArg::UserData(L,PPGameStickElement::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
 	if (s->argCount > 0) {
 		if (s->integer(0) >= 1 && s->integer(0) <= m->numAxis) {
@@ -639,7 +652,8 @@ static int funcCancelAxisCalibration(lua_State* L)
 
 static int funcStartAxisCalibration(lua_State* L)
 {
-	PPGameStickElement* m = (PPGameStickElement*)PPLuaScript::UserData(L);
+	PPGameStickElement* m = (PPGameStickElement*)PPLuaArg::UserData(L,PPGameStickElement::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
 	if (s->argCount > 0) {
 		if (s->integer(0) >= 1 && s->integer(0) <= m->numAxis) {
@@ -657,7 +671,8 @@ static int funcStartAxisCalibration(lua_State* L)
 
 static int funcResetAxisCalibration(lua_State* L)
 {
-	PPGameStickElement* m = (PPGameStickElement*)PPLuaScript::UserData(L);
+	PPGameStickElement* m = (PPGameStickElement*)PPLuaArg::UserData(L,PPGameStickElement::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
 	if (s->argCount > 0) {
 		if (s->integer(0) >= 1 && s->integer(0) <= m->numAxis) {
@@ -675,36 +690,43 @@ static int funcResetAxisCalibration(lua_State* L)
 
 static int functionProductID(lua_State* L)
 {
-	PPGameStickElement* m = (PPGameStickElement*)PPLuaScript::UserData(L);
+	PPGameStickElement* m = (PPGameStickElement*)PPLuaArg::UserData(L,PPGameStickElement::className);
+  PPUserDataAssert(m!=NULL);
 	lua_pushinteger(L,m->productID);
 	return 1;
 }
 
 static int functionVendorID(lua_State* L)
 {
-	PPGameStickElement* m = (PPGameStickElement*)PPLuaScript::UserData(L);
+	PPGameStickElement* m = (PPGameStickElement*)PPLuaArg::UserData(L,PPGameStickElement::className);
+  PPUserDataAssert(m!=NULL);
 	lua_pushinteger(L,m->productID);
 	return 1;
 }
 
 static int functionIndex(lua_State* L)
 {
-	PPGameStickElement* m = (PPGameStickElement*)PPLuaScript::UserData(L);
+	PPGameStickElement* m = (PPGameStickElement*)PPLuaArg::UserData(L,PPGameStickElement::className);
+  PPUserDataAssert(m!=NULL);
 	lua_pushinteger(L,m->index);
 	return 1;
 }
 
 static int functionExist(lua_State* L)
 {
-	PPGameStickElement* m = (PPGameStickElement*)PPLuaScript::UserData(L);
+	PPGameStickElement* m = (PPGameStickElement*)PPLuaArg::UserData(L,PPGameStickElement::className);
+  PPUserDataAssert(m!=NULL);
 	lua_pushboolean(L,m->exist);
 	return 1;
 }
 
+std::string PPGameStickElement::className;
+
 void PPGameStickElement::openLibrary(PPLuaScript* s,const char* name,const char* superclass)
 {
 //	PPObject::openLibrary(s,name);
-	s->openModule(name,this,0,superclass);
+  PPGameStickElement::className = name;
+	s->openModule(name,NULL,0,superclass);
 		s->addCommand("numAxis",funcNumAxis);
 		s->addCommand("axis",funcAxis);
 		s->addCommand("axisInfo",funcAxisInfo);

@@ -68,6 +68,7 @@ class QBGame;
 - (bool)exit;
 - (void)resignActive;
 - (void)becomeActive;
+- (void)disableIO;
 
 - (PPGameTextureInfo*)textures;
 
@@ -83,6 +84,8 @@ class QBGame;
 - (void)setAccelerometerX:(float)x Y:(float)y Z:(float)z;
 - (void)setGyroX:(float)x Y:(float)y Z:(float)z;
 - (void)setMagnetometerX:(float)x Y:(float)y Z:(float)z;
+
+- (void)setupResourceFolder;
 
 @end
 

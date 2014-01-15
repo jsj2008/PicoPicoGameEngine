@@ -68,6 +68,7 @@ class QBGame;
 - (bool)exit;
 - (void)resignActive;
 - (void)becomeActive;
+- (void)disableIO;
 
 - (PPGameTextureInfo*)textures;
 

@@ -10,8 +10,10 @@
 -----------------------------------------------------------------------------------------------*/
 
 #include <windows.h>
+#include <WinNls.h> 
 #include <stdio.h>
 #include <stdlib.h>
+#include <algorithm>
 #include <string.h>
 #include <GL/glew.h>
 #include <Shlwapi.h>
@@ -20,6 +22,7 @@
 #include "QBSoundWin.h"
 #include "PPGameWinScene.h"
 #include "PPGameUtil.h"
+#include "JpString.h"
 
 static int screenWidth = 640;
 static int screenHeight = 480;
@@ -30,7 +33,7 @@ static HGLRC hRC=NULL;
 static bool reload = false;
 static bool resizing = false;
 static bool resetCommand = false;
-static char dropFileName[1024]={0};
+static char* dropFileName=NULL;
 // static int timerStep=0;
 // static DWORD timeCount=0;
 
@@ -190,18 +193,21 @@ void CALLBACK TimerProc(HWND hWnd, UINT uMsg, UINT idEvent, DWORD dwTime)
 				}
 			}
 			
-			if (dropFileName[0] != 0) {
-				if (strncasecmp(PathFindExtension(dropFileName),".lua",4) == 0) {
-	printf("%s\n",dropFileName);
-					PPGameSetMainLua(PathFindFileName(dropFileName));
-					PathRemoveFileSpec(dropFileName);
-					PathAddBackslash(dropFileName);
-					PPGameSetDataPath(dropFileName);
-					//scene->game->reloadData();
-					reloadData=true;
-				}
-				dropFileName[0] = 0;
-			}
+      if (dropFileName) {
+        if (dropFileName[0] != 0) {
+          if (strncasecmp(PathFindExtension(dropFileName),".lua",4) == 0) {
+printf("%s\n",dropFileName);
+            PPGameSetMainLua(PathFindFileName(dropFileName));
+            PathRemoveFileSpec(dropFileName);
+            PathAddBackslash(dropFileName);
+            PPGameSetDataPath(dropFileName);
+            //scene->game->reloadData();
+            reloadData=true;
+          }
+          free(dropFileName);
+          dropFileName=NULL;
+        }
+      }
 
 			POINT cpos;
 			GetCursorPos(&cpos);
@@ -319,7 +325,7 @@ void OnDestroy(HWND hWnd)
 	PostQuitMessage(0);
 }
 
-LRESULT CALLBACK WndMainProc(HWND hWnd, UINT Msg, 
+LRESULT CALLBACK WndMainProc(HWND hWnd, UINT Msg,
 							 WPARAM wParam, LPARAM lParam)
 {
 	switch(Msg)
@@ -358,8 +364,32 @@ LRESULT CALLBACK WndMainProc(HWND hWnd, UINT Msg,
 				HDROP hDrop = (HDROP)wParam;
 				UINT uFileNo = DragQueryFile(hDrop, 0xFFFFFFFF, NULL, 0);
 				for(int i=0;i<(int)uFileNo;i++) {
-					//UINT namelen = DragQueryFile(hDrop,i,NULL,0);
-					DragQueryFile(hDrop,i,dropFileName,sizeof(dropFileName));
+					UINT namelen = DragQueryFile(hDrop,i,NULL,0);
+          if (dropFileName) free(dropFileName);
+          dropFileName = (char*)malloc(namelen+1);
+          if (dropFileName) {
+            DragQueryFile(hDrop,i,dropFileName,namelen+1);
+
+            HANDLE hFind;
+            WIN32_FIND_DATA FindFileData;
+
+            hFind = ::FindFirstFile(dropFileName,&FindFileData);
+            if(FindFileData.dwFileAttributes == FILE_ATTRIBUTE_DIRECTORY){
+              const char* n="\\main.lua";
+              char* s=(char*)malloc(namelen+1+strlen(n)+1);
+              strcpy(s,dropFileName);
+              strcat(s,n);
+              free(dropFileName);
+              dropFileName = s;
+            }
+
+            std::string fn = dropFileName;
+            std::string ext = fn.substr(fn.find_last_of(".")+1);
+            std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
+            if(ext == "lua") {
+              break;
+            }
+          }
 				}
 				DragFinish(hDrop);
 			}
@@ -444,8 +474,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
 	memset(&wcex,0,sizeof(wcex));
 
-	dropFileName[0] = 0;
-
 	{
 		char buf[1024];
 		getApplicationPath(buf,1024);
@@ -502,9 +530,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	//	}
 	
 	gFullscreenFlag = 1;
-	if (MessageBox(NULL,"Do you play with fullscreen?",APP_NAME,MB_ICONEXCLAMATION | MB_YESNO) == IDNO) {
-		gFullscreenFlag = 0;
-	}
+  if (PPGame_GetLocale() == QBGAME_LOCALE_JAPANESE) {
+    if (MessageBox(NULL,JP_STRING_DO_YOU_PLAY_FULLSCREEN,APP_NAME,MB_ICONEXCLAMATION | MB_YESNO) == IDNO) {
+      gFullscreenFlag = 0;
+    }
+  } else {
+    if (MessageBox(NULL,"Do you play with fullscreen?",APP_NAME,MB_ICONEXCLAMATION | MB_YESNO) == IDNO) {
+      gFullscreenFlag = 0;
+    }
+  }
 	//	SetFullscreenFlag(gFullscreenFlag);
 	
 	if (gFullscreenFlag) {

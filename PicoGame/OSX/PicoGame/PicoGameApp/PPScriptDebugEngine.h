@@ -6,8 +6,8 @@
 //
 //
 
-#import <Foundation/Foundation.h>
+#import <PicoGame/PPGame.h>
 
-@interface PPScriptDebugEngine : NSObject
+@interface PPScriptDebugEngine : PPGame
 
 @end

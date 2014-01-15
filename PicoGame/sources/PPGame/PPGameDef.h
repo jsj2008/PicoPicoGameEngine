@@ -74,6 +74,7 @@ typedef struct _PPGameTextureInfo {
 
 #define PAD_Start	0x1000
 #define PAD_SetUP	0x2000
+#define PAD_Pause	0x4000
 #define PAD_ANY		(-1)
 
 #ifdef _ANDROID

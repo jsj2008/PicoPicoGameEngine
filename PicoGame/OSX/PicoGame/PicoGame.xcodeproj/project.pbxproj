@@ -32,14 +32,21 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		6B05BE7F1869628E00211F11 /* GameController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B05BE7D1869628E00211F11 /* GameController.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		6B05BE801869628F00211F11 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B05BE7E1869628E00211F11 /* GameKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		6B0F20BE15B971C400588520 /* PPScriptGame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC244915B285930051C16B /* PPScriptGame.cpp */; };
 		6B0F4028164E035700BEEABD /* PPGameStart.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC244715B285930051C16B /* PPGameStart.cpp */; };
+		6B1A6329186A723500411291 /* PPImageFontData.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B1A6328186A723500411291 /* PPImageFontData.h */; };
+		6B362905187FBCCC00A73BF1 /* PPScriptDebugEngine.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6B362904187FBCCC00A73BF1 /* PPScriptDebugEngine.mm */; };
+		6B362908187FD24400A73BF1 /* DebugPicoGame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6B362906187FD24400A73BF1 /* DebugPicoGame.cpp */; };
+		6B4B70F11867C5A9007EF3C3 /* Vorbis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B4B70F01867C5A9007EF3C3 /* Vorbis.framework */; };
+		6B4B70F61867D2D4007EF3C3 /* QBStreamSound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6B4B70F41867D2D4007EF3C3 /* QBStreamSound.cpp */; };
+		6B4B70F71867D2D4007EF3C3 /* QBStreamSound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6B4B70F41867D2D4007EF3C3 /* QBStreamSound.cpp */; };
+		6B4B70F81867D2D4007EF3C3 /* QBStreamSound.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B4B70F51867D2D4007EF3C3 /* QBStreamSound.h */; };
 		6B5429C2162D332A00D1620C /* PPAnimation.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B5429C1162D332A00D1620C /* PPAnimation.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		6B89307815B80E1D00402E76 /* PPGameBGM.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC24A815B285930051C16B /* PPGameBGM.m */; };
 		6B89307915B80E1D00402E76 /* PPGameController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC24AA15B285930051C16B /* PPGameController.mm */; };
 		6B89307A15B80E1D00402E76 /* PPGameView_App.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC24AC15B285930051C16B /* PPGameView_App.mm */; };
 		6B89307B15B80E1D00402E76 /* PPJoyReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC24AD15B285930051C16B /* PPJoyReader.cpp */; };
-		6B8930F715B81D4600402E76 /* PPGameBGM.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC24A715B285930051C16B /* PPGameBGM.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6B8930F815B81D4800402E76 /* PPGameController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC24A915B285930051C16B /* PPGameController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6B8930F915B81D4D00402E76 /* PPGameView_App.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC24AB15B285930051C16B /* PPGameView_App.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6B8930FA15B81D4F00402E76 /* PPJoyReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC24AE15B285930051C16B /* PPJoyReader.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -81,7 +88,6 @@
 		6BAC259715B285930051C16B /* PPWorld.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC251F15B285930051C16B /* PPWorld.cpp */; };
 		6BAC259815B285930051C16B /* QBGame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC252115B285930051C16B /* QBGame.cpp */; };
 		6BAC259915B285930051C16B /* QBSound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC252315B285930051C16B /* QBSound.cpp */; };
-		6BAC259A15B285930051C16B /* PPImageFont.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BAC252715B285930051C16B /* PPImageFont.png */; };
 		6BAC25CD15B290880051C16B /* PPBox2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC24D615B285930051C16B /* PPBox2D.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6BAC25CF15B290880051C16B /* PPFlMMLObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC24DA15B285930051C16B /* PPFlMMLObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6BAC25D015B290880051C16B /* PPFlMMLSeq.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC24DC15B285930051C16B /* PPFlMMLSeq.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -102,7 +108,6 @@
 		6BAC25E115B290880051C16B /* PPGameUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC24F915B285930051C16B /* PPGameUtil.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6BAC25E215B290880051C16B /* PPImageFont.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC24FB15B285930051C16B /* PPImageFont.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6BAC25E415B290880051C16B /* PPLuaScript.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC24FE15B285930051C16B /* PPLuaScript.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		6BAC25E515B290880051C16B /* PPLuaScriptEmbbed.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC250015B285930051C16B /* PPLuaScriptEmbbed.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6BAC25E715B290880051C16B /* PPNormalFont.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC250415B285930051C16B /* PPNormalFont.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6BAC25E815B290880051C16B /* PPObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC250615B285930051C16B /* PPObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6BAC25E915B290880051C16B /* PPOffscreenTexture.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC250815B285930051C16B /* PPOffscreenTexture.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -129,7 +134,7 @@
 		6BFF2F5D164D332700767B64 /* PPTTFont-Def.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BFF2F5C164D332700767B64 /* PPTTFont-Def.h */; };
 		6BFF3B091861268000339F7B /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B89307C15B80E4400402E76 /* Cocoa.framework */; };
 		6BFF3B0F1861268000339F7B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6BFF3B0D1861268000339F7B /* InfoPlist.strings */; };
-		6BFF3B111861268000339F7B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BFF3B101861268000339F7B /* main.m */; };
+		6BFF3B111861268000339F7B /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6BFF3B101861268000339F7B /* main.mm */; };
 		6BFF3B151861268000339F7B /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 6BFF3B131861268000339F7B /* Credits.rtf */; };
 		6BFF3B231861268100339F7B /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BFF3A2718611BF600339F7B /* XCTest.framework */; };
 		6BFF3B241861268100339F7B /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B89307C15B80E4400402E76 /* Cocoa.framework */; };
@@ -161,7 +166,6 @@
 		6BFF3B9318612B9200339F7B /* PPGamePreference.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC246315B285930051C16B /* PPGamePreference.mm */; };
 		6BFF3B9418612B9200339F7B /* PPGameUtil.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC247F15B285930051C16B /* PPGameUtil.mm */; };
 		6BFF3B9518612B9200339F7B /* QBSoundMac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC248B15B285930051C16B /* QBSoundMac.cpp */; };
-		6BFF3B9618612B9B00339F7B /* PPGameBGM.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC24A815B285930051C16B /* PPGameBGM.m */; };
 		6BFF3B9718612B9B00339F7B /* PPGameController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC24AA15B285930051C16B /* PPGameController.mm */; };
 		6BFF3B9818612B9B00339F7B /* PPGameView_App.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC24AC15B285930051C16B /* PPGameView_App.mm */; };
 		6BFF3B9918612B9B00339F7B /* PPJoyReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC24AD15B285930051C16B /* PPJoyReader.cpp */; };
@@ -197,7 +201,6 @@
 		6BFF3BB718612BB700339F7B /* PPWorld.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC251F15B285930051C16B /* PPWorld.cpp */; };
 		6BFF3BB818612BB700339F7B /* QBGame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC252115B285930051C16B /* QBGame.cpp */; };
 		6BFF3BB918612BB700339F7B /* QBSound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC252315B285930051C16B /* QBSound.cpp */; };
-		6BFF3BBA18612BBD00339F7B /* PPImageFont.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BAC252715B285930051C16B /* PPImageFont.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -211,7 +214,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		6B05BE7D1869628E00211F11 /* GameController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameController.framework; path = System/Library/Frameworks/GameController.framework; sourceTree = SDKROOT; };
+		6B05BE7E1869628E00211F11 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		6B0F403D164E072300BEEABD /* PPTTFont-iOS.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = "PPTTFont-iOS.mm"; sourceTree = "<group>"; };
+		6B1A6328186A723500411291 /* PPImageFontData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PPImageFontData.h; path = ../PPImage/PPImageFontData.h; sourceTree = "<group>"; };
+		6B362903187FBCCC00A73BF1 /* PPScriptDebugEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPScriptDebugEngine.h; sourceTree = "<group>"; };
+		6B362904187FBCCC00A73BF1 /* PPScriptDebugEngine.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PPScriptDebugEngine.mm; sourceTree = "<group>"; };
+		6B362906187FD24400A73BF1 /* DebugPicoGame.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DebugPicoGame.cpp; sourceTree = "<group>"; };
+		6B362907187FD24400A73BF1 /* DebugPicoGame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DebugPicoGame.h; sourceTree = "<group>"; };
 		6B4060A7183319160049E023 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = linux/main.cpp; sourceTree = "<group>"; };
 		6B4060A8183319160049E023 /* pcm.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = pcm.cpp; path = linux/pcm.cpp; sourceTree = "<group>"; };
 		6B4060A9183319160049E023 /* pcm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = pcm.h; path = linux/pcm.h; sourceTree = "<group>"; };
@@ -222,6 +232,9 @@
 		6B4060AE183319160049E023 /* PPLinuxKey.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PPLinuxKey.h; path = linux/PPLinuxKey.h; sourceTree = "<group>"; };
 		6B4060AF183319160049E023 /* QBSoundLinux.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = QBSoundLinux.cpp; path = linux/QBSoundLinux.cpp; sourceTree = "<group>"; };
 		6B4060B0183319160049E023 /* QBSoundLinux.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = QBSoundLinux.h; path = linux/QBSoundLinux.h; sourceTree = "<group>"; };
+		6B4B70F01867C5A9007EF3C3 /* Vorbis.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Vorbis.framework; path = ../../../../Vorbis/OSX/Vorbis/Products/Vorbis.framework; sourceTree = "<group>"; };
+		6B4B70F41867D2D4007EF3C3 /* QBStreamSound.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = QBStreamSound.cpp; sourceTree = "<group>"; };
+		6B4B70F51867D2D4007EF3C3 /* QBStreamSound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QBStreamSound.h; sourceTree = "<group>"; };
 		6B5429C1162D332A00D1620C /* PPAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPAnimation.h; sourceTree = "<group>"; };
 		6B78A32618601E72000FFB62 /* PPTTFont-Win.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "PPTTFont-Win.cpp"; sourceTree = "<group>"; };
 		6B78A327186023E0000FFB62 /* PPTTFont-Android.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "PPTTFont-Android.cpp"; sourceTree = "<group>"; };
@@ -261,8 +274,6 @@
 		6BAC248E15B285930051C16B /* iCadeReaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iCadeReaderView.h; path = ../../sources/Platforms/iOS/iCadeReaderView.h; sourceTree = SOURCE_ROOT; };
 		6BAC248F15B285930051C16B /* iCadeReaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = iCadeReaderView.m; path = ../../sources/Platforms/iOS/iCadeReaderView.m; sourceTree = SOURCE_ROOT; };
 		6BAC249015B285930051C16B /* iCadeState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iCadeState.h; path = ../../sources/Platforms/iOS/iCadeState.h; sourceTree = SOURCE_ROOT; };
-		6BAC249615B285930051C16B /* PPGameBGM.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PPGameBGM.h; path = ../../sources/Platforms/iOS/PPGameBGM.h; sourceTree = SOURCE_ROOT; };
-		6BAC249715B285930051C16B /* PPGameBGM.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PPGameBGM.m; path = ../../sources/Platforms/iOS/PPGameBGM.m; sourceTree = SOURCE_ROOT; };
 		6BAC249815B285930051C16B /* PPGameView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PPGameView.h; path = ../../sources/Platforms/iOS/PPGameView.h; sourceTree = SOURCE_ROOT; };
 		6BAC249915B285930051C16B /* PPGameView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PPGameView.mm; path = ../../sources/Platforms/iOS/PPGameView.mm; sourceTree = SOURCE_ROOT; };
 		6BAC249A15B285930051C16B /* PPGameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PPGameViewController.h; path = ../../sources/Platforms/iOS/PPGameViewController.h; sourceTree = SOURCE_ROOT; };
@@ -273,8 +284,6 @@
 		6BAC24A115B285930051C16B /* QBMusicTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QBMusicTrack.m; path = ../../sources/Platforms/iOS/QBMusicTrack.m; sourceTree = SOURCE_ROOT; };
 		6BAC24A215B285930051C16B /* UIImage-FontTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage-FontTexture.h"; path = "../../sources/Platforms/iOS/UIImage-FontTexture.h"; sourceTree = SOURCE_ROOT; };
 		6BAC24A315B285930051C16B /* UIImage-FontTexture.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = "UIImage-FontTexture.mm"; path = "../../sources/Platforms/iOS/UIImage-FontTexture.mm"; sourceTree = SOURCE_ROOT; };
-		6BAC24A715B285930051C16B /* PPGameBGM.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PPGameBGM.h; path = ../../sources/Platforms/Mac/PPGameBGM.h; sourceTree = SOURCE_ROOT; };
-		6BAC24A815B285930051C16B /* PPGameBGM.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PPGameBGM.m; path = ../../sources/Platforms/Mac/PPGameBGM.m; sourceTree = SOURCE_ROOT; };
 		6BAC24A915B285930051C16B /* PPGameController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PPGameController.h; path = ../../sources/Platforms/Mac/PPGameController.h; sourceTree = SOURCE_ROOT; };
 		6BAC24AA15B285930051C16B /* PPGameController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PPGameController.mm; path = ../../sources/Platforms/Mac/PPGameController.mm; sourceTree = SOURCE_ROOT; };
 		6BAC24AB15B285930051C16B /* PPGameView_App.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PPGameView_App.h; path = ../../sources/Platforms/Mac/PPGameView_App.h; sourceTree = SOURCE_ROOT; };
@@ -347,8 +356,6 @@
 		6BAC24FB15B285930051C16B /* PPImageFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PPImageFont.h; path = ../../sources/PPGame/PPImageFont.h; sourceTree = "<group>"; };
 		6BAC24FD15B285930051C16B /* PPLuaScript.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PPLuaScript.cpp; path = ../../sources/PPGame/PPLuaScript.cpp; sourceTree = "<group>"; };
 		6BAC24FE15B285930051C16B /* PPLuaScript.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PPLuaScript.h; path = ../../sources/PPGame/PPLuaScript.h; sourceTree = "<group>"; };
-		6BAC24FF15B285930051C16B /* PPLuaScript.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = PPLuaScript.lua; path = ../../sources/PPGame/PPLuaScript.lua; sourceTree = "<group>"; };
-		6BAC250015B285930051C16B /* PPLuaScriptEmbbed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PPLuaScriptEmbbed.h; path = ../../sources/PPGame/PPLuaScriptEmbbed.h; sourceTree = "<group>"; };
 		6BAC250315B285930051C16B /* PPNormalFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PPNormalFont.cpp; path = ../../sources/PPGame/PPNormalFont.cpp; sourceTree = "<group>"; };
 		6BAC250415B285930051C16B /* PPNormalFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PPNormalFont.h; path = ../../sources/PPGame/PPNormalFont.h; sourceTree = "<group>"; };
 		6BAC250515B285930051C16B /* PPObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PPObject.cpp; path = ../../sources/PPGame/PPObject.cpp; sourceTree = "<group>"; };
@@ -413,7 +420,7 @@
 		6BFF3B081861268000339F7B /* PicoGameApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PicoGameApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6BFF3B0C1861268000339F7B /* PicoGameApp-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PicoGameApp-Info.plist"; sourceTree = "<group>"; };
 		6BFF3B0E1861268000339F7B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		6BFF3B101861268000339F7B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		6BFF3B101861268000339F7B /* main.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
 		6BFF3B121861268000339F7B /* PicoGameApp-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PicoGameApp-Prefix.pch"; sourceTree = "<group>"; };
 		6BFF3B141861268000339F7B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
 		6BFF3B221861268000339F7B /* PicoGameAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PicoGameAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -435,11 +442,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6B05BE7F1869628E00211F11 /* GameController.framework in Frameworks */,
+				6B05BE801869628F00211F11 /* GameKit.framework in Frameworks */,
 				6BFF3B3D1861271D00339F7B /* OpenAL.framework in Frameworks */,
 				6BFF3B3E1861271D00339F7B /* Carbon.framework in Frameworks */,
 				6BFF3B3F1861271D00339F7B /* QuartzCore.framework in Frameworks */,
 				6BFF3B401861271D00339F7B /* CoreData.framework in Frameworks */,
 				6BFF3B411861271D00339F7B /* AppKit.framework in Frameworks */,
+				6B4B70F11867C5A9007EF3C3 /* Vorbis.framework in Frameworks */,
 				6BFF3B421861271D00339F7B /* OpenGL.framework in Frameworks */,
 				6BFF3B431861271D00339F7B /* AudioUnit.framework in Frameworks */,
 				6BFF3B441861271D00339F7B /* IOKit.framework in Frameworks */,
@@ -508,6 +518,8 @@
 		6BAC243315B284FA0051C16B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6B05BE7D1869628E00211F11 /* GameController.framework */,
+				6B05BE7E1869628E00211F11 /* GameKit.framework */,
 				6BFF3AC8186123D300339F7B /* OpenAL.framework */,
 				6BFF3AC61861215100339F7B /* Carbon.framework */,
 				6BFF3AC41861214B00339F7B /* QuartzCore.framework */,
@@ -623,8 +635,6 @@
 				6BAC248E15B285930051C16B /* iCadeReaderView.h */,
 				6BAC248F15B285930051C16B /* iCadeReaderView.m */,
 				6BAC249015B285930051C16B /* iCadeState.h */,
-				6BAC249615B285930051C16B /* PPGameBGM.h */,
-				6BAC249715B285930051C16B /* PPGameBGM.m */,
 				6BAC249815B285930051C16B /* PPGameView.h */,
 				6BAC249915B285930051C16B /* PPGameView.mm */,
 				6BAC249A15B285930051C16B /* PPGameViewController.h */,
@@ -643,8 +653,6 @@
 		6BAC24A415B285930051C16B /* Mac */ = {
 			isa = PBXGroup;
 			children = (
-				6BAC24A715B285930051C16B /* PPGameBGM.h */,
-				6BAC24A815B285930051C16B /* PPGameBGM.m */,
 				6BAC24A915B285930051C16B /* PPGameController.h */,
 				6BAC24AA15B285930051C16B /* PPGameController.mm */,
 				6BAC24AB15B285930051C16B /* PPGameView_App.h */,
@@ -741,8 +749,6 @@
 				6BAC24FB15B285930051C16B /* PPImageFont.h */,
 				6BAC24FD15B285930051C16B /* PPLuaScript.cpp */,
 				6BAC24FE15B285930051C16B /* PPLuaScript.h */,
-				6BAC24FF15B285930051C16B /* PPLuaScript.lua */,
-				6BAC250015B285930051C16B /* PPLuaScriptEmbbed.h */,
 				6BAC250315B285930051C16B /* PPNormalFont.cpp */,
 				6BAC250415B285930051C16B /* PPNormalFont.h */,
 				6BAC250515B285930051C16B /* PPObject.cpp */,
@@ -772,10 +778,13 @@
 				6BAC251E15B285930051C16B /* PPVertualKey.h */,
 				6BAC251F15B285930051C16B /* PPWorld.cpp */,
 				6BAC252015B285930051C16B /* PPWorld.h */,
+				6B1A6328186A723500411291 /* PPImageFontData.h */,
 				6BAC252115B285930051C16B /* QBGame.cpp */,
 				6BAC252215B285930051C16B /* QBGame.h */,
 				6BAC252315B285930051C16B /* QBSound.cpp */,
 				6BAC252415B285930051C16B /* QBSound.h */,
+				6B4B70F41867D2D4007EF3C3 /* QBStreamSound.cpp */,
+				6B4B70F51867D2D4007EF3C3 /* QBStreamSound.h */,
 			);
 			path = PPGame;
 			sourceTree = "<group>";
@@ -797,6 +806,7 @@
 				6BFF3A6D18611CB900339F7B /* FlMML.framework */,
 				6BFF3A6F18611CC300339F7B /* freetype.framework */,
 				6BFF3A7118611CCD00339F7B /* Lua.framework */,
+				6B4B70F01867C5A9007EF3C3 /* Vorbis.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -816,6 +826,10 @@
 			children = (
 				6BFF3AB61861204200339F7B /* MainViewController.h */,
 				6BFF3AB71861204200339F7B /* MainViewController.mm */,
+				6B362903187FBCCC00A73BF1 /* PPScriptDebugEngine.h */,
+				6B362904187FBCCC00A73BF1 /* PPScriptDebugEngine.mm */,
+				6B362906187FD24400A73BF1 /* DebugPicoGame.cpp */,
+				6B362907187FD24400A73BF1 /* DebugPicoGame.h */,
 				6BFF3B48186127ED00339F7B /* MainMenu.xib */,
 				6BFF3A6818611C8700339F7B /* Frameworks */,
 				6BFF3B0B1861268000339F7B /* Supporting Files */,
@@ -829,7 +843,7 @@
 				6BFF3AB41861201500339F7B /* PPIcon.icns */,
 				6BFF3B0C1861268000339F7B /* PicoGameApp-Info.plist */,
 				6BFF3B0D1861268000339F7B /* InfoPlist.strings */,
-				6BFF3B101861268000339F7B /* main.m */,
+				6BFF3B101861268000339F7B /* main.mm */,
 				6BFF3B121861268000339F7B /* PicoGameApp-Prefix.pch */,
 				6BFF3B131861268000339F7B /* Credits.rtf */,
 			);
@@ -861,7 +875,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6B8930F715B81D4600402E76 /* PPGameBGM.h in Headers */,
 				6BAC25FB15B292F00051C16B /* PPGameStart.h in Headers */,
 				6BAC260115B294FA0051C16B /* PPGame.h in Headers */,
 				6BAC260715B295AE0051C16B /* QBSoundMac.h in Headers */,
@@ -874,6 +887,7 @@
 				6BAC25CF15B290880051C16B /* PPFlMMLObject.h in Headers */,
 				6BAC25D015B290880051C16B /* PPFlMMLSeq.h in Headers */,
 				6BAC25D115B290880051C16B /* PPFont.h in Headers */,
+				6B4B70F81867D2D4007EF3C3 /* QBStreamSound.h in Headers */,
 				6BAC25D215B290880051C16B /* PPFontTable.h in Headers */,
 				6BAC25D515B290880051C16B /* PPGameDef.h in Headers */,
 				6BAC25D615B290880051C16B /* PPGameGeometry.h in Headers */,
@@ -891,7 +905,6 @@
 				6BAC25E115B290880051C16B /* PPGameUtil.h in Headers */,
 				6BAC25E215B290880051C16B /* PPImageFont.h in Headers */,
 				6BAC25E415B290880051C16B /* PPLuaScript.h in Headers */,
-				6BAC25E515B290880051C16B /* PPLuaScriptEmbbed.h in Headers */,
 				6BAC25E715B290880051C16B /* PPNormalFont.h in Headers */,
 				6BAC25E815B290880051C16B /* PPObject.h in Headers */,
 				6BAC25E915B290880051C16B /* PPOffscreenTexture.h in Headers */,
@@ -903,6 +916,7 @@
 				6BAC25F015B290880051C16B /* PPTextureArray.h in Headers */,
 				6BAC25F115B290880051C16B /* PPTMXMap.h in Headers */,
 				6BAC25F215B290880051C16B /* PPTTFont.h in Headers */,
+				6B1A6329186A723500411291 /* PPImageFontData.h in Headers */,
 				6BAC25F315B290880051C16B /* PPUIScrollView.h in Headers */,
 				6BAC25F415B290880051C16B /* PPUIText.h in Headers */,
 				6BAC25F515B290880051C16B /* PPVertualKey.h in Headers */,
@@ -1010,7 +1024,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6BAC259A15B285930051C16B /* PPImageFont.png in Resources */,
 				6BA522EF15B96D97006749D7 /* PicoGame-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1022,7 +1035,6 @@
 				6BFF3B0F1861268000339F7B /* InfoPlist.strings in Resources */,
 				6BFF3B151861268000339F7B /* Credits.rtf in Resources */,
 				6BFF3B49186127ED00339F7B /* MainMenu.xib in Resources */,
-				6BFF3BBA18612BBD00339F7B /* PPImageFont.png in Resources */,
 				6BFF3B8E18612B4F00339F7B /* PPIcon.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1049,7 +1061,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Sets the target folders and the final framework product.\nFMK_NAME=PicoGame\nFMK_VERSION=A\n\n# Install dir will be the final output to the framework.\n# The following line create it in the root folder of the current project.\nINSTALL_DIR=${SRCROOT}/ProductsLuaJIT/${FMK_NAME}.framework\n\n# Working dir will be deleted after the framework creation.\nWRK_DIR=build\nDEVICE_DIR=${WRK_DIR}/ReleaseLuaJIT/${FMK_NAME}.framework\n#SIMULATOR_DIR=${WRK_DIR}/Release-iphonesimulator/${FMK_NAME}.framework\n\n# Building both architectures.\nxcodebuild -configuration \"ReleaseLuaJIT\" -target \"${FMK_NAME}\" -arch i386 -sdk macosx10.8\nmkdir -p \"${WRK_DIR}/i386\"\ncp \"${WRK_DIR}/ReleaseLuaJIT/${FMK_NAME}.framework/Contents/MacOS/${FMK_NAME}\" \"${WRK_DIR}/i386/\"\nxcodebuild -configuration \"ReleaseLuaJIT\" -target \"${FMK_NAME}\" -arch x86_64 -sdk macosx10.8\nmkdir -p \"${WRK_DIR}/x86_64\"\ncp \"${WRK_DIR}/ReleaseLuaJIT/${FMK_NAME}.framework/Contents/MacOS/${FMK_NAME}\" \"${WRK_DIR}/x86_64/\"\n\n# Cleaning the oldest.\nif [ -d \"${INSTALL_DIR}\" ]\nthen\nrm -rf \"${INSTALL_DIR}\"\nfi\n\n# Creates and renews the final product folder.\nmkdir -p \"${INSTALL_DIR}\"\nmkdir -p \"${INSTALL_DIR}/Versions\"\nmkdir -p \"${INSTALL_DIR}/Versions/${FMK_VERSION}\"\nmkdir -p \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources\"\nmkdir -p \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Headers\"\n\n# Creates the internal links.\n# It MUST uses relative path, otherwise will not work when the folder is copied/moved.\nln -s \"${FMK_VERSION}\" \"${INSTALL_DIR}/Versions/Current\"\nln -s \"Versions/Current/Headers\" \"${INSTALL_DIR}/Headers\"\nln -s \"Versions/Current/Resources\" \"${INSTALL_DIR}/Resources\"\nln -s \"Versions/Current/${FMK_NAME}\" \"${INSTALL_DIR}/${FMK_NAME}\"\n\n# Copies the headers and resources files to the final product folder.\ncp -R \"${DEVICE_DIR}/Contents/Headers/\" \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Headers/\"\n#cp -R \"${DEVICE_DIR}/\" \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources/\"\n\n# Removes the binary and header from the resources folder.\n#rm -r \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources/Headers\" \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources/${FMK_NAME}\"\n\n# Uses the Lipo Tool to merge both binary files (i386 + armv6/armv7) into one Universal final product.\nlipo -create \"${WRK_DIR}/i386/${FMK_NAME}\" \"${WRK_DIR}/x86_64/${FMK_NAME}\" -output \"${INSTALL_DIR}/Versions/${FMK_VERSION}/${FMK_NAME}\"\n\nrm -r \"${WRK_DIR}\"\n\n#${SRCROOT}/../../../PicoProjects/OSX/copy-frameworks.command";
+			shellScript = "# Sets the target folders and the final framework product.\nFMK_NAME=PicoGame\nFMK_VERSION=A\n\n# Install dir will be the final output to the framework.\n# The following line create it in the root folder of the current project.\nINSTALL_DIR=${SRCROOT}/ProductsLuaJIT/${FMK_NAME}.framework\n\n# Working dir will be deleted after the framework creation.\nWRK_DIR=build\nDEVICE_DIR=${WRK_DIR}/ReleaseLuaJIT/${FMK_NAME}.framework\n#SIMULATOR_DIR=${WRK_DIR}/Release-iphonesimulator/${FMK_NAME}.framework\n\n# Building both architectures.\nxcodebuild -configuration \"ReleaseLuaJIT\" -target \"${FMK_NAME}\" -arch i386 -sdk macosx10.9\nmkdir -p \"${WRK_DIR}/i386\"\ncp \"${WRK_DIR}/ReleaseLuaJIT/${FMK_NAME}.framework/Contents/MacOS/${FMK_NAME}\" \"${WRK_DIR}/i386/\"\nxcodebuild -configuration \"ReleaseLuaJIT\" -target \"${FMK_NAME}\" -arch x86_64 -sdk macosx10.9\nmkdir -p \"${WRK_DIR}/x86_64\"\ncp \"${WRK_DIR}/ReleaseLuaJIT/${FMK_NAME}.framework/Contents/MacOS/${FMK_NAME}\" \"${WRK_DIR}/x86_64/\"\n\n# Cleaning the oldest.\nif [ -d \"${INSTALL_DIR}\" ]\nthen\nrm -rf \"${INSTALL_DIR}\"\nfi\n\n# Creates and renews the final product folder.\nmkdir -p \"${INSTALL_DIR}\"\nmkdir -p \"${INSTALL_DIR}/Versions\"\nmkdir -p \"${INSTALL_DIR}/Versions/${FMK_VERSION}\"\nmkdir -p \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources\"\nmkdir -p \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Headers\"\n\n# Creates the internal links.\n# It MUST uses relative path, otherwise will not work when the folder is copied/moved.\nln -s \"${FMK_VERSION}\" \"${INSTALL_DIR}/Versions/Current\"\nln -s \"Versions/Current/Headers\" \"${INSTALL_DIR}/Headers\"\nln -s \"Versions/Current/Resources\" \"${INSTALL_DIR}/Resources\"\nln -s \"Versions/Current/${FMK_NAME}\" \"${INSTALL_DIR}/${FMK_NAME}\"\n\n# Copies the headers and resources files to the final product folder.\ncp -R \"${DEVICE_DIR}/Contents/Headers/\" \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Headers/\"\n#cp -R \"${DEVICE_DIR}/\" \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources/\"\n\n# Removes the binary and header from the resources folder.\n#rm -r \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources/Headers\" \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources/${FMK_NAME}\"\n\n# Uses the Lipo Tool to merge both binary files (i386 + armv6/armv7) into one Universal final product.\nlipo -create \"${WRK_DIR}/i386/${FMK_NAME}\" \"${WRK_DIR}/x86_64/${FMK_NAME}\" -output \"${INSTALL_DIR}/Versions/${FMK_VERSION}/${FMK_NAME}\"\n\nrm -r \"${WRK_DIR}\"\n\n#${SRCROOT}/../../../PicoProjects/OSX/copy-frameworks.command";
 		};
 		6BAC25C515B2900C0051C16B /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1062,7 +1074,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Sets the target folders and the final framework product.\nFMK_NAME=PicoGame\nFMK_VERSION=A\n\n# Install dir will be the final output to the framework.\n# The following line create it in the root folder of the current project.\nINSTALL_DIR=${SRCROOT}/Products/${FMK_NAME}.framework\n\n# Working dir will be deleted after the framework creation.\nWRK_DIR=build\nDEVICE_DIR=${WRK_DIR}/Release/${FMK_NAME}.framework\n#SIMULATOR_DIR=${WRK_DIR}/Release-iphonesimulator/${FMK_NAME}.framework\n\n# Building both architectures.\nxcodebuild -configuration \"Release\" -target \"${FMK_NAME}\" -arch i386 -sdk macosx10.8\nmkdir -p \"${WRK_DIR}/i386\"\ncp \"${WRK_DIR}/Release/${FMK_NAME}.framework/Contents/MacOS/${FMK_NAME}\" \"${WRK_DIR}/i386/\"\nxcodebuild -configuration \"Release\" -target \"${FMK_NAME}\" -arch x86_64 -sdk macosx10.8\nmkdir -p \"${WRK_DIR}/x86_64\"\ncp \"${WRK_DIR}/Release/${FMK_NAME}.framework/Contents/MacOS/${FMK_NAME}\" \"${WRK_DIR}/x86_64/\"\n\n# Cleaning the oldest.\nif [ -d \"${INSTALL_DIR}\" ]\nthen\nrm -rf \"${INSTALL_DIR}\"\nfi\n\n# Creates and renews the final product folder.\nmkdir -p \"${INSTALL_DIR}\"\nmkdir -p \"${INSTALL_DIR}/Versions\"\nmkdir -p \"${INSTALL_DIR}/Versions/${FMK_VERSION}\"\nmkdir -p \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources\"\nmkdir -p \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Headers\"\n\n# Creates the internal links.\n# It MUST uses relative path, otherwise will not work when the folder is copied/moved.\nln -s \"${FMK_VERSION}\" \"${INSTALL_DIR}/Versions/Current\"\nln -s \"Versions/Current/Headers\" \"${INSTALL_DIR}/Headers\"\nln -s \"Versions/Current/Resources\" \"${INSTALL_DIR}/Resources\"\nln -s \"Versions/Current/${FMK_NAME}\" \"${INSTALL_DIR}/${FMK_NAME}\"\n\n# Copies the headers and resources files to the final product folder.\ncp -R \"${DEVICE_DIR}/Contents/Headers/\" \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Headers/\"\n#cp -R \"${DEVICE_DIR}/\" \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources/\"\n\n# Removes the binary and header from the resources folder.\n#rm -r \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources/Headers\" \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources/${FMK_NAME}\"\n\n# Uses the Lipo Tool to merge both binary files (i386 + armv6/armv7) into one Universal final product.\nlipo -create \"${WRK_DIR}/i386/${FMK_NAME}\" \"${WRK_DIR}/x86_64/${FMK_NAME}\" -output \"${INSTALL_DIR}/Versions/${FMK_VERSION}/${FMK_NAME}\"\n\nrm -r \"${WRK_DIR}\"\n\n#${SRCROOT}/../../../PicoProjects/OSX/copy-frameworks.command";
+			shellScript = "# Sets the target folders and the final framework product.\nFMK_NAME=PicoGame\nFMK_VERSION=A\n\n# Install dir will be the final output to the framework.\n# The following line create it in the root folder of the current project.\nINSTALL_DIR=${SRCROOT}/Products/${FMK_NAME}.framework\n\n# Working dir will be deleted after the framework creation.\nWRK_DIR=build\nDEVICE_DIR=${WRK_DIR}/Release/${FMK_NAME}.framework\n#SIMULATOR_DIR=${WRK_DIR}/Release-iphonesimulator/${FMK_NAME}.framework\n\n# Building both architectures.\nxcodebuild -configuration \"Release\" -target \"${FMK_NAME}\" -arch i386 -sdk macosx10.9\nmkdir -p \"${WRK_DIR}/i386\"\ncp \"${WRK_DIR}/Release/${FMK_NAME}.framework/Contents/MacOS/${FMK_NAME}\" \"${WRK_DIR}/i386/\"\nxcodebuild -configuration \"Release\" -target \"${FMK_NAME}\" -arch x86_64 -sdk macosx10.9\nmkdir -p \"${WRK_DIR}/x86_64\"\ncp \"${WRK_DIR}/Release/${FMK_NAME}.framework/Contents/MacOS/${FMK_NAME}\" \"${WRK_DIR}/x86_64/\"\n\n# Cleaning the oldest.\nif [ -d \"${INSTALL_DIR}\" ]\nthen\nrm -rf \"${INSTALL_DIR}\"\nfi\n\n# Creates and renews the final product folder.\nmkdir -p \"${INSTALL_DIR}\"\nmkdir -p \"${INSTALL_DIR}/Versions\"\nmkdir -p \"${INSTALL_DIR}/Versions/${FMK_VERSION}\"\nmkdir -p \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources\"\nmkdir -p \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Headers\"\n\n# Creates the internal links.\n# It MUST uses relative path, otherwise will not work when the folder is copied/moved.\nln -s \"${FMK_VERSION}\" \"${INSTALL_DIR}/Versions/Current\"\nln -s \"Versions/Current/Headers\" \"${INSTALL_DIR}/Headers\"\nln -s \"Versions/Current/Resources\" \"${INSTALL_DIR}/Resources\"\nln -s \"Versions/Current/${FMK_NAME}\" \"${INSTALL_DIR}/${FMK_NAME}\"\n\n# Copies the headers and resources files to the final product folder.\ncp -R \"${DEVICE_DIR}/Contents/Headers/\" \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Headers/\"\n#cp -R \"${DEVICE_DIR}/\" \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources/\"\n\n# Removes the binary and header from the resources folder.\n#rm -r \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources/Headers\" \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources/${FMK_NAME}\"\n\n# Uses the Lipo Tool to merge both binary files (i386 + armv6/armv7) into one Universal final product.\nlipo -create \"${WRK_DIR}/i386/${FMK_NAME}\" \"${WRK_DIR}/x86_64/${FMK_NAME}\" -output \"${INSTALL_DIR}/Versions/${FMK_VERSION}/${FMK_NAME}\"\n\nrm -r \"${WRK_DIR}\"\n\n#${SRCROOT}/../../../PicoProjects/OSX/copy-frameworks.command";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1101,13 +1113,13 @@
 				6BAC259115B285930051C16B /* PPSensor.cpp in Sources */,
 				6BAC259215B285930051C16B /* PPTMXMap.cpp in Sources */,
 				6BAC259315B285930051C16B /* PPTTFont.cpp in Sources */,
+				6B4B70F61867D2D4007EF3C3 /* QBStreamSound.cpp in Sources */,
 				6BAC259415B285930051C16B /* PPUIScrollView.cpp in Sources */,
 				6BAC259515B285930051C16B /* PPUIText.cpp in Sources */,
 				6BAC259615B285930051C16B /* PPVertualKey.cpp in Sources */,
 				6BAC259715B285930051C16B /* PPWorld.cpp in Sources */,
 				6BAC259815B285930051C16B /* QBGame.cpp in Sources */,
 				6BAC259915B285930051C16B /* QBSound.cpp in Sources */,
-				6B89307815B80E1D00402E76 /* PPGameBGM.m in Sources */,
 				6B89307915B80E1D00402E76 /* PPGameController.mm in Sources */,
 				6B89307A15B80E1D00402E76 /* PPGameView_App.mm in Sources */,
 				6B89307B15B80E1D00402E76 /* PPJoyReader.cpp in Sources */,
@@ -1138,21 +1150,23 @@
 				6BFF3B9218612B9200339F7B /* PPGameMap.mm in Sources */,
 				6BFF3BB518612BB700339F7B /* PPUIText.cpp in Sources */,
 				6BFF3BAA18612BB700339F7B /* PPLuaScript.cpp in Sources */,
-				6BFF3B111861268000339F7B /* main.m in Sources */,
+				6BFF3B111861268000339F7B /* main.mm in Sources */,
 				6BFF3B8F18612B8A00339F7B /* PPGameStart.cpp in Sources */,
 				6BFF3BA418612BB700339F7B /* PPGameRunlength.c in Sources */,
 				6BFF3BAB18612BB700339F7B /* PPNormalFont.cpp in Sources */,
 				6BFF3BA618612BB700339F7B /* PPGameSprite.cpp in Sources */,
 				6BFF3BA718612BB700339F7B /* PPGameStick.cpp in Sources */,
 				6BFF3BAF18612BB700339F7B /* PPReadError.cpp in Sources */,
+				6B4B70F71867D2D4007EF3C3 /* QBStreamSound.cpp in Sources */,
 				6BFF3B9D18612BB700339F7B /* PPFlMMLSeq.cpp in Sources */,
+				6B362908187FD24400A73BF1 /* DebugPicoGame.cpp in Sources */,
 				6BFF3B9918612B9B00339F7B /* PPJoyReader.cpp in Sources */,
 				6BFF3BAC18612BB700339F7B /* PPObject.cpp in Sources */,
 				6BFF3B9E18612BB700339F7B /* PPFont.cpp in Sources */,
 				6BFF3BB718612BB700339F7B /* PPWorld.cpp in Sources */,
+				6B362905187FBCCC00A73BF1 /* PPScriptDebugEngine.mm in Sources */,
 				6BFF3BA318612BB700339F7B /* PPGamePoly.cpp in Sources */,
 				6BFF3B9418612B9200339F7B /* PPGameUtil.mm in Sources */,
-				6BFF3B9618612B9B00339F7B /* PPGameBGM.m in Sources */,
 				6BFF3B9518612B9200339F7B /* QBSoundMac.cpp in Sources */,
 				6BFF3B9318612B9200339F7B /* PPGamePreference.mm in Sources */,
 				6BFF3B9118612B9200339F7B /* PPGame.mm in Sources */,
@@ -1238,7 +1252,10 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_PREPROCESSOR_DEFINITIONS = __LUAJIT__;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					__LUAJIT__,
+					__USE_OGG_VORBIS__,
+				);
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -1273,6 +1290,8 @@
 					../../../freetype/sources/freetype,
 					"$(SDKROOT)/usr/include/libxml2/",
 					"$(SRCROOT)/../../../LuaJIT/OSX/LuaJIT/Products/LuaJIT.framework/Headers",
+					"../../../Vorbis/sources/libvorbis-1.3.3/include",
+					"../../../Vorbis/sources/libogg-1.3.1/include",
 				);
 				INFOPLIST_FILE = "";
 				INFOPLIST_OUTPUT_FORMAT = "same-as-input";
@@ -1293,6 +1312,10 @@
 		6B876AD7182E6256003D651B /* ReleaseLuaJIT */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = ReleaseLuaJIT;
@@ -1317,6 +1340,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
+					__USE_OGG_VORBIS__,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -1339,6 +1363,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = " __USE_OGG_VORBIS__";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -1371,6 +1396,8 @@
 					../../../freetype/sources,
 					../../../freetype/sources/freetype,
 					"$(SDKROOT)/usr/include/libxml2/",
+					"../../../Vorbis/sources/libvorbis-1.3.3/include",
+					"../../../Vorbis/sources/libogg-1.3.1/include",
 				);
 				INFOPLIST_FILE = "";
 				INFOPLIST_OUTPUT_FORMAT = "same-as-input";
@@ -1412,6 +1439,8 @@
 					../../../freetype/sources,
 					../../../freetype/sources/freetype,
 					"$(SDKROOT)/usr/include/libxml2/",
+					"../../../Vorbis/sources/libvorbis-1.3.3/include",
+					"../../../Vorbis/sources/libogg-1.3.1/include",
 				);
 				INFOPLIST_FILE = "";
 				INFOPLIST_OUTPUT_FORMAT = "same-as-input";
@@ -1432,6 +1461,10 @@
 		6BAC25C115B290070051C16B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -1439,6 +1472,10 @@
 		6BAC25C215B290070051C16B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -1466,10 +1503,14 @@
 					"$(SRCROOT)/../../../FlMML/OSX/FlMML/Products",
 					"$(SRCROOT)/../../../freetype/OSX/freetype/Products",
 					"$(SRCROOT)/../../../Lua5.2/OSX/Lua/Products",
+					"$(SRCROOT)/../../../Vorbis/OSX/Vorbis/Products",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PicoGameApp/PicoGameApp-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					__USE_OGG_VORBIS__,
+				);
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
@@ -1479,14 +1520,17 @@
 					"$(SDKROOT)/usr/include/libxml2/",
 					../../../freetype/sources/freetype,
 					../../../freetype/sources,
+					"../../../Vorbis/sources/libogg-1.3.1/include",
 				);
 				INFOPLIST_FILE = "PicoGameApp/PicoGameApp-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
 					"-lz",
 					"-lxml2",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				WARNING_CFLAGS = "-Wunused-variable";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1515,10 +1559,14 @@
 					"$(SRCROOT)/../../../FlMML/OSX/FlMML/Products",
 					"$(SRCROOT)/../../../freetype/OSX/freetype/Products",
 					"$(SRCROOT)/../../../Lua5.2/OSX/Lua/Products",
+					"$(SRCROOT)/../../../Vorbis/OSX/Vorbis/Products",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PicoGameApp/PicoGameApp-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					__USE_OGG_VORBIS__,
+				);
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
@@ -1528,14 +1576,17 @@
 					"$(SDKROOT)/usr/include/libxml2/",
 					../../../freetype/sources/freetype,
 					../../../freetype/sources,
+					"../../../Vorbis/sources/libogg-1.3.1/include",
 				);
 				INFOPLIST_FILE = "PicoGameApp/PicoGameApp-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
 					"-lz",
 					"-lxml2",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				WARNING_CFLAGS = "-Wunused-variable";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -1564,10 +1615,14 @@
 					"$(SRCROOT)/../../../FlMML/OSX/FlMML/Products",
 					"$(SRCROOT)/../../../freetype/OSX/freetype/Products",
 					"$(SRCROOT)/../../../Lua5.2/OSX/Lua/Products",
+					"$(SRCROOT)/../../../Vorbis/OSX/Vorbis/Products",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PicoGameApp/PicoGameApp-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					__USE_OGG_VORBIS__,
+				);
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
@@ -1577,14 +1632,17 @@
 					"$(SDKROOT)/usr/include/libxml2/",
 					../../../freetype/sources/freetype,
 					../../../freetype/sources,
+					"../../../Vorbis/sources/libogg-1.3.1/include",
 				);
 				INFOPLIST_FILE = "PicoGameApp/PicoGameApp-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
 					"-lz",
 					"-lxml2",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				WARNING_CFLAGS = "-Wunused-variable";
 				WRAPPER_EXTENSION = app;
 			};
 			name = ReleaseLuaJIT;

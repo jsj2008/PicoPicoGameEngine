@@ -21,6 +21,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		6B30B96518688FC200B524B2 /* Vorbis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B30B96418688FC200B524B2 /* Vorbis.framework */; };
 		6B8930A115B813D700402E76 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B8930A015B813D700402E76 /* Cocoa.framework */; };
 		6B8930AB15B813D700402E76 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6B8930A915B813D700402E76 /* InfoPlist.strings */; };
 		6B8930AD15B813D700402E76 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B8930AC15B813D700402E76 /* main.m */; };
@@ -60,6 +61,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6B30B96418688FC200B524B2 /* Vorbis.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Vorbis.framework; path = ../../../Vorbis/OSX/Vorbis/Products/Vorbis.framework; sourceTree = "<group>"; };
 		6B89309C15B813D700402E76 /* PicoGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PicoGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B8930A015B813D700402E76 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		6B8930A315B813D700402E76 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -112,6 +114,7 @@
 				6B8930D715B8155600402E76 /* AudioUnit.framework in Frameworks */,
 				6B8930D315B814DE00402E76 /* IOKit.framework in Frameworks */,
 				6B8930D115B814CA00402E76 /* OpenGL.framework in Frameworks */,
+				6B30B96518688FC200B524B2 /* Vorbis.framework in Frameworks */,
 				6B8930CF15B814BB00402E76 /* AudioToolbox.framework in Frameworks */,
 				6B8930A115B813D700402E76 /* Cocoa.framework in Frameworks */,
 				6B8930C215B8144900402E76 /* Box2D.framework in Frameworks */,
@@ -187,6 +190,7 @@
 				6B8930C815B8146B00402E76 /* freetype.framework */,
 				6B8930CA15B8147500402E76 /* Lua.framework */,
 				6B8930CC15B8147E00402E76 /* PicoGame.framework */,
+				6B30B96418688FC200B524B2 /* Vorbis.framework */,
 			);
 			path = PicoGame;
 			sourceTree = "<group>";
@@ -424,6 +428,7 @@
 					"$(SRCROOT)/../../freetype/OSX/freetype/Products",
 					"$(SRCROOT)/../../Lua5.2/OSX/Lua/Products",
 					"$(SRCROOT)/../../PicoGame/OSX/PicoGame/Products",
+					/Users/yamagame/Developer/GameDev/PicoPicoGameEngine/Vorbis/OSX/Vorbis/Products,
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PicoGame/PicoGame-Prefix.pch";
@@ -457,6 +462,7 @@
 					"$(SRCROOT)/../../freetype/OSX/freetype/Products",
 					"$(SRCROOT)/../../Lua5.2/OSX/Lua/Products",
 					"$(SRCROOT)/../../PicoGame/OSX/PicoGame/Products",
+					/Users/yamagame/Developer/GameDev/PicoPicoGameEngine/Vorbis/OSX/Vorbis/Products,
 				);
 				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;

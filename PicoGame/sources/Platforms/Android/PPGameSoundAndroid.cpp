@@ -20,8 +20,6 @@ extern "C" {
 	void PPGameBGM_SetCommand(int command,int value);
 };
 
-void PPGame_IdleBGM(void* controller,int playBGM,bool playBGMOneTime,int chooseBGM,int x,int y,int w,int h);
-
 void PPGameBGM_SetCommand(int command,int value)
 {
 }
@@ -56,20 +54,6 @@ int PPGame_GetSelectingBGM()
 void PPGame_SetSelectingBGM(int flag)
 {
 	selectbgmflag = flag;
-}
-
-void PPGame_IdleBGM(void* controller,int playBGM,bool playBGMOneTime,int chooseBGM,int x,int y,int w,int h)
-{
-	if (playBGM != 0) {
-		if (playBGMOneTime) {
-			PPGameBGM_SetCommand(0,playBGM);
-		} else {
-			PPGameBGM_SetCommand(1,playBGM);
-		}
-	}
-	if (chooseBGM != 0) {
-		PPGameBGM_SetCommand(2,chooseBGM);
-	}
 }
 
 /*-----------------------------------------------------------------------------------------------

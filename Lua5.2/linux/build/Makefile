@@ -2,17 +2,16 @@ CC = gcc
 CPP = g++
 AR = ar
 
-CFLAGS = -O3 -march=armv6 -mfpu=vfp -mfloat-abi=hard -ffast-math -fstrict-aliasing -fomit-frame-pointer \
-  -DDISABLE_IO_INTERFACE=1
+CFLAGS = -O3 -march=armv6 -mfpu=vfp -mfloat-abi=hard -ffast-math -fstrict-aliasing -fomit-frame-pointer
 
 BUILD_DIR = objects
 
 LIBNAME = liblua.ar
 
 CFLAGS += \
--I../../sources/lua5.2
+-I../../sources/lua-5.2.3/src
 
-VPATH = ../../sources/lua5.2:
+VPATH = ../../sources/lua-5.2.3/src:
 
 OBJS = \
 lapi.o \
@@ -46,8 +45,7 @@ ltablib.o \
 ltm.o \
 lundump.o \
 lvm.o \
-lzio.o \
-luaApiHook.o
+lzio.o
 
 $(BUILD_DIR)/%.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@

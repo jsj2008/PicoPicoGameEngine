@@ -19,8 +19,10 @@
 #ifndef B2_SETTINGS_H
 #define B2_SETTINGS_H
 
-#include <cassert>
-#include <cmath>
+#include <stddef.h>
+#include <assert.h>
+#include <float.h>
+#include <string.h>
 
 #define B2_NOT_USED(x) ((void)(x))
 #define b2Assert(A) assert(A)

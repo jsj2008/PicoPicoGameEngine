@@ -7,6 +7,7 @@
 //
 
 #import "MainViewController.h"
+#import "PPScriptGame.h"
 
 @implementation MainViewController
 
@@ -27,7 +28,8 @@
 	[self.window setFrame:frameRect display:YES];
 	
 	[self.game startGame:self];
-	
+  [self.game disableIO:self];    //ファイルの読み書きを制限
+  
 	[self.window orderFront:self];
 
   NSNotificationCenter *center = [NSNotificationCenter defaultCenter];

@@ -44,6 +44,8 @@ extern "C" {
   JNIEXPORT jboolean JNICALL Java_com_picopicoengine_PicoGameRenderer_nativeKeyDown(JNIEnv*  env, jobject thiz, jint keyCode);
   JNIEXPORT void JNICALL Java_com_picopicoengine_PicoGameRenderer_nativeOnResume(JNIEnv*  env, jobject thiz);
   JNIEXPORT void JNICALL Java_com_picopicoengine_PicoGameRenderer_setDensity(JNIEnv*  env, jobject thiz, jfloat density);
+
+  JNIEXPORT void JNICALL Java_org_cocos2dx_lib_Cocos2dxAccelerometer_onSensorChanged(JNIEnv*  env, jobject thiz, jfloat x, jfloat y, jfloat z, jlong timeStamp);
 }
 
 static void enableAccelerometerJNI();
@@ -329,12 +331,12 @@ JNIEXPORT void JNICALL Java_com_picopicoengine_PicoGameRenderer_setDensity(JNIEn
 
 #define TG3_GRAVITY_EARTH                    (9.80665f)
 
-void Java_org_cocos2dx_lib_Cocos2dxAccelerometer_onSensorChanged(JNIEnv*  env, jobject thiz, jfloat x, jfloat y, jfloat z, jlong timeStamp)
+JNIEXPORT void JNICALL Java_org_cocos2dx_lib_Cocos2dxAccelerometer_onSensorChanged(JNIEnv*  env, jobject thiz, jfloat x, jfloat y, jfloat z, jlong timeStamp)
 {
 	if (PPSensor::sharedManager()) {
 		PPSensorAndroid* a = (PPSensorAndroid*)PPSensor::sharedManager();
-		a->accelerometer.x = -((double)x/TG3_GRAVITY_EARTH);
-		a->accelerometer.y = -((double)y/TG3_GRAVITY_EARTH);
+		a->accelerometer.x = ((double)x/TG3_GRAVITY_EARTH);
+		a->accelerometer.y = ((double)y/TG3_GRAVITY_EARTH);
 		a->accelerometer.z = -((double)z/TG3_GRAVITY_EARTH);
 	}
 }
@@ -344,7 +346,7 @@ static void enableAccelerometerJNI()
 	cocos2d::JniMethodInfo t;
 
 	if (cocos2d::JniHelper::getStaticMethodInfo(t,
-		                         "com/picopicogame/PicoGameActivity",
+		             "com/picopicoengine/PicoGameActivity",
 								 "enableAccelerometer",
 								 "()V"))
 	{
@@ -358,7 +360,7 @@ static void disableAccelerometerJNI()
 	cocos2d::JniMethodInfo t;
 
 	if (cocos2d::JniHelper::getStaticMethodInfo(t,
-		"com/picopicogame/PicoGameActivity",
+		"com/picopicoengine/PicoGameActivity",
 		"disableAccelerometer",
 		"()V"))
 	{

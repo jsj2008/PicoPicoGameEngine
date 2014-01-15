@@ -5,29 +5,30 @@ CFLAGS = -DFT2_BUILD_LIBRARY -DFT_CONFIG_MODULES_H="<ftmodule.h>" -D_WIN32 -DIGN
 -O3 -DWINDOWS
 
 BUILD_DIR = objects
+SRC_PATH=../../sources/Box2D_v2.3.0/Box2D
 
 LIBNAME = libbox2d.ar
 
 CFLAGS += \
--I../../sources/Box2D_v2.2.1/ \
--I../../sources/Box2D_v2.2.1/Box2D/ \
--I../../sources/Box2D_v2.2.1/Box2D/Collision/ \
--I../../sources/Box2D_v2.2.1/Box2D/Collision/Shapes/ \
--I../../sources/Box2D_v2.2.1/Box2D/Common/ \
--I../../sources/Box2D_v2.2.1/Box2D/Dynamics/ \
--I../../sources/Box2D_v2.2.1/Box2D/Dynamics/Contacts/ \
--I../../sources/Box2D_v2.2.1/Box2D/Dynamics/Joints/ \
--I../../sources/Box2D_v2.2.1/Box2D/Rope/
+-I$(SRC_PATH)/ \
+-I$(SRC_PATH)/Box2D/ \
+-I$(SRC_PATH)/Box2D/Collision/ \
+-I$(SRC_PATH)/Box2D/Collision/Shapes/ \
+-I$(SRC_PATH)/Box2D/Common/ \
+-I$(SRC_PATH)/Box2D/Dynamics/ \
+-I$(SRC_PATH)/Box2D/Dynamics/Contacts/ \
+-I$(SRC_PATH)/Box2D/Dynamics/Joints/ \
+-I$(SRC_PATH)/Box2D/Rope/
 
 VPATH = \
-../../sources/Box2D_v2.2.1/Box2D/:\
-../../sources/Box2D_v2.2.1/Box2D/Collision/:\
-../../sources/Box2D_v2.2.1/Box2D/Collision/Shapes/:\
-../../sources/Box2D_v2.2.1/Box2D/Common/:\
-../../sources/Box2D_v2.2.1/Box2D/Dynamics/:\
-../../sources/Box2D_v2.2.1/Box2D/Dynamics/Contacts/:\
-../../sources/Box2D_v2.2.1/Box2D/Dynamics/Joints/:\
-../../sources/Box2D_v2.2.1/Box2D/Rope/:
+$(SRC_PATH)/Box2D/:\
+$(SRC_PATH)/Box2D/Collision/:\
+$(SRC_PATH)/Box2D/Collision/Shapes/:\
+$(SRC_PATH)/Box2D/Common/:\
+$(SRC_PATH)/Box2D/Dynamics/:\
+$(SRC_PATH)/Box2D/Dynamics/Contacts/:\
+$(SRC_PATH)/Box2D/Dynamics/Joints/:\
+$(SRC_PATH)/Box2D/Rope/:
 
 OBJS = b2BroadPhase.o \
 b2CollideCircle.o \
@@ -66,6 +67,7 @@ b2DistanceJoint.o \
 b2FrictionJoint.o \
 b2GearJoint.o \
 b2Joint.o \
+b2MotorJoint.o \
 b2MouseJoint.o \
 b2PrismaticJoint.o \
 b2PulleyJoint.o \

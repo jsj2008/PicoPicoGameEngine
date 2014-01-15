@@ -15,6 +15,17 @@
 #include <stdio.h>
 #include <Shlwapi.h>
 #include "png.h"
+#ifdef __LUAJIT__
+#include <lua.hpp>
+#define LUA_OK 0
+#else
+extern "C" {
+#include <lua/lua.h>
+#include <lua/lualib.h>
+#include <lua/lauxlib.h>
+#include <lua/ldebug.h>
+}
+#endif
 
 #define PNG_HEADER_SIZE 8
 
@@ -531,38 +542,13 @@ const char* PPGameLoadShader(const char* name)
 	return NULL;
 }
 
-
-int PPGame_InitBGM(int no,const char* key)
-{
-	return 0;
-}
-
-int PPGame_InitBGMiPad(int no,const char* key)
-{
-	return 0;
-}
-
-void PPGame_ReleaseBGM()
-{
-}
-
-int PPGame_GetSelectingBGM()
-{
-	return 0;
-}
-
-void PPGame_SetSelectingBGM(int flag)
-{
-}
-
-void PPGame_IdleBGM(void* controller,int playBGM,bool playBGMOneTime,int chooseBGM,int x,int y,int w,int h)
-{
-}
-
-
 int PPGame_GetLocale()
 {
-	return QBGAME_LOCALE_JAPANESE;
+  LCID l = GetSystemDefaultLCID();
+  if (l == 0x0411) {
+    return QBGAME_LOCALE_JAPANESE;
+  }
+  return QBGAME_LOCALE_OTHER;
 }
 
 const char* PPGame_LocaleString(const char* jp,const char* en)
@@ -573,25 +559,8 @@ const char* PPGame_LocaleString(const char* jp,const char* en)
 	return en;
 }
 
-
-int PPGame_LoadAIFF(const char* name,const char* type)
-{
-	return 0;
-}
-
-int PPGame_PlayAIFF(int soundId)
-{
-	return 0;
-}
-
-
 void PPGame_Vibrate()
 {
-}
-
-int PPGame_3GSLater()
-{
-	return 0;
 }
 
 static std::string __luaFilePath="main.lua";
@@ -637,6 +606,22 @@ void PPGameControllerStopDiscoverty()
 int PPGameControllerCount()
 {
   return 0;
+}
+
+void PPGameControllerSetPlayerIndex(int index,int playerIndex)
+{
+}
+
+int PPGameControllerGetPlayerIndex(int index)
+{
+  return 0;
+}
+
+int PPGameControllerInfo(void* script,int index)
+{
+  lua_State* L = (lua_State*)script;
+  lua_createtable(L,0,0);
+  return 1;
 }
 
 void PPGameOpenWeb(const char* url,const char* title)

@@ -48,19 +48,11 @@ unsigned char* PPGame_LoadPNG(const char* path,unsigned long* width,unsigned lon
 unsigned char* PPGame_DecodePNG(unsigned char* bytes,unsigned long size,unsigned long* width,unsigned long* height,unsigned long* bytesPerRow);
 const char* PPGameLoadShader(const char* name);
 
-int PPGame_InitBGM(int no,const char* key);
-int PPGame_InitBGMiPad(int no,const char* key);
-void PPGame_ReleaseBGM();
-void PPGame_IdleBGM(void* controller,int playBGM,bool playBGMOneTime,int chooseBGM,int x,int y,int w,int h);
-
 int PPGame_GetLocale();
 const char* PPGame_LocaleString(const char* jp,const char* en);
 
-int PPGame_LoadAIFF(const char* name,const char* type);
-int PPGame_PlayAIFF(int soundId);
-
 void PPGame_Vibrate();
-int PPGame_3GSLater();
+int PPGameControllerInfo(void* script,int index);
 
 const char* PPGameMainLua();
 void PPGameSetMainLua(const char* luaname);
@@ -72,6 +64,8 @@ const char* PPGameDataSubPath(const char* name);
 void PPGameControllerStartDiscoverty();
 void PPGameControllerStopDiscoverty();
 int PPGameControllerCount();
+void PPGameControllerSetPlayerIndex(int index,int playerIndex);
+int PPGameControllerGetPlayerIndex(int index);
 
 void PPGameOpenWeb(const char* url,const char* title);
 

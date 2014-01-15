@@ -10,5 +10,11 @@
 #define __PicoGame__DebugPicoGame__
 
 #include <iostream>
+#import <PicoGame/PPScriptGame.h>
+
+class DebugPicoGame : public PPScriptGame {
+public:
+	virtual void initScript();
+};
 
 #endif /* defined(__PicoGame__DebugPicoGame__) */

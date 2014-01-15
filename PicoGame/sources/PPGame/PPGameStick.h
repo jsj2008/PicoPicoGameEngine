@@ -63,7 +63,7 @@ public:
 	unsigned short productID;
 	unsigned short vendorID;
 
-	virtual void openLibrary(PPLuaScript* script,const char* name,const char* superclass=NULL);
+	static void openLibrary(PPLuaScript* script,const char* name,const char* superclass=NULL);
 	
 	void calibration() {
 		for (int i=0;i<MAX_JOYSTICK_AXIS;i++) {
@@ -77,6 +77,8 @@ public:
 	
 	void saveCalibration();
 	void loadCalibration();
+  
+  static std::string className;
 };
 
 class PPGameStick : public PPObject {
@@ -109,6 +111,8 @@ private:
 	int numJoystick;
 	PPJoyReader joy[MAX_JOYSTICK_NUM];
 #endif
+
+  static std::string className;
 };
 
 #endif

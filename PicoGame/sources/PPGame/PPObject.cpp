@@ -390,7 +390,8 @@ PPSize PPObject::tileSize()
 
 //static int funcInit(lua_State* L)
 //{
-//	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
+//	PPObject* m = (PPObject*)PPLuaArg::UserData(L);
+//  PPUserDataAssert(m!=NULL);
 //	if (m==NULL) {
 //		return luaL_argerror(L,1,"invalid argument.");
 //	}
@@ -400,7 +401,8 @@ PPSize PPObject::tileSize()
 
 //static int funcStart(lua_State* L)
 //{
-//	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
+//	PPObject* m = (PPObject*)PPLuaArg::UserData(L);
+//  PPUserDataAssert(m!=NULL);
 //	if (m==NULL) {
 //		return luaL_argerror(L,1,"invalid argument.");
 //	}
@@ -410,76 +412,83 @@ PPSize PPObject::tileSize()
 
 static int funcShow(lua_State* L)
 {
-	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
+	PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className);
+  PPUserDataAssert(m!=NULL);
+//	if (m==NULL) {
+//		return luaL_argerror(L,1,"invalid argument.");
+//	}
 	m->show();
 	return 0;
 }
 
 static int funcHide(lua_State* L)
 {
-	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
+	PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className);
+  PPUserDataAssert(m!=NULL);
+//	if (m==NULL) {
+//		return luaL_argerror(L,1,"invalid argument.");
+//	}
 	m->hide();
 	return 0;
 }
 
 static int funcIdle(lua_State* L)
 {
-	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
+	PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className);
+  PPUserDataAssert(m!=NULL);
+//	if (m==NULL) {
+//		return luaL_argerror(L,1,"invalid argument.");
+//	}
 	m->idle();
 	return 0;
 }
 
 static int funcLayout(lua_State* L)
 {
-	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-	if (lua_gettop(L)>=4) {
-		bool autolayout;
-		bool centerx;
-		bool centery;
-		PPRect layoutarea;
+	PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className);
+  PPUserDataAssert(m!=NULL);
+  PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
+  if (m) {
+    if (lua_gettop(L)>=4) {
+      bool autolayout;
+      bool centerx;
+      bool centery;
+      PPRect layoutarea;
 
-		autolayout = lua_toboolean(L,2);
-		centerx = lua_toboolean(L,3);
-		centery = lua_toboolean(L,4);
-		if (!lua_isnil(L,5)) {
-			layoutarea = s->getRect(L,3);
-		} else {
-			layoutarea = PPRectZero;
-		}
-		lua_pushboolean(L,autolayout);
-		lua_setfield(L,1,"autolayout");
-		lua_pushboolean(L,centerx);
-		lua_setfield(L,1,"centerx");
-		lua_pushboolean(L,centery);
-		lua_setfield(L,1,"centery");
-		s->pushRect(L,layoutarea);
-		lua_setfield(L,1,"layoutarea");
-	}
+      autolayout = lua_toboolean(L,2);
+      centerx = lua_toboolean(L,3);
+      centery = lua_toboolean(L,4);
+      if (!lua_isnil(L,5)) {
+        layoutarea = s->getRect(L,3);
+      } else {
+        layoutarea = PPRectZero;
+      }
+      lua_pushboolean(L,autolayout);
+      lua_setfield(L,1,"autolayout");
+      lua_pushboolean(L,centerx);
+      lua_setfield(L,1,"centerx");
+      lua_pushboolean(L,centery);
+      lua_setfield(L,1,"centery");
+      s->pushRect(L,layoutarea);
+      lua_setfield(L,1,"layoutarea");
+    }
+  }
 	return 0;
 }
 
 static int funcDraw(lua_State* L)
 {
-	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
+	PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
 	QBGame* g = (QBGame*)m->world();//s->userdata;
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 
+#if 0   //setter & getter test
 	lua_getfield(L, 1, "x");
 	m->pos.x = lua_tonumber(L, -1);
 	lua_getfield(L, 1, "y");
 	m->pos.y = lua_tonumber(L, -1);
+#endif
 	
 	lua_getfield(L,1,"autolayout");
 	if (lua_toboolean(L,-1)) {
@@ -510,28 +519,25 @@ static int funcDraw(lua_State* L)
 
 static int funcIsAlive(lua_State* L)
 {
-	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
+	PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	lua_pushboolean(L,m->isAlive());
 	return 1;
 }
 
 static int funcIsVisible(lua_State* L)
 {
-	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
+	PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className);
+  PPUserDataAssert(m!=NULL);
 	lua_pushboolean(L,m->isVisible());
 	return 1;
 }
 
 static int funcPosition(lua_State* L)
 {
-	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
+	PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
 	if (m==NULL) {
 		return luaL_argerror(L,1,"invalid argument.");
@@ -542,15 +548,19 @@ static int funcPosition(lua_State* L)
 		} else {
 			m->pos = PPPoint(s->number(0),s->number(1));
 		}
+#if 0   //setter & getter test
 		lua_pushnumber(L, m->pos.x);
 		lua_setfield(L, 1, "x");
 		lua_pushnumber(L, m->pos.y);
 		lua_setfield(L, 1, "y");
+#endif
 	} else {
+#if 0   //setter & getter test
 		lua_getfield(L, 1, "x");
 		m->pos.x = lua_tonumber(L, -1);
 		lua_getfield(L, 1, "y");
 		m->pos.y = lua_tonumber(L, -1);
+#endif
 		return s->returnPoint(L,m->pos);
 	}
 	return 0;
@@ -558,11 +568,9 @@ static int funcPosition(lua_State* L)
 
 static int funcColor(lua_State* L)
 {
-	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
+	PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	if (s->argCount > 0) {
 		if (s->isTable(L,0)) {
 			m->poly.color.r = s->tableInteger(L,0,1,"r",m->poly.color.r);
@@ -591,21 +599,17 @@ static int funcColor(lua_State* L)
 
 static int funcSize(lua_State* L)
 {
-	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
+	PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	return s->returnSize(L,m->size());
 }
 
 static int funcTileSize(lua_State* L)
 {
-	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
+	PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	if (s->argCount > 0 && s->isTable(L,0)) {
 		m->poly.texTileSize = s->getSize(L,0);
 		return 0;
@@ -625,19 +629,24 @@ static int funcTileSize(lua_State* L)
 
 static int funcTileInfo(lua_State* L)
 {
-	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
+	PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	if (s->argCount > 0 && s->isTable(L,0)) {
 		m->animation.setKey((int)s->tableInteger(L,0,"index",m->animation.key()+1)-1);
-		m->poly.texTileSize.width = s->tableTableNumber(L,0,"size","width",m->poly.texTileSize.width);
-		m->poly.texTileSize.height = s->tableTableNumber(L,0,"size","height",m->poly.texTileSize.height);
-		m->poly.texTileStride.width = s->tableTableNumber(L,0,"stride","x",m->poly.texTileStride.width);
-		m->poly.texTileStride.height = s->tableTableNumber(L,0,"stride","y",m->poly.texTileStride.height);
-		m->poly.texOffset.x = s->tableTableNumber(L,0,"offset","x",m->poly.texOffset.x);
-		m->poly.texOffset.y = s->tableTableNumber(L,0,"offset","y",m->poly.texOffset.y);
+    lua_getfield(L,2,"size");
+    if (lua_istable(L,-1)) {
+      m->poly.texTileSize = s->getSize(L,lua_gettop(L)-2);
+    }
+    lua_getfield(L,2,"stride");
+    if (lua_istable(L,-1)) {
+      PPPoint p=s->getPoint(L,lua_gettop(L)-2);
+      m->poly.texTileStride = PPSize(p.x,p.y);
+    }
+    lua_getfield(L,2,"offset");
+    if (lua_istable(L,-1)) {
+      m->poly.texOffset = s->getPoint(L,lua_gettop(L)-2);
+    }
 		return 0;
 	}
 
@@ -645,11 +654,17 @@ static int funcTileInfo(lua_State* L)
 	lua_pushnumber(L,m->animation.key()+1);
 	lua_setfield(L, -2, "index");
 	
-	lua_createtable(L, 0, 2);
+	lua_createtable(L, 0, 4);
+	lua_pushnumber(L,0);
+	lua_setfield(L, -2, "x");
+	lua_pushnumber(L,0);
+	lua_setfield(L, -2, "y");
 	lua_pushnumber(L,m->poly.texTileSize.width);
 	lua_setfield(L, -2, "width");
 	lua_pushnumber(L,m->poly.texTileSize.height);
 	lua_setfield(L, -2, "height");
+  lua_getglobal(L,"pprect_mt");
+  lua_setmetatable(L,-2);
 	lua_setfield(L, -2, "size");
 	
 	lua_createtable(L, 0, 2);
@@ -657,6 +672,8 @@ static int funcTileInfo(lua_State* L)
 	lua_setfield(L, -2, "x");
 	lua_pushnumber(L,m->poly.texTileStride.height);
 	lua_setfield(L, -2, "y");
+  lua_getglobal(L,"pppoint_mt");
+  lua_setmetatable(L,-2);
 	lua_setfield(L, -2, "stride");
 	
 	lua_createtable(L, 0, 2);
@@ -664,6 +681,8 @@ static int funcTileInfo(lua_State* L)
 	lua_setfield(L, -2, "x");
 	lua_pushnumber(L,m->poly.texOffset.y);
 	lua_setfield(L, -2, "y");
+  lua_getglobal(L,"pppoint_mt");
+  lua_setmetatable(L,-2);
 	lua_setfield(L, -2, "offset");
 
 	return 1;
@@ -671,11 +690,9 @@ static int funcTileInfo(lua_State* L)
 
 static int funcTileStride(lua_State* L)
 {
-	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
+	PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	if (s->argCount > 0 && s->isTable(L,0)) {
 		m->poly.texTileStride = s->getSize(L,0);
 		return 0;
@@ -690,16 +707,14 @@ static int funcTileStride(lua_State* L)
 		}
 		return 0;
 	}
-	return s->returnSize(L,m->poly.texTileStride);
+	return s->returnPoint(L,PPPoint(m->poly.texTileStride.width,m->poly.texTileStride.height));
 }
 
 static int funcTileOffset(lua_State* L)
 {
-	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
+	PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	if (s->argCount > 0 && s->isTable(L,0)) {
 		m->poly.texOffset = s->getPoint(L,0);
 		return 0;
@@ -717,18 +732,20 @@ static int funcTileOffset(lua_State* L)
 	return s->returnPoint(L,m->poly.texOffset);
 }
 
-static PPRect calcAABB(lua_State* L)
+static PPRect calcAABB(lua_State* L,PPLuaArg* s,PPObject* m)
 {
-	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
-	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
+//	PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className);
+//	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
 	QBGame* g = (QBGame*)m->world();//s->userdata;
 	
 	int top=lua_gettop(L);
 
+#if 0   //setter & getter test
 	lua_getfield(L, 1, "x");
 	m->pos.x = lua_tonumber(L, -1);
 	lua_getfield(L, 1, "y");
 	m->pos.y = lua_tonumber(L, -1);
+#endif
 
 	PPPoint p = m->pos;
 	
@@ -784,37 +801,30 @@ static PPRect calcAABB(lua_State* L)
 
 static int funcAABB(lua_State* L)
 {
-	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
+	PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
-
-	return s->returnRect(L,calcAABB(L));
+	return s->returnRect(L,calcAABB(L,s,m));
 }
 
 static int funcTexture(lua_State* L)
 {
-	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
+	PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	if (s->argCount > 0) {
 		if (s->isNumber(L,0)) {
-			m->poly.initTexture((int)s->integer(0)-1);
+			m->poly.setTexture((int)s->integer(0)-1);
 		} else
 		if (s->isTable(L,0)) {
-			m->poly.initTexture((int)s->tableInteger(L,0,"index",0)-1);		//Texture
+			m->poly.setTexture((int)s->tableInteger(L,0,"index",0)-1);		//Texture
 		} else
 		if (s->isString(L,0)) {
 			PPGameTextureOption option;
 			if (s->argCount > 1 && s->isTable(L,1)) {
 				option = s->getTextureOption(L, 1, option);//s->boolean(1);
 			}
-			
-			m->poly.initTexture(m->world()->projector->textureManager->loadTexture(s->args(0),option));
-
+			m->poly.setTexture(m->world()->projector->textureManager->loadTexture(s->args(0),option));
 			if (PPReadError()) {
 				PPReadErrorReset();
 				return luaL_error(L,"texture file read error '%s'",s->args(0));
@@ -829,11 +839,9 @@ static int funcTexture(lua_State* L)
 
 static int funcTileIndex(lua_State* L)
 {
-	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
+	PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	if (s->argCount > 0) {
 		m->animation.setKey((int)s->integer(0)-1);
 		return 0;
@@ -844,57 +852,53 @@ static int funcTileIndex(lua_State* L)
 
 static int funcEnable(lua_State* L)
 {
-	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
+	PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className);
+  PPUserDataAssert(m!=NULL);
 	m->setAlive(true);
 	return 0;
 }
 
 static int funcDisable(lua_State* L)
 {
-	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
+	PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className);
+  PPUserDataAssert(m!=NULL);
 	m->setAlive(false);
 	return 0;
 }
 
 static int funcMove(lua_State* L)
 {
-	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
+	PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 
+#if 0   //setter & getter test
 	lua_getfield(L, 1, "x");
 	m->pos.x = lua_tonumber(L, -1);
 	lua_getfield(L, 1, "y");
 	m->pos.y = lua_tonumber(L, -1);
+#endif
 
 	if (s->argCount > 0) {
 		PPPoint p = s->getPoint(L,0);
 		m->pos += p;
 	}
 
+#if 0   //setter & getter test
 	lua_pushnumber(L, m->pos.x);
 	lua_setfield(L, 1, "x");
 	lua_pushnumber(L, m->pos.y);
 	lua_setfield(L, 1, "y");
+#endif
 	
 	return 0;
 }
 
 static int funcRotate(lua_State* L)
 {
-	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
+	PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	if (s->argCount > 0) {
 		m->poly.rotate = s->number(0);
 		while (m->poly.rotate < 0) {
@@ -911,11 +915,9 @@ static int funcRotate(lua_State* L)
 
 static int funcOrigin(lua_State* L)
 {
-	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
+	PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	if (s->argCount > 0) {
 		if (s->isTable(L,0)) {
 			m->origin.x = s->tableNumber(L,0,1,"x");
@@ -936,11 +938,9 @@ static int funcOrigin(lua_State* L)
 
 static int funcFlip(lua_State* L)
 {
-	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
+	PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	if (s->argCount > 1) {
 		m->poly.flags &= ~(PPFLIP_H | PPFLIP_V);
 		if (s->boolean(0)) m->poly.flags |= PPFLIP_H;
@@ -964,11 +964,9 @@ static int funcFlip(lua_State* L)
 
 static int funcScale(lua_State* L)
 {
-	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
+	PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	if (s->argCount > 0) {
 		if (s->isTable(L,0)) {
 			m->poly.scale = s->getPoint(L,0,m->poly.scale.x,m->poly.scale.y);
@@ -985,11 +983,9 @@ static int funcScale(lua_State* L)
 
 static int funcAlpha(lua_State* L)
 {
-	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
+	PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	if (s->argCount > 0) {
 		m->poly.color.a = s->integer(0);//atoi(s->args(0));
 		return 0;
@@ -1000,10 +996,11 @@ static int funcAlpha(lua_State* L)
 
 static int funcLoopAnime(lua_State* L)
 {
-	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
+	PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className);
+  PPUserDataAssert(m!=NULL);
+//	if (m==NULL) {
+//		return luaL_argerror(L,1,"invalid argument.");
+//	}
 
 	lua_Number t = lua_tonumber(L,2);
 	if (t > 0) {
@@ -1014,8 +1011,7 @@ static int funcLoopAnime(lua_State* L)
 #ifdef __LUAJIT__
 			int n=(int)lua_objlen(L,3);
 #else
-			lua_len(L,3);
-			int n=(int)lua_tointeger(L,-1);
+			int n=(int)lua_rawlen(L,3);
 #endif
 			
 			if (m->animationTime<1) m->animationTime=1;
@@ -1036,10 +1032,11 @@ static int funcLoopAnime(lua_State* L)
 
 static int funcPlayAnime(lua_State* L)
 {
-	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
+	PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className);
+  PPUserDataAssert(m!=NULL);
+//	if (m==NULL) {
+//		return luaL_argerror(L,1,"invalid argument.");
+//	}
 	bool endanime = false;
 
 	lua_Number t = lua_tonumber(L,2);
@@ -1051,8 +1048,7 @@ static int funcPlayAnime(lua_State* L)
 #ifdef __LUAJIT__
 			int n=(int)lua_objlen(L,3);
 #else
-			lua_len(L,3);
-			int n=(int)lua_tointeger(L,-1);
+			int n=(int)lua_rawlen(L,3);
 #endif
 			
 			if (m->animationTime<1) m->animationTime=1;
@@ -1079,12 +1075,10 @@ static int funcPlayAnime(lua_State* L)
 
 static int funcContain(lua_State *L)
 {
-	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
+	PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
-	PPRect aabb = calcAABB(L);
+	PPRect aabb = calcAABB(L,s,m);
 	PPPoint p = s->getPoint(L,0);
 	bool r=p.hitCheck(aabb);
 	lua_pushboolean(L,r);
@@ -1093,12 +1087,10 @@ static int funcContain(lua_State *L)
 
 static int funcIntersect(lua_State *L)
 {
-	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
+	PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
-	PPRect aabb = calcAABB(L);
+	PPRect aabb = calcAABB(L,s,m);
 	PPRect rect = s->getRect(L,0);
 	bool r=rect.hitCheck(aabb);
 	lua_pushboolean(L,r);
@@ -1150,22 +1142,19 @@ static PPPoint nearPos(lua_State* L,int n,PPObject* o)
 static int funcDrag(lua_State *L)
 {
 	int top=lua_gettop(L);
-	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
+	PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 
-  PPRect aabb = calcAABB(L);
+  PPRect aabb = calcAABB(L,s,m);
 
 	lua_settop(L,top);
 	
 	if (lua_istable(L,2)) {
 #ifdef __LUAJIT__
-		int n= (int)lua_objlen(L,2);
+		int n=(int)lua_objlen(L,2);
 #else
-		lua_len(L,2);
-		int n = (int)lua_tointeger(L,-1);
+		int n=(int)lua_rawlen(L,2);
 #endif
 		if (n > 0) {
 			PPPoint dragPos;
@@ -1222,10 +1211,12 @@ static int funcDrag(lua_State *L)
 				break;
 			}
 
+#if 0   //setter & getter test
 			lua_pushnumber(L, m->pos.x);
 			lua_setfield(L, 1, "x");
 			lua_pushnumber(L, m->pos.y);
 			lua_setfield(L, 1, "y");
+#endif
 
 		} else {
 			m->dragStep = 0;
@@ -1237,11 +1228,9 @@ static int funcDrag(lua_State *L)
 
 static int funcBlend(lua_State *L)
 {
-	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
+	PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 
 	if (s->argCount > 0) {
 		m->poly.blend.blend = lua_toboolean(L,2);
@@ -1262,11 +1251,9 @@ static int funcBlend(lua_State *L)
 
 static int funcFog(lua_State *L)
 {
-	PPObject* m = (PPObject*)PPLuaScript::UserData(L);
+	PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 
 	if (s->argCount > 0) {
 		m->poly.blend.fog = lua_toboolean(L,2);
@@ -1311,72 +1298,156 @@ static int funcDelete(lua_State *L)
 	return 0;
 }
 
+static int funcSetter(lua_State* L)
+{
+  std::string name = lua_tostring(L,2);
+  if (name == "x") {
+    PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className,false);
+    if (lua_type(L,3)==LUA_TNUMBER) {
+      m->pos.x = lua_tonumber(L,3);
+      lua_pushboolean(L,true);
+      return 1;
+    }
+  } else
+  if (name == "y") {
+    PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className,false);
+    if (lua_type(L,3)==LUA_TNUMBER) {
+      m->pos.y = lua_tonumber(L,3);
+      lua_pushboolean(L,true);
+      return 1;
+    }
+  } else
+  if (name == "alive") {
+    PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className,false);
+    if (lua_type(L,3)==LUA_TBOOLEAN) {
+      m->setAlive(lua_toboolean(L,3));
+      lua_pushboolean(L,true);
+      return 1;
+    }
+  } else
+  if (name == "visible") {
+    PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className,false);
+    if (lua_type(L,3)==LUA_TBOOLEAN) {
+      if (lua_toboolean(L,3)) {
+        m->show();
+      } else {
+        m->hide();
+      }
+      lua_pushboolean(L,true);
+      return 1;
+    }
+  }
+  lua_pushboolean(L,false);
+  return 1;
+}
+
+static int funcGetter(lua_State* L)
+{
+  std::string name = lua_tostring(L,2);
+  if (name == "x") {
+    PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className,false);
+    if (m) {
+      lua_pushnumber(L, m->pos.x);
+    } else {
+      lua_pushnumber(L,0);
+    }
+    return 1;
+  } else
+  if (name == "y") {
+    PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className,false);
+    if (m) {
+      lua_pushnumber(L, m->pos.y);
+    } else {
+      lua_pushnumber(L,0);
+    }
+    return 1;
+  } else
+  if (name == "alive") {
+    PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className,false);
+    if (m) {
+      lua_pushboolean(L,m->isAlive());
+    } else {
+      lua_pushboolean(L,false);
+    }
+    return 1;
+  } else
+  if (name == "visible") {
+    PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className,false);
+    if (m) {
+      lua_pushboolean(L,m->isVisible());
+    } else {
+      lua_pushboolean(L,false);
+    }
+    return 1;
+  }
+  lua_pushnil(L);
+  return 1;
+}
+
 static int funcNew(lua_State *L)
 {
 	PPWorld* world = PPLuaScript::World(L);
-//	PPObject* o = (PPObject*)PPLuaScript::UserData(L);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPObject* o = (PPObject*)s->userdata;
+  int texid=-1;
+  int texid2=world->projector->textureManager->defaultTexture;
 	if (s->argCount > 0) {
-		lua_createtable(L,(int)s->integer(0),0);
-		int table = lua_gettop(L);
-		for (int i=0;i<s->integer(0);i++) {
-			PPObject* obj = new PPObject(world);
-			obj->start();
-			obj->poly._texture = world->projector->textureManager->defaultTexture;
-			PPLuaScript::newObject(L,PPObject::className.c_str(),obj,funcDelete);
-			lua_rawseti(L,table,i+1);
-
-//#ifdef __LUAJIT__
-//      int top=lua_gettop(L);
-//      
-//      lua_getglobal(L,"ffi");
-//      lua_getfield(L, -1, "gc");
-//      lua_pushlightuserdata(L, obj);
-//      lua_pushcfunction(L,funcDelete);
-//      lua_call(L, 2, 0);
-//      
-//      lua_settop(L,top);
-//#endif
-
-		}
-	} else {
-		PPObject* obj = new PPObject(world);
-		obj->start();
-		obj->poly._texture =world->projector->textureManager->defaultTexture;
-		PPLuaScript::newObject(L,PPObject::className.c_str(),obj,funcDelete);
-
-//#ifdef __LUAJIT__
-//    int top=lua_gettop(L);
-//    
-//    lua_getglobal(L,"ffi");
-//    lua_getfield(L, -1, "gc");
-//    lua_pushlightuserdata(L, obj);
-//    lua_pushcfunction(L,funcDelete);
-//    lua_call(L, 2, 0);
-//    
-//    lua_settop(L,top);
-//#endif
-
+    if (lua_isnumber(L,1+s->argShift-1)) {
+      lua_createtable(L,(int)s->integer(0),0);
+      int table = lua_gettop(L);
+      for (int i=0;i<s->integer(0);i++) {
+        PPObject* obj = new PPObject(world);
+        obj->start();
+        obj->poly._texture = world->projector->textureManager->defaultTexture;
+        PPLuaScript::newObject(L,PPObject::className.c_str(),obj,funcDelete);
+        lua_rawseti(L,table,i+1);
+      }
+      return 1;
+    } else
+    if (lua_isstring(L,1+s->argShift-1)) {
+			PPGameTextureOption option;
+			if (s->argCount > 0 && s->isTable(L,0)) {
+				option = s->getTextureOption(L, 0, option);//s->boolean(1);
+			}
+			texid = world->projector->textureManager->loadTexture(s->args(0),option);
+			if (PPReadError()) {
+				PPReadErrorReset();
+				return luaL_error(L,"texture file read error '%s'",s->args(0));
+			}
+    } else
+    if (lua_istable(L,1+s->argShift-1)) {
+			texid2 = (int)s->tableInteger(L,-1,"index",0)-1;		//Texture
+    }
 	}
+  PPObject* obj = new PPObject(world);
+  obj->start();
+  if (texid >= 0) {
+    obj->poly._texture =texid;
+    PPSize size = world->projector->textureManager->getImageSize(texid);
+    obj->poly.texTileSize.width = size.width;
+    obj->poly.texTileSize.height = size.height;
+    obj->animation.setKey(0);
+  } else {
+    obj->poly._texture = texid2;
+  }
+  PPLuaScript::newObject(L,PPObject::className.c_str(),obj,funcDelete);
+
 	return 1;
 }
 
-std::string PPObject::className;
+std::string PPObject::className="PPObject";
 
 PPObject* PPObject::registClass(PPLuaScript* script,const char* name,const char* superclass)
 {
-	if (name) {
-		PPObject::className = name;
-	} else {
-		PPObject::className = "PPObject";
-	}
+	if (name) PPObject::className = name;
 	return PPObject::registClass(script,PPObject::className.c_str(),new PPObject(script->world()),superclass);
 }
 
 PPObject* PPObject::registClass(PPLuaScript* script,const char* name,PPObject* obj,const char* superclass)
 {
 	script->openModule(name,obj,0,superclass);
+
+    script->addAccessor(funcSetter,funcGetter);
+
 		script->addCommand("new",funcNew);
 		script->addCommand("show",funcShow);
 		script->addCommand("hide",funcHide);
@@ -1415,8 +1486,10 @@ PPObject* PPObject::registClass(PPLuaScript* script,const char* name,PPObject* o
 		script->addCommand("contain",funcContain);
 		script->addCommand("intersect",funcIntersect);
 		script->addCommand("drag",funcDrag);
-		script->addNumberValue("x",0);
-		script->addNumberValue("y",0);
+
+//		script->addNumberValue("x",0);
+//		script->addNumberValue("y",0);
+
 		script->addNumberValue("animationTime",1);
 		script->addNumberValue("hitlength",0);
 		script->addIntegerValue("hitmask",0);
@@ -1424,7 +1497,7 @@ PPObject* PPObject::registClass(PPLuaScript* script,const char* name,PPObject* o
 		script->addBoolValue("autolayout",false);
 		script->addBoolValue("centerx",false);
 		script->addBoolValue("centery",false);
-  
+
     script->addCommand("blend",funcBlend);
     script->addCommand("shadow",funcFog);
 //		script->addCommand("hitCheck",funcHitCheck);
@@ -1451,7 +1524,7 @@ PPObject* PPObject::registClass(PPLuaScript* script,const char* name,PPObject* o
 
 void PPObject::openLibrary(PPLuaScript* script,const char* name,const char* superclass)
 {
-	registClass(script,name,this,superclass);
+	registClass(script,name,NULL,superclass);
 }
 
 /*-----------------------------------------------------------------------------------------------

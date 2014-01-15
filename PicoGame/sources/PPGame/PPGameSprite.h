@@ -315,6 +315,8 @@ public:
 
 	virtual void openLibrary(PPLuaScript* script,const char* name,const char* superclass=NULL);
 
+  static std::string className;
+
 private:
 	int Line(PPGamePoly* poly);
 	int Fill(PPGamePoly* poly);
@@ -324,6 +326,7 @@ private:
 	int DrawCore(PPGamePoly* poly,PPPoint pos,PPSize size,PPPoint delta);
 	
 	PPWorld* target;
+  
 };
 
 /*-----------------------------------------------------------------------------------------------

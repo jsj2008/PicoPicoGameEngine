@@ -13,37 +13,24 @@
 #include "Cocos2dxWrapper.h"
 #include "png.h"
 #include "PPGameDef.h"
+#ifdef __LUAJIT__
+#include <lua.hpp>
+#define LUA_OK 0
+#else
+extern "C" {
+#include <lua/lua.h>
+#include <lua/lualib.h>
+#include <lua/lauxlib.h>
+#include <lua/ldebug.h>
+}
+#endif
 
 #define PNG_HEADER_SIZE 8
-
-//static int keySide = 0;
 
 const char* PPGameResourcePath(const char* name)
 {
   return ccPPGameResourcePath(name);
 }
-
-//int PPGame_SetDefault(const char* name)
-//{
-//	if (strcmp(name,PPGAME_KEY_SIDE_RIGHT) == 0) {
-//		keySide = 1;
-//	} else
-//	if (strcmp(name,PPGAME_KEY_SIDE_LEFT) == 0) {
-//		keySide = 0;
-//	}
-//	return keySide;
-//}
-
-//int PPGame_GetDefault(const char* name)
-//{
-//	if (strcmp(name,PPGAME_KEY_SIDE_RIGHT) == 0) {
-//		if (keySide == 1) return 1;
-//	} else
-//	if (strcmp(name,PPGAME_KEY_SIDE_LEFT) == 0) {
-//		if (keySide == 0) return 1;
-//	}
-//	return 0;
-//}
 
 unsigned char* PPGame_GetData(const char* key,int* dataSize)
 {
@@ -129,33 +116,6 @@ void PPSync()
 {
 }
 
-int PPGame_InitBGM(int no,const char* key)
-{
-	return 0;
-}
-
-int PPGame_InitBGMiPad(int no,const char* key)
-{
-	return 0;
-}
-
-void PPGame_ReleaseBGM()
-{
-}
-
-//int PPGame_GetSelectingBGM()
-//{
-//	return 0;
-//}
-
-//void PPGame_SetSelectingBGM(int flag)
-//{
-//}
-
-//void PPGame_IdleBGM(void* controller,int playBGM,bool playBGMOneTime,int chooseBGM,int x,int y,int w,int h)
-//{
-//}
-
 int PPGame_GetLocale()
 {
 	return QBGAME_LOCALE_JAPANESE;
@@ -167,26 +127,7 @@ const char* PPGame_LocaleString(const char* jp,const char* en)
   return ccPPGame_LocaleString(jp,en);
 }
 
-int PPGame_LoadAIFF(const char* name,const char* type)
-{
-	return 0;
-}
-
-int PPGame_PlayAIFF(int soundId)
-{
-	return 0;
-}
-
 void PPGame_Vibrate()
-{
-}
-
-int PPGame_3GSLater()
-{
-	return 0;
-}
-
-void __PPGame_Set3GSLater(int later)
 {
 }
 
@@ -232,6 +173,22 @@ void PPGameControllerStopDiscoverty()
 }
 
 int PPGameControllerCount()
+{
+  return 0;
+}
+
+int PPGameControllerInfo(void* script,int index)
+{
+  lua_State* L = (lua_State*)script;
+  lua_createtable(L,0,0);
+  return 1;
+}
+
+void PPGameControllerSetPlayerIndex(int index,int playerIndex)
+{
+}
+
+int PPGameControllerGetPlayerIndex(int index)
 {
   return 0;
 }

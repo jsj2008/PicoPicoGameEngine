@@ -29,6 +29,7 @@
 #include "PPGameUtil.h"
 #include "PPGameTexture.h"
 #define _PG_GLOBAL_
+#include "PPImageFontData.h"
 #include "PPImageFontLayout.h"
 #include "QBSound.h"
 
@@ -179,7 +180,7 @@ unsigned long QBGame::blinkCounter=0;
 //	return rand();
 //}
 
-QBGame::QBGame() : __tarray(NULL),__normalFont(NULL),__halfFont(NULL),__miniFont(NULL)
+QBGame::QBGame() : __tarray(NULL),__normalFont(NULL),__halfFont(NULL),__miniFont(NULL),systemTextureID(0)
 {
 	curFont = NULL;
 	later3GS = true;
@@ -234,6 +235,7 @@ QBGame::QBGame() : __tarray(NULL),__normalFont(NULL),__halfFont(NULL),__miniFont
 	
 	fontLoaded = false;
 	lineWrap = false;
+  pauseButton = false;
 
 	poly.reset();
 	
@@ -243,7 +245,6 @@ QBGame::QBGame() : __tarray(NULL),__normalFont(NULL),__halfFont(NULL),__miniFont
 
 QBGame::~QBGame()
 {
-	releaseBGM();
 	if (gameMap) delete gameMap;
 	gameMap = NULL;
 	if (__tarray) delete __tarray;
@@ -288,13 +289,16 @@ bool QBGame::Key(unsigned long mask)
 int QBGame::gameIdle(unsigned long ikey)
 {
 	if (!fontLoaded) {
+
 		PPGameTexture* tex = new PPGameTexture();
-		tex->name = "PPImageFont.png";
+    tex->name = "picopicodefaultfont.png";
 		tex->group = PPImageFont_group;
 		tex->manager = projector->textureManager;
+    tex->embedpixel = EMBEDDED_PPIMAGE_FONT;
+    tex->embedpixel_len = EMBEDDED_PPIMAGE_FONT_len;
 		tex->loadTexture();
 		fontTexture = projector->textureManager->setTexture(tex);
-		
+
 		__normalFont = new PPNormalFont(this,16,16);
 		__normalFont->display(this, (PP_DRAW_SELECTOR)&QBGame::putNormalFont);
 		__normalFont->setName("default");
@@ -311,6 +315,10 @@ int QBGame::gameIdle(unsigned long ikey)
 	}
 	
 	key = ikey;
+  
+  if (key & PAD_Pause) {
+    pauseButton = 1 - pauseButton;
+  }
 	projector->st.windowSize = PPSize(screenWidth,screenHeight);
 	projector->st.viewPort = PPRect(0,0,screenWidth,screenHeight);
 	projector->st.offset2 = PPPointZero;
@@ -523,6 +531,7 @@ PPSize QBGame::PatternSize(int textureid,int group)
 
 void QBGame::rawPrint(const char* str)
 {
+  if (str == NULL) return;
 	PPPoint p;
 	PPPoint oldscale = scale_value;
 	p.x = locatex;
@@ -619,7 +628,10 @@ int QBGame::putFont(PPFont* basefont,float x,float y,const char* str)
 				int t = tile->tile[x+y*tile->gwidth()];
 				if (t!=0) {
 					poly.sprite(tx,ty,t,0);
-					projector->DrawPoly(&poly);
+          if (projector->textureManager->checkBind(font->texture)) 
+          {
+            projector->DrawPoly(&poly);
+          }
 					tx += font->tileWidth();//*scale().x;
 				}
 			}
@@ -747,12 +759,6 @@ void QBGame::Fill(float x1,float y1,float x2,float y2,int color)
 
 void QBGame::Box(float x1,float y1,float x2,float y2,int color)
 {
-#if 1
-	Fill(x1,y1,1,y2-1,color);
-	Fill(x1,y1,x2-1,1,color);
-	Fill(x1+x2-1,y1,1,y2-1,color);
-	Fill(x1,y1+y2-1,x2,1,color);
-#else
 	poly.origin = rotate_center;//+x1;
 	poly.rotate = rotate_value;
 	poly.color.r = colortable[color][0];
@@ -761,20 +767,8 @@ void QBGame::Box(float x1,float y1,float x2,float y2,int color)
 	poly.color.a = colortable[color][3];
 	poly.scale.x = scale_value.x;
 	poly.scale.y = scale_value.y;
-#if 1
 	poly.box(x1,y1,x1+x2,y1+y2);
 	projector->DrawPoly(&poly);
-#else
-	poly.line(x1+x2,y1,x1,y1);
-	projector->DrawPoly(&poly);
-	poly.line(x1+x2,y1,x1+x2,y1+y2);
-	projector->DrawPoly(&poly);
-	poly.line(x1+x2,y1+y2,x1,y1+y2);
-	projector->DrawPoly(&poly);
-	poly.line(x1,y1+y2,x1,y1);
-	projector->DrawPoly(&poly);
-#endif
-#endif
 }
 
 //bool QBGame::LoadMap(const char* mapname)
@@ -819,61 +813,6 @@ int QBGame::SaveData(const char* name,void* data,unsigned long dataSize)
 	return -1;
 }
 
-int QBGame::InitBGM(int no,const char* key)
-{
-	if (hdVersion) {
-		return PPGame_InitBGMiPad(no,key);
-	}
-	return PPGame_InitBGM(no,key);
-}
-
-void QBGame::releaseBGM()
-{
-	PPGame_ReleaseBGM();
-}
-
-bool QBGame::IsBGMSelected()
-{
-	return PPGame_GetSelectingBGM();
-}
-
-void QBGame::idleBGM(void* controller)
-{
-	int t = chooseBGM;
-	int p = playBGM;
-	playBGM = 0;
-	chooseBGM = 0;
-	PPGame_IdleBGM(controller,p,playBGMOneTime,t,chooseBGM_X,chooseBGM_Y,chooseBGM_W,chooseBGM_H);
-}
-
-void QBGame::SelectBGM(int no,int x,int y,int w,int h)
-{
-	chooseBGM = no;
-	chooseBGM_X = x;
-	chooseBGM_Y = y;
-	chooseBGM_W = w;
-	chooseBGM_H = h;
-}
-
-void QBGame::PlayBGM(int no,bool repeat)
-{
-	if (!repeat) {
-		playBGMOneTime = true;
-	}
-	playBGM = no;
-}
-
-void QBGame::StopBGM()
-{
-	playBGMOneTime = false;
-	playBGM = -1;
-}
-
-void QBGame::ResetBGM()
-{
-	chooseBGM = -1;
-}
-
 void QBGame::RepeatKey(int firstDelay,int secondDelay)
 {
 	if (key == prekey && key != 0) {
@@ -891,6 +830,11 @@ void QBGame::RepeatKey(int firstDelay,int secondDelay)
 unsigned long QBGame::GetKey()
 {
 	return key;
+}
+
+unsigned long QBGame::GetPreKey()
+{
+  return prekey;
 }
 
 void QBGame::SetKey(unsigned long ikey)
@@ -1253,6 +1197,7 @@ static int funcRotate(lua_State* L)
 		while (m->rotate_value > 2*M_PI) {
 			m->rotate_value -= 2*M_PI;
 		}
+    return 0;
 	}
 	lua_pushnumber(L,m->rotate_value);
 	return 1;
@@ -1264,8 +1209,9 @@ static int funcLineWrap(lua_State* L)
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
 	if (s->argCount > 0) {
 		m->lineWrap = s->boolean(0);
+    return 0;
 	}
-	lua_pushnumber(L,m->lineWrap);
+	lua_pushboolean(L,m->lineWrap);
 	return 1;
 }
 
@@ -1464,27 +1410,6 @@ static int funcTouch(lua_State* L)
 	return 1;
 }
 
-//static int funcWinSize(lua_State* L)
-//{
-//	QBGame* m = (QBGame*)PPLuaArg::World(L);
-//	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPSize z = m->winSize();
-//	lua_createtable(L, 0, 2);
-//	lua_pushnumber(L,z.width);
-//	lua_setfield(L, -2, "width");
-//	lua_pushnumber(L,z.height);
-//	lua_setfield(L, -2, "height");
-//	return 1;
-//}
-
-//static int funcWinRect(lua_State* L)
-//{
-//	QBGame* m = (QBGame*)PPLuaArg::World(L);
-//	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPSize z = m->winSize();
-//	return s->returnRect(L,PPRect(0,0,z.width,z.height));
-//}
-
 static int funcFontWithName(lua_State* L)
 {
 	QBGame* m = (QBGame*)PPLuaArg::World(L);
@@ -1512,7 +1437,7 @@ static int funcFontWithName(lua_State* L)
 
 static int funcFontWithTexture(lua_State* L)
 {
-	QBGame* m = (QBGame*)PPLuaScript::UserData(L);
+	QBGame* m = (QBGame*)PPLuaArg::World(L);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
 	if (s->argCount > 2) {
 		PPImageFont* font;
@@ -1535,8 +1460,7 @@ static int funcFontWithTexture(lua_State* L)
 #ifdef __LUAJIT__
 			int t= (int)lua_objlen(L,2+2);
 #else
-			lua_len(L,2+2);
-			int t = (int)lua_tointeger(L,-1);
+			int t= (int)lua_rawlen(L,2+2);
 #endif
 			if (t > 0) {
 				float n[4]={0};
@@ -1902,123 +1826,123 @@ static int funcMousePosition(lua_State* L)
 	return s->returnPoint(L,m->mouseLocation);
 }
 
-//static int funcGetKey(lua_State* L)
-//{
-//	QBGame* m = (QBGame*)PPLuaArg::World(L);
-//	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	lua_pushinteger(L,m->GetKey());
-//	return 1;
-//}
+static int funcKeyCommon(lua_State* L,unsigned long mask)
+{
+	QBGame* m = (QBGame*)PPLuaArg::World(L);
+  bool r=false;
+  unsigned long b=m->GetKey()&mask;
+  if (lua_gettop(L)>0) {
+    unsigned long p=m->GetPreKey()&mask;
+    bool t=lua_toboolean(L,1);
+    if (t) {
+      if (b!=0 && p==0) {
+        r = true;
+      }
+    } else {
+      if (b==0 && p!=0) {
+        r = true;
+      }
+    }
+  } else {
+    r = (b!=0);
+  }
+	lua_pushboolean(L,r);
+	return 1;
+}
 
 static int funcGetKeyUp(lua_State* L)
 {
-	QBGame* m = (QBGame*)PPLuaArg::World(L);
-	lua_pushboolean(L,m->GetKey() & PAD_UP);
+  funcKeyCommon(L,PAD_UP);
 	return 1;
 }
 
 static int funcGetKeyDown(lua_State* L)
 {
-	QBGame* m = (QBGame*)PPLuaArg::World(L);
-	lua_pushboolean(L,m->GetKey() & PAD_DOWN);
+  funcKeyCommon(L,PAD_DOWN);
 	return 1;
 }
 
 static int funcGetKeyLeft(lua_State* L)
 {
-	QBGame* m = (QBGame*)PPLuaArg::World(L);
-	lua_pushboolean(L,m->GetKey() & PAD_LEFT);
+  funcKeyCommon(L,PAD_LEFT);
 	return 1;
 }
 
 static int funcGetKeyRight(lua_State* L)
 {
-	QBGame* m = (QBGame*)PPLuaArg::World(L);
-	lua_pushboolean(L,m->GetKey() & PAD_RIGHT);
+  funcKeyCommon(L,PAD_RIGHT);
 	return 1;
 }
 
 static int funcGetKeyA(lua_State* L)
 {
-	QBGame* m = (QBGame*)PPLuaArg::World(L);
-	lua_pushboolean(L,m->GetKey() & PAD_A);
+  funcKeyCommon(L,PAD_A);
 	return 1;
 }
 
 static int funcGetKeyB(lua_State* L)
 {
-	QBGame* m = (QBGame*)PPLuaArg::World(L);
-	lua_pushboolean(L,m->GetKey() & PAD_B);
+  funcKeyCommon(L,PAD_B);
 	return 1;
 }
 
 static int funcGetKeyC(lua_State* L)
 {
-	QBGame* m = (QBGame*)PPLuaArg::World(L);
-	lua_pushboolean(L,m->GetKey() & PAD_C);
+  funcKeyCommon(L,PAD_C);
 	return 1;
 }
 
 static int funcGetKeyD(lua_State* L)
 {
-	QBGame* m = (QBGame*)PPLuaArg::World(L);
-	lua_pushboolean(L,m->GetKey() & PAD_D);
+  funcKeyCommon(L,PAD_D);
 	return 1;
 }
 
 static int funcGetKeyE(lua_State* L)
 {
-	QBGame* m = (QBGame*)PPLuaArg::World(L);
-	lua_pushboolean(L,m->GetKey() & PAD_E);
+  funcKeyCommon(L,PAD_E);
 	return 1;
 }
 
 static int funcGetKeyF(lua_State* L)
 {
-	QBGame* m = (QBGame*)PPLuaArg::World(L);
-	lua_pushboolean(L,m->GetKey() & PAD_F);
+  funcKeyCommon(L,PAD_F);
 	return 1;
 }
 
 static int funcGetKeyG(lua_State* L)
 {
-	QBGame* m = (QBGame*)PPLuaArg::World(L);
-	lua_pushboolean(L,m->GetKey() & PAD_G);
+  funcKeyCommon(L,PAD_G);
 	return 1;
 }
 
 static int funcGetKeyH(lua_State* L)
 {
-	QBGame* m = (QBGame*)PPLuaArg::World(L);
-	lua_pushboolean(L,m->GetKey() & PAD_H);
+  funcKeyCommon(L,PAD_H);
 	return 1;
 }
 
 static int funcGetKeyX(lua_State* L)
 {
-	QBGame* m = (QBGame*)PPLuaArg::World(L);
-	lua_pushboolean(L,m->GetKey() & PAD_X);
+  funcKeyCommon(L,PAD_X);
 	return 1;
 }
 
 static int funcGetKeyY(lua_State* L)
 {
-	QBGame* m = (QBGame*)PPLuaArg::World(L);
-	lua_pushboolean(L,m->GetKey() & PAD_Y);
+  funcKeyCommon(L,PAD_Y);
 	return 1;
 }
 
 static int funcGetKeyL(lua_State* L)
 {
-	QBGame* m = (QBGame*)PPLuaArg::World(L);
-	lua_pushboolean(L,m->GetKey() & PAD_L);
+  funcKeyCommon(L,PAD_L);
 	return 1;
 }
 
 static int funcGetKeyR(lua_State* L)
 {
-	QBGame* m = (QBGame*)PPLuaArg::World(L);
-	lua_pushboolean(L,m->GetKey() & PAD_R);
+  funcKeyCommon(L,PAD_R);
 	return 1;
 }
 
@@ -2040,17 +1964,50 @@ static int functionGetKeyControllers(lua_State* L)
 	return 1;
 }
 
+static int functionGetKeyControllersInfo(lua_State* L)
+{
+  if (lua_gettop(L) <= 0) return 0;
+  int index = (int)lua_tointeger(L,1)-1;
+  PPGameControllerInfo(L,index);
+  return 1;
+}
+
+static int functionGetKeyControllersPlayerIndex(lua_State* L)
+{
+  if (lua_gettop(L) <= 0) return 0;
+  int index = (int)lua_tointeger(L,1)-1;
+  if (index >= 0 && index < PPGameControllerCount()) {
+    if (lua_gettop(L) > 1) {
+      int playerIndex = (int)lua_tointeger(L,2);
+      PPGameControllerSetPlayerIndex(index,playerIndex);
+      return 0;
+    }
+    lua_pushinteger(L,PPGameControllerGetPlayerIndex(index));
+    return 1;
+  }
+  return 0;
+}
+
 static int funcGetKeySetUP(lua_State* L)
 {
-	QBGame* m = (QBGame*)PPLuaArg::World(L);
-	lua_pushboolean(L,m->GetKey() & PAD_SetUP);
+  funcKeyCommon(L,PAD_SetUP);
 	return 1;
 }
 
 static int funcGetKeyStart(lua_State* L)
 {
+  funcKeyCommon(L,PAD_Start);
+	return 1;
+}
+
+static int funcGetKeyPause(lua_State* L)
+{
 	QBGame* m = (QBGame*)PPLuaArg::World(L);
-	lua_pushboolean(L,m->GetKey() & PAD_Start);
+  if (lua_gettop(L)>0) {
+    m->pauseButton = lua_toboolean(L,1);
+    return 0;
+  }
+	lua_pushboolean(L,m->pauseButton);
 	return 1;
 }
 
@@ -2211,39 +2168,56 @@ static int funcTile(lua_State* L)
 {
 	QBGame* m = (QBGame*)PPLuaArg::World(L);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-	if (s->argCount > 0) {
-		if (s->isTable(L,0)) {
-			m->poly.texTileSize.width = s->tableFieldNumber(L,0,"size","width",1,m->poly.texTileSize.width);
-			m->poly.texTileSize.height = s->tableFieldNumber(L,0,"size","height",2,m->poly.texTileSize.height);
-			m->poly.texTileStride.width = s->tableFieldNumber(L,0,"stride","x",1,m->poly.texTileStride.width);
-			m->poly.texTileStride.height = s->tableFieldNumber(L,0,"stride","y",2,m->poly.texTileStride.height);
-			m->poly.texOffset.x = s->tableFieldNumber(L,0,"offset","x",1,m->poly.texOffset.x);
-			m->poly.texOffset.y = s->tableFieldNumber(L,0,"offset","y",2,m->poly.texOffset.y);
-			return 0;
-		}
+	if (s->argCount > 0 && s->isTable(L,0)) {
+    lua_getfield(L,2,"size");
+    if (lua_istable(L,-1)) {
+      m->poly.texTileSize = s->getSize(L,lua_gettop(L)-2);
+    }
+    lua_getfield(L,2,"stride");
+    if (lua_istable(L,-1)) {
+      PPPoint p=s->getPoint(L,lua_gettop(L)-2);
+      m->poly.texTileStride = PPSize(p.x,p.y);
+    }
+    lua_getfield(L,2,"offset");
+    if (lua_istable(L,-1)) {
+      m->poly.texOffset = s->getPoint(L,lua_gettop(L)-2);
+    }
+		return 0;
 	}
-	lua_createtable(L,0,3);
 
-	lua_createtable(L,0,2);
+	lua_createtable(L, 0, 3);
+	
+	lua_createtable(L, 0, 4);
+	lua_pushnumber(L,0);
+	lua_setfield(L, -2, "x");
+	lua_pushnumber(L,0);
+	lua_setfield(L, -2, "y");
 	lua_pushnumber(L,m->poly.texTileSize.width);
-	lua_setfield(L,-2,"width");
+	lua_setfield(L, -2, "width");
 	lua_pushnumber(L,m->poly.texTileSize.height);
-	lua_setfield(L,-2,"height");
-	lua_setfield(L,-2,"size");
-
-	lua_createtable(L,0,2);
+	lua_setfield(L, -2, "height");
+  lua_getglobal(L,"pprect_mt");
+  lua_setmetatable(L,-2);
+	lua_setfield(L, -2, "size");
+	
+	lua_createtable(L, 0, 2);
 	lua_pushnumber(L,m->poly.texTileStride.width);
-	lua_setfield(L,-2,"x");
+	lua_setfield(L, -2, "x");
 	lua_pushnumber(L,m->poly.texTileStride.height);
-	lua_setfield(L,-2,"y");
-	lua_setfield(L,-2,"stride");
-
-	lua_createtable(L,0,2);
+	lua_setfield(L, -2, "y");
+  lua_getglobal(L,"pppoint_mt");
+  lua_setmetatable(L,-2);
+	lua_setfield(L, -2, "stride");
+	
+	lua_createtable(L, 0, 2);
 	lua_pushnumber(L,m->poly.texOffset.x);
-	lua_setfield(L,-2,"x");
+	lua_setfield(L, -2, "x");
 	lua_pushnumber(L,m->poly.texOffset.y);
-	lua_setfield(L,-2,"y");
-	lua_setfield(L,-2,"offset");
+	lua_setfield(L, -2, "y");
+  lua_getglobal(L,"pppoint_mt");
+  lua_setmetatable(L,-2);
+	lua_setfield(L, -2, "offset");
+
 	return 1;
 }
 
@@ -2251,10 +2225,6 @@ static int funcTileSize(lua_State* L)
 {
 	QBGame* m = (QBGame*)PPLuaArg::World(L);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPObject* m = (PPObject*)s->userdata;
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	if (s->argCount > 0 && s->isTable(L,0)) {
 		m->poly.texTileSize = s->getSize(L,0);
 		return 0;
@@ -2276,10 +2246,6 @@ static int funcTileStride(lua_State* L)
 {
 	QBGame* m = (QBGame*)PPLuaArg::World(L);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPObject* m = (PPObject*)s->userdata;
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	if (s->argCount > 0 && s->isTable(L,0)) {
 		m->poly.texTileStride = s->getSize(L,0);
 		return 0;
@@ -2294,17 +2260,13 @@ static int funcTileStride(lua_State* L)
 		}
 		return 0;
 	}
-	return s->returnSize(L,m->poly.texTileStride);
+	return s->returnPoint(L,PPPoint(m->poly.texTileStride.width,m->poly.texTileStride.height));
 }
 
 static int funcTileOffset(lua_State* L)
 {
 	QBGame* m = (QBGame*)PPLuaArg::World(L);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPObject* m = (PPObject*)s->userdata;
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	if (s->argCount > 0 && s->isTable(L,0)) {
 		m->poly.texOffset = s->getPoint(L,0);
 		return 0;
@@ -2327,22 +2289,6 @@ static int funcDocumentPath(lua_State* L)
   lua_pushstring(L,PPGameDocumentPath(""));
   return 1;
 }
-
-//static int funcPreferncePath(lua_State* L)
-//{
-//	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	if (s->argCount > 0) {
-//		PPSetCustomPlistPath(s->args(0));
-//    return 0;
-//	}
-//  const char* p = PPGetCustomPlistPath();
-//  if (p==NULL) {
-//    lua_pushnil(L);
-//  } else {
-//    lua_pushstring(L,p);
-//  }
-//  return 1;
-//}
 
 void QBGame::openGameLibrary(PPLuaScript* script,const char* name)
 {
@@ -2440,6 +2386,7 @@ void QBGame::openKeyLibrary(PPLuaScript* script,const char* name)
 		script->addCommand("count",functionGetKeyControllers);
 		script->addCommand("setup",funcGetKeySetUP);
 		script->addCommand("start",funcGetKeyStart);
+		script->addCommand("pause",funcGetKeyPause);
 	script->closeModule();
 }
 
@@ -2447,7 +2394,6 @@ static int funcLoadTexture(lua_State* L)
 {
 	QBGame* m = (QBGame*)PPLuaArg::World(L);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	QBGame* m = (QBGame*)s->userdata;
 	if (s->argCount > 0) {
 		PPGameTextureOption option;
 #if 1
@@ -2480,7 +2426,6 @@ static int funcDefaultTexture(lua_State* L)
 {
 	QBGame* m = (QBGame*)PPLuaArg::World(L);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	QBGame* m = (QBGame*)s->userdata;
 	if (s->argCount > 0) {
 		if (s->isTable(L,0)) {
 			int tex = (int)s->tableInteger(L,0,"index",0);
@@ -2497,15 +2442,16 @@ static int funcDeleteTexture(lua_State* L)
 {
 	QBGame* m = (QBGame*)PPLuaArg::World(L);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	QBGame* m = (QBGame*)s->userdata;
-	//QBGame* m = (QBGame*)PPWorld::sharedWorld();//s->userdata;
 	if (s->argCount > 0) {
 		if (s->isTable(L,0)) {
 			int tex = (int)s->tableInteger(L,0,"index",0);
 			if (tex>0) {
 				m->projector->textureManager->deleteTexture(tex-1);
 			}
-		}
+		} else
+    if (lua_isstring(L,-1)) {
+      m->projector->textureManager->deleteTextureWithName(lua_tostring(L,-1),m->systemTextureID);
+    }
 	}
 	return 0;
 }
@@ -2522,7 +2468,6 @@ static int funcTexture(lua_State* L)
 {
 	QBGame* m = (QBGame*)PPLuaArg::World(L);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	QBGame* m = (QBGame*)s->userdata;
 	lua_createtable(L,m->projector->textureManager->getTextureCount(),0);
 	int c=0;
 	for (int i=0;i<PPGAME_MAX_TEXTURE;i++) {
@@ -2587,10 +2532,29 @@ static int funcPlayBackgroundMusic(lua_State* L)
       if (lua_gettop(L) > 1) {
         loop=lua_toboolean(L,2);
       }
-#ifndef NO_COCOSDENSHION
       const char* s = PPGameDataSubPath(lua_tostring(L,1));
+#ifndef NO_COCOSDENSHION
       if (checkFileName(s)) {
-        CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic(s,loop);
+        bool stream=false;
+        QBSound* snd = QBSound::sharedSound();
+        if (snd) {
+          if (snd->streamTest(s)) {
+            long long looppoint=0;
+            if (lua_gettop(L) > 2) {
+              looppoint=lua_tointeger(L,3);
+            }
+            if (loop) {
+              snd->streamLoopPlay(s,looppoint);
+            } else {
+              snd->streamPlay(s);
+            }
+            stream=true;
+          } else {
+          }
+        }
+        if (!stream) {
+          CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic(s,loop);
+        }
       } else {
         PPReadErrorReset();
         return luaL_error(L,"music file read error '%s'",lua_tostring(L,1));
@@ -2603,7 +2567,10 @@ static int funcPlayBackgroundMusic(lua_State* L)
 
 static int funcStopBackgroundMusic(lua_State* L)
 {
-//	PPLuaScript* s = PPLuaScript::sharedScript(L);
+  QBSound* snd = QBSound::sharedSound();
+  if (snd) {
+    snd->streamStop();
+  }
 	if (lua_gettop(L) > 0) {
 #ifndef NO_COCOSDENSHION
 		CocosDenshion::SimpleAudioEngine::sharedEngine()->stopBackgroundMusic(lua_toboolean(L,1));
@@ -2619,6 +2586,10 @@ static int funcStopBackgroundMusic(lua_State* L)
 static int funcPauseBackgroundMusic(lua_State* L)
 {
 #ifndef NO_COCOSDENSHION
+  QBSound* snd = QBSound::sharedSound();
+  if (snd) {
+    snd->streamPause();
+  }
 	CocosDenshion::SimpleAudioEngine::sharedEngine()->pauseBackgroundMusic();
 #endif
 	return 0;
@@ -2627,6 +2598,10 @@ static int funcPauseBackgroundMusic(lua_State* L)
 static int funcResumeBackgroundMusic(lua_State* L)
 {
 #ifndef NO_COCOSDENSHION
+  QBSound* snd = QBSound::sharedSound();
+  if (snd) {
+    snd->streamResume();
+  }
 	CocosDenshion::SimpleAudioEngine::sharedEngine()->resumeBackgroundMusic();
 #endif
 	return 0;
@@ -2635,6 +2610,10 @@ static int funcResumeBackgroundMusic(lua_State* L)
 static int funcRewindBackgroundMusic(lua_State* L)
 {
 #ifndef NO_COCOSDENSHION
+  QBSound* snd = QBSound::sharedSound();
+  if (snd) {
+    snd->streamRewind();
+  }
 	CocosDenshion::SimpleAudioEngine::sharedEngine()->rewindBackgroundMusic();
 #endif
 	return 0;
@@ -2643,6 +2622,10 @@ static int funcRewindBackgroundMusic(lua_State* L)
 static int funcWillPlayBackgroundMusic(lua_State* L)
 {
 #ifndef NO_COCOSDENSHION
+  QBSound* snd = QBSound::sharedSound();
+  if (snd) {
+    snd->streamWillPlay();
+  }
 	CocosDenshion::SimpleAudioEngine::sharedEngine()->willPlayBackgroundMusic();
 #endif
 	return 0;
@@ -2651,6 +2634,13 @@ static int funcWillPlayBackgroundMusic(lua_State* L)
 static int funcIsBackgroundMusicPlaying(lua_State* L)
 {
 #ifndef NO_COCOSDENSHION
+  QBSound* snd = QBSound::sharedSound();
+  if (snd) {
+    if (snd->streamIsPlaying()) {
+      lua_pushboolean(L,true);
+      return 1;
+    }
+  }
 	lua_pushboolean(L,CocosDenshion::SimpleAudioEngine::sharedEngine()->isBackgroundMusicPlaying());
 	return 1;
 #else
@@ -2663,6 +2653,10 @@ static int funcBackgroundMusicVolume(lua_State* L)
 #ifndef NO_COCOSDENSHION
 //	PPLuaScript* s = PPLuaScript::sharedScript(L);
 	if (lua_gettop(L) > 0) {
+    QBSound* snd = QBSound::sharedSound();
+    if (snd) {
+      snd->streamSetVolume(lua_tonumber(L,1));
+    }
 		CocosDenshion::SimpleAudioEngine::sharedEngine()->setBackgroundMusicVolume(lua_tonumber(L,1));
 		return 0;
 	}
@@ -2734,25 +2728,34 @@ static int funcPlayEffect(lua_State* L)
         gain=lua_tonumber(L,5);
       }
 
+      bool isOgg=false;
+      const char* s = PPGameDataSubPath(lua_tostring(L,1));
+      QBSound* snd = QBSound::sharedSound();
+      if (snd) {
+        if (snd->streamTest(s)) {
+          snd->playEffect(s, loop,pitch,pan,gain);
+          isOgg=true;
+        }
+      }
+      if (!isOgg) {
 #ifdef __LUAJIT__
-      const char* s = PPGameDataSubPath(lua_tostring(L,1));
-      if (checkFileName(s)) {
-        int val = CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect(s,loop,pitch,pan,gain);
-        lua_pushnumber(L,val);
-      } else {
-        PPReadErrorReset();
-        return luaL_error(L,"music file read error '%s'",lua_tostring(L,1));
-      }
+        if (checkFileName(s)) {
+          int val = CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect(s,loop,pitch,pan,gain);
+          lua_pushnumber(L,val);
+        } else {
+          PPReadErrorReset();
+          return luaL_error(L,"music file read error '%s'",lua_tostring(L,1));
+        }
 #else
-      const char* s = PPGameDataSubPath(lua_tostring(L,1));
-      if (checkFileName(s)) {
-        lua_Unsigned val = CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect(s,loop,pitch,pan,gain);
-        lua_pushunsigned(L,val);
-      } else {
-        PPReadErrorReset();
-        return luaL_error(L,"music file read error '%s'",lua_tostring(L,1));
-      }
+        if (checkFileName(s)) {
+          lua_Unsigned val = CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect(s,loop,pitch,pan,gain);
+          lua_pushunsigned(L,val);
+        } else {
+          PPReadErrorReset();
+          return luaL_error(L,"music file read error '%s'",lua_tostring(L,1));
+        }
 #endif
+      }
 
 			return 1;
 		}
@@ -2763,55 +2766,69 @@ static int funcPlayEffect(lua_State* L)
 
 static int funcStopEffect(lua_State* L)
 {
+  if (lua_gettop(L) > 0) {
 #ifndef NO_COCOSDENSHION
 #ifdef __LUAJIT__
-	int val=lua_tonumber(L,1);
+    int val=lua_tonumber(L,1);
 #else
-	lua_Unsigned val = lua_tounsigned(L,1);
+    lua_Unsigned val = lua_tounsigned(L,1);
 #endif
-	CocosDenshion::SimpleAudioEngine::sharedEngine()->stopEffect(val);
+    QBSound* snd = QBSound::sharedSound();
+    if (snd) {
+      snd->stopEffect(val);
+    }
+    CocosDenshion::SimpleAudioEngine::sharedEngine()->stopEffect(val);
 #endif
+  }
 	return 0;
 }
 
 static int funcPreloadEffect(lua_State* L)
 {
-#ifndef NO_COCOSDENSHION
-	//PPLuaScript* s = PPLuaScript::sharedScript(L);
-	if (lua_gettop(L) > 0) {
-//		std::string fname = lua_tostring(L,1);
-//		fname = fname + ".";
-//		fname = fname + SDEXT;
-		if (lua_isstring(L,1)) {
-//printf("%s\n",PPGameDataPath(lua_tostring(L,1)));
-      const char* s = PPGameDataSubPath(lua_tostring(L,1));
-      if (checkFileName(s)) {
-        CocosDenshion::SimpleAudioEngine::sharedEngine()->preloadEffect(s);
-      } else {
-        PPReadErrorReset();
-        return luaL_error(L,"sound effect file read error '%s'",lua_tostring(L,1));
+  if (lua_gettop(L) > 0) {
+    const char* s = PPGameDataSubPath(lua_tostring(L,1));
+    if (lua_isstring(L,1)) {
+      QBSound* snd = QBSound::sharedSound();
+      bool isOgg=false;
+      if (snd) {
+        if (snd->streamTest(s)) {
+          snd->preloadEffect(s);
+          isOgg=true;
+        }
       }
-		}
-	}
+      if (!isOgg) {
+#ifndef NO_COCOSDENSHION
+        if (checkFileName(s)) {
+          CocosDenshion::SimpleAudioEngine::sharedEngine()->preloadEffect(s);
+        } else {
+          PPReadErrorReset();
+          return luaL_error(L,"sound effect file read error '%s'",lua_tostring(L,1));
+        }
+      }
 #endif
+    }
+  }
 	return 0;
 }
 
 static int funcUnloadEffect(lua_State* L)
 {
-#ifndef NO_COCOSDENSHION
-	//PPLuaScript* s = PPLuaScript::sharedScript(L);
-	if (lua_gettop(L) > 0) {
-		if (lua_isstring(L,1)) {
+  if (lua_gettop(L) > 0) {
+    if (lua_isstring(L,1)) {
       const char* s = PPGameDataSubPath(lua_tostring(L,1));
+      QBSound* snd = QBSound::sharedSound();
+      if (snd) {
+        snd->unloadEffect(s);
+      }
+#ifndef NO_COCOSDENSHION
       if (checkFileName(s)) {
         CocosDenshion::SimpleAudioEngine::sharedEngine()->unloadEffect(s);
       } else {
         PPReadErrorReset();
         return luaL_error(L,"sound effect file read error '%s'",lua_tostring(L,1));
       }
-		}
-	}
+    }
+  }
 #endif
 	return 0;
 }
@@ -2833,7 +2850,6 @@ static int funcPlay(lua_State* L)
 {
 	QBGame* m = (QBGame*)PPLuaArg::World(L);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	QBGame* m = (QBGame*)s->userdata;
 	if (s->argCount > 1) {
 		m->play(s->args(0),atoi(s->args(1)));
 	} else
@@ -2889,16 +2905,6 @@ static int funcFlMMLPreload(lua_State* L)
 	}
 	return 0;
 }
-
-//static int funcFlMMLStop(lua_State* L)
-//{
-//	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	QBSound* snd = QBSound::sharedSound();
-//  if (snd) {
-//    snd->stopMML((int)s->integer(0));
-//  }
-//	return 0;
-//}
 
 static int funcFlMMLPause(lua_State* L)
 {
@@ -3071,11 +3077,15 @@ void QBGame::openAudioEngineSEMML(PPLuaScript* s,const char* name)
 	s->closeModule();
 }
 
-void QBGame::openGameController(PPLuaScript* script,const char* name)
+void QBGame::openGameController(PPLuaScript* s,const char* name)
 {
-	script->openModule(name,this);
-//		script->addCommand("volume",funcEffectsVolume);
-	script->closeModule();
+	s->openModule(name,this,0);
+		s->addCommand("startDiscovery",funcGetKeyStartDiscovery);
+		s->addCommand("stopDiscovery",funcGetKeyStopDiscovery);
+		s->addCommand("count",functionGetKeyControllers);
+    s->addCommand("info",functionGetKeyControllersInfo);
+    s->addCommand("playerIndex",functionGetKeyControllersPlayerIndex);
+	s->closeModule();
 }
 
 #if TARGET_OS_IPHONE
@@ -3286,6 +3296,10 @@ void QBGame::drawPattern(PPPoint pos,unsigned short gid,void* userdata)
   unsigned char r,g,b,a;
   GetRGBColor(colorIndex,&r,&g,&b,&a);
   Put(pos.x*GetScale().x,pos.y*GetScale().y,gid,0,o->poly._texture,r,g,b,a);
+}
+
+void QBGame::disableIO()
+{
 }
 
 /*-----------------------------------------------------------------------------------------------

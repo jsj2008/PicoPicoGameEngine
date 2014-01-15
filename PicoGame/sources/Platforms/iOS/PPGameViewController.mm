@@ -14,6 +14,7 @@
 #import "PPSensoriOS.h"
 #import "iCadeReaderView.h"
 #import "PPGameView.h"
+#import <GameController/GameController.h>
 
 #define kAccelerometerFrequency     10
 
@@ -80,11 +81,47 @@
 		[self.game start];
 		self.game.initFlag = YES;
 	}
+  
+  [self initGameController];
+}
+
+- (void)initGameController
+{
+  if ([GCController class]!=nil) {
+    NSArray* controllers = [GCController controllers];
+    for (GCController* controller in controllers) {
+      [self configureController:controller];
+    }
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectController:) name:GCControllerDidConnectNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(disconnectController:) name:GCControllerDidDisconnectNotification object:nil];
+  }
+}
+
+- (void)connectController:(NSNotification*)notification
+{
+  GCController *controller = notification.object;
+  
+  [self configureController:controller];
+}
+
+- (void)configureController:(GCController *)controller
+{
+  controller.controllerPausedHandler = ^(GCController *controller) {
+    [((PPGameView*)self.view) pauseButtonPushed:controller];
+  };
+}
+
+- (void)disconnectController:(NSNotification*)notification
+{
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
   [super viewWillDisappear:animated];
 	[((PPGameView*)self.view) stopAnimation];
+  if ([GCController class]!=nil) {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:GCControllerDidConnectNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:GCControllerDidDisconnectNotification object:nil];
+  }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -115,6 +152,11 @@
 - (PPGame*)gameController
 {
 	return self.game;
+}
+
+- (void)disableIO:(id)sender
+{
+  [self.game disableIO];
 }
 
 @end

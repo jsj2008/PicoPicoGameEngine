@@ -5,42 +5,42 @@ PG_ENGINE_PATH := ../../..
 ifneq ($(call set_is_member,$(__ndk_modules),cocosdenshion),$(true))
   include $(CLEAR_VARS)
   LOCAL_MODULE    := cocosdenshion
-  LOCAL_SRC_FILES := $(PG_ENGINE_PATH)/CocosDenshion/Android/libs/$(TARGET_ARCH_ABI)/libcocosdenshion.so
+  LOCAL_SRC_FILES := $(PG_ENGINE_PATH)/CocosDenshion/Android/obj/local/$(TARGET_ARCH_ABI)/libcocosdenshion.a
   include $(PREBUILT_STATIC_LIBRARY)
 endif
 
 ifneq ($(call set_is_member,$(__ndk_modules),cocos2dwrapper),$(true))
   include $(CLEAR_VARS)
   LOCAL_MODULE    := cocos2dwrapper
-  LOCAL_SRC_FILES := $(PG_ENGINE_PATH)/Cocos2dx/Android2/libs/$(TARGET_ARCH_ABI)/libcocos2dwrapper.so
+  LOCAL_SRC_FILES := $(PG_ENGINE_PATH)/Cocos2dx/Android2/obj/local/$(TARGET_ARCH_ABI)/libcocos2dwrapper.a
   include $(PREBUILT_STATIC_LIBRARY)
 endif
 
 ifneq ($(call set_is_member,$(__ndk_modules),freetype),$(true))
   include $(CLEAR_VARS)
   LOCAL_MODULE    := freetype
-  LOCAL_SRC_FILES := $(PG_ENGINE_PATH)/freetype/Android/libs/$(TARGET_ARCH_ABI)/libfreetype.so
+  LOCAL_SRC_FILES := $(PG_ENGINE_PATH)/freetype/Android/obj/local/$(TARGET_ARCH_ABI)/libfreetype.a
   include $(PREBUILT_STATIC_LIBRARY)
 endif
 
 ifneq ($(call set_is_member,$(__ndk_modules),lua),$(true))
   include $(CLEAR_VARS)
-  LOCAL_MODULE    := liblua
-  LOCAL_SRC_FILES := $(PG_ENGINE_PATH)/Lua5.2/Android/libs/$(TARGET_ARCH_ABI)/liblua.so
+  LOCAL_MODULE    := lua
+  LOCAL_SRC_FILES := $(PG_ENGINE_PATH)/Lua5.2/Android/obj/local/$(TARGET_ARCH_ABI)/liblua.a
   include $(PREBUILT_STATIC_LIBRARY)
 endif
 
 ifneq ($(call set_is_member,$(__ndk_modules),box2d),$(true))
   include $(CLEAR_VARS)
-  LOCAL_MODULE    := libbox2d
-  LOCAL_SRC_FILES := $(PG_ENGINE_PATH)/Box2D/Android/libs/$(TARGET_ARCH_ABI)/libbox2d.so
+  LOCAL_MODULE    := box2d
+  LOCAL_SRC_FILES := $(PG_ENGINE_PATH)/Box2D/Android/obj/local/$(TARGET_ARCH_ABI)/libbox2d.a
   include $(PREBUILT_STATIC_LIBRARY)
 endif
 
 ifneq ($(call set_is_member,$(__ndk_modules),flmml),$(true))
   include $(CLEAR_VARS)
   LOCAL_MODULE    := flmml
-  LOCAL_SRC_FILES := $(PG_ENGINE_PATH)/FlMML/Android/libs/$(TARGET_ARCH_ABI)/libflmml.so
+  LOCAL_SRC_FILES := $(PG_ENGINE_PATH)/FlMML/Android/obj/local/$(TARGET_ARCH_ABI)/libflmml.a
   include $(PREBUILT_STATIC_LIBRARY)
 endif
 
@@ -48,7 +48,6 @@ ifneq ($(call set_is_member,$(__ndk_modules),png),$(true))
   include $(CLEAR_VARS)
   LOCAL_MODULE    := libpng 
   LOCAL_SRC_FILES := $(PG_ENGINE_PATH)/png/Android/obj/local/$(TARGET_ARCH_ABI)/libpng.a
-#  LOCAL_SRC_FILES := $(PG_ENGINE_PATH)/Cocos2dx/libraries/Android/$(TARGET_ARCH_ABI)/libpng.a
   include $(PREBUILT_STATIC_LIBRARY)
 endif
 
@@ -141,7 +140,7 @@ LOCAL_C_INCLUDES := \
                     $(LOCAL_PATH)/$(SOURCE_PATH)/GameLogic/ \
                   	$(LOCAL_PATH)/../../../Lua5.2/sources/ \
                   	$(LOCAL_PATH)/../../../Lua5.2/sources/lua/ \
-                    $(LOCAL_PATH)/../../../Box2D/sources/Box2D_v2.2.1/ \
+                    $(LOCAL_PATH)/../../../Box2D/sources/Box2D_v2.3.0/Box2D/ \
                   	$(LOCAL_PATH)/../../../freetype/sources/ \
                   	$(LOCAL_PATH)/../../../freetype/sources/freetype-2.4.12/ \
                   	$(LOCAL_PATH)/../../../freetype/sources/freetype-2.4.12/include/ \
@@ -149,6 +148,6 @@ LOCAL_C_INCLUDES := \
 
 LOCAL_CFLAGS += -O3
 
-LOCAL_STATIC_LIBRARIES := libpng libxml2 liblua libbox2d libflmml libfreetype libcocosdenshion libcocos2dwrapper
+LOCAL_STATIC_LIBRARIES := libpng libxml2 liblua libbox2d libfreetype libflmml libcocosdenshion libcocos2dwrapper
 
 include $(BUILD_STATIC_LIBRARY)

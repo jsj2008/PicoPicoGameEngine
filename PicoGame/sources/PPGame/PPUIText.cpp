@@ -505,12 +505,13 @@ void PPUIText::touchDrag(PPPoint _pos)
 
 static int funcIdle(lua_State* L)
 {
-	PPUIText* m = (PPUIText*)PPLuaScript::UserData(L);
+	PPUIText* m = (PPUIText*)PPLuaArg::UserData(L,PPUIText::className);
+  PPUserDataAssert(m!=NULL);
 //	PPLuaScript* s = PPLuaScript::SharedScript(m->world(),L);
 //	PPUIText* m = (PPUIText*)s->userData(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
+//	if (m==NULL) {
+//		return luaL_argerror(L,1,"invalid argument.");
+//	}
 	m->selectedCell=-1;
 	m->idle();
 	lua_pushboolean(L,m->updateString);
@@ -520,11 +521,9 @@ static int funcIdle(lua_State* L)
 
 static int funcText(lua_State* L)
 {
-	PPUIText* m = (PPUIText*)PPLuaScript::UserData(L);
+	PPUIText* m = (PPUIText*)PPLuaArg::UserData(L,PPUIText::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	if (s->argCount > 0) {
 		m->str = s->args(0);
 		m->calcContentsRect();
@@ -537,10 +536,11 @@ static int funcText(lua_State* L)
 
 static int funcClear(lua_State* L)
 {
-	PPUIText* m = (PPUIText*)PPLuaScript::UserData(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
+	PPUIText* m = (PPUIText*)PPLuaArg::UserData(L,PPUIText::className);
+  PPUserDataAssert(m!=NULL);
+//	if (m==NULL) {
+//		return luaL_argerror(L,1,"invalid argument.");
+//	}
 	m->str = "";
 	m->calcContentsRect();
 	m->selectedCell = -1;
@@ -550,11 +550,9 @@ static int funcClear(lua_State* L)
 
 static int funcLineHeight(lua_State* L)
 {
-	PPUIText* m = (PPUIText*)PPLuaScript::UserData(L);
+	PPUIText* m = (PPUIText*)PPLuaArg::UserData(L,PPUIText::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	if (s->argCount > 0) {
 		m->lineHeight = s->number(0);
 		m->calcContentsRect();
@@ -566,11 +564,9 @@ static int funcLineHeight(lua_State* L)
 
 static int funcLineWidth(lua_State* L)
 {
-	PPUIText* m = (PPUIText*)PPLuaScript::UserData(L);
+	PPUIText* m = (PPUIText*)PPLuaArg::UserData(L,PPUIText::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	if (s->argCount > 0) {
 		m->lineWidth = s->number(0);
 		m->calcContentsRect();
@@ -582,11 +578,9 @@ static int funcLineWidth(lua_State* L)
 
 static int funcLineRect(lua_State* L)
 {
-	PPUIText* m = (PPUIText*)PPLuaScript::UserData(L);
+	PPUIText* m = (PPUIText*)PPLuaArg::UserData(L,PPUIText::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	PPRect r = PPRect(0,0,0,0);
 	if (s->argCount > 0) {
 		int i = (int)s->integer(0);
@@ -597,11 +591,9 @@ static int funcLineRect(lua_State* L)
 
 static int funcLineString(lua_State* L)
 {
-	PPUIText* m = (PPUIText*)PPLuaScript::UserData(L);
+	PPUIText* m = (PPUIText*)PPLuaArg::UserData(L,PPUIText::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	bool ok=false;
 	if (s->argCount > 0) {
 		int i = (int)s->integer(0)-1;
@@ -626,11 +618,9 @@ static int funcLineString(lua_State* L)
 
 static int funcAutoScroll(lua_State* L)
 {
-	PPUIText* m = (PPUIText*)PPLuaScript::UserData(L);
+	PPUIText* m = (PPUIText*)PPLuaArg::UserData(L,PPUIText::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	if (s->argCount > 0) {
 		m->autoScroll = s->boolean(0);
 		return 0;
@@ -641,11 +631,9 @@ static int funcAutoScroll(lua_State* L)
 
 static int funcAutoCenter(lua_State* L)
 {
-	PPUIText* m = (PPUIText*)PPLuaScript::UserData(L);
+	PPUIText* m = (PPUIText*)PPLuaArg::UserData(L,PPUIText::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	if (s->argCount > 0) {
 		m->autoCenter = s->boolean(0);
 		m->calcContentsRect();
@@ -657,11 +645,9 @@ static int funcAutoCenter(lua_State* L)
 
 static int funcHideCell(lua_State* L)
 {
-	PPUIText* m = (PPUIText*)PPLuaScript::UserData(L);
+	PPUIText* m = (PPUIText*)PPLuaArg::UserData(L,PPUIText::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	if (s->argCount > 0) {
 		m->hideCell = s->boolean(0);
 		return 0;
@@ -672,11 +658,9 @@ static int funcHideCell(lua_State* L)
 
 static int funcSetSpeed(lua_State* L)
 {
-	PPUIText* m = (PPUIText*)PPLuaScript::UserData(L);
+	PPUIText* m = (PPUIText*)PPLuaArg::UserData(L,PPUIText::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	if (s->argCount > 0) {
 		m->messageSpeed = (int)s->integer(0);
 		return 0;
@@ -687,11 +671,9 @@ static int funcSetSpeed(lua_State* L)
 
 static int funcAdd(lua_State* L)
 {
-	PPUIText* m = (PPUIText*)PPLuaScript::UserData(L);
+	PPUIText* m = (PPUIText*)PPLuaArg::UserData(L,PPUIText::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	if (m->messageSpeed==0) {
 		m->str+=s->args(0);
 		m->str+="\n";
@@ -707,11 +689,9 @@ static int funcAdd(lua_State* L)
 
 static int funcSetMessage(lua_State* L)
 {
-	PPUIText* m = (PPUIText*)PPLuaScript::UserData(L);
+	PPUIText* m = (PPUIText*)PPLuaArg::UserData(L,PPUIText::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	if (m->messageSpeed==0) {
 		m->str+=s->args(0);
 		m->calcContentsRect();
@@ -725,11 +705,8 @@ static int funcSetMessage(lua_State* L)
 
 static int funcDone(lua_State* L)
 {
-	PPUIText* m = (PPUIText*)PPLuaScript::UserData(L);
-//	PPLuaScript* s = PPLuaScript::SharedScript(m->world(),L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
+	PPUIText* m = (PPUIText*)PPLuaArg::UserData(L,PPUIText::className);
+  PPUserDataAssert(m!=NULL);
 	lua_pushboolean(L,m->message=="");
 	return 1;
 }
@@ -741,11 +718,9 @@ static int funcDone(lua_State* L)
 
 static int funcCurPos(lua_State* L)
 {
-	PPUIText* m = (PPUIText*)PPLuaScript::UserData(L);
+	PPUIText* m = (PPUIText*)PPLuaArg::UserData(L,PPUIText::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	PPRect r = m->getCurRect(m->maxLine-1);
 	if (r.height == 0) {
 		return s->returnPoint(L,PPPoint(r.x+r.width,r.y+r.height));
@@ -755,29 +730,28 @@ static int funcCurPos(lua_State* L)
 
 static int funcLineCount(lua_State* L)
 {
-	PPUIText* m = (PPUIText*)PPLuaScript::UserData(L);
+	PPUIText* m = (PPUIText*)PPLuaArg::UserData(L,PPUIText::className);
+  PPUserDataAssert(m!=NULL);
 //	PPLuaScript* s = PPLuaScript::SharedScript(m->world(),L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
+//	if (m==NULL) {
+//		return luaL_argerror(L,1,"invalid argument.");
+//	}
 	lua_pushinteger(L,m->maxLine);
 	return 1;
 }
 
 static int funcSelectedLines(lua_State* L)
 {
-	PPUIText* m = (PPUIText*)PPLuaScript::UserData(L);
+	PPUIText* m = (PPUIText*)PPLuaArg::UserData(L,PPUIText::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	if (s->argCount > 0) {
 		m->selectedLines.clear();
 		if (s->isTable(L,0)) {
 #ifdef __LUAJIT__
 			int n= (int)lua_objlen(L,2);
 #else
-			int n = luaL_len(L,2);
+			int n= (int)lua_rawlen(L,2);
 #endif
 			for (int i=0;i<n;i++) {
 				int top = lua_gettop(L);
@@ -800,11 +774,9 @@ static int funcSelectedLines(lua_State* L)
 
 static int funcSelectable(lua_State* L)
 {
-	PPUIText* m = (PPUIText*)PPLuaScript::UserData(L);
+	PPUIText* m = (PPUIText*)PPLuaArg::UserData(L,PPUIText::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	if (s->argCount > 0) {
 		m->selectable = s->boolean(0);
 		return 0;
@@ -815,11 +787,9 @@ static int funcSelectable(lua_State* L)
 
 static int funcMultiSelectable(lua_State* L)
 {
-	PPUIText* m = (PPUIText*)PPLuaScript::UserData(L);
+	PPUIText* m = (PPUIText*)PPLuaArg::UserData(L,PPUIText::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	if (s->argCount > 0) {
 		m->multiselectable = s->boolean(0);
 		return 0;
@@ -830,11 +800,9 @@ static int funcMultiSelectable(lua_State* L)
 
 static int funcEmptySelection(lua_State* L)
 {
-	PPUIText* m = (PPUIText*)PPLuaScript::UserData(L);
+	PPUIText* m = (PPUIText*)PPLuaArg::UserData(L,PPUIText::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	if (s->argCount > 0) {
 		m->emptyselection = s->boolean(0);
 		if (!m->emptyselection && m->isEmpty()) {
@@ -848,11 +816,9 @@ static int funcEmptySelection(lua_State* L)
 
 static int funcSelectedColor(lua_State* L)
 {
-	PPUIText* m = (PPUIText*)PPLuaScript::UserData(L);
+	PPUIText* m = (PPUIText*)PPLuaArg::UserData(L,PPUIText::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	if (s->argCount > 0) {
 		if (s->isTable(L,0)) {
 			m->selectedColor.r = s->tableInteger(L,0,1,"r",m->selectedColor.r);
@@ -881,11 +847,9 @@ static int funcSelectedColor(lua_State* L)
 
 static int funcSetColumn(lua_State* L)
 {
-	PPUIText* m = (PPUIText*)PPLuaScript::UserData(L);
+	PPUIText* m = (PPUIText*)PPLuaArg::UserData(L,PPUIText::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	if (s->argCount > 0) {
 		m->column = (int)s->integer(0);//atoi(s->args(0));
 		if (m->column < 1) m->column=1;
@@ -899,22 +863,21 @@ static int funcSetColumn(lua_State* L)
 
 static int funcSelectedCell(lua_State* L)
 {
-	PPUIText* m = (PPUIText*)PPLuaScript::UserData(L);
+	PPUIText* m = (PPUIText*)PPLuaArg::UserData(L,PPUIText::className);
+  PPUserDataAssert(m!=NULL);
 //	PPLuaScript* s = PPLuaScript::SharedScript(m->world(),L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
+//	if (m==NULL) {
+//		return luaL_argerror(L,1,"invalid argument.");
+//	}
 	lua_pushinteger(L,m->selectedCell+1);
 	return 1;
 }
 
 static int funcMargin(lua_State* L)
 {
-	PPUIText* m = (PPUIText*)PPLuaScript::UserData(L);
+	PPUIText* m = (PPUIText*)PPLuaArg::UserData(L,PPUIText::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	if (s->argCount > 0) {
 		if (s->isTable(L,0)) {
 			m->marginTop = s->tableInteger(L,0,1,"top",m->marginTop);
@@ -958,11 +921,9 @@ static int funcMargin(lua_State* L)
 
 static int funcScale(lua_State* L)
 {
-	PPUIText* m = (PPUIText*)PPLuaScript::UserData(L);
+	PPUIText* m = (PPUIText*)PPLuaArg::UserData(L,PPUIText::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	if (s->argCount > 0) {
 		if (s->isTable(L,0)) {
 			m->poly.scale = s->getPoint(L,0,m->poly.scale.x,m->poly.scale.y);
@@ -980,12 +941,13 @@ static int funcScale(lua_State* L)
 
 static int funcHide(lua_State* L)
 {
-	PPUIText* m = (PPUIText*)PPLuaScript::UserData(L);
+	PPUIText* m = (PPUIText*)PPLuaArg::UserData(L,PPUIText::className);
+  PPUserDataAssert(m!=NULL);
 //	PPLuaScript* s = PPLuaScript::sharedScript();
 //	PPObject* m = (PPObject*)s->userData(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
+//	if (m==NULL) {
+//		return luaL_argerror(L,1,"invalid argument.");
+//	}
 	m->resetScroll();
 //	m->dragged=false;
 //	m->setTouch(false);
@@ -1006,7 +968,6 @@ static int funcDelete(lua_State *L)
 static int funcNew(lua_State *L)
 {
 	PPWorld* world = PPLuaScript::World(L);
-//	PPUIText* m = (PPUIText*)PPLuaScript::UserData(L);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
 	if (s->argCount > 0) {
 		lua_createtable(L,(int)s->integer(0),0);
@@ -1015,30 +976,31 @@ static int funcNew(lua_State *L)
 			PPUIText* obj = new PPUIText(world);
 			obj->init();
 			obj->start();
-			PPLuaScript::newObject(L,PPUIText::className.c_str(),obj,funcDelete);
+			PPLuaScript::newObject(L,PPUIText::classname.c_str(),obj,funcDelete);
 			lua_rawseti(L,table,i+1);
 		}
 	} else {
 		PPUIText* obj = new PPUIText(world);
 		obj->init();
 		obj->start();
-		PPLuaScript::newObject(L,PPUIText::className.c_str(),obj,funcDelete);
+		PPLuaScript::newObject(L,PPUIText::classname.c_str(),obj,funcDelete);
 	}
 	return 1;
 }
 
-std::string PPUIText::className = "PPUIText";
+std::string PPUIText::classname;
 
 PPObject* PPUIText::registClass(PPLuaScript* script,const char* name,const char* superclass)
 {
-	if (name) PPUIText::className = name;
-	return PPUIText::registClass(script,PPUIText::className.c_str(),new PPUIText(script->world()),superclass);
+	if (name) PPUIText::classname = name;
+	return PPUIText::registClass(script,PPUIText::classname.c_str(),new PPUIText(script->world()),superclass);
 }
 
 PPObject* PPUIText::registClass(PPLuaScript* s,const char* name,PPObject* obj,const char* superclass)
 {
+  classname=name;
 	obj->init(s->world());
-	PPUIScrollView::registClass(s,name,obj);
+	//PPUIScrollView::registClass(s,name,obj);
 	s->openModule(name,obj,0,superclass);
 		s->addCommand("new",funcNew);
 		s->addCommand("idle",funcIdle);

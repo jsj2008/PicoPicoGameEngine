@@ -58,10 +58,13 @@ PPVertex PPSensor::getAccelerometer()
 }
 
 static int funcStart(lua_State *L) {
-//	PPSensor* o = (PPSensor*)PPLuaScript::UserData(L);
-//	PPLuaScript* s = PPLuaScript::SharedScript(o->world(),L);
-//	int value = lua_tonumber(L,2);
-	PPSensor::sharedManager()->startAccelerometer(lua_tonumber(L,2));
+  if (lua_gettop(L)>0) {
+    if (lua_gettop(L)>1) {
+      PPSensor::sharedManager()->startAccelerometer(lua_tonumber(L,2));
+    } else {
+      PPSensor::sharedManager()->startAccelerometer(lua_tonumber(L,1));
+    }
+  }
 	return 0;
 }
 

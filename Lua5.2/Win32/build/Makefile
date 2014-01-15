@@ -1,7 +1,9 @@
 CC = /Developer/Cocotron/1.0/Windows/i386/gcc-4.3.1/bin/i386-mingw32msvc-gcc
 AR = /Developer/Cocotron/1.0/Windows/i386/gcc-4.3.1/bin/i386-mingw32msvc-ar
 
-CFLAGS = -DFT2_BUILD_LIBRARY -DFT_CONFIG_MODULES_H="<ftmodule.h>" -D_WIN32 -DIGNORE_EXPORT -DGLEW_NO_GLU -D__MINGW32__ -DGLEW_STATIC -DREGEX_STATIC -DLUA_COMPAT_ALL -DCC_UNDER_WIN32 -DGL_GLEXT_PROTOTYPES=1 -DWIN32 -D_WINDOWS -DNDEBUG \
+CFLAGS = -DFT2_BUILD_LIBRARY -DFT_CONFIG_MODULES_H="<ftmodule.h>" -D_WIN32 \
+-DIGNORE_EXPORT -DGLEW_NO_GLU -D__MINGW32__ -DGLEW_STATIC -DREGEX_STATIC \
+-DLUA_COMPAT_ALL -DCC_UNDER_WIN32 -DGL_GLEXT_PROTOTYPES=1 -DWIN32 -D_WINDOWS -DNDEBUG \
 -O3 -DWINDOWS
 
 BUILD_DIR = objects
@@ -9,9 +11,9 @@ BUILD_DIR = objects
 LIBNAME = liblua.ar
 
 CFLAGS += \
--I../../sources/lua5.2
+-I../../sources/lua-5.2.3/src
 
-VPATH = ../../sources/lua5.2:
+VPATH = ../../sources/lua-5.2.3/src:
 
 OBJS = \
 lapi.o \
@@ -45,8 +47,7 @@ ltablib.o \
 ltm.o \
 lundump.o \
 lvm.o \
-lzio.o \
-luaApiHook.o
+lzio.o
 
 $(BUILD_DIR)/%.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@

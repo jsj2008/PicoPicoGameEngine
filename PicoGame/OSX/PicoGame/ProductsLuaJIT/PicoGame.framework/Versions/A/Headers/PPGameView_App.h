@@ -13,6 +13,7 @@
 #import <QuartzCore/CVDisplayLink.h>
 #import "PPGameSprite.h"
 #import "PPGameController.h"
+#import <GameController/GameController.h>
 
 @class PPGame;
 @class PPGameController;
@@ -50,6 +51,8 @@
 	bool reloadTexture;
 
 	PPGameSprite* _projector;
+  
+  bool pauseButtonPushed;
 }
 
 - (id)initWithFrame:(NSRect)frameRect;
@@ -78,6 +81,7 @@
 @property (nonatomic,assign) bool reloadTexture;
 
 - (unsigned long)staticButton;
+- (void)pauseButtonPushed:(GCController*)controller;
 
 @end
 

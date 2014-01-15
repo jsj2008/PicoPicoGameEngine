@@ -50,7 +50,8 @@ LIBS = \
 ../../../freetype/Win32/build/libfreetype.ar \
 ../../../FlMML/Win32/build/libflmml.ar \
 ../../../png/Win32/build/libpng.ar \
-../../../Box2D/Win32/build/libbox2d.ar
+../../../Box2D/Win32/build/libbox2d.ar \
+../../../Vorbis/Win32/build/libvorbis.ar
 
 $(BUILD_DIR)/%.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -78,6 +79,7 @@ buildall:
 	cd ../../../freetype/Win32/build; make clean
 	cd ../../../PicoGame/Win32/buildLuaJIT; make clean
 	cd ../../../png/Win32/build; make clean
+	cd ../../../Vorbis/Win32/build; make clean
 	cd ./; make clean
 	cd ../../../Box2D/Win32/build; make
 	cd ../../../CocosDenshion/Win32/build; make
@@ -85,6 +87,7 @@ buildall:
 	cd ../../../freetype/Win32/build; make
 	cd ../../../PicoGame/Win32/buildLuaJIT; make
 	cd ../../../png/Win32/build; make
+	cd ../../../Vorbis/Win32/build; make
 	cd ./; make
 
 cleanall:
@@ -94,6 +97,7 @@ cleanall:
 	cd ../../../freetype/Win32/build; make clean
 	cd ../../../PicoGame/Win32/buildLuaJIT; make clean
 	cd ../../../png/Win32/build; make clean
+	cd ../../../Vorbis/Win32/build; make clean
 	cd ./; make clean
 
 build:
@@ -103,6 +107,7 @@ build:
 	cd ../../../freetype/Win32/build; make
 	cd ../../../PicoGame/Win32/buildLuaJIT; make
 	cd ../../../png/Win32/build; make
+	cd ../../../Vorbis/Win32/build; make
 	cd ./; make
 
 clean:

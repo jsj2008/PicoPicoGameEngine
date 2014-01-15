@@ -13,16 +13,23 @@
 -----------------------------------------------------------------------------------------------*/
 
 #include <stdlib.h>
+#include <vector>
 
 /*-----------------------------------------------------------------------------------------------
 	クラス
 -----------------------------------------------------------------------------------------------*/
 
+class PPBox2DWorld;
 class PPLuaScript;
 
 class PPBox2D {
 public:
-	static void openLibrary(PPLuaScript* script,const char* name,const char* superclass=NULL);
+	static PPBox2D* openLibrary(PPLuaScript* script,const char* name,const char* superclass=NULL);
+
+  std::vector<PPBox2DWorld*> worlds;
+
+  void addWorld(PPBox2DWorld* world);
+  void removeWorld(PPBox2DWorld* world);
 };
 
 #endif

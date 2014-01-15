@@ -90,6 +90,27 @@ public:
 
 	static int BufferSize;
 	static int BufferSizeVista;
+
+#ifdef __USE_OGG_VORBIS__
+	bool mThreadEnd;
+
+  virtual void streamPlay(const char* filename,int track=0);
+  virtual void streamLoopPlay(const char* filename,long long looppoint=0,int track=0);
+  virtual void streamStop(int track=0);
+  virtual void streamPause(int track=0);
+  virtual void streamResume(int track=0);
+  virtual void streamRewind(int track=0);
+  virtual void streamWillPlay(int track=0);
+  virtual bool streamIsPlaying(int track=0);
+  virtual void streamSetVolume(float volume,int track=0);
+  virtual float streamGetVolume(int track=0);
+  virtual bool streamTest(const char* filename);
+
+  virtual void preloadEffect(const char* filename);
+  virtual unsigned int playEffect(const char* filename,bool bLoop,float pitch, float pan, float gain);
+  virtual void stopEffect(unsigned int nSoundId);
+  virtual void unloadEffect(const char* filename);
+#endif
 };
 
 #ifdef __cplusplus

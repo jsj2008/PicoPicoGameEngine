@@ -13,6 +13,7 @@
 #import "PPGameView_App.h"
 #import "PPGame.h"
 #import "QBGame.h"
+#import <GameController/GameController.h>
 
 #ifndef NO_COCOSDENSHION
 #include <CocosDenshion/SimpleAudioEngine.h>
@@ -45,12 +46,45 @@
 		
 		[openGLView startAnimation];
 		isAnimating = YES;
+
+#if __LP64__
+    if ([GCController class]!=nil) {
+      [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectController:) name:GCControllerDidConnectNotification object:nil];
+      [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(disconnectController:) name:GCControllerDidDisconnectNotification object:nil];
+    }
+#endif
 	}
 
 	NSNumber* density = [[NSUserDefaults standardUserDefaults] objectForKey:@"densityValue"];
 	if (density == nil) density = [NSNumber numberWithInt:10];
 	[openGLView.game game]->scale_factor = [density intValue]/10.0;
 	[openGLView setNeedsDisplay:YES];
+}
+
+- (void)connectController:(NSNotification*)notification
+{
+#if __LP64__
+  if ([GCController class]!=nil) {
+    GCController *controller = notification.object;
+  
+    [self configureController:controller];
+  }
+#endif
+}
+
+- (void)configureController:(GCController *)controller
+{
+#if __LP64__
+  if ([GCController class]!=nil) {
+    controller.controllerPausedHandler = ^(GCController *controller) {
+      [openGLView pauseButtonPushed:controller];
+    };
+  }
+#endif
+}
+
+- (void)disconnectController:(NSNotification*)notification
+{
 }
 
 - (IBAction)goFullScreen:(id)sender
@@ -386,6 +420,11 @@
 - (void)windowWillClose:(NSNotification *)notification
 {
 	[NSApp terminate:self];
+}
+
+- (void)disableIO:(id)sender
+{
+  [self.game disableIO];
 }
 
 @end

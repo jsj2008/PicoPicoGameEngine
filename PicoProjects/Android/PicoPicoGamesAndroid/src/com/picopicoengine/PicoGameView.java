@@ -3,10 +3,13 @@ package com.picopicoengine;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
+import android.os.Build;
 
 public class PicoGameView extends GLSurfaceView {
-	
+  private static String TAG = "PicoGameView";
+  
   private PicoGameRenderer mRenderer;
 
   public PicoGameView(Context context) {
@@ -19,7 +22,22 @@ public class PicoGameView extends GLSurfaceView {
     initView();
   }
 
+  private final static boolean isAndroidEmulator() {
+      String model = Build.MODEL;
+      Log.d(TAG, "model=" + model);
+      String product = Build.PRODUCT;
+      Log.d(TAG, "product=" + product);
+      boolean isEmulator = false;
+      if (product != null) {
+         isEmulator = product.equals("sdk") || product.contains("_sdk") || product.contains("sdk_");
+      }
+      Log.d(TAG, "isEmulator=" + isEmulator);
+      return isEmulator;
+   }
+
   protected void initView() {
+	if (isAndroidEmulator())
+		setEGLConfigChooser(8, 8, 8, 8, 16, 0);
 	mRenderer = new PicoGameRenderer();
     setRenderer(mRenderer);
   }

@@ -9,7 +9,8 @@
 #import "MainViewController.h"
 #import <PicoGame/PPGame.h>
 #import <PicoGame/PPGameView.h>
-
+#import <PicoGame/PPGameUtil.h>
+#
 @interface MainViewController ()
 
 @property (strong, nonatomic) IBOutlet PPGame *game1;
@@ -40,6 +41,8 @@
 			[self.gameView1 setContentScaleFactor:[[UIScreen mainScreen] scale]];
 		}
 	}
+
+	PPGameSetDataPath([[[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"GameData/main.lua"] stringByDeletingLastPathComponent] fileSystemRepresentation]);
 	
 	[self.game1 start];
 	[self.game2 start];
@@ -80,6 +83,11 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (BOOL)prefersStatusBarHidden
+{
+  return YES;
 }
 
 - (void)viewDidUnload {

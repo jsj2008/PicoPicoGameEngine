@@ -1349,9 +1349,9 @@ void PPTMXMap_textHandler(void *ctx, const PPXmlChar *name, int len)
 
 static int funcLoad(lua_State* L)
 {
-	PPTMXMap* m = (PPTMXMap*)PPLuaScript::UserData(L);
+	PPTMXMap* m = (PPTMXMap*)PPLuaArg::UserData(L,PPTMXMap::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPTMXMap* m = (PPTMXMap*)s->userdata;
 	if (s->argCount > 0) {
 		if (!m->load(s->args(0))) {
 			if (PPReadError()) {
@@ -1386,10 +1386,9 @@ static int funcLoad(lua_State* L)
 
 static int funcGID(lua_State* L)
 {
-	PPTMXMap* m = (PPTMXMap*)PPLuaScript::UserData(L);
+	PPTMXMap* m = (PPTMXMap*)PPLuaArg::UserData(L,PPTMXMap::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPLuaScript* s = PPLuaScript::sharedScript(L);
-//	PPTMXMap* m = (PPTMXMap*)s->userdata;
 	PPPoint pos = m->editPos;
 	int gid = 0;
 
@@ -1400,6 +1399,7 @@ static int funcGID(lua_State* L)
 			} else {
 				gid = (int)s->integer(0);
 				m->tset(gid,pos);
+        m->editAttr.tile=gid;
 				return 0;
 			}
 		} else
@@ -1408,12 +1408,14 @@ static int funcGID(lua_State* L)
 				pos = PPPoint(s->tableNumber(L,0,1,"x"),s->tableNumber(L,0,2,"y"));
 				gid = (int)s->integer(1);
 				m->tset(gid,pos);
+        m->editAttr.tile=gid;
 				return 0;
 			} else {
 				pos = PPPoint(s->number(0),s->number(1));
 				if (s->argCount >= 3) {
 					gid = (int)s->integer(2);
 					m->tset(gid,pos);
+          m->editAttr.tile=gid;
 					return 0;
 				}
 			}
@@ -1426,10 +1428,9 @@ static int funcGID(lua_State* L)
 
 static int funcSelectLayer(lua_State* L)
 {
-	PPTMXMap* m = (PPTMXMap*)PPLuaScript::UserData(L);
+	PPTMXMap* m = (PPTMXMap*)PPLuaArg::UserData(L,PPTMXMap::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPLuaScript* s = PPLuaScript::sharedScript(L);
-//	PPTMXMap* m = (PPTMXMap*)s->userdata;
 	if (s->argCount > 0) {
 		m->curLayer = -1;
 		if (!m->layer.empty()) {
@@ -1448,10 +1449,9 @@ static int funcSelectLayer(lua_State* L)
 
 static int funcLayerList(lua_State* L)
 {
-	PPTMXMap* m = (PPTMXMap*)PPLuaScript::UserData(L);
+	PPTMXMap* m = (PPTMXMap*)PPLuaArg::UserData(L,PPTMXMap::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPLuaScript* s = PPLuaScript::sharedScript(L);
-//	PPTMXMap* m = (PPTMXMap*)s->userdata;
 	if (!m->layer.empty()) {
 		lua_createtable(L, (int)m->layer.size(), 0);
 		for (int i=0;i<m->layer.size();i++) {
@@ -1466,10 +1466,9 @@ static int funcLayerList(lua_State* L)
 
 static int funcMapSize(lua_State* L)
 {
-	PPTMXMap* m = (PPTMXMap*)PPLuaScript::UserData(L);
+	PPTMXMap* m = (PPTMXMap*)PPLuaArg::UserData(L,PPTMXMap::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPLuaScript* s = PPLuaScript::sharedScript(L);
-//	PPTMXMap* m = (PPTMXMap*)s->userdata;
 	PPSize mapSize = PPSizeZero;
 	if (s->argCount > 0) {
 		PPSize size = s->getSize(L,0,1,1);
@@ -1489,10 +1488,9 @@ static int funcMapSize(lua_State* L)
 
 static int funcObjectGroupList(lua_State* L)
 {
-	PPTMXMap* m = (PPTMXMap*)PPLuaScript::UserData(L);
+	PPTMXMap* m = (PPTMXMap*)PPLuaArg::UserData(L,PPTMXMap::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPLuaScript* s = PPLuaScript::sharedScript(L);
-//	PPTMXMap* m = (PPTMXMap*)s->userdata;
 	if (!m->objectgroup.empty()) {
 		lua_createtable(L, 0, (int)m->layer.size());
 		for (int i=0;i<m->objectgroup.size();i++) {
@@ -1529,10 +1527,9 @@ static bool pushTMXObject(lua_State* L,PPTMXObject* o)
 static int funcObjectList(lua_State* L)
 {
 	bool found=false;
-	PPTMXMap* m = (PPTMXMap*)PPLuaScript::UserData(L);
+	PPTMXMap* m = (PPTMXMap*)PPLuaArg::UserData(L,PPTMXMap::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPLuaScript* s = PPLuaScript::sharedScript(L);
-//	PPTMXMap* m = (PPTMXMap*)s->userdata;
 	if (s->argCount > 0) {
 		if (!m->objectgroup.empty()) {
 			for (int i=0;i<m->objectgroup.size();i++) {
@@ -1559,10 +1556,9 @@ static int funcObjectList(lua_State* L)
 static int funcObjectInfo(lua_State* L)
 {
 	bool found=false;
-	PPTMXMap* m = (PPTMXMap*)PPLuaScript::UserData(L);
+	PPTMXMap* m = (PPTMXMap*)PPLuaArg::UserData(L,PPTMXMap::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPLuaScript* s = PPLuaScript::sharedScript(L);
-//	PPTMXMap* m = (PPTMXMap*)s->userdata;
 	if (s->argCount > 1) {
 		if (!m->objectgroup.empty()) {
 			for (int i=0;i<m->objectgroup.size();i++) {
@@ -1589,10 +1585,9 @@ static int funcObjectInfo(lua_State* L)
 static int funcObjectIndex(lua_State* L)
 {
 	bool found=false;
-	PPTMXMap* m = (PPTMXMap*)PPLuaScript::UserData(L);
+	PPTMXMap* m = (PPTMXMap*)PPLuaArg::UserData(L,PPTMXMap::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPLuaScript* s = PPLuaScript::sharedScript(L);
-//	PPTMXMap* m = (PPTMXMap*)s->userdata;
 	if (s->argCount > 1) {
 		if (!m->objectgroup.empty()) {
 			for (int i=0;i<m->objectgroup.size();i++) {
@@ -1616,10 +1611,9 @@ static int funcObjectIndex(lua_State* L)
 
 static int funcShowAllLayer(lua_State* L)
 {
-	PPTMXMap* m = (PPTMXMap*)PPLuaScript::UserData(L);
+	PPTMXMap* m = (PPTMXMap*)PPLuaArg::UserData(L,PPTMXMap::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPLuaScript* s = PPLuaScript::sharedScript(L);
-//	PPTMXMap* m = (PPTMXMap*)s->userdata;
 	if (!m->layer.empty()) {
 		if (s->argCount > 0) {
 			int l = (int)s->integer(0)-1;
@@ -1635,10 +1629,9 @@ static int funcShowAllLayer(lua_State* L)
 
 static int funcHideAllLayer(lua_State* L)
 {
-	PPTMXMap* m = (PPTMXMap*)PPLuaScript::UserData(L);
+	PPTMXMap* m = (PPTMXMap*)PPLuaArg::UserData(L,PPTMXMap::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPLuaScript* s = PPLuaScript::sharedScript(L);
-//	PPTMXMap* m = (PPTMXMap*)s->userdata;
 	if (!m->layer.empty()) {
 		if (s->argCount > 0) {
 			int l = (int)s->integer(0)-1;
@@ -1654,11 +1647,9 @@ static int funcHideAllLayer(lua_State* L)
 
 static int funcMapArea(lua_State* L)
 {
-	PPTMXMap* m = (PPTMXMap*)PPLuaScript::UserData(L);
+	PPTMXMap* m = (PPTMXMap*)PPLuaArg::UserData(L,PPTMXMap::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPLuaScript* s = PPLuaScript::sharedScript(L);
-//	PPTMXMap* m = (PPTMXMap*)s->userdata;
-//	PPSize t = PPSizeZero;
 	if (s->argCount > 0) {
 		if (s->argCount > 0 && s->isTable(L,0)) {
 			m->drawArea = s->getRect(L,0);
@@ -1675,10 +1666,9 @@ static int funcMapArea(lua_State* L)
 
 static int funcAddLayer(lua_State* L)
 {
-	PPTMXMap* m = (PPTMXMap*)PPLuaScript::UserData(L);
+	PPTMXMap* m = (PPTMXMap*)PPLuaArg::UserData(L,PPTMXMap::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPLuaScript* s = PPLuaScript::sharedScript(L);
-//	PPTMXMap* m = (PPTMXMap*)s->userdata;
 	if (s->argCount > 0) {
 		if (!m->layer.empty()) {
 			for (int i=0;i<m->layer.size();i++) {
@@ -1707,7 +1697,8 @@ static int funcAddLayer(lua_State* L)
 
 static int funcReset(lua_State* L)
 {
-	PPTMXMap* m = (PPTMXMap*)PPLuaScript::UserData(L);
+	PPTMXMap* m = (PPTMXMap*)PPLuaArg::UserData(L,PPTMXMap::className);
+  PPUserDataAssert(m!=NULL);
 //	PPLuaScript* s = PPLuaScript::SharedScript(m->world(),L);
 //	PPLuaScript* s = PPLuaScript::sharedScript(L);
 //	PPTMXMap* m = (PPTMXMap*)s->userdata;
@@ -1729,19 +1720,53 @@ static int funcDelete(lua_State *L)
 static int funcNew(lua_State *L)
 {
 	PPWorld* world = PPLuaScript::World(L);
-//	PPTMXMap* m = (PPTMXMap*)PPLuaScript::UserData(L);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPLuaScript* s = PPLuaScript::sharedScript(L);
 	if (s->argCount > 0) {
-		lua_createtable(L,(int)s->integer(0),0);
-		int table = lua_gettop(L);
-		for (int i=0;i<s->integer(0);i++) {
-			PPTMXMap* obj = new PPTMXMap(world);
-			obj->start();
-			obj->poly._texture = world->projector->textureManager->defaultTexture;
-			PPLuaScript::newObject(L,PPTMXMap::className.c_str(),obj,funcDelete);
-			lua_rawseti(L,table,i+1);
-		}
+    if (lua_isnumber(L,1+s->argShift-1)) {
+      lua_createtable(L,(int)s->integer(0),0);
+      int table = lua_gettop(L);
+      for (int i=0;i<s->integer(0);i++) {
+        PPTMXMap* obj = new PPTMXMap(world);
+        obj->start();
+        obj->poly._texture = world->projector->textureManager->defaultTexture;
+        PPLuaScript::newObject(L,PPTMXMap::className.c_str(),obj,funcDelete);
+        lua_rawseti(L,table,i+1);
+      }
+    } else
+    if (lua_isstring(L,1+s->argShift-1)) {
+      PPTMXMap* obj = new PPTMXMap(world);
+      obj->start();
+      obj->poly._texture = world->projector->textureManager->defaultTexture;
+      PPLuaScript::newObject(L,PPTMXMap::className.c_str(),obj,funcDelete);
+
+      PPTMXMap* m = obj;
+      if (!m->load(s->args(0))) {
+        if (PPReadError()) {
+          PPReadErrorReset();
+          return luaL_error(L,"file read error '%s'",s->args(0));
+        }
+      }
+      PPGameTextureOption option;
+      if (s->argCount > 1) {
+        if (s->isTable(L,1)) {
+          option = s->getTextureOption(L,1,option);
+        }
+      }
+      if (!m->tileset.empty()) {
+        const char* str = m->tileset[m->tileset.size()-1]->source.c_str();
+        if (str) {
+          m->poly.initTexture(m->world()->projector->textureManager->loadTexture(str,option));
+
+          if (PPReadError()) {
+            PPReadErrorReset();
+            return luaL_error(L,"texture file read error '%s'",str);
+          }
+        } else {
+          return luaL_error(L,"TMX file error");
+        }
+      }
+
+    }
 	} else {
 		PPTMXMap* obj = new PPTMXMap(world);
 		obj->start();
@@ -1761,26 +1786,23 @@ PPObject* PPTMXMap::registClass(PPLuaScript* script,const char* name,const char*
 
 static int funcInitAttribute(lua_State* L)
 {
-	PPTMXMap* m = (PPTMXMap*)PPLuaScript::UserData(L);
+	PPTMXMap* m = (PPTMXMap*)PPLuaArg::UserData(L,PPTMXMap::className);
+  PPUserDataAssert(m!=NULL);
 //	PPLuaScript* s = PPLuaScript::SharedScript(m->world(),L);
 //	PPLuaScript* s = PPLuaScript::sharedScript(L);
 //	PPTMXMap* m = (PPTMXMap*)s->userdata;
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
+//	if (m==NULL) {
+//		return luaL_argerror(L,1,"invalid argument.");
+//	}
 	m->editAttr.reset();
 	return 0;
 }
 
 static int funcAttribute(lua_State* L)
 {
-	PPTMXMap* m = (PPTMXMap*)PPLuaScript::UserData(L);
+	PPTMXMap* m = (PPTMXMap*)PPLuaArg::UserData(L,PPTMXMap::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPLuaScript* s = PPLuaScript::sharedScript(L);
-//	PPTMXMap* m = (PPTMXMap*)s->userdata;
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	if (s->argCount > 0) {
 		int t=-1;
 		if (s->argCount > 0) {
@@ -1800,10 +1822,10 @@ static int funcAttribute(lua_State* L)
 		if (t>=0) {
 			m->editPos.x = s->tableNumber(L,t,"x",m->editPos.x);
 			m->editPos.y = s->tableNumber(L,t,"y",m->editPos.y);
-			m->editAttr.tile = s->tableNumber(L,t,"tile",m->editAttr.tile);
+			m->editAttr.tile = (unsigned int)s->tableInteger(L,t,"tile",m->editAttr.tile);
 			bool hflip = s->tableBoolean(L,t,"hflip",(m->editAttr.flag & PPFLIP_H)!=0);
 			bool vflip = s->tableBoolean(L,t,"vflip",(m->editAttr.flag & PPFLIP_V)!=0);
-			int rflip = s->tableNumber(L,t,"rotate90",(m->editAttr.flag & PPFLIP_RMASK)>>2);
+			int rflip = (int)s->tableInteger(L,t,"rotate90",(m->editAttr.flag & PPFLIP_RMASK)>>2);
 			m->editAttr.flag = 0;
 			if (hflip) m->editAttr.flag |= PPFLIP_H;
 			if (vflip) m->editAttr.flag |= PPFLIP_V;
@@ -1812,30 +1834,31 @@ static int funcAttribute(lua_State* L)
 			return 0;
 		}
 	}
-	lua_createtable(L, 0, 2);
-	lua_pushnumber(L,m->tget(m->editPos));
+	lua_createtable(L, 0, 7);
+  lua_pushnumber(L,m->editPos.x);
+	lua_setfield(L, -2, "x");
+  lua_pushnumber(L,m->editPos.y);
+	lua_setfield(L, -2, "y");
+	lua_pushinteger(L,m->editAttr.tile);
 	lua_setfield(L, -2, "tile");
-	PPTMXChip a = m->aget(m->editPos);
-	lua_pushboolean(L,(a.flag & PPFLIP_H)!=0);
+	lua_pushboolean(L,(m->editAttr.flag & PPFLIP_H)!=0);
 	lua_setfield(L, -2, "hflip");
-	lua_pushboolean(L,(a.flag & PPFLIP_V)!=0);
+	lua_pushboolean(L,(m->editAttr.flag & PPFLIP_V)!=0);
 	lua_setfield(L, -2, "vflip");
-	lua_pushnumber(L,(a.flag & PPFLIP_RMASK)>>2);
+	lua_pushinteger(L,(m->editAttr.flag & PPFLIP_RMASK)>>2);
 	lua_setfield(L, -2, "rotate90");
-	s->pushColor(L,a.color);
+	s->pushColor(L,m->editAttr.color);
 	lua_setfield(L, -2, "color");
+  lua_getglobal(L,"pppoint_mt");
+  lua_setmetatable(L,-2);
 	return 1;
 }
 
 static int funcLocate(lua_State* L)
 {
-	PPTMXMap* m = (PPTMXMap*)PPLuaScript::UserData(L);
+	PPTMXMap* m = (PPTMXMap*)PPLuaArg::UserData(L,PPTMXMap::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPLuaScript* s = PPLuaScript::sharedScript(L);
-//	PPTMXMap* m = (PPTMXMap*)s->userdata;
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	if (s->argCount > 0) {
 		m->editPos = s->getPoint(L,0,m->editPos.x,m->editPos.y);
 	}
@@ -1844,13 +1867,9 @@ static int funcLocate(lua_State* L)
 
 static int funcPrint(lua_State* L)
 {
-	PPTMXMap* m = (PPTMXMap*)PPLuaScript::UserData(L);
+	PPTMXMap* m = (PPTMXMap*)PPLuaArg::UserData(L,PPTMXMap::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPLuaScript* s = PPLuaScript::sharedScript(L);
-//	PPTMXMap* m = (PPTMXMap*)s->userdata;
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	if (s->argCount > 0) {
 		m->print(s->args(0));
 	}
@@ -1859,13 +1878,9 @@ static int funcPrint(lua_State* L)
 
 static int funcLine(lua_State *L)
 {
-	PPTMXMap* m = (PPTMXMap*)PPLuaScript::UserData(L);
+	PPTMXMap* m = (PPTMXMap*)PPLuaArg::UserData(L,PPTMXMap::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPLuaScript* s = PPLuaScript::sharedScript(L);
-//	PPTMXMap* m = (PPTMXMap*)s->userdata;
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	if (m->curLayer >= 0) {
 		int n=0;
 		PPPoint pos1 = PPPointZero;
@@ -1897,13 +1912,9 @@ static int funcLine(lua_State *L)
 
 static int funcBox(lua_State *L)
 {
-	PPTMXMap* m = (PPTMXMap*)PPLuaScript::UserData(L);
+	PPTMXMap* m = (PPTMXMap*)PPLuaArg::UserData(L,PPTMXMap::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPLuaScript* s = PPLuaScript::sharedScript(L);
-//	PPTMXMap* m = (PPTMXMap*)s->userdata;
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	if (m->curLayer >= 0) {
 		int n=0;
 		PPRect rect = PPRect(0,0,0,0);
@@ -1926,13 +1937,9 @@ static int funcBox(lua_State *L)
 
 static int funcFill(lua_State *L)
 {
-	PPTMXMap* m = (PPTMXMap*)PPLuaScript::UserData(L);
+	PPTMXMap* m = (PPTMXMap*)PPLuaArg::UserData(L,PPTMXMap::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPLuaScript* s = PPLuaScript::sharedScript(L);
-//	PPTMXMap* m = (PPTMXMap*)s->userdata;
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	if (m->curLayer >= 0) {
 		int n=0;
 		PPRect rect = PPRect(0,0,0,0);
@@ -1955,13 +1962,9 @@ static int funcFill(lua_State *L)
 
 static int funcClear(lua_State *L)
 {
-	PPTMXMap* m = (PPTMXMap*)PPLuaScript::UserData(L);
+	PPTMXMap* m = (PPTMXMap*)PPLuaArg::UserData(L,PPTMXMap::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPLuaScript* s = PPLuaScript::sharedScript(L);
-//	PPTMXMap* m = (PPTMXMap*)s->userdata;
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	if (m->curLayer >= 0) {
 		PPSize mapSize = m->layer[m->curLayer]->mapSize;
 		int n=0;
@@ -1977,13 +1980,9 @@ static int funcClear(lua_State *L)
 
 static int funcPaint(lua_State *L)
 {
-	PPTMXMap* m = (PPTMXMap*)PPLuaScript::UserData(L);
+	PPTMXMap* m = (PPTMXMap*)PPLuaArg::UserData(L,PPTMXMap::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPLuaScript* s = PPLuaScript::sharedScript(L);
-//	PPTMXMap* m = (PPTMXMap*)s->userdata;
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	if (m->curLayer >= 0) {
 		int n=0;
 		PPPoint pos = PPPointZero;
@@ -2011,13 +2010,9 @@ static int funcPaint(lua_State *L)
 
 static int funcCircle(lua_State *L)
 {
-	PPTMXMap* m = (PPTMXMap*)PPLuaScript::UserData(L);
+	PPTMXMap* m = (PPTMXMap*)PPLuaArg::UserData(L,PPTMXMap::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPLuaScript* s = PPLuaScript::sharedScript(L);
-//	PPTMXMap* m = (PPTMXMap*)s->userdata;
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	if (m->curLayer >= 0) {
 		int n=0;
 		float r,start=0,end=360;
@@ -2054,13 +2049,9 @@ static int funcCircle(lua_State *L)
 
 static int funcSwap(lua_State* L)
 {
-	PPTMXMap* m = (PPTMXMap*)PPLuaScript::UserData(L);
+	PPTMXMap* m = (PPTMXMap*)PPLuaArg::UserData(L,PPTMXMap::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPLuaScript* s = PPLuaScript::sharedScript(L);
-//	PPTMXMap* m = (PPTMXMap*)s->userdata;
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	if (m->curLayer >= 0) {
 		PPSize mapSize = m->layer[m->curLayer]->mapSize;
 		int t1 = (int)s->integer(0);
@@ -2081,13 +2072,9 @@ static int funcSwap(lua_State* L)
 
 static int funcCopy(lua_State* L)
 {
-	PPTMXMap* m = (PPTMXMap*)PPLuaScript::UserData(L);
+	PPTMXMap* m = (PPTMXMap*)PPLuaArg::UserData(L,PPTMXMap::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPLuaScript* s = PPLuaScript::sharedScript(L);
-//	PPTMXMap* m = (PPTMXMap*)s->userdata;
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	if (m->curLayer >= 0) {
 		int n=0;
 		PPRect rect;
@@ -2119,13 +2106,8 @@ static int funcCopy(lua_State* L)
 
 static int funcTileset(lua_State* L)
 {
-	PPTMXMap* m = (PPTMXMap*)PPLuaScript::UserData(L);
-//	PPLuaScript* s = PPLuaScript::SharedScript(m->world(),L);
-//	PPLuaScript* s = PPLuaScript::sharedScript(L);
-//	PPTMXMap* m = (PPTMXMap*)s->userdata;
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
+	PPTMXMap* m = (PPTMXMap*)PPLuaArg::UserData(L,PPTMXMap::className);
+  PPUserDataAssert(m!=NULL);
 	lua_createtable(L,(int)m->tileset.size(),0);
 	int t = lua_gettop(L);
 	if (!m->tileset.empty()) {
@@ -2147,13 +2129,9 @@ static int funcTileset(lua_State* L)
 
 static int funcScroll(lua_State* L)
 {
-	PPTMXMap* m = (PPTMXMap*)PPLuaScript::UserData(L);
+	PPTMXMap* m = (PPTMXMap*)PPLuaArg::UserData(L,PPTMXMap::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPLuaScript* s = PPLuaScript::sharedScript(L);
-//	PPTMXMap* m = (PPTMXMap*)s->userdata;
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	if (m->curLayer >= 0) {
 		int n=0;
 		PPPoint pos = PPPointZero;
@@ -2171,19 +2149,17 @@ static int funcScroll(lua_State* L)
 
 static int funcAABB(lua_State* L)
 {
-	PPTMXMap* m = (PPTMXMap*)PPLuaScript::UserData(L);
+	PPTMXMap* m = (PPTMXMap*)PPLuaArg::UserData(L,PPTMXMap::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPLuaScript* s = PPLuaScript::sharedScript(L);
-//	PPTMXMap* m = (PPTMXMap*)s->userdata;
 	QBGame* g = (QBGame*)m->world();//s->userdata;
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 
+#if 0   //setter & getter test
 	lua_getfield(L, 1, "x");
 	m->pos.x = lua_tonumber(L, -1);
 	lua_getfield(L, 1, "y");
 	m->pos.y = lua_tonumber(L, -1);
+#endif
 
 	PPPoint p = m->pos;
 	
@@ -2255,8 +2231,7 @@ static int funcCheck(lua_State* L)
 #ifdef __LUAJIT__
 					int l= (int)lua_objlen(L,3);
 #else
-					lua_len(L,3);
-					int l=(int)lua_tointeger(L,-1);
+					int l= (int)lua_rawlen(L,3);
 #endif
 					for (int j=1;j<=l;j++) {
 						lua_rawgeti(L,3,j);

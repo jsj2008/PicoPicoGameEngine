@@ -86,6 +86,7 @@ public:
 	void init();
 	void reset();
 	void initTexture(int texture);
+	void setTexture(int texture);
 	void sprite(float _x,float _y,int _pat,int _group=0);
 
 	void line(float x1,float y1,float x2,float y2);

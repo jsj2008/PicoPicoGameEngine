@@ -1,4 +1,4 @@
-PicoPicoGameEngine Simulator Ver. 1.0.15
+PicoPicoGameEngine Simulator Ver. 1.0.16
 
 luaスクリプトを書いてゲームを作る事ができるシミュレータです。
 ピコピコゲームエンジンについては下記を参照してください。
@@ -18,4 +18,4 @@ MacOSX版
 
 本ソフトウエアは無保証です。本ソフトウエアによって生じた、いかなる損害についても保証いたしません。 自己の責任の範囲で使用してください。
 
-2013/11/06 H.Yamaguchi
+2014/01/01 H.Yamaguchi

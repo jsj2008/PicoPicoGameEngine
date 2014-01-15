@@ -16,6 +16,7 @@
 
 float PPImageFont::__print(PPWorld* _target,float x,float y,float _scale,const char* _str)
 {
+  if (_str==NULL) return cur.x;
 	if (_target) {
 		poly.color = _target->color();
 	}

@@ -84,12 +84,9 @@ PPSize PPUIScrollView::contentsSize()
 
 static int funcFrameRect(lua_State* L)
 {
-	PPUIScrollView* m = (PPUIScrollView*)PPLuaScript::UserData(L);
+	PPUIScrollView* m = (PPUIScrollView*)PPLuaArg::UserData(L,PPUIScrollView::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPUIScrollView* m = (PPUIScrollView*)s->userdata;
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 
 	lua_getfield(L, 1, "x");
 	m->pos.x = lua_tonumber(L, -1);
@@ -121,11 +118,9 @@ static int funcFrameRect(lua_State* L)
 
 static int funcContentsRect(lua_State* L)
 {
-	PPUIScrollView* m = (PPUIScrollView*)PPLuaScript::UserData(L);
+	PPUIScrollView* m = (PPUIScrollView*)PPLuaArg::UserData(L,PPUIScrollView::className);
+  PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	PPRect r;
 	if (s->argCount > 0) {
 		m->_contentsRect = s->getRect(L,0,m->_contentsRect);
@@ -138,10 +133,11 @@ static int funcContentsRect(lua_State* L)
 
 static int funcIsDiragging(lua_State* L)
 {
-	PPUIScrollView* m = (PPUIScrollView*)PPLuaScript::UserData(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
+	PPUIScrollView* m = (PPUIScrollView*)PPLuaArg::UserData(L,PPUIScrollView::className);
+  PPUserDataAssert(m!=NULL);
+//	if (m==NULL) {
+//		return luaL_argerror(L,1,"invalid argument.");
+//	}
 	bool r=false;
 	if (m->touchDownFlag) {
 		r=true;
@@ -190,7 +186,6 @@ PPObject* PPUIScrollView::registClass(PPLuaScript* script,const char* name,const
 PPObject* PPUIScrollView::registClass(PPLuaScript* script,const char* name,PPObject* obj,const char* superclass)
 {
 	obj->init(script->world());
-	PPObject::registClass(script,name,obj);
 	script->openModule(name,obj,0,superclass);
 		script->addCommand("new",funcNew);
 		script->addCommand("frameRect",funcFrameRect);

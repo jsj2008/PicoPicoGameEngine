@@ -1,7 +1,7 @@
 LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 LOCAL_MODULE := libbox2d
-B2_SOURCE_PATH := ../../sources/Box2D_v2.2.1/Box2D
+B2_SOURCE_PATH := ../../sources/Box2D_v2.3.0/Box2D/Box2D
 
 BOX2D_MODULE := 1
 
@@ -42,6 +42,7 @@ LOCAL_SRC_FILES := \
 					$(B2_SOURCE_PATH)/Dynamics/Joints/b2DistanceJoint.cpp \
 					$(B2_SOURCE_PATH)/Dynamics/Joints/b2FrictionJoint.cpp \
 					$(B2_SOURCE_PATH)/Dynamics/Joints/b2GearJoint.cpp \
+					$(B2_SOURCE_PATH)/Dynamics/Joints/b2MotorJoint.cpp \
 					$(B2_SOURCE_PATH)/Dynamics/Joints/b2Joint.cpp \
 					$(B2_SOURCE_PATH)/Dynamics/Joints/b2MouseJoint.cpp \
 					$(B2_SOURCE_PATH)/Dynamics/Joints/b2PrismaticJoint.cpp \

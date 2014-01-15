@@ -110,7 +110,7 @@ LOCAL_C_INCLUDES := \
                     $(LOCAL_PATH)/$(SOURCE_PATH)/GameLogic/ \
                     $(LOCAL_PATH)/../../../LuaJIT/sources/output-android/ \
                     $(LOCAL_PATH)/../../../LuaJIT/sources/output-android/include/ \
-                    $(LOCAL_PATH)/../../../Box2D/sources/Box2D_v2.2.1/ \
+                    $(LOCAL_PATH)/../../../Box2D/sources/Box2D_v2.3.0/Box2D/ \
                   	$(LOCAL_PATH)/../../../freetype/sources/ \
                   	$(LOCAL_PATH)/../../../freetype/sources/freetype-2.4.12/ \
                   	$(LOCAL_PATH)/../../../freetype/sources/freetype-2.4.12/include/ \

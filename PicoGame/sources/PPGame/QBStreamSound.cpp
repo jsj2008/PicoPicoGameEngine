@@ -24,17 +24,17 @@ static size_t qbsound_read(void* buffer,size_t size,size_t count,FILE* stream)
 	if (buffer == NULL) return 0;
 	if (t == NULL) return 0;
 	
-	size_t s = size*count;
+	long long s = size*count;
 	if (t->streamsize-t->streamptr < s) {
 		s = t->streamsize-t->streamptr;
 	}
 	
-	memcpy(buffer,&t->streamdata[t->streamptr],s);
+	memcpy(buffer,&t->streamdata[t->streamptr],(size_t)s);
 	t->streamptr += s;
 
 //printf("qbsound_read %ld,%ld,%ld\n",s,size,count);
 	
-	return s;
+	return (size_t)s;
 }
 
 static int qbsound_seek(FILE *stream,ogg_int64_t off,int whence)
@@ -89,14 +89,14 @@ static int qbsound_close(FILE *stream)
 
 QBStreamSound::QBStreamSound()
 {
-printf("malloc qbstreamsound\n");
+//printf("malloc qbstreamsound\n");
   streamopenov = false;
   reset();
 }
 
 QBStreamSound::~QBStreamSound()
 {
-printf("delete qbstreamsound\n");
+//printf("delete qbstreamsound\n");
 }
 
 int QBStreamSound::streamOpen()

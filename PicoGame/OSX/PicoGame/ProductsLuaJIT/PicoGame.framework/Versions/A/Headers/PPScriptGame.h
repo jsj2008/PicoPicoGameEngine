@@ -14,17 +14,19 @@
 
 #include "QBGame.h"
 #include "PPLuaScript.h"
-#include "PPVertualKey.h"
-#include "PPTMXMap.h"
-#include "PPParticle.h"
-#include "PPGameStick.h"
-#include "PPOffscreenTexture.h"
-#include "PPUIScrollView.h"
-#include "PPUIText.h"
 
 /*-----------------------------------------------------------------------------------------------
  クラス
  -----------------------------------------------------------------------------------------------*/
+
+class PPBox2D;
+class PPVertualKey;
+class PPTMXMap;
+class PPUIText;
+class PPParticleEmitter;
+class PPOffscreenTexture;
+class PPUIScrollView;
+class PPGameStick;
 
 class PPScriptGame : public QBGame {
 public:
@@ -36,6 +38,7 @@ public:
 	void stepIdle();
 	void stepError();
 	virtual void initScript();
+	virtual void disableIO();
   
 	PPLuaScript* script;
   
@@ -47,10 +50,13 @@ public:
 	PPGameStick* stick;
 	PPUIScrollView* scrollViewObject;
 	PPUIText* textObject;
+  PPBox2D* box2d;
   
 	int systemTextureID;
 	
 	std::string luaScriptPath;
+private:
+  bool disableIOFlag;
 };
 
 #endif

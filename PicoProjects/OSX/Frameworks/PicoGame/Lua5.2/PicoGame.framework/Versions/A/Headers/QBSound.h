@@ -120,6 +120,24 @@ public:
 	}
 	
 	unsigned long count;
+
+  virtual void streamPreload(const char* filename,int track=0) {}
+  virtual void streamLoopPlay(const char* filename,long long looppoint=0,int track=0) {}
+  virtual void streamPlay(const char* filename,int track=0) {}
+  virtual void streamStop(int track=0) {}
+  virtual void streamPause(int track=0) {}
+  virtual void streamResume(int track=0) {}
+  virtual void streamRewind(int track=0) {}
+  virtual void streamWillPlay(int track=0) {}
+  virtual bool streamIsPlaying(int track=0) {return false;}
+  virtual void streamSetVolume(float volume,int track=0) {}
+  virtual float streamGetVolume(int track=0) {return 0;}
+  virtual bool streamTest(const char* filename) {return false;}
+
+  virtual void preloadEffect(const char* filename) {}
+  virtual unsigned int playEffect(const char* filename,bool bLoop,float pitch, float pan, float gain) {return 1;}
+  virtual void stopEffect(unsigned int nSoundId) {}
+  virtual void unloadEffect(const char* filename) {}
 };
 
 #ifdef __cplusplus

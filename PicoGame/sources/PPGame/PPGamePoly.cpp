@@ -168,6 +168,11 @@ void PPGamePoly::initTexture(int texid)
 	texOffset = PPPointZero;
 }
 
+void PPGamePoly::setTexture(int texid)
+{
+	_texture = texid;
+}
+
 void PPGamePoly::sprite(float _x,float _y,int _pat,int _group)
 {
 	pos.x = _x;

@@ -3,7 +3,7 @@ SRCROOT=$(cd $(dirname $0);pwd)
 cd "$SRCROOT"
 
 cp ../../FullBuild/OSX/libpicoengine.a ./OSX/library
-cp ../../FullBuild/OSX/libpicoengineio.a ./OSX/library
+#cp ../../FullBuild/OSX/libpicoengineio.a ./OSX/library
 cp ../../FullBuild/OSX/libpicoenginejit.a ./OSX/library
 
 rm ./OSX/include/PicoGame/*

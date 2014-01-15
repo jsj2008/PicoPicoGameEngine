@@ -167,6 +167,9 @@ private:
 	PPTTFontImage* getFreeTile();
 
 	int drawbitmap(PPTTFontTile* tile,signed int width,signed int height,unsigned char* buffer,signed int x,signed int y);
+
+	int loadSystemFont(const char* name,int size=16);
+	PPTTFontTile* imageSystemFont(const char* string);
 	
 	int _gridX;
 	int _gridY;

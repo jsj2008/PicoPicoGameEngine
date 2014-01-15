@@ -31,6 +31,8 @@ static FlMML::PPFlMMLSeq** flmmlSequencer = NULL;
 static PPFlMMLObject** flmmlObject = NULL;
 static PPSEMMLObject** semmlObject = NULL;
 
+#pragma mark -
+
 QBSound* QBSound::sharedSound()
 {
 	return snd;
@@ -1093,7 +1095,6 @@ void QBSound::noteOn(int i,int ch,int noteNo,float velocity)
 	if (velocity < 0) velocity = 0;
 	if (velocity > 1) velocity = 1;
 	flmmlSequencer[i]->noteOn(ch,noteNo,velocity*127);
-//printf("ch %d,noteNo %d,velocity %f\n",ch,noteNo,velocity);
 }
 
 void QBSound::noteOff(int i,int ch)
@@ -1108,7 +1109,10 @@ float QBSound::getVolumeMML(int i)
 
 void QBSound::openSEMMLLibrary(PPLuaScript* script,const char* name)
 {
-	script->makeObjectTable((PPObject**)semmlObject,mMaxTrack,name);
+  std::string elementclass = name;
+  elementclass += "element";
+  PPSEMMLObject::openLibrary(script,elementclass.c_str());
+	script->makeObjectTable((PPObject**)semmlObject,mMaxTrack,name,elementclass.c_str());
 	if (semmlObject) {
 		for (int i=0;i<mMaxTrack;i++) {
 			semmlObject[i]->start();
@@ -1127,7 +1131,10 @@ void QBSound::idleSEMML()
 
 void QBSound::openFlMMLLibrary(PPLuaScript* script,const char* name)
 {
-	script->makeObjectTable((PPObject**)flmmlObject,mFlMMLNum,name);
+  std::string elementclass = name;
+  elementclass += "element";
+  PPFlMMLObject::openLibrary(script,elementclass.c_str());
+	script->makeObjectTable((PPObject**)flmmlObject,mFlMMLNum,name,elementclass.c_str());
 }
 
 void QBSound::setWav9(int waveNo,int intVol,bool loopFg,const char* data)

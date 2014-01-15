@@ -57,6 +57,6 @@ LOCAL_LDLIBS := -L$(call host-path, $(JNI_PATH)/../libs/$(TARGET_ARCH_ABI)) \
                 -lGLESv1_CM -llog -lz
 
 LOCAL_STATIC_LIBRARIES := libpicogame
-LOCAL_SHARED_LIBRARIES := cocos2d　cocosdenshion
+LOCAL_SHARED_LIBRARIES := cocos2d
 
 include $(BUILD_SHARED_LIBRARY)

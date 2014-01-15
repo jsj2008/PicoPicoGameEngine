@@ -68,10 +68,8 @@ public:
 		touchDownFlag = true;
 		if (speed.length() < 0.1) {
 			longtouch = 1;
-//printf("touchDown 1\n");
 		} else {
 			longtouch = 0;
-//printf("touchDown 0\n");
 		}
 	}
 
@@ -146,8 +144,12 @@ public:
 				if (fabsf(speed.y) < 0.1) speed.y = 0;
 			}
 			dpos += speed;
+
+#ifdef __USE_BOUNCE__
 			if (touchDownFlag) {
-			} else {
+			} else
+#endif
+      {
 				PPPoint gpos = dpos;
 				bool flag = false;
 				{
@@ -176,7 +178,12 @@ public:
 				}
 				PPPoint d = (gpos-dpos)*0.2f;
 				dpos += d;
+        
+#ifndef __USE_BOUNCE__
+        dpos=gpos;
+#endif
 			}
+
 			if (_contentsRect.width <= size().width) {
 				dpos.x = 0;
 			}

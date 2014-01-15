@@ -82,6 +82,8 @@ public:
 	
 protected:
 	virtual float __print(PPWorld* _target,float x,float y,float scale,const char* str);
+  
+  const char* systemFontFilePath();
 	
 	std::string* _name;
 };

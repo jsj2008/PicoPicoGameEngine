@@ -16,6 +16,15 @@
 #include <unistd.h>
 #include <sys/time.h>
 
+#ifdef __USE_OGG_VORBIS__
+#include <map>
+#include "QBStreamSound.h"
+
+typedef map<unsigned int,QBStreamSound*> PlayerList;
+static PlayerList streamTrack;
+static int soundID = 1;
+#endif
+
 class QBSoundLocker {
 public:
 	QBSoundLocker(pthread_mutex_t *_locker,const char* name) {
@@ -45,6 +54,28 @@ static OSStatus callback(
 	}
 	return 0;
 }
+
+#ifdef __USE_OGG_VORBIS__
+static void *LoaderThreadProc(void *arg)
+{
+	QBSoundMac* snd = (QBSoundMac*)arg;
+	bool r=false;
+	while (!r) {
+    {
+      QBSoundLocker locker(&snd->mMutex,"threadProc");
+      
+      PlayerList::iterator it = streamTrack.begin();
+      while(it != streamTrack.end()) {
+        (*it).second->streamLoad();
+        ++it;
+      }
+      r = snd->mThreadEnd;
+    }
+		usleep(1000);
+	}
+	return NULL;
+}
+#endif
 
 #if TARGET_OS_IPHONE
 static void InterruptionListener(void *inUserData,UInt32 inInterruption)
@@ -103,24 +134,10 @@ QBSoundMac::QBSoundMac(int maxChannel) : mGraph(NULL),QBSound(maxChannel)
 {
 }
 
-//static void *LoaderThreadProc(void *arg)
-//{
-//	QBSoundMac* snd = (QBSoundMac*)arg;
-//	bool r=false;
-//	while (!r) {
-//		pthread_mutex_lock(&snd->mMutex);
-//		r = snd->mThreadEnd;
-//		pthread_mutex_unlock(&snd->mMutex);
-//		usleep(1000);
-//	}
-//	return NULL;
-//}
-
 int QBSoundMac::Exit()
 {
-//	pthread_mutex_lock(&mMutex);
-//	mThreadEnd = true;
-//	pthread_mutex_unlock(&mMutex);
+	QBSoundLocker locker(&mMutex,"Exit");
+	mThreadEnd = true;
 	pthread_join(mLoaderThread,NULL);
 	return 0;
 }
@@ -236,10 +253,11 @@ int QBSoundMac::initGraph()
 	//err = AUGraphStart(mGraph);
 	
 	//pthread_mutex_init(&mLoaderThreadMutex,NULL);
-//#ifndef _IPHONE
-//	mThreadEnd = false;
-//	pthread_create(&mLoaderThread,NULL,LoaderThreadProc,this);
-//#endif
+
+#ifdef __USE_OGG_VORBIS__
+	mThreadEnd = false;
+	pthread_create(&mLoaderThread,NULL,LoaderThreadProc,this);
+#endif
 
 //	mOpenGraph = false;
 //	mInitGraph = false;
@@ -318,7 +336,22 @@ int QBSoundMac::play(const char *note,int track,bool loop)
 int QBSoundMac::fill_sound_buffer(void* buffer,int size)
 {
 	QBSoundLocker locker(&mMutex,"fill_sound_buffer");
-	return QBSound::fill_sound_buffer(buffer,size);
+	int r= QBSound::fill_sound_buffer(buffer,size);
+
+#ifdef __USE_OGG_VORBIS__
+  PlayerList::iterator it = streamTrack.begin();
+  while(it != streamTrack.end()) {
+    if ((*it).second->streamdone && (*it).first > 0) {
+      delete (*it).second;
+      streamTrack.erase(it++);
+    } else {
+      (*it).second->fill_sound_buffer(buffer,size,mMasterVolume);
+      ++it;
+    }
+  }
+#endif
+  
+  return r;
 }
 
 int QBSoundMac::stop(int track)
@@ -455,6 +488,242 @@ unsigned long QBSoundMac::idleCount() {
 	QBSoundLocker locker(&mMutex,"idleCount");
 	return QBSound::idleCount();
 }
+
+#pragma mark -
+
+#ifdef __USE_OGG_VORBIS__
+
+static QBStreamSound* findPlayer(int track)
+{
+  QBStreamSound* player=NULL;
+  PlayerList::iterator p = streamTrack.find(track);
+  if (p != streamTrack.end()) {
+    player = p->second;
+  } else {
+    player = new QBStreamSound();
+    streamTrack.insert(make_pair(track,player));
+  }
+  return player;
+}
+
+void QBSoundMac::streamPlay(const char* filename,int track)
+{
+	QBSoundLocker locker(&mMutex,"streamPlay");
+  findPlayer(track)->play(filename);
+}
+
+void QBSoundMac::streamLoopPlay(const char* filename,long long looppoint,int track)
+{
+	QBSoundLocker locker(&mMutex,"streamPlay");
+  findPlayer(track)->play(filename,looppoint);
+}
+
+void QBSoundMac::streamStop(int track)
+{
+	QBSoundLocker locker(&mMutex,"streamStop");
+  findPlayer(track)->stop();
+}
+
+void QBSoundMac::streamPause(int track)
+{
+	QBSoundLocker locker(&mMutex,"streamStop");
+  findPlayer(track)->pause();
+}
+
+void QBSoundMac::streamResume(int track)
+{
+	QBSoundLocker locker(&mMutex,"streamStop");
+  streamTrack[track]->resume();
+}
+
+void QBSoundMac::streamRewind(int track)
+{
+	QBSoundLocker locker(&mMutex,"streamStop");
+  findPlayer(track)->rewind();
+}
+
+void QBSoundMac::streamWillPlay(int track)
+{
+	QBSoundLocker locker(&mMutex,"streamStop");
+  findPlayer(track)->willplay();
+}
+
+bool QBSoundMac::streamIsPlaying(int track)
+{
+	QBSoundLocker locker(&mMutex,"streamStop");
+  PlayerList::iterator p = streamTrack.find(track);
+  if (p == streamTrack.end()) {
+    return false;
+  }
+  return findPlayer(track)->isPlaying();
+}
+
+void QBSoundMac::streamSetVolume(float volume,int track)
+{
+	QBSoundLocker locker(&mMutex,"streamStop");
+  findPlayer(track)->setVolume(volume);
+}
+
+float QBSoundMac::streamGetVolume(int track)
+{
+	QBSoundLocker locker(&mMutex,"streamStop");
+  return findPlayer(track)->getVolume();
+}
+
+bool QBSoundMac::streamTest(const char* filename)
+{
+  return QBStreamSound::test(filename);
+}
+
+#pragma mark -
+
+class EffectBuffer {
+public:
+	signed short* pcmbuffer;
+	unsigned long pcmsize;
+	int pcmchannel;
+  std::string fname;
+
+  EffectBuffer() : pcmbuffer(NULL) {
+    
+  }
+  virtual ~EffectBuffer() {
+    if (pcmbuffer) free(pcmbuffer);
+printf("unload effect %s\n",fname.c_str());
+  }
+
+  bool load(const char* filename) {
+    fname=filename;
+    int ret=-1;
+		FILE* fp = fopen(filename,"r");
+    if (fp) {
+      do {
+        fseek(fp,0,SEEK_END);
+        size_t size = ftell(fp);
+        if (size==0) {
+          fclose(fp);
+          return -1;
+        }
+        fseek(fp,0,SEEK_SET);
+        pcmbuffer = (signed short*)malloc(size);
+        if (pcmbuffer) {
+          pcmsize = size;
+          fread(pcmbuffer,size,1,fp);
+          ret=0;
+        }
+      } while (0);
+      fclose(fp);
+    }
+printf("load effect %s\n",filename);
+    return ret;
+  }
+};
+
+typedef map<unsigned int, EffectBuffer *> EffectList;
+
+static unsigned int _Hash(const char *key)
+{
+    size_t len = strlen(key);
+    const char *end=key+len;
+    unsigned int hash;
+
+    for (hash = 0; key < end; key++)
+    {
+        hash *= 16777619;
+        hash ^= (unsigned int) (unsigned char) toupper(*key);
+    }
+    return (hash);
+}
+
+static EffectList& sharedList()
+{
+    static EffectList s_List;
+    return s_List;
+}
+
+void QBSoundMac::preloadEffect(const char* filename)
+{
+	QBSoundLocker locker(&mMutex,"preloadEffect");
+  do {
+    if (filename==NULL) break;
+  
+    unsigned int nRet = _Hash(filename);
+    
+    if (sharedList().end() != sharedList().find(nRet)) break;
+    
+    sharedList().insert(make_pair(nRet,new EffectBuffer()));
+    EffectBuffer* buffer = sharedList()[nRet];
+    
+    if (buffer->load(filename)!=0) {
+      sharedList().erase(nRet);
+    }
+
+  } while (0);
+}
+
+unsigned int QBSoundMac::playEffect(const char* filename,bool bLoop,float pitch, float pan, float gain)
+{
+	QBSoundLocker locker(&mMutex,"playEffect");
+  if (filename) {
+    unsigned int nRet = _Hash(filename);
+  
+    do {
+      if (filename==NULL) break;
+    
+      unsigned int nRet = _Hash(filename);
+      
+      if (sharedList().end() != sharedList().find(nRet)) break;
+      
+      sharedList().insert(make_pair(nRet,new EffectBuffer()));
+      EffectBuffer* buffer = sharedList()[nRet];
+      
+      if (buffer->load(filename)!=0) {
+        sharedList().erase(nRet);
+      }
+
+    } while (0);
+
+    EffectList::iterator p = sharedList().find(nRet);
+    if (p != sharedList().end())
+    {
+      EffectBuffer* effect = p->second;
+      findPlayer(soundID)->setVolume(gain);
+      findPlayer(soundID)->play((unsigned char*)effect->pcmbuffer,effect->pcmsize);
+      soundID ++;
+      if (soundID > 9999) soundID = 1;
+    }
+
+    return soundID;
+  }
+  return 0;
+}
+
+void QBSoundMac::stopEffect(unsigned int nSoundId)
+{
+	QBSoundLocker locker(&mMutex,"stopEffect");
+  PlayerList::iterator p = streamTrack.find(nSoundId);
+  if (p != streamTrack.end()) {
+    findPlayer(nSoundId)->stop();
+  }
+}
+
+void QBSoundMac::unloadEffect(const char* filename)
+{
+	QBSoundLocker locker(&mMutex,"unloadEffect");
+  if (filename) {
+    unsigned int nRet = _Hash(filename);
+
+    EffectList::iterator p = sharedList().find(nRet);
+    if (p != sharedList().end())
+    {
+      delete p->second;
+      p->second = NULL;
+      sharedList().erase(nRet);
+    }
+  }
+}
+
+#endif
 
 /*-----------------------------------------------------------------------------------------------
 	このファイルはここまで

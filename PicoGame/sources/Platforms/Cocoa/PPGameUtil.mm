@@ -10,22 +10,20 @@
 -----------------------------------------------------------------------------------------------*/
 
 #include "PPGameUtil.h"
-#include "PPGameBGM.h"
+//#include "PPGameBGM.h"
 #include "PPGameSound.h"
 #include "QBGame.h"
 #include "PPGamePreference.h"
-#if TARGET_OS_IPHONE
 #import <GameController/GCController.h>
+#import <AudioToolbox/AudioToolbox.h>
+
+#if __LP64__ || TARGET_OS_IPHONE
+#define __USE_GAME_CONTROLLER__ 1
+#else
+#define __USE_GAME_CONTROLLER__ 0
 #endif
 
 using namespace std;
-
-#define PPGAME_MAX_BGM 10
-
-//static int keySide = 0;
-static PPGameBGM* bgm[PPGAME_MAX_BGM] = {0};
-static BOOL selectingBGM=NO;
-static int later3GS = 1;
 
 const char* PPGameResourcePath(const char* name)
 {
@@ -218,90 +216,6 @@ void PPGame_SetData(const char* key,unsigned char* data,int dataSize)
 	[PPPrefreceObject() synchronize];
 }
 
-int PPGame_InitBGM(int no,const char* key)
-{
-	if (bgm[no-1] == nil) {
-		bgm[no-1] = [[PPGameBGM alloc] init];
-	}
-	if (bgm[no-1] != nil) {
-		[bgm[no-1] reset];
-		bgm[no-1].key = [NSString stringWithUTF8String:key];
-		[bgm[no-1] loadForKey:[NSString stringWithUTF8String:key]];
-		bgm[no-1].selectedPlay = PPGame_GetSoundEnable();
-	}
-	return 0;
-}
-
-int PPGame_InitBGMiPad(int no,const char* key)
-{
-	if (bgm[no-1] == nil) {
-		bgm[no-1] = [[PPGameBGM alloc] init];
-#if TARGET_OS_IPHONE
-		bgm[no-1].popover = TRUE;
-#endif
-	}
-	if (bgm[no-1] != nil) {
-		[bgm[no-1] reset];
-		bgm[no-1].key = [NSString stringWithUTF8String:key];
-		[bgm[no-1] loadForKey:[NSString stringWithUTF8String:key]];
-		bgm[no-1].selectedPlay = PPGame_GetSoundEnable();
-	}
-	return 0;
-}
-
-void PPGame_ReleaseBGM()
-{
-	for (int i=0;i<PPGAME_MAX_BGM;i++) {
-		[bgm[i] release];
-		bgm[i] = nil;
-	}
-}
-
-int PPGame_GetSelectingBGM()
-{
-	return selectingBGM;
-}
-
-void PPGame_SetSelectingBGM(int flag)
-{
-	selectingBGM = flag;
-}
-
-void PPGame_IdleBGM(void* controller,int playBGM,bool playBGMOneTime,int chooseBGM,int x,int y,int w,int h)
-{
-	for (int no=1;no<=PPGAME_MAX_BGM;no++) {
-		if (bgm[no-1]) {
-			if (chooseBGM != 0) {
-				if (chooseBGM == no) {
-#if TARGET_OS_IPHONE
-#ifndef __NO_POPOVER__
-					[bgm[no-1] popoverPosition:CGRectMake(x, y, w, h)];
-					[bgm[no-1] selectBGM:(UIViewController*)controller];
-#endif
-#endif
-				} else
-				if (chooseBGM < 0) {
-					[bgm[no-1] reset];
-					[bgm[no-1] saveForKey:bgm[no-1].key];
-				}
-			}
-			if (playBGM != 0) {
-				if (playBGM == no) {
-					if (playBGMOneTime) {
-						if (PPGame_GetSoundEnable()) [bgm[no-1] playOneTime];
-						playBGMOneTime = false;
-					} else {
-						if (PPGame_GetSoundEnable()) [bgm[no-1] play];
-					}
-				} else
-				if (playBGM < 0) {
-					if (PPGame_GetSoundEnable()) [bgm[no-1] stop];
-				}
-			}
-		}
-	}
-}
-
 int PPGame_GetLocale()
 {
 	NSString* code = NSLocalizedString(@"language",@"");
@@ -319,50 +233,11 @@ const char* PPGame_LocaleString(const char* jp,const char* en)
 	return en;
 }
 
-int PPGame_LoadAIFF(const char* name,const char* type)
-{
-#ifndef __MACOSX_APP__
-	//create soundid
-	SystemSoundID soundId;
-	NSURL *countdownFileURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:[NSString stringWithUTF8String:name] ofType:[NSString stringWithUTF8String:type]] isDirectory:NO];
- 
-	OSStatus error = AudioServicesCreateSystemSoundID((CFURLRef)countdownFileURL, &soundId);
- 
-	if (error != kAudioServicesNoError) {
-		NSLog(@"Error %ld loading sound at path: %@", error, [NSString stringWithUTF8String:name]);
-	}
-	
-	return soundId;
-#else
-	return 0;
-#endif
-}
-
-int PPGame_PlayAIFF(int soundId)
-{
-#ifndef __MACOSX_APP__
-	AudioServicesPlaySystemSound(soundId);
-#endif
-	return 0;
-}
-
 void PPGame_Vibrate()
 {
 #if TARGET_OS_IPHONE
 	AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
 #endif
-}
-
-int PPGame_3GSLater()
-{
-	return later3GS;
-}
-
-void __PPGame_Set3GSLater(int later);
-
-void __PPGame_Set3GSLater(int later)
-{
-	later3GS = later;
 }
 
 #if !TARGET_OS_IPHONE
@@ -450,8 +325,8 @@ const char* PPGameDataSubPath(const char* name)
 
 void PPGameControllerStartDiscoverty()
 {
-#if TARGET_OS_IPHONE
-  if ([[[UIDevice currentDevice] systemVersion] floatValue]>=7.0) {
+#if __USE_GAME_CONTROLLER__
+  if ([GCController class]!=nil) {
     [GCController startWirelessControllerDiscoveryWithCompletionHandler:nil];
   }
 #endif
@@ -459,8 +334,8 @@ void PPGameControllerStartDiscoverty()
 
 void PPGameControllerStopDiscoverty()
 {
-#if TARGET_OS_IPHONE
-  if ([[[UIDevice currentDevice] systemVersion] floatValue]>=7.0) {
+#if __USE_GAME_CONTROLLER__
+  if ([GCController class]!=nil) {
     [GCController stopWirelessControllerDiscovery];
   }
 #endif
@@ -468,9 +343,140 @@ void PPGameControllerStopDiscoverty()
 
 int PPGameControllerCount()
 {
-#if TARGET_OS_IPHONE
-  if ([[[UIDevice currentDevice] systemVersion] floatValue]>=7.0) {
-    return [GCController controllers].count;
+#if __USE_GAME_CONTROLLER__
+  if ([GCController class]!=nil) {
+    return (int)[GCController controllers].count;
+  }
+#endif
+  return 0;
+}
+
+static void pushValue(lua_State* L,int table,const char* value,const char* key)
+{
+  lua_pushstring(L,value);
+  lua_setfield(L,table,key);
+}
+
+static void pushValue(lua_State* L,int table,int value,const char* key)
+{
+  lua_pushinteger(L,value);
+  lua_setfield(L,table,key);
+}
+
+static void pushValue(lua_State* L,int table,float value,const char* key)
+{
+  lua_pushnumber(L,value);
+  lua_setfield(L,table,key);
+}
+
+static void pushValue(lua_State* L,int table,BOOL value,const char* key)
+{
+  lua_pushboolean(L,value);
+  lua_setfield(L,table,key);
+}
+
+static void pushValue(lua_State* L,int table,GCControllerAxisInput* axis,const char* key)
+{
+  if (axis==nil) return;
+  lua_createtable(L,0,0);
+  int info=lua_gettop(L);
+  pushValue(L,info,axis.value,"value");
+  lua_setfield(L,table,key);
+}
+
+static void pushValue(lua_State* L,int table,GCControllerButtonInput* button,const char* key)
+{
+  if (button==nil) return;
+  lua_createtable(L,0,0);
+  int info=lua_gettop(L);
+  pushValue(L,info,button.value,"value");
+  pushValue(L,info,button.pressed,"pressed");
+  lua_setfield(L,table,key);
+}
+
+static void pushValue(lua_State* L,int table,GCControllerDirectionPad* dpad,const char* key)
+{
+  if (dpad==nil) return;
+  lua_createtable(L,0,0);
+  int info=lua_gettop(L);
+  pushValue(L,info,dpad.up,"up");
+  pushValue(L,info,dpad.down,"down");
+  pushValue(L,info,dpad.left,"left");
+  pushValue(L,info,dpad.right,"right");
+  pushValue(L,info,dpad.yAxis,"yAxis");
+  pushValue(L,info,dpad.xAxis,"xAxis");
+  lua_setfield(L,table,key);
+}
+
+int PPGameControllerInfo(void* script,int index)
+{
+  lua_State* L = (lua_State*)script;
+#if __USE_GAME_CONTROLLER__
+  int info=lua_gettop(L);
+  if ([GCController class]!=nil) {
+    NSArray* controllers = [GCController controllers];
+    if (controllers.count > index && index >= 0) {
+      GCController* gc = [controllers objectAtIndex:index];
+
+      lua_createtable(L,0,0);
+
+      pushValue(L,info,[gc.vendorName UTF8String],"vendorName");
+      pushValue(L,info,gc.attachedToDevice,"attachedToDevice");
+      pushValue(L,info,(int)gc.playerIndex,"playerIndex");
+
+      if (gc.extendedGamepad) {
+        pushValue(L,info,gc.extendedGamepad.buttonA,"buttonA");
+        pushValue(L,info,gc.extendedGamepad.buttonB,"buttonB");
+        pushValue(L,info,gc.extendedGamepad.buttonX,"buttonX");
+        pushValue(L,info,gc.extendedGamepad.buttonY,"buttonY");
+        pushValue(L,info,gc.extendedGamepad.leftThumbstick,"leftThumbstick");
+        pushValue(L,info,gc.extendedGamepad.rightThumbstick,"rightThumbstick");
+        pushValue(L,info,gc.extendedGamepad.leftShoulder,"leftShoulder");
+        pushValue(L,info,gc.extendedGamepad.rightShoulder,"rightShoulder");
+        pushValue(L,info,gc.extendedGamepad.leftTrigger,"leftTrigger");
+        pushValue(L,info,gc.extendedGamepad.rightTrigger,"rightTrigger");
+        pushValue(L,info,gc.extendedGamepad.dpad,"dpad");
+      } else
+      if (gc.gamepad) {
+        pushValue(L,info,gc.gamepad.buttonA,"buttonA");
+        pushValue(L,info,gc.gamepad.buttonB,"buttonB");
+        pushValue(L,info,gc.gamepad.buttonX,"buttonX");
+        pushValue(L,info,gc.gamepad.buttonY,"buttonY");
+        pushValue(L,info,gc.gamepad.leftShoulder,"leftShoulder");
+        pushValue(L,info,gc.gamepad.rightShoulder,"rightShoulder");
+        pushValue(L,info,gc.gamepad.dpad,"dpad");
+      }
+
+      return 1;
+    }
+  }
+#endif
+  lua_pushnil(L);
+  return 1;
+}
+
+void PPGameControllerSetPlayerIndex(int index,int playerIndex)
+{
+#if __USE_GAME_CONTROLLER__
+  if ([GCController class]!=nil) {
+    NSArray* controllers = [GCController controllers];
+    if (controllers.count > index && index >= 0) {
+      GCController* gc = [controllers objectAtIndex:index];
+      gc.playerIndex=playerIndex;
+    }
+  }
+#endif
+}
+
+int PPGameControllerGetPlayerIndex(int index)
+{
+#if __USE_GAME_CONTROLLER__
+  if ([GCController class]!=nil) {
+    NSArray* controllers = [GCController controllers];
+    if (controllers.count > index && index >= 0) {
+      GCController* gc = [controllers objectAtIndex:index];
+      return (int)gc.playerIndex;
+    }
   }
 #endif
   return 0;

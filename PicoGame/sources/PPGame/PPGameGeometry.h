@@ -234,6 +234,8 @@ public:
 
 	void operator += (PPPoint a);
 	PPRect operator + (PPPoint a);
+	void operator -= (PPPoint a);
+	PPRect operator - (PPPoint a);
 	void operator = (PPPoint a);
 	void operator = (PPSize a);
 
@@ -245,6 +247,9 @@ public:
 		if (dw >= 0 && dw < rect.width+width && dh >= 0 && dh < rect.height+height) return true;
 		return false;
 	}
+  
+  PPPoint min();
+  PPPoint max();
 	
 	PPSize size();
 	PPPoint pos();

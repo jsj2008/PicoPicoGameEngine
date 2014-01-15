@@ -21,6 +21,8 @@
 @property (nonatomic,retain) IBOutlet PPGame* game;
 
 - (void)exitGame;
+- (void)initGameController;
+- (void)disableIO:(id)sender;
 
 @end
 

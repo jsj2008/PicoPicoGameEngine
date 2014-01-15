@@ -1,60 +1,63 @@
-pppointImp = {
-	length=function(self,x,y)
-		return pplength(self,x,y)
-	end,
-	move = function(self,x,y)
-		local p = pppoint(x,y)
-		self.x = self.x+p.x
-		self.y = self.y+p.y
-	end
-}
-pppoint_mt = {
-	__add = function(a,b)
-		local c = {}
-		if type(b) == "number" then
-			c.x = a.x + b
-			c.y = a.y + b
-		else
-			c.x = a.x + b.x
-			c.y = a.y + b.y
-		end
-		return pppoint(c)
-	end,
-	__sub = function(a,b)
-		local c = {}
-		if type(b) == "number" then
-			c.x = a.x - b
-			c.y = a.y - b
-		else
-			c.x = a.x - b.x
-			c.y = a.y - b.y
-		end
-		return pppoint(c)
-	end,
-	__div = function(a,b)
-		local c = {}
-		if type(b) == "number" then
-			c.x = a.x / b
-			c.y = a.y / b
-		else
-			c.x = a.x / b.x
-			c.y = a.y / b.y
-		end
-		return pppoint(c)
-	end,
-	__mul = function(a,b)
-		local c = {}
-		if type(b) == "number" then
-			c.x = a.x * b
-			c.y = a.y * b
-		else
-			c.x = a.x * b.x
-			c.y = a.y * b.y
-		end
-		return pppoint(c)
-	end,
-	__index = pppointImp
-}
+--pppointImp = {
+--	length=function(self,x,y)
+--		return pplength(self,x,y)
+--	end,
+--	move = function(self,x,y)
+--		local p = pppoint(x,y)
+--		self.x = self.x+p.x
+--		self.y = self.y+p.y
+--	end
+--}
+--pppoint_mt = {
+--  __unm = function(a,b)
+--		return pppoint(-a.x,-a.y)
+--  end,
+--	__add = function(a,b)
+--		local c = {}
+--		if type(b) == "number" then
+--			c.x = a.x + b
+--			c.y = a.y + b
+--		else
+--			c.x = a.x + b.x
+--			c.y = a.y + b.y
+--		end
+--		return pppoint(c)
+--	end,
+--	__sub = function(a,b)
+--		local c = {}
+--		if type(b) == "number" then
+--			c.x = a.x - b
+--			c.y = a.y - b
+--		else
+--			c.x = a.x - b.x
+--			c.y = a.y - b.y
+--		end
+--		return pppoint(c)
+--	end,
+--	__div = function(a,b)
+--		local c = {}
+--		if type(b) == "number" then
+--			c.x = a.x / b
+--			c.y = a.y / b
+--		else
+--			c.x = a.x / b.x
+--			c.y = a.y / b.y
+--		end
+--		return pppoint(c)
+--	end,
+--	__mul = function(a,b)
+--		local c = {}
+--		if type(b) == "number" then
+--			c.x = a.x * b
+--			c.y = a.y * b
+--		else
+--			c.x = a.x * b.x
+--			c.y = a.y * b.y
+--		end
+--		return pppoint(c)
+--	end,
+--	__index = pppointImp
+--}
 ppobject.hitCheck=function(s,p,hitCheck)
   local ret=false
   local pretrigger=s.trigger
@@ -108,190 +111,192 @@ ppobject.hitCheck=function(s,p,hitCheck)
   s.touchCount=#p
   return ret
 end
-pprectImp = {
-	min = function(self)
-		return pppoint(self.x,self.y)
-	end,
-	max = function(self)
-		return pppoint(self.x+self.width,self.y+self.height)
-	end,
-	center = function(self)
-		return pppoint(self.x+self.width/2,self.y+self.height/2)
-	end,
-	equalToSize = function(self,a)
-		return (self.width == a.width and self.height == a.height)
-	end,
-	equalToRect = function(self,a)
-		return (self.x == a.x and self.y == a.y and self.width == a.width and self.height == a.height)
-	end,
-	isEmpty = function(self)
-		return (self.width == 0 and self.height == 0)
-	end,
-	move = function(self,x,y)
-		local p = pppoint(x,y)
-		self.x = self.x+p.x
-		self.y = self.y+p.y
-	end,
-	position = function(self,x,y)
-		if x~=nil then
-			local p = pppoint(x,y)
-			self.x = p.x
-			self.y = p.y
-		end
-		return pppoint(self.x,self.y)
-	end,
-	pos = function(self,x,y)
-		if x~=nil then
-			local p = pppoint(x,y)
-			self.x = p.x
-			self.y = p.y
-		end
-		return pppoint(self.x,self.y)
-	end,
-	size = function(self,x,y)
-		if x~=nil then
-			local width=x
-			local height=y
-			if (type(x) == "table") then
-				if (x.width == nil) then
-					width = x[1]
-				else
-					width = x.width
-				end
-				if (x.height == nil) then
-					height = x[2]
-				else
-					height = x.height
-				end
-			end
-			if width==nil then width=0 end
-			if height==nil then height=0 end
-			self.width = width
-			self.height = height
-		end
-		return {width=self.width,height=self.height}
-	end,
-
-	scale = function(self,x,y)
-		local r = pprect(self)
-    if not y then
-      y = x
-    end
-		r.width  = r.width *x
-		r.height = r.height*y
-		self.width = r.width
-		self.height = r.height
-		return r
-	end,
-	inset = function(self,x,y)
-		local r = pprect(self)
-		if y==nil then y=x end
-		local d = pppoint(x,y)
-		r.x = r.x + d.x
-		r.y = r.y + d.y
-		self.x = r.x
-		self.y = r.y
-		if (self.width  ~= nil) then
-		  r.width  = r.width  - d.x*2
-		  self.width = r.width;
-		end
-		if (self.height ~= nil) then
-		  r.height = r.height - d.y*2
-		  self.height = r.height;
-		end
-		return r
-	end,
-
-	contain = function(self,x,y)
-		local p = pppoint(x,y)
-		if y==nil then y=x end
-		local min1 = self:min()
-		local max1 = self:max()
-		return (min1.x <= p.x and min1.y <= p.y and p.x < max1.x and p.y < max1.y)
-	end,
-	intersect = function(self,r)
-		local wx = self.x - r.x + self.width
-		local wy = self.y - r.y + self.height
-		return (wx >= 0 and wx < self.width+r.width and wy >= 0 and wy < self.height+r.height)
-	end,
-	union = function(self,r2)
-		local min1 = self:min()
-		local max1 = self:max()
-		local min2 = r2:min()
-		local max2 = r2:max()
-		if (min1.x > min2.x) then min1.x = min2.x end
-		if (min1.y > min2.y) then min1.y = min2.y end
-		if (max1.x < max2.x) then max1.x = max2.x end
-		if (max1.y < max2.y) then max1.y = max2.y end
-		return pprect(min1.x,min1.y,max1.x-min1.x,max1.y-min1.y)
-	end,
-	length=function(self,x,y)
-		return pplength(self,x,y)
-	end,
-	hitCheck = ppobject.hitCheck
-}
-pprect_mt = {
-	__add = function(a,b)
-		local c = {}
-		if type(b) == "number" then
-			c.x = a.x + b
-			c.y = a.y + b
-		else
-			c.x = a.x + b.x
-			c.y = a.y + b.y
-		end
-		c.width = a.width
-		c.height = a.height
-		return pprect(c)
-	end,
-	__sub = function(a,b)
-		local c = {}
-		if type(b) == "number" then
-			c.x = a.x - b
-			c.y = a.y - b
-		else
-			c.x = a.x - b.x
-			c.y = a.y - b.y
-		end
-		c.width = a.width
-		c.height = a.height
-		return pprect(c)
-	end,
-	__div = function(a,b)
-		local c = {}
-		if type(b) == "number" then
-			c.x = a.x / b
-			c.y = a.y / b
-			c.width = a.width / b
-			c.height = a.height / b
-		else
-			c.x = a.x / b.x
-			c.y = a.y / b.y
-			c.width = a.width / b.x
-			c.height = a.height / b.y
-		end
-		return pprect(c)
-	end,
-	__mul = function(a,b)
-		local c = {}
-		if type(b) == "number" then
-			c.x = a.x * b
-			c.y = a.y * b
-			c.width = a.width * b
-			c.height = a.height * b
-		else
-			c.x = a.x * b.x
-			c.y = a.y * b.y
-			c.width = a.width * b.x
-			c.height = a.height * b.y
-		end
-		return pprect(c)
-	end,
-	__index = pprectImp
-}
+--pprectImp = {
+--	min = function(self)
+--		return pppoint(self.x,self.y)
+--	end,
+--	max = function(self)
+--		return pppoint(self.x+self.width,self.y+self.height)
+--	end,
+--	center = function(self)
+--		return pppoint(self.x+self.width/2,self.y+self.height/2)
+--	end,
+--	equalToSize = function(self,...)
+--    local a=pprect(...)
+--		return (self.width == a.width and self.height == a.height)
+--	end,
+--	equalToRect = function(self,...)
+--    local a=pprect(...)
+--		return (self.x == a.x and self.y == a.y and self.width == a.width and self.height == a.height)
+--	end,
+--	isEmpty = function(self)
+--		return (self.width == 0 and self.height == 0)
+--	end,
+--	move = function(self,x,y)
+--		local p = pppoint(x,y)
+--		self.x = self.x+p.x
+--		self.y = self.y+p.y
+--	end,
+--	position = function(self,x,y)
+--		if x~=nil then
+--			local p = pppoint(x,y)
+--			self.x = p.x
+--			self.y = p.y
+--		end
+--		return pppoint(self.x,self.y)
+--	end,
+--	pos = function(self,x,y)
+--		if x~=nil then
+--			local p = pppoint(x,y)
+--			self.x = p.x
+--			self.y = p.y
+--		end
+--		return pppoint(self.x,self.y)
+--	end,
+--	size = function(self,x,y)
+--		if x~=nil then
+--			local width=x
+--			local height=y
+--			if (type(x) == "table") then
+--				if (x.width == nil) then
+--					width = x[1]
+--				else
+--					width = x.width
+--				end
+--				if (x.height == nil) then
+--					height = x[2]
+--				else
+--					height = x.height
+--				end
+--			end
+--			if width==nil then width=0 end
+--			if height==nil then height=0 end
+--			self.width = width
+--			self.height = height
+--		end
+--		return {width=self.width,height=self.height}
+--	end,
+--
+--	scale = function(self,x,y)
+--		local r = pprect(self)
+--    if not y then
+--      y = x
+--    end
+--		r.width  = r.width *x
+--		r.height = r.height*y
+--		self.width = r.width
+--		self.height = r.height
+--		return r
+--	end,
+--	inset = function(self,x,y)
+--		local r = pprect(self)
+--		if y==nil then y=x end
+--		local d = pppoint(x,y)
+--		r.x = r.x + d.x
+--		r.y = r.y + d.y
+--		self.x = r.x
+--		self.y = r.y
+--		if (self.width  ~= nil) then
+--		  r.width  = r.width  - d.x*2
+--		  self.width = r.width;
+--		end
+--		if (self.height ~= nil) then
+--		  r.height = r.height - d.y*2
+--		  self.height = r.height;
+--		end
+--		return r
+--	end,
+--
+--	contain = function(self,x,y)
+--		local p = pppoint(x,y)
+--		if y==nil then y=x end
+--		local min1 = self:min()
+--		local max1 = self:max()
+--		return (min1.x <= p.x and min1.y <= p.y and p.x < max1.x and p.y < max1.y)
+--	end,
+--	intersect = function(self,r)
+--		local wx = self.x - r.x + self.width
+--		local wy = self.y - r.y + self.height
+--		return (wx >= 0 and wx < self.width+r.width and wy >= 0 and wy < self.height+r.height)
+--	end,
+--	union = function(self,r2)
+--		local min1 = self:min()
+--		local max1 = self:max()
+--		local min2 = r2:min()
+--		local max2 = r2:max()
+--		if (min1.x > min2.x) then min1.x = min2.x end
+--		if (min1.y > min2.y) then min1.y = min2.y end
+--		if (max1.x < max2.x) then max1.x = max2.x end
+--		if (max1.y < max2.y) then max1.y = max2.y end
+--		return pprect(min1.x,min1.y,max1.x-min1.x,max1.y-min1.y)
+--	end,
+--	length=function(self,x,y)
+--		return pplength(self,x,y)
+--	end,
+--	hitCheck = ppobject.hitCheck
+--}
+--pprect_mt = {
+--	__add = function(a,b)
+--		local c = {}
+--		if type(b) == "number" then
+--			c.x = a.x + b
+--			c.y = a.y + b
+--		else
+--			c.x = a.x + b.x
+--			c.y = a.y + b.y
+--		end
+--		c.width = a.width
+--		c.height = a.height
+--		return pprect(c)
+--	end,
+--	__sub = function(a,b)
+--		local c = {}
+--		if type(b) == "number" then
+--			c.x = a.x - b
+--			c.y = a.y - b
+--		else
+--			c.x = a.x - b.x
+--			c.y = a.y - b.y
+--		end
+--		c.width = a.width
+--		c.height = a.height
+--		return pprect(c)
+--	end,
+--	__div = function(a,b)
+--		local c = {}
+--		if type(b) == "number" then
+--			c.x = a.x / b
+--			c.y = a.y / b
+--			c.width = a.width / b
+--			c.height = a.height / b
+--		else
+--			c.x = a.x / b.x
+--			c.y = a.y / b.y
+--			c.width = a.width / b.x
+--			c.height = a.height / b.y
+--		end
+--		return pprect(c)
+--	end,
+--	__mul = function(a,b)
+--		local c = {}
+--		if type(b) == "number" then
+--			c.x = a.x * b
+--			c.y = a.y * b
+--			c.width = a.width * b
+--			c.height = a.height * b
+--		else
+--			c.x = a.x * b.x
+--			c.y = a.y * b.y
+--			c.width = a.width * b.x
+--			c.height = a.height * b.y
+--		end
+--		return pprect(c)
+--	end,
+--	__index = pprectImp
+--}
 ppsprite = ppobject
-function ppscreen:from(t)
-	local r=pprect(t)
+function ppscreen:from(...)
+	local r=pprect(...)
 	r.x = r.x - self:pivot().x
 	r.y = r.y - self:pivot().y
 	r.x = r.x * self:scale().x
@@ -302,8 +307,8 @@ function ppscreen:from(t)
 	r.height = r.height * self:scale().y
 	return r
 end
-function ppscreen:to(t)
-	local r=pprect(t)
+function ppscreen:to(...)
+	local r=pprect(...)
 	r.x = r.x - self:offset().x
 	r.y = r.y - self:offset().y
 	r.x = r.x - self:pivot().x

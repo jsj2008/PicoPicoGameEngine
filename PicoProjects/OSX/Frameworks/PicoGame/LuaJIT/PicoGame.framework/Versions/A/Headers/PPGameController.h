@@ -51,6 +51,7 @@
 - (IBAction)goWindow:(id)sender;
 
 - (IBAction)startGame:(id)sender;
+- (void)disableIO:(id)sender;
 
 //- (PPGame*)scene;
 

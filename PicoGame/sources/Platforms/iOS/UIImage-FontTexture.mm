@@ -13,15 +13,11 @@
 #import <OpenGLES/EAGL.h>
 #import <OpenGLES/ES1/gl.h>
 #import <OpenGLES/ES1/glext.h>
+#import <UIKit/UIStringDrawing.h>
 
 static CGFloat fontSize = 15;
 static UIColor* fontBGColor = nil;
 static UIColor* fontColor = nil;
-
-static UIImage* fontImage(char* string)
-{
-	return [UIImage fontImage:[NSString stringWithUTF8String:string]];
-}
 
 @implementation UIImage (FontTexture)
 
