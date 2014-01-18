@@ -1032,41 +1032,43 @@ PPWorld* PPLuaArg::World(lua_State* L)
 	return world;
 }
 
-static bool isKindOfClass(lua_State* L,std::string &classname)
+static bool isKindOfClass(lua_State* L,const char* classname)
 {
 	int top = lua_gettop(L);
   int classtop = top;
   bool collectclass=false;
-  do {
-    lua_getfield(L,classtop,PICO_CLASSNAME);
-    if (lua_isnil(L,-1)) {
-      break;
-    }
-    std::string name = lua_tostring(L,-1);
-    if (name == classname) {
-      collectclass = true;
-      break;
-    }
-    lua_getfield(L,classtop,PICO_SUPER);
-    if (lua_isnil(L,-1)) {
-      break;
-    }
-    lua_getmetatable(L,-1);
-    if (lua_isnil(L,-1)) {
-      break;
-    }
-    classtop = lua_gettop(L);
-  } while (true);
+  if (!lua_isnil(L,classtop)) {
+    do {
+      lua_getfield(L,classtop,PICO_CLASSNAME);
+      if (lua_isnil(L,-1)) {
+        break;
+      }
+      std::string name = lua_tostring(L,-1);
+      if (name == classname) {
+        collectclass = true;
+        break;
+      }
+      lua_getfield(L,classtop,PICO_SUPER);
+      if (lua_isnil(L,-1)) {
+        break;
+      }
+      lua_getmetatable(L,-1);
+      if (lua_isnil(L,-1)) {
+        break;
+      }
+      classtop = lua_gettop(L);
+    } while (true);
+  }
   lua_settop(L,top);
   return collectclass;
 }
 
-void* PPLuaArg::UserData(lua_State* L,std::string &classname,bool nullcheck)
+void* PPLuaArg::UserData(lua_State* L,const char* classname,bool nullcheck)
 {
   return UserData(L,1,classname,nullcheck);
 }
 
-void* PPLuaArg::UserData(lua_State* L,int idx,std::string &classname,bool nullcheck)
+void* PPLuaArg::UserData(lua_State* L,int idx,const char* classname,bool nullcheck)
 {
   std::string err;
 	int top = lua_gettop(L);
@@ -1075,13 +1077,15 @@ void* PPLuaArg::UserData(lua_State* L,int idx,std::string &classname,bool nullch
 		lua_getmetatable(L,idx);
     if (!isKindOfClass(L,classname)) {
       lua_settop(L,top);
-      lua_Debug ar;
-      lua_getstack(L,0,&ar);
-      lua_getinfo(L, "Snl", &ar);
-      err = "illegal instance method '";
-      err += ar.name;
-      err += "' call.";
-      lua_pushstring(L,err.c_str());
+      if (nullcheck) {
+        lua_Debug ar;
+        lua_getstack(L,0,&ar);
+        lua_getinfo(L, "Snl", &ar);
+        err = "illegal instance method '";
+        err += ar.name;
+        err += "' call.";
+        lua_pushstring(L,err.c_str());
+      }
       return NULL;
     }
 		lua_getfield(L,-1,PPGAMEINSTNACE);
@@ -1106,6 +1110,16 @@ void* PPLuaArg::UserData(lua_State* L,int idx,std::string &classname,bool nullch
     }
   }
 	return userdata;
+}
+
+void* PPLuaArg::UserData(lua_State* L,std::string &classname,bool nullcheck)
+{
+  return UserData(L,1,classname,nullcheck);
+}
+
+void* PPLuaArg::UserData(lua_State* L,int idx,std::string &classname,bool nullcheck)
+{
+  return UserData(L,idx,classname.c_str(),nullcheck);
 }
 
 void PPLuaScript::idle()
@@ -1199,7 +1213,7 @@ static int funcPPRect(lua_State *L)
 	return s->returnRect(L,r);
 }
 
-static int getPPPoint(lua_State *L,int idx,PPPoint &p)
+int PPLuaArg::getPPPoint(lua_State *L,int idx,PPPoint &p)
 {
   int n=0;
   float v[2]={0};
@@ -1210,6 +1224,7 @@ static int getPPPoint(lua_State *L,int idx,PPPoint &p)
       if (!lua_isnil(L,-1)) {
         v[n++]=lua_tonumber(L,-1);
       }
+      if (n>=2) break;
       lua_getfield(L,i,"y");
       if (!lua_isnil(L,-1)) {
         v[n++]=lua_tonumber(L,-1);
@@ -1243,7 +1258,7 @@ static int getPPPoint(lua_State *L,int idx,PPPoint &p)
   return n;
 }
 
-static int getPPSize(lua_State *L,int idx,float &w,float &h)
+int PPLuaArg::getPPSize(lua_State *L,int idx,float &w,float &h)
 {
   int n=0;
   float v[2]={0};
@@ -1254,14 +1269,17 @@ static int getPPSize(lua_State *L,int idx,float &w,float &h)
       if (!lua_isnil(L,-1)) {
         v[n++]=lua_tonumber(L,-1);
       }
+      if (n>=2) break;
       lua_getfield(L,i,"height");
       if (!lua_isnil(L,-1)) {
         v[n++]=lua_tonumber(L,-1);
       }
+      if (n>=2) break;
       lua_getfield(L,i,"x");
       if (!lua_isnil(L,-1)) {
         v[n++]=lua_tonumber(L,-1);
       }
+      if (n>=2) break;
       lua_getfield(L,i,"y");
       if (!lua_isnil(L,-1)) {
         v[n++]=lua_tonumber(L,-1);
@@ -1296,7 +1314,7 @@ static int getPPSize(lua_State *L,int idx,float &w,float &h)
   return n;
 }
 
-static int getPPRect(lua_State *L,int idx,PPRect &r)
+int PPLuaArg::getPPRect(lua_State *L,int idx,PPRect &r)
 {
   int n=0;
   float v[4]={0};
@@ -1307,19 +1325,22 @@ static int getPPRect(lua_State *L,int idx,PPRect &r)
       if (!lua_isnil(L,-1)) {
         v[n++]=lua_tonumber(L,-1);
       }
+      if (n>=4) break;
       lua_getfield(L,i,"y");
       if (!lua_isnil(L,-1)) {
         v[n++]=lua_tonumber(L,-1);
       }
+      if (n>=4) break;
       lua_getfield(L,i,"width");
       if (!lua_isnil(L,-1)) {
         v[n++]=lua_tonumber(L,-1);
       }
+      if (n>=4) break;
       lua_getfield(L,i,"height");
       if (!lua_isnil(L,-1)) {
         v[n++]=lua_tonumber(L,-1);
       }
-      if (n<2) {
+      if (n<4) {
 #ifdef __LUAJIT__
         size_t len = lua_objlen(L,i);
 #else
@@ -1358,156 +1379,8 @@ static int funcPPPoint(lua_State *L)
 {
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->initarg(L);
 	PPPoint p;
-  getPPPoint(L,1,p);
+  PPLuaArg::getPPPoint(L,1,p);
 	return s->returnPoint(L,p);
-}
-
-typedef struct _hitdata {
-	int index;
-	int mask;
-	unsigned long type;
-	PPPoint pos;
-	PPPoint center;
-	PPRect rect;
-	lua_Number length;
-} hitdata;
-
-static lua_Number getNumber(lua_State* L,int stack,int index,const char* field)
-{
-	lua_getfield(L,stack,field);
-	if (lua_isnil(L,-1)) {
-		lua_rawgeti(L,stack,index);
-		if (lua_isnil(L,-1)) {
-			return 0;
-		}
-	}
-	return lua_tonumber(L,-1);
-}
-
-static int funcPPHitCheck(lua_State *L)
-{
-	int top=lua_gettop(L);
-	if (lua_isfunction(L,3)) {
-		if (top >= 2) {
-			int n[2];
-			hitdata* hit[2];
-#ifdef __LUAJIT__
-			n[0] = (int)lua_objlen(L,1);
-			n[1] = (int)lua_objlen(L,2);
-#else
-			n[0] = (int)lua_rawlen(L,1);
-			n[1] = (int)lua_rawlen(L,2);
-#endif
-			lua_settop(L,top);
-			
-			if (n[0] > 0 && n[1] > 0) {
-				hit[0] = (hitdata*)malloc(n[0]*sizeof(hitdata));
-				hit[1] = (hitdata*)malloc(n[1]*sizeof(hitdata));
-        
-				for (int i=0;i<2;i++) {
-					for (int j=0;j<n[i];j++) {
-						int top=lua_gettop(L);
-						hit[i][j].index = j+1;
-						hit[i][j].mask = 0;
-						hit[i][j].length = 0;
-						hit[i][j].type = 0;
-						hit[i][j].center = PPPoint(0,0);
-						lua_rawgeti(L,1+i,j+1);
-						int table=lua_gettop(L);
-						{
-							lua_getfield(L,table,"hitmask");
-							if (!lua_isnil(L,-1)) {
-								hit[i][j].mask = (int)lua_tointeger(L,-1);
-							}
-							lua_pop(L,1);
-						}
-						if (hit[i][j].mask != 0) {
-							lua_getfield(L,table,"hitlength");
-							if (!lua_isnil(L,-1)) {
-								hit[i][j].length = lua_tonumber(L,-1);
-							}
-							lua_pop(L,1);
-						}
-						if (hit[i][j].mask != 0) {
-							lua_getfield(L,table,"hitcenter");
-							if (lua_istable(L,-1)) {
-								int center=lua_gettop(L);
-								hit[i][j].center.x = getNumber(L,center,1,"x");
-								hit[i][j].center.y = getNumber(L,center,2,"y");
-							}
-							{
-								lua_getfield(L,table,"x");
-								hit[i][j].pos.x = lua_tonumber(L,-1);
-								lua_getfield(L,table,"y");
-								hit[i][j].pos.y = lua_tonumber(L,-1);
-							}
-							lua_settop(L,table);
-						}
-						if (hit[i][j].mask != 0) {
-							lua_getfield(L,table,"hitpos");
-							if (lua_istable(L,-1)) {
-								int center=lua_gettop(L);
-								hit[i][j].pos.x = getNumber(L,center,1,"x");
-								hit[i][j].pos.y = getNumber(L,center,2,"y");
-								lua_settop(L,table);
-							}
-						}
-						if (hit[i][j].mask != 0) {
-							lua_getfield(L,table,"hitrect");
-							if (lua_istable(L,-1)) {
-								int s=lua_gettop(L);
-								PPRect r;
-								r.x = getNumber(L,s,1,"x");
-								r.y = getNumber(L,s,2,"y");
-								r.width = getNumber(L,s,3,"width");
-								r.height = getNumber(L,s,4,"height");
-								hit[i][j].rect = PPRect(hit[i][j].pos.x+r.x,hit[i][j].pos.y+r.y,r.width,r.height);
-								hit[i][j].pos.x += r.x+r.width/2;
-								hit[i][j].pos.y += r.y+r.height/2;
-								hit[i][j].length=sqrt(r.width*r.width/4+r.height*r.height/4);
-								hit[i][j].type = 1;
-							}
-						}
-						lua_settop(L,top);
-					}
-				}
-				
-				for (int i=0;i<n[0];i++) {
-					hitdata* a = &hit[0][i];
-					if (a->mask != 0 && a->length > 0) {
-						for (int j=0;j<n[1];j++) {
-							hitdata* b = &hit[1][j];
-							if (b->mask != 0 && b->length > 0) {
-								if (a->mask & b->mask) {
-									bool hitcheck = false;
-									if (b->type && a->type) {
-										if (b->rect.hitCheck(a->rect)) {
-											hitcheck = true;
-										}
-									} else
-                    if ((b->pos+b->center).length(a->pos+a->center) < a->length+b->length) {
-                      hitcheck = true;
-                    }
-									if (hitcheck) {
-										lua_pushvalue(L,3);
-										lua_rawgeti(L,1,a->index);
-										lua_rawgeti(L,2,b->index);
-										lua_call(L,2,0);
-										lua_settop(L,top);
-									}
-								}
-							}
-						}
-					}
-				}
-				
-				free(hit[0]);
-				free(hit[1]);
-        
-			}
-		}
-	}
-	return 0;
 }
 
 static int funcPPIterator(lua_State *L)
@@ -1560,7 +1433,7 @@ static int funcPPPointLength(lua_State *L)
   PPPoint m;
   getMyPoint(L,1,m);
 	PPPoint p;
-  int r=getPPPoint(L,2,p);
+  int r=PPLuaArg::getPPPoint(L,2,p);
   if (r<2) {
     lua_pushnumber(L,m.length());
   } else {
@@ -1574,7 +1447,7 @@ static int funcPPPointMove(lua_State* L)
   PPAssert(1,LUA_TTABLE);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->initarg(L);
 	PPPoint p;
-  getPPPoint(L,2,p);
+  PPLuaArg::getPPPoint(L,2,p);
   PPPoint m;
   getMyPoint(L,1,m);
   m=m+p;
@@ -1599,7 +1472,7 @@ static int funcPPPointAdd(lua_State* L)
   PPPoint m;
   getMyPoint(L,1,m);
 	PPPoint p;
-  int r=getPPPoint(L,2,p);
+  int r=PPLuaArg::getPPPoint(L,2,p);
   if (r<2) {
     return s->returnPoint(L,PPPoint(m.x+p.x,m.y+p.x));
   }
@@ -1612,7 +1485,7 @@ static int funcPPPointSub(lua_State* L)
   PPPoint m;
   getMyPoint(L,1,m);
 	PPPoint p;
-  int r=getPPPoint(L,2,p);
+  int r=PPLuaArg::getPPPoint(L,2,p);
   if (r<2) {
     return s->returnPoint(L,PPPoint(m.x-p.x,m.y-p.x));
   }
@@ -1625,15 +1498,17 @@ static int funcPPPointDiv(lua_State* L)
   PPPoint m;
   getMyPoint(L,1,m);
 	PPPoint p;
-  int r=getPPPoint(L,2,p);
+  int r=PPLuaArg::getPPPoint(L,2,p);
   if (r<2) {
     if (p.x == 0) {
       return luaL_error(L,"divide by zero");
+//      return s->returnPoint(L,PPPoint(0,0));
     }
     return s->returnPoint(L,PPPoint(m.x/p.x,m.y/p.x));
   }
   if (p.x == 0 || p.y == 0) {
     return luaL_error(L,"divide by zero");
+//    return s->returnPoint(L,PPPoint(0,0));
   }
   return s->returnPoint(L,m/p);
 }
@@ -1644,7 +1519,7 @@ static int funcPPPointMul(lua_State* L)
   PPPoint m;
   getMyPoint(L,1,m);
 	PPPoint p;
-  int r=getPPPoint(L,2,p);
+  int r=PPLuaArg::getPPPoint(L,2,p);
   if (r<2) {
     return s->returnPoint(L,PPPoint(m.x*p.x,m.y*p.x));
   }
@@ -1707,7 +1582,7 @@ static int funcPPRectEqualToSize(lua_State* L)
   PPRect r;
   getMyRect(L,r);
   PPRect t;
-  getPPRect(L,2,t);
+  PPLuaArg::getPPRect(L,2,t);
   bool b=(r.width==t.width && r.height==t.height);
   lua_pushboolean(L,b);
   return 1;
@@ -1720,7 +1595,7 @@ static int funcPPRectEqualToRect(lua_State* L)
   PPRect r;
   getMyRect(L,r);
   PPRect t;
-  getPPRect(L,2,t);
+  PPLuaArg::getPPRect(L,2,t);
   bool b=(r.x==t.x && r.y==t.y && r.width==t.width && r.height==t.height);
   lua_pushboolean(L,b);
   return 1;
@@ -1744,7 +1619,7 @@ static int funcPPRectMove(lua_State* L)
   PPRect r;
   getMyRect(L,r);
 	PPPoint p;
-  getPPPoint(L,2,p);
+  PPLuaArg::getPPPoint(L,2,p);
   r=r+p;
   lua_pushnumber(L,r.x);
   lua_setfield(L,1,"x");
@@ -1764,13 +1639,13 @@ static int funcPPRectPosition(lua_State* L)
   PPRect r;
   getMyRect(L,r);
 	PPPoint p;
-  int q=getPPPoint(L,2,p);
+  int q=PPLuaArg::getPPPoint(L,2,p);
   if (q>0) {
     lua_pushnumber(L,p.x);
     lua_setfield(L,1,"x");
     lua_pushnumber(L,p.y);
     lua_setfield(L,1,"y");
-    return 0;
+    //return 0;
   }
   return s->returnPoint(L,PPPoint(r.x,r.y));
 }
@@ -1782,7 +1657,7 @@ static int funcPPRectSize(lua_State* L)
   PPRect r;
   getMyRect(L,r);
   float w=0,h=0;
-  int q=getPPSize(L,2,w,h);
+  int q=PPLuaArg::getPPSize(L,2,w,h);
   if (q>0) {
     lua_pushnumber(L,w);
     lua_setfield(L,1,"width");
@@ -1800,7 +1675,7 @@ static int funcPPRectScale(lua_State* L)
   PPRect r;
   getMyRect(L,r);
 	PPPoint p;
-  int q=getPPPoint(L,2,p);
+  int q=PPLuaArg::getPPPoint(L,2,p);
   if (q>0) {
     if (q==1) {
       p.y=p.x;
@@ -1823,7 +1698,7 @@ static int funcPPRectInset(lua_State* L)
   PPRect r;
   getMyRect(L,r);
 	PPPoint p;
-  int q=getPPPoint(L,2,p);
+  int q=PPLuaArg::getPPPoint(L,2,p);
   if (q>0) {
     if (q==1) {
       p.y=p.x;
@@ -1840,7 +1715,7 @@ static int funcPPRectInset(lua_State* L)
     lua_setfield(L,1,"width");
     lua_pushnumber(L,r.height);
     lua_setfield(L,1,"height");
-    return 0;
+//    return 0;
   }
   return s->returnRect(L,r);
 }
@@ -1852,7 +1727,7 @@ static int funcPPRectContain(lua_State* L)
   PPRect r;
   getMyRect(L,r);
 	PPPoint p;
-  int q=getPPPoint(L,2,p);
+  int q=PPLuaArg::getPPPoint(L,2,p);
   bool ret=false;
   if (q>0) {
     ret = (r.x <= p.x && r.y <= p.y && p.x < r.x+r.width && p.y < r.y+r.height);
@@ -1868,7 +1743,7 @@ static int funcPPRectIntersect(lua_State* L)
   PPRect r;
   getMyRect(L,r);
   PPRect t;
-  getPPRect(L,2,t);
+  PPLuaArg::getPPRect(L,2,t);
   float wx=r.x-t.x+r.width;
   float wy=r.y-t.y+r.height;
   bool ret = (wx>=0 && wx<r.width+t.width && wy>=0 && wy<r.height+t.height);
@@ -1883,7 +1758,7 @@ static int funcPPRectUnion(lua_State* L)
   PPRect r;
   getMyRect(L,r);
   PPRect t;
-  getPPRect(L,2,t);
+  PPLuaArg::getPPRect(L,2,t);
   PPPoint min1=r.min();
   PPPoint max1=r.max();
   PPPoint min2=t.min();
@@ -1909,7 +1784,7 @@ static int funcPPRectAdd(lua_State* L)
   PPRect m;
   getMyRect(L,m);
   PPRect t;
-  int r=getPPRect(L,2,t);
+  int r=PPLuaArg::getPPRect(L,2,t);
   if (r>0) {
     if (r<2) {
       m.x=m.x+t.x;
@@ -1927,7 +1802,7 @@ static int funcPPRectSub(lua_State* L)
   PPRect m;
   getMyRect(L,m);
   PPRect t;
-  int r=getPPRect(L,2,t);
+  int r=PPLuaArg::getPPRect(L,2,t);
   if (r>0) {
     if (r<2) {
       m.x=m.x-t.x;
@@ -1945,7 +1820,7 @@ static int funcPPRectDiv(lua_State* L)
   PPRect m;
   getMyRect(L,m);
   PPRect t;
-  int r=getPPRect(L,2,t);
+  int r=PPLuaArg::getPPRect(L,2,t);
   if (r>0) {
     if (r<2) {
       if (t.x == 0) {
@@ -1953,12 +1828,16 @@ static int funcPPRectDiv(lua_State* L)
       }
       m.x=m.x/t.x;
       m.y=m.y/t.x;
+      m.width=m.width/t.x;
+      m.height=m.height/t.x;
     } else {
       if (t.x == 0 || t.y == 0) {
         return luaL_error(L,"divide by zero");
       }
       m.x=m.x/t.x;
       m.y=m.y/t.y;
+      m.width=m.width/t.x;
+      m.height=m.height/t.y;
     }
   }
   return s->returnRect(L,m);
@@ -1970,7 +1849,7 @@ static int funcPPRectMul(lua_State* L)
   PPRect m;
   getMyRect(L,m);
   PPRect t;
-  int r=getPPRect(L,2,t);
+  int r=PPLuaArg::getPPRect(L,2,t);
   if (r>0) {
     if (r<2) {
       m.x=m.x*t.x;
@@ -2070,7 +1949,6 @@ void PPLuaScript::setupGeometryCommand()
 	addCommand("pplength",funcPPLength);
 	addCommand("pprect",funcPPRect);
 	addCommand("pppoint",funcPPPoint);
-	addCommand("pphitcheck",funcPPHitCheck);
 	addCommand("ppforeach",funcPPIterator);
   
   lua_settop(L,top);

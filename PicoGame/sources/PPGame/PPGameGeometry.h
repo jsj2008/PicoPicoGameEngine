@@ -250,6 +250,7 @@ public:
   
   PPPoint min();
   PPPoint max();
+  PPPoint center();
 	
 	PPSize size();
 	PPPoint pos();

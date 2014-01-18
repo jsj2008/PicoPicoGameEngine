@@ -50,6 +50,8 @@ public:
 
 	static void* UserData(lua_State* L,std::string &classname,bool nullcheck=true);
   static void* UserData(lua_State* L,int idx,std::string &classname,bool nullcheck=true);
+	static void* UserData(lua_State* L,const char* classname,bool nullcheck=true);
+  static void* UserData(lua_State* L,int idx,const char* classname,bool nullcheck=true);
 	
 	static PPLuaArg* ErrorTarget(lua_State* L) {
 		return (PPLuaArg*)World(L)->userdata;
@@ -196,8 +198,8 @@ fflush(stdout);
 		lua_setfield(L,-2,"width");
 		lua_pushnumber(L,s.height);
 		lua_setfield(L,-2,"height");
-		lua_pushboolean(L,0);
-		lua_setfield(L,-2,"hit");
+//		lua_pushboolean(L,0);
+//		lua_setfield(L,-2,"hit");
 		lua_getglobal(L,"pprect_mt");
 		lua_setmetatable(L,-2);
 		return 1;
@@ -217,8 +219,8 @@ fflush(stdout);
 		lua_setfield(L,-2,"width");
 		lua_pushnumber(L,r.height);
 		lua_setfield(L,-2,"height");
-		lua_pushboolean(L,0);
-		lua_setfield(L,-2,"hit");
+//		lua_pushboolean(L,0);
+//		lua_setfield(L,-2,"hit");
 		lua_getglobal(L,"pprect_mt");
 		lua_setmetatable(L,-2);
 		return 1;
@@ -260,6 +262,10 @@ fflush(stdout);
 	virtual const char* args(int index);
 
   static int setterReadOnlyError(lua_State* L,const char* name);
+
+  static int getPPPoint(lua_State *L,int idx,PPPoint &p);
+  static int getPPSize(lua_State *L,int idx,float &w,float &h);
+  static int getPPRect(lua_State *L,int idx,PPRect &r);
   
 private:
 	PPWorld* target;

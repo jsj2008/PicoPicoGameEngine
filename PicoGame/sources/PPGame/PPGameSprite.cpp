@@ -495,8 +495,6 @@ int PPGameSprite::Box(PPGamePoly* poly)
 		vert[pt++] = p[2].y;
 		vert[pt++] = p[3].x;
 		vert[pt++] = p[3].y;
-//		vert[pt++] = p[0].x;
-//		vert[pt++] = p[0].y;
 	}
 
 	{
@@ -584,6 +582,7 @@ int PPGameSprite::DrawOT()
 				glPopMatrix();
 				break;
 			case QBBOX_TAG:
+			case QBLINE_LOOP_TAG:
 				glDisable(GL_TEXTURE_2D);
 				glVertexPointer(VN,GL_FLOAT,0,&b_vert[p*VN]);
 				glEnableClientState(GL_VERTEX_ARRAY);
@@ -594,6 +593,48 @@ int PPGameSprite::DrawOT()
 				glPushMatrix();
 				glLineWidth(1);
 				glDrawArrays(GL_LINE_LOOP,0,(b_stack[i].ptr-p));
+//				glDrawArrays(GL_LINE_STRIP,0,(b_stack[i].ptr-p));
+				glPopMatrix();
+				break;
+			case QBLINE_STRIP_TAG:
+				glDisable(GL_TEXTURE_2D);
+				glVertexPointer(VN,GL_FLOAT,0,&b_vert[p*VN]);
+				glEnableClientState(GL_VERTEX_ARRAY);
+				glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+				glColorPointer(4,GL_UNSIGNED_BYTE,0,&b_color[p*4]);
+				glEnableClientState(GL_COLOR_ARRAY);
+				BlendOn(b_stack[i].alphaValue,b_stack[i].blendType);
+				glPushMatrix();
+				glLineWidth(1);
+				glDrawArrays(GL_LINE_STRIP,0,(b_stack[i].ptr-p));
+//				glDrawArrays(GL_LINE_STRIP,0,(b_stack[i].ptr-p));
+				glPopMatrix();
+				break;
+			case QBTRIANGLE_STRIP_TAG:
+				glDisable(GL_TEXTURE_2D);
+				glVertexPointer(VN,GL_FLOAT,0,&b_vert[p*VN]);
+				glEnableClientState(GL_VERTEX_ARRAY);
+				glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+				glColorPointer(4,GL_UNSIGNED_BYTE,0,&b_color[p*4]);
+				glEnableClientState(GL_COLOR_ARRAY);
+				BlendOn(b_stack[i].alphaValue,b_stack[i].blendType);
+				glPushMatrix();
+				glLineWidth(1);
+				glDrawArrays(GL_TRIANGLE_STRIP,0,(b_stack[i].ptr-p));
+//				glDrawArrays(GL_LINE_STRIP,0,(b_stack[i].ptr-p));
+				glPopMatrix();
+				break;
+			case QBTRIANGLE_FAN_TAG:
+				glDisable(GL_TEXTURE_2D);
+				glVertexPointer(VN,GL_FLOAT,0,&b_vert[p*VN]);
+				glEnableClientState(GL_VERTEX_ARRAY);
+				glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+				glColorPointer(4,GL_UNSIGNED_BYTE,0,&b_color[p*4]);
+				glEnableClientState(GL_COLOR_ARRAY);
+				BlendOn(b_stack[i].alphaValue,b_stack[i].blendType);
+				glPushMatrix();
+				glLineWidth(1);
+				glDrawArrays(GL_TRIANGLE_FAN,0,(b_stack[i].ptr-p));
 //				glDrawArrays(GL_LINE_STRIP,0,(b_stack[i].ptr-p));
 				glPopMatrix();
 				break;
@@ -664,6 +705,7 @@ int PPGameSprite::DrawOT2()
 				glPopMatrix();
 				break;
 			case QBBOX_TAG:
+      case QBLINE_LOOP_TAG:
 				glDisable(GL_TEXTURE_2D);
 				glVertexAttribPointer(0, VN,GL_FLOAT,GL_FALSE, 0, (void*)&b_vert[p*VN]);
         glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, (void*)&b_uv[p*2]);
@@ -672,6 +714,42 @@ int PPGameSprite::DrawOT2()
 				glPushMatrix();
 				glLineWidth(1);
 				glDrawArrays(GL_LINE_LOOP,0,(b_stack[i].ptr-p));
+//				glDrawArrays(GL_LINE_STRIP,0,(b_stack[i].ptr-p));
+				glPopMatrix();
+				break;
+      case QBLINE_STRIP_TAG:
+				glDisable(GL_TEXTURE_2D);
+				glVertexAttribPointer(0, VN,GL_FLOAT,GL_FALSE, 0, (void*)&b_vert[p*VN]);
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, (void*)&b_uv[p*2]);
+        glVertexAttribPointer(1, 4, GL_UNSIGNED_BYTE, GL_TRUE, 0, (void*)&b_color[p*4]);
+				BlendOn(b_stack[i].alphaValue,b_stack[i].blendType);
+				glPushMatrix();
+				glLineWidth(1);
+				glDrawArrays(GL_LINE_STRIP,0,(b_stack[i].ptr-p));
+//				glDrawArrays(GL_LINE_STRIP,0,(b_stack[i].ptr-p));
+				glPopMatrix();
+				break;
+      case QBTRIANGLE_STRIP_TAG:
+				glDisable(GL_TEXTURE_2D);
+				glVertexAttribPointer(0, VN,GL_FLOAT,GL_FALSE, 0, (void*)&b_vert[p*VN]);
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, (void*)&b_uv[p*2]);
+        glVertexAttribPointer(1, 4, GL_UNSIGNED_BYTE, GL_TRUE, 0, (void*)&b_color[p*4]);
+				BlendOn(b_stack[i].alphaValue,b_stack[i].blendType);
+				glPushMatrix();
+				glLineWidth(1);
+				glDrawArrays(GL_TRIANGLE_STRIP,0,(b_stack[i].ptr-p));
+//				glDrawArrays(GL_LINE_STRIP,0,(b_stack[i].ptr-p));
+				glPopMatrix();
+				break;
+      case QBTRIANGLE_FAN_TAG:
+				glDisable(GL_TEXTURE_2D);
+				glVertexAttribPointer(0, VN,GL_FLOAT,GL_FALSE, 0, (void*)&b_vert[p*VN]);
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, (void*)&b_uv[p*2]);
+        glVertexAttribPointer(1, 4, GL_UNSIGNED_BYTE, GL_TRUE, 0, (void*)&b_color[p*4]);
+				BlendOn(b_stack[i].alphaValue,b_stack[i].blendType);
+				glPushMatrix();
+				glLineWidth(1);
+				glDrawArrays(GL_TRIANGLE_FAN,0,(b_stack[i].ptr-p));
 //				glDrawArrays(GL_LINE_STRIP,0,(b_stack[i].ptr-p));
 				glPopMatrix();
 				break;
@@ -784,11 +862,53 @@ int PPGameSprite::BlendOff()
 	return 0;
 }
 
+void PPGameSprite::StartPoint()
+{
+  point_count = 0;
+}
+
+void PPGameSprite::SetPoint(float x,float y,unsigned char* rgba)
+{
+	PPPoint p(x,y);
+	
+	GLfloat* vert = &b_vert[(st.b_ptr+point_count)*VN];
+	GLubyte* color = &b_color[(st.b_ptr+point_count)*4];
+	
+  {
+		p = calcPoint(p,st.scale,st.origin,st.rotate);
+		p = p + st.offset+st.offset2;
+		p.x =  (p.x)/(st.screenWidth /2)-1.0f;
+		p.y = -(p.y)/(st.screenHeight/2)+1.0f;
+	}
+
+	{
+		int pt=0;
+		vert[pt++] = p.x;
+		vert[pt++] = p.y;
+	}
+
+  color[0] = rgba[0];
+  color[1] = rgba[1];
+  color[2] = rgba[2];
+  color[3] = rgba[3];
+  
+  point_count++;
+}
+
+void PPGameSprite::ClosePoint(int type)
+{
+  PushStack(type);
+}
+
 int PPGameSprite::PushStack(int type,float alphaValue,int blendType)
 {
 	if (type != st.s_type
 	 || type == QBVIEW_TAG
 	 || type == QBBOX_TAG
+   || type == QBLINE_LOOP_TAG
+   || type == QBLINE_STRIP_TAG
+   || type == QBTRIANGLE_STRIP_TAG
+   || type == QBTRIANGLE_FAN_TAG
 	 || alphaValue != st.s_alphaValue
 	 || blendType != st.s_blendType) {
 		st.s_type = type;
@@ -812,6 +932,12 @@ int PPGameSprite::PushStack(int type,float alphaValue,int blendType)
 	} else
 	if (type == QBBOX_TAG) {
 		st.b_ptr += 4;
+  } else
+  if (type == QBLINE_LOOP_TAG
+   || type == QBLINE_STRIP_TAG
+   || type == QBTRIANGLE_STRIP_TAG
+   || type == QBTRIANGLE_FAN_TAG) {
+    st.b_ptr += point_count;
 	} else {
 		st.b_ptr += 6;
 	}

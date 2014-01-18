@@ -26,10 +26,10 @@ class PPBox2D {
 public:
 	static PPBox2D* openLibrary(PPLuaScript* script,const char* name,const char* superclass=NULL);
 
-  std::vector<PPBox2DWorld*> worlds;
+//  std::vector<PPBox2DWorld*> worlds;
 
-  void addWorld(PPBox2DWorld* world);
-  void removeWorld(PPBox2DWorld* world);
+//  void addWorld(PPBox2DWorld* world);
+//  void removeWorld(PPBox2DWorld* world);
   
   static std::string className;
 };

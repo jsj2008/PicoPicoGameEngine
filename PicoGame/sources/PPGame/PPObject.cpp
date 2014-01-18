@@ -1336,6 +1336,44 @@ static int funcSetter(lua_State* L)
       lua_pushboolean(L,true);
       return 1;
     }
+  } else
+  if (name == "hitlength") {
+    PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className,false);
+    m->hit.length=lua_tonumber(L,3);
+    lua_pushboolean(L,true);
+    return 1;
+  } else
+  if (name == "hitmask") {
+    PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className,false);
+    m->hit.mask=(int)lua_tointeger(L,3);
+    lua_pushboolean(L,true);
+    return 1;
+  } else
+  if (name == "hitrect") {
+    PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className,false);
+    PPRect r;
+    PPLuaArg::getPPRect(L,3,r);
+    m->hit.rect = r;
+    m->hit.type = 1;
+    lua_pushboolean(L,true);
+    return 1;
+  } else
+  if (name == "hitcenter") {
+    PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className,false);
+    PPPoint p;
+    PPLuaArg::getPPPoint(L,3,p);
+    m->hit.center = p;
+    m->hit.type = 0;
+    lua_pushboolean(L,true);
+    return 1;
+//  } else
+//  if (name == "hitpos") {
+//    PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className,false);
+//    PPPoint p;
+//    PPLuaArg::getPPPoint(L,3,p);
+//    m->hit.pos = p;
+//    m->hit.type = 0;
+//    return 1;
   }
   lua_pushboolean(L,false);
   return 1;
@@ -1379,6 +1417,34 @@ static int funcGetter(lua_State* L)
       lua_pushboolean(L,false);
     }
     return 1;
+  } else
+  if (name == "hitlength") {
+    PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className,false);
+    lua_pushnumber(L,m->hit.length);
+    return 1;
+  } else
+  if (name == "hitmask") {
+    PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className,false);
+    lua_pushinteger(L,m->hit.mask);
+    return 1;
+  } else
+  if (name == "hitrect") {
+    PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className,false);
+    PPLuaArg s(NULL);
+    s.returnRect(L,m->hit.rect);
+    return 1;
+  } else
+  if (name == "hitcenter") {
+    PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className,false);
+    PPLuaArg s(NULL);
+    s.returnPoint(L,m->hit.center);
+    return 1;
+//  } else
+//  if (name == "hitpos") {
+//    PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className,false);
+//    PPLuaArg s(NULL);
+//    s.returnPoint(L,m->hit.pos);
+//    return 1;
   }
   lua_pushnil(L);
   return 1;
@@ -1491,9 +1557,11 @@ PPObject* PPObject::registClass(PPLuaScript* script,const char* name,PPObject* o
 //		script->addNumberValue("y",0);
 
 		script->addNumberValue("animationTime",1);
-		script->addNumberValue("hitlength",0);
-		script->addIntegerValue("hitmask",0);
+
+//		script->addNumberValue("hitlength",0);
+//		script->addIntegerValue("hitmask",0);
 		script->addBoolValue("hit",false);
+
 		script->addBoolValue("autolayout",false);
 		script->addBoolValue("centerx",false);
 		script->addBoolValue("centery",false);

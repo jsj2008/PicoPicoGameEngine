@@ -25,23 +25,32 @@
 #define WORLD_LIST "__worldList"
 #define FIX_SHAPE "__shape"
 
-#define B2CONTACT "ppb2Contact"
-#define B2FIXTURE "ppb2Fixture"
-#define B2JOINT "ppb2Joint"
-#define B2BODY "ppb2Body"
-#define B2WORLD "ppb2World"
+#define B2CONTACT "b2Contact"
+#define B2FIXTURE "b2Fixture"
+#define B2JOINT "b2Joint"
+#define B2BODY "b2Body"
+#define B2WORLD "b2World"
+#define B2SETTINGS "b2Settings"
 
-#define B2REVOLUTEJOINT "ppb2RevoluteJoint"
-#define B2PRISMATICJOINT "ppb2PrismaticJoint"
-#define B2DISTANCEJOINT "ppb2DistanceJoint"
-#define B2PULLEYJOINT "ppb2PulleyJoint"
-#define B2MOUSEJOINT "ppb2MouseJoint"
-#define B2GEARJOINT "ppb2GearJoint"
-#define B2WHEELJOINT "ppb2WheelJoint"
-#define B2WELDJOINT "ppb2WeldJoint"
-#define B2FRICTIONJOINT "ppb2FrictionJoint"
-#define B2ROPEJOINT "ppb2RopeJoint"
-#define B2MOTORJOINT "ppb2MotorJoint"
+#define B2REVOLUTEJOINT "b2RevoluteJoint"
+#define B2PRISMATICJOINT "b2PrismaticJoint"
+#define B2DISTANCEJOINT "b2DistanceJoint"
+#define B2PULLEYJOINT "b2PulleyJoint"
+#define B2MOUSEJOINT "b2MouseJoint"
+#define B2GEARJOINT "b2GearJoint"
+#define B2WHEELJOINT "b2WheelJoint"
+#define B2WELDJOINT "b2WeldJoint"
+#define B2FRICTIONJOINT "b2FrictionJoint"
+#define B2ROPEJOINT "b2RopeJoint"
+#define B2MOTORJOINT "b2MotorJoint"
+
+#define B2TRANSFORM "b2Transform"
+
+#define B2SHAPE "b2Shape"
+#define B2CHAINSHAPE "b2ChainShape"
+#define B2CIRCLESHAPE "b2CircleShape"
+#define B2EDGESHAPE "b2EdgeShape"
+#define B2POLYGONSHAPE "b2PolygonShape"
 
 /*-----------------------------------------------------------------------------------------------
 	外部に公開しないプログラム
@@ -51,6 +60,7 @@ static int funcDestroyJoint(lua_State *L);
 static int funcDestroyFixture(lua_State *L);
 static int funcDestroyBody(lua_State *L);
 static int funcDeleteContact(lua_State *L);
+static int funcDeleteShape(lua_State* L);
 
 static float getNumber(lua_State* L,int n,float def,const char* field1,const char* field2=NULL)
 {
@@ -174,11 +184,185 @@ static lua_Integer getBodyType(lua_State* L,int argn,const char* field,lua_Integ
 	return r;
 }
 
+static void pushAABB(lua_State*L,b2AABB &aabb)
+{
+  lua_createtable(L,0,0);
+  lua_createtable(L,0,2);
+  lua_pushnumber(L,aabb.lowerBound.x);
+  lua_setfield(L,-2,"x");
+  lua_pushnumber(L,aabb.lowerBound.y);
+  lua_setfield(L,-2,"y");
+  lua_getglobal(L,"pppoint_mt");
+  lua_setmetatable(L,-2);
+  lua_setfield(L,-2,"lowerBound");
+  lua_createtable(L,0,2);
+  lua_pushnumber(L,aabb.upperBound.x);
+  lua_setfield(L,-2,"x");
+  lua_pushnumber(L,aabb.upperBound.y);
+  lua_setfield(L,-2,"y");
+  lua_getglobal(L,"pppoint_mt");
+  lua_setmetatable(L,-2);
+  lua_setfield(L,-2,"upperBound");
+}
+
+static int setOption(lua_State* L)
+{
+  int option=1;
+  int table=2;
+  if (lua_type(L,option)==LUA_TTABLE
+   && lua_type(L,table)==LUA_TTABLE) {
+    int top=lua_gettop(L);
+    lua_pushnil(L);
+    while (lua_next(L, option) != 0) {
+      if (lua_type(L,-2) == LUA_TSTRING) {
+        const char* key = lua_tostring(L,-2);
+        lua_getfield(L,table,key);
+        if (lua_isfunction(L,-1)) {
+          lua_pop(L,1);
+        } else {
+          lua_pop(L,1);
+          lua_pushvalue(L,-1);
+          lua_setfield(L,table,key);
+        }
+      }
+      lua_pop(L, 1);
+    }
+    lua_settop(L,top);
+  }
+  return 0;
+}
+
 /*-----------------------------------------------------------------------------------------------
 	プログラム
 -----------------------------------------------------------------------------------------------*/
 
 #pragma mark -
+
+class PPBox2DVert {
+public:
+  PPBox2DVert() {
+    vertices = NULL;
+    size=0;
+    count=0;
+  }
+  
+  virtual ~PPBox2DVert() {
+    if (vertices) free(vertices);
+  }
+  
+  void set(float32 x,float32 y) {
+    if (vertices == NULL) {
+      vertices = (b2Vec2*)malloc(sizeof(b2Vec2)*10);
+      size=10;
+    } else
+    if (size==count) {
+      vertices = (b2Vec2*)realloc(vertices,sizeof(b2Vec2)*(size+10));
+      size=size+10;
+    }
+    vertices[count].x=x;
+    vertices[count].y=y;
+    count++;
+  }
+  
+  void parse(lua_State* L,int idx,int top,int limit=0) {
+    int valc=0;
+    float32 val[10];
+    for (int i=idx;i<=top;i++) {
+      if (lua_istable(L,i)) {
+        lua_getfield(L,i,"x");
+        if (!lua_isnil(L,-1)) {
+          valc=0;
+          val[valc++] = lua_tonumber(L,-1);
+        }
+        lua_pop(L,1);
+        lua_getfield(L,i,"y");
+        if (!lua_isnil(L,-1)) {
+          val[valc++] = lua_tonumber(L,-1);
+        }
+        lua_pop(L,1);
+        if (valc>=2) {
+          set(val[0],val[1]);
+          if (limit > 0 && count >= limit) {
+            return;
+          }
+          valc=0;
+        } else {
+          valc=0;
+#ifdef __LUAJIT__
+          size_t len = lua_objlen(L,i);
+#else
+          size_t len = lua_rawlen(L,i);
+#endif
+          for (int j=1;j<=len;j++) {
+            lua_rawgeti(L,i,j);
+            if (lua_istable(L,-1)) {
+              lua_getfield(L,-1,"x");
+              if (!lua_isnil(L,-1)) {
+                valc=0;
+                val[valc++] = lua_tonumber(L,-1);
+              }
+              lua_pop(L,1);
+              lua_getfield(L,-1,"y");
+              if (!lua_isnil(L,-1)) {
+                val[valc++] = lua_tonumber(L,-1);
+              }
+              lua_pop(L,1);
+              if (valc>=2) {
+                set(val[0],val[1]);
+                if (limit > 0 && count >= limit) {
+                  return;
+                }
+                valc=0;
+              } else {
+                valc=0;
+                lua_rawgeti(L,-1,1);
+                if (!lua_isnil(L,-1)) {
+                  val[valc++] = lua_tonumber(L,-1);
+                }
+                lua_pop(L,1);
+                lua_rawgeti(L,-1,2);
+                if (!lua_isnil(L,-1)) {
+                  val[valc++] = lua_tonumber(L,-1);
+                }
+                lua_pop(L,1);
+                if (valc>=2) {
+                  set(val[0],val[1]);
+                  if (limit > 0 && count >= limit) {
+                    return;
+                  }
+                  valc=0;
+                }
+              }
+            } else {
+              val[valc++] = lua_tonumber(L,-1);
+              if (valc>=2) {
+                set(val[0],val[1]);
+                if (limit > 0 && count >= limit) {
+                  return;
+                }
+                valc=0;
+              }
+            }
+            lua_pop(L,1);
+          }
+        }
+      } else {
+        val[valc++] = lua_tonumber(L,i);
+        if (valc>=2) {
+          set(val[0],val[1]);
+          if (limit > 0 && count >= limit) {
+            return;
+          }
+          valc=0;
+        }
+      }
+    }
+  }
+  
+  b2Vec2* vertices;
+  int32 count;
+  int32 size;
+};
 
 std::string PPBox2D::className;
 
@@ -199,13 +383,13 @@ public:
 
 	void DrawTransform(const b2Transform& xf);
 
-    void DrawPoint(const b2Vec2& p, float32 size, const b2Color& color);
+  void DrawPoint(const b2Vec2& p, float32 size, const b2Color& color);
 
-    void DrawString(int x, int y, const char* string, ...); 
+  void DrawString(int x, int y, const char* string, ...); 
 
-    void DrawString(const b2Vec2& p, const char* string, ...);
+  void DrawString(const b2Vec2& p, const char* string, ...);
 
-    void DrawAABB(b2AABB* aabb, const b2Color& color);
+  void DrawAABB(b2AABB* aabb, const b2Color& color);
   
   QBGame* game;
   b2Vec2 scale;
@@ -215,14 +399,15 @@ void PPBox2DDebugDraw::DrawPolygon(const b2Vec2* vertices, int32 vertexCount, co
 {
   unsigned char r,g,b,a;
   game->GetRGBColor(game->colorIndex, &r, &g, &b, &a);
-  game->SetRGBColor(game->colorIndex, color.r*255, color.g*255, color.b*255, a);
   if (vertexCount > 2) {
-    int32 i;
-    for (i = 0; i < vertexCount-1; ++i)
+
+    game->SetRGBColor(game->colorIndex, color.r*255, color.g*255, color.b*255, a);
+    game->StartPoint();
+    for (int32 i = 0; i < vertexCount; ++i)
     {
-      game->Line(vertices[i].x*scale.x,vertices[i].y*scale.y,vertices[i+1].x*scale.x,vertices[i+1].y*scale.y,game->colorIndex);
+      game->SetPoint(vertices[i].x*scale.x,vertices[i].y*scale.y);
     }
-    game->Line(vertices[i].x*scale.x,vertices[i].y*scale.y,vertices[0].x*scale.x,vertices[0].y*scale.y,game->colorIndex);
+    game->ClosePoint(QBLINE_LOOP_TAG);
   }
   game->SetRGBColor(game->colorIndex, r, g, b, a);
 }
@@ -231,68 +416,88 @@ void PPBox2DDebugDraw::DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCoun
 {
   unsigned char r,g,b,a;
   game->GetRGBColor(game->colorIndex, &r, &g, &b, &a);
-  game->SetRGBColor(game->colorIndex, color.r*255, color.g*255, color.b*255, a);
   if (vertexCount > 2) {
-    int32 i;
-    for (i = 0; i < vertexCount-1; ++i)
+
+    game->SetRGBColor(game->colorIndex, color.r*255, color.g*255, color.b*255, 128);
+    game->StartPoint();
+    for (int32 i = 0; i < vertexCount; ++i)
     {
-      game->Line(vertices[i].x*scale.x,vertices[i].y*scale.y,vertices[i+1].x*scale.x,vertices[i+1].y*scale.y,game->colorIndex);
+      game->SetPoint(vertices[i].x*scale.x,vertices[i].y*scale.y);
     }
-    game->Line(vertices[i].x*scale.x,vertices[i].y*scale.y,vertices[0].x*scale.x,vertices[0].y*scale.y,game->colorIndex);
+    game->ClosePoint(QBTRIANGLE_FAN_TAG);
+
+    game->SetRGBColor(game->colorIndex, color.r*255, color.g*255, color.b*255, a);
+    game->StartPoint();
+    for (int32 i = 0; i < vertexCount; ++i)
+    {
+      game->SetPoint(vertices[i].x*scale.x,vertices[i].y*scale.y);
+    }
+    game->ClosePoint(QBLINE_LOOP_TAG);
 	}
   game->SetRGBColor(game->colorIndex, r, g, b, a);
 }
 
 void PPBox2DDebugDraw::DrawCircle(const b2Vec2& center, float32 radius, const b2Color& color)
 {
-	const float32 k_segments = 16.0f;
-	const float32 k_increment = 2.0f * b2_pi / k_segments;
-	float32 theta = 0.0f;
-  unsigned char r,g,b,a;
-  game->GetRGBColor(game->colorIndex, &r, &g, &b, &a);
-  game->SetRGBColor(game->colorIndex, color.r*255, color.g*255, color.b*255, a);
-  PPPoint p0,p1,p2;
-	for (int32 i = 0; i < k_segments; ++i)
-	{
-		b2Vec2 v = center + radius * b2Vec2(cosf(theta), sinf(theta));
-    p2.x=v.x*scale.x;
-    p2.y=v.y*scale.y;
-    if (i>0) {
-      game->Line(p1.x,p1.y,p2.x,p2.y,game->colorIndex);
-    } else {
-      p0=p2;
+  if (radius*scale.x>=1 || radius*scale.y>=1) {
+    const float32 k_segments = 16.0f;
+    const float32 k_increment = 2.0f * b2_pi / k_segments;
+    float32 theta = 0.0f;
+    PPPoint p0,p1,p2;
+    unsigned char r,g,b,a;
+    game->GetRGBColor(game->colorIndex, &r, &g, &b, &a);
+    
+    game->SetRGBColor(game->colorIndex, color.r*255, color.g*255, color.b*255, a);
+    game->StartPoint();
+    for (int32 i = 0; i < k_segments; ++i)
+    {
+      b2Vec2 v = center + radius*b2Vec2(cosf(theta),sinf(theta));
+      v.x=v.x*scale.x;
+      v.y=v.y*scale.y;
+      game->SetPoint(v.x,v.y);
+      theta += k_increment;
     }
-    p1=p2;
-		theta += k_increment;
-	}
-  game->Line(p1.x,p1.y,p0.x,p0.y,game->colorIndex);
-  game->SetRGBColor(game->colorIndex, r, g, b, a);
+    game->ClosePoint(QBLINE_LOOP_TAG);
+
+    game->SetRGBColor(game->colorIndex, r, g, b, a);
+  }
 }
 
 void PPBox2DDebugDraw::DrawSolidCircle(const b2Vec2& center, float32 radius, const b2Vec2& axis, const b2Color& color)
 {
-	const float32 k_segments = 16.0f;
-	const float32 k_increment = 2.0f * b2_pi / k_segments;
-	float32 theta = 0.0f;
-  unsigned char r,g,b,a;
-  game->GetRGBColor(game->colorIndex, &r, &g, &b, &a);
-  game->SetRGBColor(game->colorIndex, color.r*255, color.g*255, color.b*255, a);
-  PPPoint p0,p1,p2;
-	for (int32 i = 0; i < k_segments; ++i)
-	{
-		b2Vec2 v = center + radius * b2Vec2(cosf(theta), sinf(theta));
-    p2.x=v.x*scale.x;
-    p2.y=v.y*scale.x;
-    if (i>0) {
-      game->Line(p1.x,p1.y,p2.x,p2.y,game->colorIndex);
-    } else {
-      p0=p2;
+  if (radius*scale.x>=1 || radius*scale.y>=1) {
+    const float32 k_segments = 16.0f;
+    const float32 k_increment = 2.0f * b2_pi / k_segments;
+    float32 theta = 0.0f;
+    unsigned char r,g,b,a;
+    game->GetRGBColor(game->colorIndex, &r, &g, &b, &a);
+
+    game->SetRGBColor(game->colorIndex, color.r*255, color.g*255, color.b*255, 128);
+    game->StartPoint();
+    for (int32 i = 0; i < k_segments; ++i)
+    {
+      b2Vec2 v = center + radius*b2Vec2(cosf(theta),sinf(theta));
+      v.x=v.x*scale.x;
+      v.y=v.y*scale.y;
+      game->SetPoint(v.x,v.y);
+      theta += k_increment;
     }
-    p1=p2;
-		theta += k_increment;
-	}
-  game->Line(p1.x,p1.y,p0.x,p0.y,game->colorIndex);
-  game->SetRGBColor(game->colorIndex, r, g, b, a);
+    game->ClosePoint(QBTRIANGLE_FAN_TAG);
+
+    game->SetRGBColor(game->colorIndex, color.r*255, color.g*255, color.b*255, a);
+    game->StartPoint();
+    for (int32 i = 0; i < k_segments; ++i)
+    {
+      b2Vec2 v = center + radius*b2Vec2(cosf(theta),sinf(theta));
+      v.x=v.x*scale.x;
+      v.y=v.y*scale.y;
+      game->SetPoint(v.x,v.y);
+      theta += k_increment;
+    }
+    game->ClosePoint(QBLINE_LOOP_TAG);
+
+    game->SetRGBColor(game->colorIndex, r, g, b, a);
+  }
 }
 
 void PPBox2DDebugDraw::DrawSegment(const b2Vec2& p1, const b2Vec2& p2, const b2Color& color)
@@ -378,7 +583,31 @@ public:
   unsigned int worldId;
 };
 
+class PPBox2DTransform {
+public:
+  PPBox2DTransform() {
+    noangle=true;
+    t.Set(b2Vec2(0,0),0);
+  }
+  
+  b2Transform t;
+  float32 angle;
+  bool noangle;
+  
+  void Set(b2Transform& f) {
+    t.p=f.p;
+    t.q=f.q;
+  }
+  
+  static std::string className;
+};
+
+std::string PPBox2DTransform::className;
+
+static int funcDeleteTransform(lua_State *L);
+
 class PPBox2DContact;
+class PPBox2DBody;
 
 class PPBox2DWorld : public b2World
 {
@@ -391,25 +620,19 @@ public:
     contactFilter=NULL;
     callbackL=NULL;
     callbackIdx=0;
-    box2d = NULL;
+//    box2d = NULL;
     worldId = PPBox2DWorld::worldCount;
     PPBox2DWorld::worldCount++;
 	}
 	virtual ~PPBox2DWorld();
-//  void retain() {
-//    if (retainCount == 0) {
-//      setListener();
-//    }
-//    retainCount ++;
-//  }
-//  bool release() {
-//    retainCount --;
-//    if (retainCount) return true;
-//    return false;
-//  }
   
-  virtual void drawShape(lua_State* L,int idx=1);
+  virtual void drawBody(lua_State* L,int idx=1);
+  virtual void drawShape(b2Shape* shape,b2Transform* transform);
   virtual void drawJoint(lua_State* L,int idx=1);
+
+  virtual void drawABody(lua_State* L,int idx=1);
+  virtual void debugDrawBody(PPBox2DBody* body);
+  virtual void debugDrawShape(b2Fixture* fixture, const b2Transform& xf, const b2Color& color);
   
   static bool findFixture(lua_State* L,b2Fixture* fixture,int idx=1);
   static bool findJoint(lua_State* L,b2Joint* joint,int idx=1);
@@ -435,19 +658,17 @@ public:
   ppContactListener* contactListener;
   ppContactFilter* contactFilter;
   
-  //int retainCount;
   b2Vec2 drawScale;
+  b2Draw* m_ppdebugDraw;
   
   unsigned int worldId;
 
-  PPBox2D* box2d;
+//  PPBox2D* box2d;
   lua_State* callbackL;
   int callbackIdx;
   
   bool jointEdited;
   bool bodyEdited;
-  
-//  PPBox2DContact* contactTop;
   
   static std::string className;
 };
@@ -456,70 +677,25 @@ std::string PPBox2DWorld::className;
 
 unsigned int PPBox2DWorld::worldCount=0;
 
-class PPBox2DBody;
-class PPBox2DBodyUserData {
-public:
-  PPBox2DBodyUserData() {
-    dataIndex = count++;
-printf("- instance body userdata %d\n",dataIndex);
-  }
-  virtual ~PPBox2DBodyUserData() {
-printf("- destruct body userdata %d\n",dataIndex);
-  }
-  //std::vector<PPBox2DBody*> list;
-  PPBox2DBody* body;
-  size_t index;
-  unsigned int dataIndex;
-  
-  static unsigned int count;
-};
-
-unsigned int PPBox2DBodyUserData::count=0;
-
 class PPBox2DBody {
 public:
   PPBox2DBody(b2Body* body,PPBox2DWorld* world): body(body),world(world)
   {
     worldId = world->worldId;
-    PPBox2DBodyUserData* userData = (PPBox2DBodyUserData*)body->GetUserData();
-    if (userData == NULL) {
-      userData = new PPBox2DBodyUserData();
-      body->SetUserData(userData);
-    }
+    tableIndex=0;
+    body->SetUserData(this);
     fixtureEdited=false;
-    userData->index = 0;
-    userData->body = this;
     bodyIndex = bodyCount++;
-    //userData->list.push_back(this);
   }
   virtual ~PPBox2DBody() {
     if (body) {
-      PPBox2DBodyUserData* userData = (PPBox2DBodyUserData*)body->GetUserData();
-      if (userData) {
-//        std::vector<PPBox2DBody*>::iterator it;
-//        for( it = userData->list.begin(); it != userData->list.end(); it++ ) {
-//          if ((*it) == this) {
-//            userData->list.erase(it);
-////            delete userData;
-//            break;
-//          }
-//        }
-        delete userData;
-        body->SetUserData(NULL);
-      }
+      body->SetUserData(NULL);
+      body=NULL;
     }
   }
   void destroy(b2World* world) {
     if (body) {
-      PPBox2DBodyUserData* userData = (PPBox2DBodyUserData*)body->GetUserData();
-      if (userData) {
-//        std::vector<PPBox2DBody*>::iterator it;
-//        for( it = userData->list.begin(); it != userData->list.end(); it++ ) {
-//          (*it)->body = NULL;
-//        }
-        delete userData;
-        body->SetUserData(NULL);
-      }
+      body->SetUserData(NULL);
       world->DestroyBody(body);
       body=NULL;
     }
@@ -530,6 +706,7 @@ public:
   static std::string className;
   bool fixtureEdited;
   unsigned int bodyIndex;
+  unsigned long tableIndex;
   
   static unsigned int bodyCount;
 };
@@ -538,124 +715,54 @@ unsigned int PPBox2DBody::bodyCount=0;
 
 std::string PPBox2DBody::className;
 
-class PPBox2DFixture;
-class PPBox2DFixtureUserData {
-public:
-  PPBox2DFixtureUserData() {
-  }
-  virtual ~PPBox2DFixtureUserData() {
-  }
-  PPBox2DFixture* fixture;
-  unsigned int worldId;
-  size_t index;
-};
-
 class PPBox2DFixture {
 public:
-  PPBox2DFixture(b2Fixture* _fixture): fixture(_fixture)
+  PPBox2DFixture(b2Fixture* fixture,PPBox2DBody* body): fixture(fixture),body(body)
   {
-    PPBox2DFixtureUserData* userData = (PPBox2DFixtureUserData*)fixture->GetUserData();
-    if (userData == NULL) {
-      userData = new PPBox2DFixtureUserData();
-      fixture->SetUserData(userData);
-    }
-    userData->index = 0;
-    userData->fixture=this;
-//    userData->list.push_back(this);
+    tableIndex=0;
+    fixture->SetUserData(this);
   }
   virtual ~PPBox2DFixture() {
     if (fixture) {
-      PPBox2DFixtureUserData* userData = (PPBox2DFixtureUserData*)fixture->GetUserData();
-      if (userData) {
-//        std::vector<PPBox2DFixture*>::iterator it;
-//        for( it = userData->list.begin(); it != userData->list.end(); it++ ) {
-//          if ((*it) == this) {
-//            userData->list.erase(it);
-////            delete userData;
-//            break;
-//          }
-//        }
-        delete userData;
-        fixture->SetUserData(NULL);
-      }
+      fixture->SetUserData(NULL);
+      fixture=NULL;
     }
   }
   void destroy(b2Body* body) {
     if (fixture) {
-      PPBox2DFixtureUserData* userData = (PPBox2DFixtureUserData*)fixture->GetUserData();
-      if (userData) {
-//        std::vector<PPBox2DFixture*>::iterator it;
-//        for( it = userData->list.begin(); it != userData->list.end(); it++ ) {
-//          (*it)->fixture = NULL;
-//        }
-        delete userData;
-        fixture->SetUserData(NULL);
-      }
+      fixture->SetUserData(NULL);
       body->DestroyFixture(fixture);
       fixture=NULL;
     }
   }
   b2Fixture* fixture;
-  b2Vec2 pivot;
+  PPBox2DBody* body;
+  b2Vec2 offset;
   unsigned int worldId;
+  unsigned long tableIndex;
   
   static std::string className;
 };
 
 std::string PPBox2DFixture::className;
 
-class PPBox2DJoint;
-class PPBox2DJointUserData {
-public:
-  virtual ~PPBox2DJointUserData() {
-  }
-  //std::vector<PPBox2DJoint*> list;
-  PPBox2DJoint* joint;
-  unsigned int worldId;
-  size_t index;
-};
-
 class PPBox2DJoint {
 public:
   PPBox2DJoint(b2Joint* joint,PPBox2DWorld* world): joint(joint),world(world)
   {
-    PPBox2DJointUserData* userData = (PPBox2DJointUserData*)joint->GetUserData();
-    if (userData == NULL) {
-      userData = new PPBox2DJointUserData();
-      joint->SetUserData(userData);
-    }
-    userData->index = 0;
-    userData->joint = this;
-//    userData->list.push_back(this);
+    worldId = world->worldId;
+    tableIndex=0;
+    joint->SetUserData(this);
   }
   virtual ~PPBox2DJoint() {
     if (joint) {
-      PPBox2DJointUserData* userData = (PPBox2DJointUserData*)joint->GetUserData();
-      if (userData) {
-//        std::vector<PPBox2DJoint*>::iterator it;
-//        for( it = userData->list.begin(); it != userData->list.end(); it++ ) {
-//          if ((*it) == this) {
-//            userData->list.erase(it);
-////            delete userData;
-//            break;
-//          }
-//        }
-        delete userData;
-        joint->SetUserData(NULL);
-      }
+      joint->SetUserData(NULL);
+      joint=NULL;
     }
   }
   void destroy(b2World* world) {
     if (joint) {
-      PPBox2DJointUserData* userData = (PPBox2DJointUserData*)joint->GetUserData();
-      if (userData) {
-//        std::vector<PPBox2DJoint*>::iterator it;
-//        for( it = userData->list.begin(); it != userData->list.end(); it++ ) {
-//          (*it)->joint = NULL;
-//        }
-        delete userData;
-        joint->SetUserData(NULL);
-      }
+      joint->SetUserData(NULL);
       world->DestroyJoint(joint);
       joint=NULL;
     }
@@ -663,6 +770,7 @@ public:
   b2Joint* joint;
   PPBox2DWorld* world;
   unsigned int worldId;
+  unsigned long tableIndex;
   
   static std::string className;
   static std::string motorJointClassName;
@@ -955,20 +1063,20 @@ void ppContactListener::PostSolve(b2Contact* contact, const b2ContactImpulse* im
 //  return true;
 //}
 
-bool PPBox2DWorld::findFixture(lua_State* L,b2Fixture* fixture,int idx)
+bool PPBox2DWorld::findFixture(lua_State* L,b2Fixture* fixture,int worldIdx)
 {
   if (fixture==NULL) {
     lua_pushstring(L,"not found fixture.");
     return false;
   }
-  if (!findBody(L,fixture->GetBody(),idx)) {
-    
-  }
+  
+  findBody(L,fixture->GetBody(),worldIdx);
   int list=lua_gettop(L);
-	PPBox2DBody* m = (PPBox2DBody*)PPLuaArg::UserData(L,list,PPBox2DBody::className);
-  if (m==NULL) return false;
 
   lua_getfield(L,-1,FIX_LIST);
+  lua_replace(L,list);
+  lua_settop(L,list);
+
   if (!lua_isnil(L,-1)) {
 #ifdef __LUAJIT__
     size_t len = lua_objlen(L,-1);
@@ -976,23 +1084,25 @@ bool PPBox2DWorld::findFixture(lua_State* L,b2Fixture* fixture,int idx)
     size_t len = lua_rawlen(L,-1);
 #endif
 
-    if (m->fixtureEdited) {
-      b2Fixture* f = m->body->GetFixtureList();
-      while (f) {
-        PPBox2DFixtureUserData* userData = (PPBox2DFixtureUserData*)f->GetUserData();
-        if (userData) {
-          userData->index=0;
-        }
-        f=f->GetNext();
-      }
-      m->fixtureEdited=false;
-    }
+    PPBox2DFixture* ppfixture = (PPBox2DFixture*)fixture->GetUserData();
 
-    PPBox2DFixtureUserData* userData = (PPBox2DFixtureUserData*)fixture->GetUserData();
-    if (userData) {
-      userData->index=0;
+    if (ppfixture) {
+      if (ppfixture->body) {
+        if (ppfixture->body->fixtureEdited) {
+          b2Fixture* f = ppfixture->body->body->GetFixtureList();
+          while (f) {
+            PPBox2DFixture* userData = (PPBox2DFixture*)f->GetUserData();
+            if (userData) {
+              userData->tableIndex=0;
+            }
+            f=f->GetNext();
+          }
+          ppfixture->body->fixtureEdited=false;
+        }
+      }
+      //ppfixture->tableIndex=0;
     
-      if (userData->index == 0) {
+      if (ppfixture->tableIndex == 0) {
         for (int i=0;i<len;i++) {
           int top=lua_gettop(L);
           lua_rawgeti(L,top,i+1);
@@ -1002,7 +1112,7 @@ bool PPBox2DWorld::findFixture(lua_State* L,b2Fixture* fixture,int idx)
           PPBox2DFixture* fixture2 = (PPBox2DFixture*)lua_touserdata(L,-1);
           if (fixture2) {
             if (fixture2->fixture == fixture) {
-              userData->index=i+1;
+              ppfixture->tableIndex=i+1;
               lua_settop(L,item);
               lua_replace(L,list);
               lua_settop(L,list);
@@ -1013,7 +1123,7 @@ bool PPBox2DWorld::findFixture(lua_State* L,b2Fixture* fixture,int idx)
         }
       }
       
-      lua_rawgeti(L,-1,(int)userData->index);
+      lua_rawgeti(L,-1,(int)ppfixture->tableIndex);
       lua_replace(L,list);
       lua_settop(L,list);
       return true;
@@ -1049,20 +1159,20 @@ bool PPBox2DWorld::findJoint(lua_State* L,b2Joint* joint,int worldIdx)
     if (m->jointEdited) {
       b2Joint* j = m->GetJointList();
       while (j) {
-        PPBox2DJointUserData* userData = (PPBox2DJointUserData*)j->GetUserData();
+        PPBox2DJoint* userData = (PPBox2DJoint*)j->GetUserData();
         if (userData) {
-          userData->index=0;
+          userData->tableIndex=0;
         }
         j=j->GetNext();
       }
       m->jointEdited=false;
     }
 
-    PPBox2DJointUserData* userData = (PPBox2DJointUserData*)joint->GetUserData();
-    if (userData) {
-      userData->index=0;
+    PPBox2DJoint* ppjoint = (PPBox2DJoint*)joint->GetUserData();
+    if (ppjoint) {
+      //ppjoint->tableIndex=0;
     
-      if (userData->index == 0) {
+      if (ppjoint->tableIndex == 0) {
         for (int i=0;i<len;i++) {
           int top=lua_gettop(L);
           lua_rawgeti(L,top,i+1);
@@ -1072,7 +1182,7 @@ bool PPBox2DWorld::findJoint(lua_State* L,b2Joint* joint,int worldIdx)
           PPBox2DJoint* joint2 = (PPBox2DJoint*)lua_touserdata(L,-1);
           if (joint2) {
             if (joint2->joint == joint) {
-              userData->index=i+1;
+              ppjoint->tableIndex=i+1;
               lua_settop(L,item);
               lua_replace(L,list);
               lua_settop(L,list);
@@ -1083,7 +1193,7 @@ bool PPBox2DWorld::findJoint(lua_State* L,b2Joint* joint,int worldIdx)
         }
       }
       
-      lua_rawgeti(L,-1,(int)userData->index);
+      lua_rawgeti(L,-1,(int)ppjoint->tableIndex);
       lua_replace(L,list);
       lua_settop(L,list);
       return true;
@@ -1120,20 +1230,20 @@ bool PPBox2DWorld::findBody(lua_State* L,b2Body* body,int worldIdx)
     if (m->bodyEdited) {
       b2Body* b = m->GetBodyList();
       while (b) {
-        PPBox2DBodyUserData* userData = (PPBox2DBodyUserData*)b->GetUserData();
-        if (userData) {
-          userData->index=0;
+        PPBox2DBody* body = (PPBox2DBody*)b->GetUserData();
+        if (body) {
+          body->tableIndex=0;
         }
         b=b->GetNext();
       }
       m->bodyEdited=false;
     }
 
-    PPBox2DBodyUserData* userData = (PPBox2DBodyUserData*)body->GetUserData();
-    if (userData) {
-      userData->index=0;
+    PPBox2DBody* ppbody = (PPBox2DBody*)body->GetUserData();
+    if (ppbody) {
+      //ppbody->tableIndex=0;
     
-      if (userData->index == 0) {
+      if (ppbody->tableIndex == 0) {
         for (int i=0;i<len;i++) {
           int top=lua_gettop(L);
           lua_rawgeti(L,top,i+1);
@@ -1143,7 +1253,7 @@ bool PPBox2DWorld::findBody(lua_State* L,b2Body* body,int worldIdx)
           PPBox2DBody* body2 = (PPBox2DBody*)lua_touserdata(L,-1);
           if (body2) {
             if (body2->body == body) {
-              userData->index=i+1;
+              ppbody->tableIndex=i+1;
               lua_settop(L,item);
               lua_replace(L,list);
               lua_settop(L,list);
@@ -1154,7 +1264,7 @@ bool PPBox2DWorld::findBody(lua_State* L,b2Body* body,int worldIdx)
         }
       }
       
-      lua_rawgeti(L,-1,(int)userData->index);
+      lua_rawgeti(L,-1,(int)ppbody->tableIndex);
       lua_replace(L,list);
       lua_settop(L,list);
       return true;
@@ -1218,7 +1328,92 @@ void PPBox2DWorld::deleteWorld(lua_State* L,unsigned int worldId)
   lua_settop(L,top);
 }
 
-void PPBox2DWorld::drawShape(lua_State* L,int idx)
+void PPBox2DWorld::drawABody(lua_State* L,int bodyidx)
+{
+  if (!lua_isnil(L,bodyidx)) {
+    int top=lua_gettop(L);
+    PPBox2DBody* body = (PPBox2DBody*)PPLuaArg::UserData(L,bodyidx,PPBox2DBody::className,false);
+    if (body) {
+      if (body->body) {
+        b2Body* b=body->body;
+        //lua_settop(L,bodyidx);
+        lua_getfield(L,bodyidx,FIX_LIST);
+#ifdef __LUAJIT__
+        size_t len = lua_objlen(L,-1);
+#else
+        size_t len = lua_rawlen(L,-1);
+#endif
+        int top=lua_gettop(L);
+        for (int i=0;i<len;i++) {
+          lua_rawgeti(L,-1,i+1);
+          int fixidx=lua_gettop(L);
+          lua_getmetatable(L,-1);
+          lua_getfield(L,-1,PPGAMEINSTNACE);
+          if (!lua_isnil(L,-1)) {
+            PPBox2DFixture* fix = (PPBox2DFixture*)lua_touserdata(L,-1);
+            if (fix) {
+              b2Fixture* f=fix->fixture;
+              if (f) {
+                lua_getfield(L,fixidx,"draw");
+                if (!lua_isnil(L,-1)) {
+                  const b2Transform& xf = b->GetTransform();
+
+                  lua_createtable(L, 0, 5);
+
+                  b2Vec2 origin = b2Mul(xf, b2Vec2(0,0));
+                  lua_createtable(L,0,2);
+                  lua_pushnumber(L,origin.x*drawScale.x);
+                  lua_setfield(L,-2, "x");
+                  lua_pushnumber(L,origin.y*drawScale.y);
+                  lua_setfield(L,-2, "y");
+                  lua_getglobal(L,"pppoint_mt");
+                  lua_setmetatable(L,-2);
+                  lua_setfield(L,-2, "origin");
+
+                  b2Vec2 offset = b2Mul(xf, fix->offset);
+                  lua_createtable(L,0,2);
+                  lua_pushnumber(L,offset.x*drawScale.x);
+                  lua_setfield(L,-2, "x");
+                  lua_pushnumber(L,offset.y*drawScale.y);
+                  lua_setfield(L,-2, "y");
+                  lua_getglobal(L,"pppoint_mt");
+                  lua_setmetatable(L,-2);
+                  lua_setfield(L,-2,"offset");
+
+                  lua_createtable(L,0,2);
+                  lua_pushnumber(L,drawScale.x);
+                  lua_setfield(L,-2, "x");
+                  lua_pushnumber(L,drawScale.y);
+                  lua_setfield(L,-2, "y");
+                  lua_getglobal(L,"pppoint_mt");
+                  lua_setmetatable(L,-2);
+                  lua_setfield(L,-2, "drawScale");
+
+                  lua_pushnumber(L,b->GetAngle());
+                  lua_setfield(L,-2, "angle");
+                  
+                  lua_getfield(L,fixidx,"shape");
+                  lua_setfield(L,-2, "shape");
+
+                  lua_pushvalue(L,fixidx);
+                  lua_pushvalue(L,bodyidx);
+
+                  if (lua_pcall(L, 3, 0, 0)!=0) {
+                    
+                  }
+                }
+              }
+            }
+          }
+          lua_settop(L,top);
+        }
+      }
+    }
+    lua_settop(L,top);
+  }
+}
+
+void PPBox2DWorld::drawBody(lua_State* L,int idx)
 {
   lua_getfield(L,idx,BODY_LIST);
   if (!lua_isnil(L,-1)) {
@@ -1227,318 +1422,130 @@ void PPBox2DWorld::drawShape(lua_State* L,int idx)
 #else
     size_t len = lua_rawlen(L,-1);
 #endif
-    int top=lua_gettop(L);
     for (int i=0;i<len;i++) {
       lua_rawgeti(L,-1,i+1);
-      int bodyidx=lua_gettop(L);
-      lua_getmetatable(L,-1);
-      lua_getfield(L,-1,PPGAMEINSTNACE);
-      if (!lua_isnil(L,-1)) {
-        PPBox2DBody* body = (PPBox2DBody*)lua_touserdata(L,-1);
-        if (body) {
-          if (body->body) {
-            b2Body* b=body->body;
-            lua_settop(L,bodyidx);
-            lua_getfield(L,-1,FIX_LIST);
-#ifdef __LUAJIT__
-            size_t len = lua_objlen(L,-1);
-#else
-            size_t len = lua_rawlen(L,-1);
-#endif
-            int top=lua_gettop(L);
-            for (int i=0;i<len;i++) {
-              lua_rawgeti(L,-1,i+1);
-              int fixidx=lua_gettop(L);
-              lua_getmetatable(L,-1);
-              lua_getfield(L,-1,PPGAMEINSTNACE);
-              if (!lua_isnil(L,-1)) {
-                PPBox2DFixture* fix = (PPBox2DFixture*)lua_touserdata(L,-1);
-                if (fix) {
-                  b2Fixture* f=fix->fixture;
-                  if (f) {
-                    
-                    const b2Transform& xf = b->GetTransform();
-                    
-                    switch (f->GetType()) {
-                    case b2Shape::e_circle:
-                      lua_getfield(L,fixidx,"draw");
-                      if (!lua_isnil(L,-1)) {
-                        lua_pushvalue(L,fixidx);
-                        lua_pushvalue(L,bodyidx);
-
-                        b2CircleShape* circle = (b2CircleShape*)f->GetShape();
-
-                        b2Vec2 pivot = b2Mul(xf, circle->m_p+fix->pivot);
-                        b2Vec2 center = b2Mul(xf, circle->m_p);
-                        float32 radius = circle->m_radius;
-                        b2Vec2 axis = b2Mul(xf.q, b2Vec2(1.0f, 0.0f));
-                        
-                        lua_createtable(L, 5, 0);
-
-                        lua_createtable(L,2,0);
-                        lua_pushnumber(L,center.x*drawScale.x);
-                        lua_setfield(L,-2, "x");
-                        lua_pushnumber(L,center.y*drawScale.y);
-                        lua_setfield(L,-2, "y");
-                        lua_getglobal(L,"pppoint_mt");
-                        lua_setmetatable(L,-2);
-                        lua_setfield(L,-2,"center");
-
-                        lua_createtable(L,2,0);
-                        lua_pushnumber(L,axis.x*drawScale.x);
-                        lua_setfield(L,-2, "x");
-                        lua_pushnumber(L,axis.y*drawScale.y);
-                        lua_setfield(L,-2, "y");
-                        lua_getglobal(L,"pppoint_mt");
-                        lua_setmetatable(L,-2);
-                        lua_setfield(L,-2,"axis");
-
-                        lua_createtable(L,2,0);
-                        lua_pushnumber(L,pivot.x*drawScale.x);
-                        lua_setfield(L,-2, "x");
-                        lua_pushnumber(L,pivot.y*drawScale.y);
-                        lua_setfield(L,-2, "y");
-                        lua_getglobal(L,"pppoint_mt");
-                        lua_setmetatable(L,-2);
-                        lua_setfield(L,-2,"pivot");
-
-                        lua_pushnumber(L,radius*drawScale.x);
-                        lua_setfield(L,-2,"radius");
-
-                        lua_createtable(L, 0, 2);
-                        lua_pushnumber(L,drawScale.x);
-                        lua_setfield(L,-2, "x");
-                        lua_pushnumber(L,drawScale.y);
-                        lua_setfield(L,-2, "y");
-                        lua_getglobal(L,"pppoint_mt");
-                        lua_setmetatable(L,-2);
-                        lua_setfield(L,-2, "drawScale");
-
-                        lua_pushnumber(L,b->GetAngle());
-                        lua_setfield(L,-2, "angle");
-
-                        if (lua_pcall(L, 3, 0, 0)!=0) {
-                          
-                        }
-
-                        //m_debugDraw->DrawSolidCircle(center, radius, axis, color);
-                      }
-                      break;
-                    case b2Shape::e_edge:
-                      lua_getfield(L,fixidx,"draw");
-                      if (!lua_isnil(L,-1)) {
-                        lua_pushvalue(L,fixidx);
-                        lua_pushvalue(L,bodyidx);
-
-                        b2EdgeShape* edge = (b2EdgeShape*)f->GetShape();
-                        b2Vec2 v1 = b2Mul(xf, edge->m_vertex1);
-                        b2Vec2 v2 = b2Mul(xf, edge->m_vertex2);
-
-                        lua_createtable(L, 2, 0);
-
-                        lua_createtable(L,2,0);
-                        lua_pushnumber(L,v1.x*drawScale.x);
-                        lua_setfield(L,-2, "x");
-                        lua_pushnumber(L,v1.y*drawScale.y);
-                        lua_setfield(L,-2, "y");
-                        lua_getglobal(L,"pppoint_mt");
-                        lua_setmetatable(L,-2);
-                        lua_setfield(L,-2,"v1");
-
-                        lua_createtable(L,2,0);
-                        lua_pushnumber(L,v2.x*drawScale.x);
-                        lua_setfield(L,-2, "x");
-                        lua_pushnumber(L,v2.y*drawScale.y);
-                        lua_setfield(L,-2, "y");
-                        lua_getglobal(L,"pppoint_mt");
-                        lua_setmetatable(L,-2);
-                        lua_setfield(L,-2,"v2");
-
-                        lua_createtable(L, 0, 2);
-                        lua_pushnumber(L,drawScale.x);
-                        lua_setfield(L,-2, "x");
-                        lua_pushnumber(L,drawScale.y);
-                        lua_setfield(L,-2, "y");
-                        lua_getglobal(L,"pppoint_mt");
-                        lua_setmetatable(L,-2);
-                        lua_setfield(L,-2, "drawScale");
-
-                        lua_pushnumber(L,b->GetAngle());
-                        lua_setfield(L,-2, "angle");
-                        
-                        if (lua_pcall(L, 3, 0, 0)!=0) {
-                          
-                        }
-                      }
-                      break;
-                    case b2Shape::e_chain:
-                      lua_getfield(L,fixidx,"draw");
-                      if (!lua_isnil(L,-1)) {
-
-                        b2ChainShape* chain = (b2ChainShape*)f->GetShape();
-                        int32 count = chain->m_count;
-                        const b2Vec2* vertices = chain->m_vertices;
-
-                        lua_createtable(L, 0, count);
-
-                        b2Vec2 v1 = b2Mul(xf, vertices[0]);
-                        for (int32 i = 1; i < count; ++i)
-                        {
-                          b2Vec2 v2 = b2Mul(xf, vertices[i]);
-
-                          lua_pushvalue(L,fixidx);
-                          lua_pushvalue(L,bodyidx);
-
-                          lua_createtable(L,2,0);
-
-                          lua_createtable(L,2,0);
-                          lua_pushnumber(L,v1.x*drawScale.x);
-                          lua_setfield(L,-2, "x");
-                          lua_pushnumber(L,v1.y*drawScale.y);
-                          lua_setfield(L,-2, "y");
-                          lua_getglobal(L,"pppoint_mt");
-                          lua_setmetatable(L,-2);
-                          lua_setfield(L,-2,"v1");
-
-                          lua_createtable(L,2,0);
-                          lua_pushnumber(L,v2.x*drawScale.x);
-                          lua_setfield(L,-2, "x");
-                          lua_pushnumber(L,v2.y*drawScale.y);
-                          lua_setfield(L,-2, "y");
-                          lua_getglobal(L,"pppoint_mt");
-                          lua_setmetatable(L,-2);
-                          lua_setfield(L,-2,"v2");
-
-                          lua_createtable(L, 0, 2);
-                          lua_pushnumber(L,drawScale.x);
-                          lua_setfield(L,-2, "x");
-                          lua_pushnumber(L,drawScale.y);
-                          lua_setfield(L,-2, "y");
-                          lua_getglobal(L,"pppoint_mt");
-                          lua_setmetatable(L,-2);
-                          lua_setfield(L,-2, "drawScale");
-
-                          lua_pushnumber(L,b->GetAngle());
-                          lua_setfield(L,-2, "angle");
-
-                          if (lua_pcall(L, 3, 0, 0)!=0) {
-                            
-                          }
-
-                          v1 = v2;
-                        }
-
-                      }
-                      break;
-                    case b2Shape::e_polygon:
-                      lua_getfield(L,fixidx,"draw");
-                      if (!lua_isnil(L,-1)) {
-                        lua_pushvalue(L,fixidx);
-                        lua_pushvalue(L,bodyidx);
-
-                        b2PolygonShape* poly = (b2PolygonShape*)f->GetShape();
-                        int32 vertexCount = poly->m_count;
-                        b2Assert(vertexCount <= b2_maxPolygonVertices);
-                        b2Vec2 vertices[b2_maxPolygonVertices];
-
-                        lua_createtable(L,2,0);
-
-                        lua_createtable(L,0,vertexCount);
-                        for (int32 i = 0; i < vertexCount; ++i)
-                        {
-                          vertices[i] = b2Mul(xf, poly->m_vertices[i]);
-
-                          lua_createtable(L,2,0);
-                          lua_pushnumber(L,vertices[i].x*drawScale.x);
-                          lua_setfield(L,-2, "x");
-                          lua_pushnumber(L,vertices[i].y*drawScale.y);
-                          lua_setfield(L,-2, "y");
-                          lua_getglobal(L,"pppoint_mt");
-                          lua_setmetatable(L,-2);
-                          lua_rawseti(L,-2,i+1);
-
-                        }
-
-                        lua_setfield(L,-2, "vertices");
-
-                        b2Vec2 center = b2Mul(xf, b2Vec2(0,0));
-                        lua_createtable(L,2,0);
-                        lua_pushnumber(L,center.x*drawScale.x);
-                        lua_setfield(L,-2, "x");
-                        lua_pushnumber(L,center.y*drawScale.y);
-                        lua_setfield(L,-2, "y");
-                        lua_getglobal(L,"pppoint_mt");
-                        lua_setmetatable(L,-2);
-                        lua_setfield(L,-2, "origin");
-
-                        b2Vec2 pivot = b2Mul(xf, poly->m_vertices[0]+fix->pivot);
-                        lua_createtable(L,2,0);
-                        lua_pushnumber(L,pivot.x*drawScale.x);
-                        lua_setfield(L,-2, "x");
-                        lua_pushnumber(L,pivot.y*drawScale.y);
-                        lua_setfield(L,-2, "y");
-                        lua_getglobal(L,"pppoint_mt");
-                        lua_setmetatable(L,-2);
-                        lua_setfield(L,-2, "pivot");
-                        
-                        lua_createtable(L, 0, 2);
-                        lua_pushnumber(L,drawScale.x);
-                        lua_setfield(L,-2, "x");
-                        lua_pushnumber(L,drawScale.y);
-                        lua_setfield(L,-2, "y");
-                        lua_getglobal(L,"pppoint_mt");
-                        lua_setmetatable(L,-2);
-                        lua_setfield(L,-2, "drawScale");
-
-                        lua_pushnumber(L,b->GetAngle());
-                        lua_setfield(L,-2, "angle");
-
-                        if (lua_pcall(L, 3, 0, 0)!=0) {
-                          
-                        }
-                        //m_debugDraw->DrawSolidPolygon(vertices, vertexCount, color);
-                      }
-                      break;
-                    case b2Shape::e_typeCount:
-                      break;
-                    }
-                    
-                  }
-                }
-              }
-              lua_settop(L,top);
-            }
-          }
-        }
-      }
-      lua_settop(L,top);
+      drawABody(L,lua_gettop(L));
+      lua_pop(L,1);
     }
-    
   }
+}
+
+void PPBox2DWorld::drawShape(b2Shape* shape,b2Transform* transform)
+{
 }
 
 void PPBox2DWorld::drawJoint(lua_State* L,int idx)
 {
 }
 
+void PPBox2DWorld::debugDrawShape(b2Fixture* fixture, const b2Transform& xf, const b2Color& color)
+{
+	switch (fixture->GetType())
+	{
+	case b2Shape::e_circle:
+		{
+			b2CircleShape* circle = (b2CircleShape*)fixture->GetShape();
+
+			b2Vec2 center = b2Mul(xf, circle->m_p);
+			float32 radius = circle->m_radius;
+			b2Vec2 axis = b2Mul(xf.q, b2Vec2(1.0f, 0.0f));
+
+			m_ppdebugDraw->DrawSolidCircle(center, radius, axis, color);
+		}
+		break;
+
+	case b2Shape::e_edge:
+		{
+			b2EdgeShape* edge = (b2EdgeShape*)fixture->GetShape();
+			b2Vec2 v1 = b2Mul(xf, edge->m_vertex1);
+			b2Vec2 v2 = b2Mul(xf, edge->m_vertex2);
+			m_ppdebugDraw->DrawSegment(v1, v2, color);
+		}
+		break;
+
+	case b2Shape::e_chain:
+		{
+			b2ChainShape* chain = (b2ChainShape*)fixture->GetShape();
+			int32 count = chain->m_count;
+			const b2Vec2* vertices = chain->m_vertices;
+
+			b2Vec2 v1 = b2Mul(xf, vertices[0]);
+			for (int32 i = 1; i < count; ++i)
+			{
+				b2Vec2 v2 = b2Mul(xf, vertices[i]);
+				m_ppdebugDraw->DrawSegment(v1, v2, color);
+				m_ppdebugDraw->DrawCircle(v1, 0.05f, color);
+				v1 = v2;
+			}
+		}
+		break;
+
+	case b2Shape::e_polygon:
+		{
+			b2PolygonShape* poly = (b2PolygonShape*)fixture->GetShape();
+			int32 vertexCount = poly->m_count;
+			b2Assert(vertexCount <= b2_maxPolygonVertices);
+			b2Vec2 vertices[b2_maxPolygonVertices];
+
+			for (int32 i = 0; i < vertexCount; ++i)
+			{
+				vertices[i] = b2Mul(xf, poly->m_vertices[i]);
+			}
+
+			m_ppdebugDraw->DrawSolidPolygon(vertices, vertexCount, color);
+		}
+		break;
+            
+    default:
+        break;
+	}
+}
+
+void PPBox2DWorld::debugDrawBody(PPBox2DBody* body)
+{
+  b2Body* b=body->body;
+  const b2Transform& xf = b->GetTransform();
+  for (b2Fixture* f = b->GetFixtureList(); f; f = f->GetNext())
+  {
+    if (b->IsActive() == false)
+    {
+      debugDrawShape(f, xf, b2Color(0.5f, 0.5f, 0.3f));
+    }
+    else if (b->GetType() == b2_staticBody)
+    {
+      debugDrawShape(f, xf, b2Color(0.5f, 0.9f, 0.5f));
+    }
+    else if (b->GetType() == b2_kinematicBody)
+    {
+      debugDrawShape(f, xf, b2Color(0.5f, 0.5f, 0.9f));
+    }
+    else if (b->IsAwake() == false)
+    {
+      debugDrawShape(f, xf, b2Color(0.6f, 0.6f, 0.6f));
+    }
+    else
+    {
+      debugDrawShape(f, xf, b2Color(0.9f, 0.7f, 0.7f));
+    }
+  }
+}
+
 PPBox2DWorld::~PPBox2DWorld() {
-printf("--- destruct world %u\n",worldId);
+//printf("--- destruct world %u\n",worldId);
   b2Body* body = GetBodyList();
   while (body) {
     b2Body* next = body->GetNext();
-    PPBox2DBodyUserData* userData = (PPBox2DBodyUserData*)body->GetUserData();
+    PPBox2DBody* userData = (PPBox2DBody*)body->GetUserData();
     if (userData) {
-      userData->body->body=NULL;
-      delete userData;
+      userData->body=NULL;
       body->SetUserData(NULL);
     }
     b2Fixture* fixture=body->GetFixtureList();
     while (fixture) {
       b2Fixture* next=fixture->GetNext();
-      PPBox2DFixtureUserData* userData = (PPBox2DFixtureUserData*)fixture->GetUserData();
+      PPBox2DFixture* userData = (PPBox2DFixture*)fixture->GetUserData();
       if (userData) {
-        userData->fixture->fixture=NULL;
-        delete userData;
+        userData->fixture=NULL;
         fixture->SetUserData(NULL);
       }
       fixture=next;
@@ -1548,17 +1555,18 @@ printf("--- destruct world %u\n",worldId);
   b2Joint* joint = GetJointList();
   while (joint) {
     b2Joint* next = joint->GetNext();
-    PPBox2DJointUserData* userData = (PPBox2DJointUserData*)joint->GetUserData();
+    PPBox2DJoint* userData = (PPBox2DJoint*)joint->GetUserData();
     if (userData) {
-      userData->joint->joint=NULL;
-      delete userData;
+//      userData->joint->joint=NULL;
+//      delete userData;
+      userData->joint=NULL;
       joint->SetUserData(NULL);
     }
     joint=next;
   }
-  if (box2d) {
-    box2d->removeWorld(this);
-  }
+//  if (box2d) {
+//    box2d->removeWorld(this);
+//  }
   if (destructionListener) delete destructionListener;
   if (contactListener) delete contactListener;
   if (contactFilter) delete contactFilter;
@@ -1566,21 +1574,21 @@ printf("--- destruct world %u\n",worldId);
 
 #pragma mark -
 
-void PPBox2D::addWorld(PPBox2DWorld* world)
-{
-  worlds.push_back(world);
-}
+//void PPBox2D::addWorld(PPBox2DWorld* world)
+//{
+//  worlds.push_back(world);
+//}
 
-void PPBox2D::removeWorld(PPBox2DWorld* world)
-{
-  std::vector<PPBox2DWorld*>::iterator it;
-  for( it = worlds.begin(); it != worlds.end(); it++ ) {
-    if (*it == world) {
-      worlds.erase(it);
-      break;
-    }
-  }
-}
+//void PPBox2D::removeWorld(PPBox2DWorld* world)
+//{
+//  std::vector<PPBox2DWorld*>::iterator it;
+//  for( it = worlds.begin(); it != worlds.end(); it++ ) {
+//    if (*it == world) {
+//      worlds.erase(it);
+//      break;
+//    }
+//  }
+//}
 
 #pragma mark -
 
@@ -1684,7 +1692,7 @@ static int funcDeleteWorld(lua_State *L)
 	PPBox2DWorld* w = (PPBox2DWorld*)(PPLuaScript::DeleteObject(L));
   if (w) {
     PPBox2DWorld::deleteWorld(L,w->worldId);
-printf("--- delete world %d\n",w->worldId);
+//printf("--- delete world %d\n",w->worldId);
     delete w;
 //    if (!w->release()) {
 //      PPBox2DWorld::deleteWorld(L,w->worldId);
@@ -1705,21 +1713,16 @@ printf("--- delete world %d\n",w->worldId);
 
 static int funcCreateWorld(lua_State *L)
 {
+  int top=lua_gettop(L);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-	PPBox2D* m = (PPBox2D*)PPLuaArg::UserData(L,PPBox2D::className);
-  PPUserDataAssert(m!=NULL);
-  PPPoint g=PPPointZero;
-	if (s->argCount > 0) {
-		if (s->isTable(L,0)) {
-			g = PPPoint(s->tableNumber(L,0,1,"x",0),s->tableNumber(L,0,2,"y",0));
-		} else {
-			g = PPPoint(s->number(0),s->number(1));
-		}
+  b2Vec2 g;
+  PPBox2DVert vert;
+  vert.parse(L,1,top);
+  if (vert.count > 0) {
+    g=vert.vertices[0];
   }
-	PPBox2DWorld* world = new PPBox2DWorld(b2Vec2(g.x,g.y));
+	PPBox2DWorld* world = new PPBox2DWorld(g);
   world->setListener();
-  world->box2d = m;
-  m->addWorld(world);
 	PPLuaScript::newObject(L,B2WORLD,world,funcDeleteWorld);
   int worldIdx=lua_gettop(L);
   lua_pushstring(L,BODY_LIST);
@@ -1728,11 +1731,7 @@ static int funcCreateWorld(lua_State *L)
   lua_pushstring(L,JOINT_LIST);
   lua_createtable(L,0,0);
   lua_rawset(L,worldIdx);
-  
   PPBox2DWorld::setWorld(L,world->worldId,lua_gettop(L));
-
-printf("--- create world %d\n",world->worldId);
-  
 	return 1;
 }
 
@@ -1932,8 +1931,40 @@ static int funcDestroyBody(lua_State *L)
   PPUserDataAssert(m!=NULL);
   if (m) {
     delete m;
-printf("--- destroy body %u\n",m->bodyIndex);
+//printf("--- destroy body %u\n",m->bodyIndex);
 //printf("delete body\n");
+  }
+  return 0;
+}
+
+static int functionb2WorldDrawBody(lua_State* L)
+{
+  int top=lua_gettop(L);
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
+	PPBox2DWorld* m = (PPBox2DWorld*)PPLuaArg::UserData(L,PPBox2DWorld::className);
+  PPUserDataAssert(m!=NULL);
+  if (m) {
+    if (lua_istable(L,2)) {
+      for (int i=2;i<=top;i++) {
+        PPBox2DBody* body = (PPBox2DBody*)PPLuaArg::UserData(L,i,PPBox2DBody::className,false);
+        if (body) {
+          m->drawABody(L,i);
+        } else {
+#ifdef __LUAJIT__
+          size_t len = lua_objlen(L,i);
+#else
+          size_t len = lua_rawlen(L,i);
+#endif
+          for (int j=0;j<len;j++) {
+            lua_rawgeti(L,i,j+1);
+            m->drawABody(L,lua_gettop(L));
+            lua_pop(L,1);
+          }
+        }
+      }
+    } else {
+      m->drawBody(L);
+    }
   }
   return 0;
 }
@@ -1944,7 +1975,74 @@ static int functionb2WorldDrawShape(lua_State* L)
 	PPBox2DWorld* m = (PPBox2DWorld*)PPLuaArg::UserData(L,PPBox2DWorld::className);
   PPUserDataAssert(m!=NULL);
   if (m) {
-    m->drawShape(L);
+    int shapeidx=2;
+    int transformidx=3;
+    if (lua_istable(L,shapeidx)) {
+      b2Shape* shape = (b2Shape*)PPLuaArg::UserData(L,shapeidx,B2SHAPE,false);
+      if (shape == NULL) return 0;
+      PPBox2DTransform* transform = (PPBox2DTransform*)PPLuaArg::UserData(L,transformidx,B2TRANSFORM,false);
+      if (transform == NULL) return 0;
+
+      lua_getfield(L,shapeidx,"offset");
+      b2Vec2 offset;
+      offset=getPoint(L,lua_gettop(L),offset);
+      lua_pop(L,1);
+
+      lua_getfield(L,transformidx,"angle");
+      float angle;
+      angle=lua_tonumber(L,-1);
+      lua_pop(L,1);
+
+      lua_getfield(L,shapeidx,"draw");
+      if (!lua_isnil(L,-1)) {
+        const b2Transform& xf = transform->t;
+
+        lua_createtable(L, 0, 5);
+
+        b2Vec2 origin = b2Mul(xf, b2Vec2(0,0));
+        lua_createtable(L,0,2);
+        lua_pushnumber(L,origin.x*m->drawScale.x);
+        lua_setfield(L,-2, "x");
+        lua_pushnumber(L,origin.y*m->drawScale.y);
+        lua_setfield(L,-2, "y");
+        lua_getglobal(L,"pppoint_mt");
+        lua_setmetatable(L,-2);
+        lua_setfield(L,-2, "origin");
+
+        offset = b2Mul(xf, offset);
+        lua_createtable(L,0,2);
+        lua_pushnumber(L,offset.x*m->drawScale.x);
+        lua_setfield(L,-2, "x");
+        lua_pushnumber(L,offset.y*m->drawScale.y);
+        lua_setfield(L,-2, "y");
+        lua_getglobal(L,"pppoint_mt");
+        lua_setmetatable(L,-2);
+        lua_setfield(L,-2,"offset");
+
+        lua_createtable(L,0,2);
+        lua_pushnumber(L,m->drawScale.x);
+        lua_setfield(L,-2, "x");
+        lua_pushnumber(L,m->drawScale.y);
+        lua_setfield(L,-2, "y");
+        lua_getglobal(L,"pppoint_mt");
+        lua_setmetatable(L,-2);
+        lua_setfield(L,-2, "drawScale");
+
+        lua_pushnumber(L,angle);
+        lua_setfield(L,-2, "angle");
+
+        lua_pushvalue(L,shapeidx);
+        lua_setfield(L,-2, "shape");
+
+        lua_pushnil(L);
+        lua_pushnil(L);
+
+        if (lua_pcall(L, 3, 0, 0)!=0) {
+          
+        }
+      }
+
+    }
   }
   return 0;
 }
@@ -1966,13 +2064,131 @@ static int functionb2WorldDebugDrawShape(lua_State* L)
 	PPBox2DWorld* m = (PPBox2DWorld*)PPLuaArg::UserData(L,PPBox2DWorld::className);
   PPUserDataAssert(m!=NULL);
   if (m) {
+    int shapeidx=2;
+    int transformidx=3;
+    PPColor c(255,255,255,255);
+    c=s->getColor(L,4-2,c);
+    b2Color color(c.r/255.0f,c.g/255.0f,c.b/255.0f);
+    if (lua_istable(L,shapeidx)) {
+      b2Shape* shape = (b2Shape*)PPLuaArg::UserData(L,shapeidx,B2SHAPE,false);
+      if (shape==NULL) return 0;
+      PPBox2DTransform* transform = (PPBox2DTransform*)PPLuaArg::UserData(L,transformidx,B2TRANSFORM,false);
+      if (transform==NULL) return 0;
+
+      QBGame* game = (QBGame*)PPLuaArg::World(L);
+      PPBox2DDebugDraw m_debugDraw;
+      m_debugDraw.SetFlags(b2Draw::e_shapeBit);
+      m_debugDraw.game = game;
+      m_debugDraw.scale = m->drawScale;
+      m->m_ppdebugDraw = &m_debugDraw;
+
+      const b2Transform& xf = transform->t;
+
+      switch (shape->GetType())
+      {
+      case b2Shape::e_circle:
+        {
+          b2CircleShape* circle = (b2CircleShape*)shape;
+
+          b2Vec2 center = b2Mul(xf, circle->m_p);
+          float32 radius = circle->m_radius;
+          b2Vec2 axis = b2Mul(xf.q, b2Vec2(1.0f, 0.0f));
+
+          m->m_ppdebugDraw->DrawSolidCircle(center, radius, axis, color);
+        }
+        break;
+
+      case b2Shape::e_edge:
+        {
+          b2EdgeShape* edge = (b2EdgeShape*)shape;
+          b2Vec2 v1 = b2Mul(xf, edge->m_vertex1);
+          b2Vec2 v2 = b2Mul(xf, edge->m_vertex2);
+          m->m_ppdebugDraw->DrawSegment(v1, v2, color);
+        }
+        break;
+
+      case b2Shape::e_chain:
+        {
+          b2ChainShape* chain = (b2ChainShape*)shape;
+          int32 count = chain->m_count;
+          const b2Vec2* vertices = chain->m_vertices;
+
+          b2Vec2 v1 = b2Mul(xf, vertices[0]);
+          for (int32 i = 1; i < count; ++i)
+          {
+            b2Vec2 v2 = b2Mul(xf, vertices[i]);
+            m->m_ppdebugDraw->DrawSegment(v1, v2, color);
+            m->m_ppdebugDraw->DrawCircle(v1, 0.05f, color);
+            v1 = v2;
+          }
+        }
+        break;
+
+      case b2Shape::e_polygon:
+        {
+          b2PolygonShape* poly = (b2PolygonShape*)shape;
+          int32 vertexCount = poly->m_count;
+          b2Assert(vertexCount <= b2_maxPolygonVertices);
+          b2Vec2 vertices[b2_maxPolygonVertices];
+
+          for (int32 i = 0; i < vertexCount; ++i)
+          {
+            vertices[i] = b2Mul(xf, poly->m_vertices[i]);
+          }
+
+          m->m_ppdebugDraw->DrawSolidPolygon(vertices, vertexCount, color);
+        }
+        break;
+                
+        default:
+            break;
+      }
+
+    }
+  }
+  return 0;
+}
+
+static int functionb2WorldDebugDrawBody(lua_State* L)
+{
+  int top=lua_gettop(L);
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
+	PPBox2DWorld* m = (PPBox2DWorld*)PPLuaArg::UserData(L,PPBox2DWorld::className);
+  PPUserDataAssert(m!=NULL);
+  if (m) {
     QBGame* game = (QBGame*)PPLuaArg::World(L);
     PPBox2DDebugDraw m_debugDraw;
     m_debugDraw.SetFlags(b2Draw::e_shapeBit);
     m_debugDraw.game = game;
     m_debugDraw.scale = m->drawScale;
-    m->SetDebugDraw(&m_debugDraw);
-    m->DrawDebugData();
+
+    if (lua_istable(L,2)) {
+      m->m_ppdebugDraw = &m_debugDraw;
+      for (int i=2;i<=top;i++) {
+        PPBox2DBody* body = (PPBox2DBody*)PPLuaArg::UserData(L,i,PPBox2DBody::className,false);
+        if (body) {
+          m->debugDrawBody(body);
+        } else {
+#ifdef __LUAJIT__
+          size_t len = lua_objlen(L,i);
+#else
+          size_t len = lua_rawlen(L,i);
+#endif
+          for (int j=0;j<len;j++) {
+            lua_rawgeti(L,i,j+1);
+            PPBox2DBody* body = (PPBox2DBody*)PPLuaArg::UserData(L,lua_gettop(L),PPBox2DBody::className,false);
+            if (body) {
+              m->debugDrawBody(body);
+            }
+            lua_pop(L,1);
+          }
+        }
+      }
+    } else {
+      m->SetDebugDraw(&m_debugDraw);
+      m->DrawDebugData();
+    }
+
   }
   return 0;
 }
@@ -2045,9 +2261,12 @@ static int functionb2WorldDrawScale(lua_State* L)
       } else {
         p = s->getPoint(L,0,p.x,p.y);
       }
-
-      m->drawScale.x=p.x;
-      m->drawScale.y=p.y;
+      
+      //if (m->drawScale.x !=0 && m->drawScale.y!=0) 
+      {
+        m->drawScale.x=p.x;
+        m->drawScale.y=p.y;
+      }
       return 0;
     }
   }
@@ -2231,9 +2450,9 @@ static int funcb2WorldCreateBody(lua_State *L)
     b2Body* body = m->CreateBody(&def);
     PPBox2DBody* ppbody = new PPBox2DBody(body,m);
     m->bodyEdited=true;
-    PPBox2DBodyUserData* userData = (PPBox2DBodyUserData*)body->GetUserData();
+    PPBox2DBody* userData = (PPBox2DBody*)body->GetUserData();
     if (userData) {
-      userData->index=len+1;
+      userData->tableIndex=len+1;
     }
     PPLuaScript::newObject(L,B2BODY,ppbody,funcDestroyBody);
     
@@ -2251,7 +2470,7 @@ static int funcb2WorldCreateBody(lua_State *L)
     lua_rawgeti(L,-1,(int)len+1);
 
 //    PPBox2DWorld::findBody(L,body);
-printf("--- create body %u\n",ppbody->bodyIndex);
+//printf("--- create body %u\n",ppbody->bodyIndex);
   }
 
 	return 1;
@@ -2275,10 +2494,10 @@ static int funcb2WorldDestroyBody(lua_State *L)
         b2Fixture* fixture = b2body->GetFixtureList();
         while (fixture) {
           b2Fixture* next=fixture->GetNext();
-          PPBox2DFixtureUserData* userData = (PPBox2DFixtureUserData*)fixture->GetUserData();
+          PPBox2DFixture* userData = (PPBox2DFixture*)fixture->GetUserData();
           if (userData) {
-            if (userData->fixture) {
-              userData->fixture->destroy(b2body);
+            if (userData) {
+              userData->destroy(b2body);
             }
           }
           fixture=next;
@@ -2771,9 +2990,9 @@ static int funcb2WorldCreateJoint(lua_State *L) {
 				b2Joint* joint = m->CreateJoint(def);
         PPBox2DJoint* ppjoint = new PPBox2DJoint(joint,m);
         m->jointEdited=true;
-        PPBox2DJointUserData* userData = (PPBox2DJointUserData*)joint->GetUserData();
+        PPBox2DJoint* userData = (PPBox2DJoint*)joint->GetUserData();
         if (userData) {
-          userData->index=len+1;
+          userData->tableIndex=len+1;
         }
         ppjoint->worldId = m->worldId;
 				PPLuaScript::newObject(L,jointclass,ppjoint,funcDestroyJoint);
@@ -3151,17 +3370,16 @@ public:
     bool r = false;
     int top=lua_gettop(L);
     do {
-      if (lua_isfunction(L,callbackIdx)) {
+      if (lua_isfunction(L,callbackIdx)) 
+      {
         lua_pushvalue(L,callbackIdx);
-        if (fixture == NULL) {
-          lua_pushnil(L);
-        } else {
+        if (fixture != NULL) {
           PPBox2DWorld::findFixture(L,fixture,worldIdx);
+          if(lua_pcall(L, 1, 1, 0) != 0) {
+            //break;
+          }
+          r=lua_toboolean(L,-1);
         }
-        if(lua_pcall(L, 1, 1, 0) != 0) {
-          break;
-        }
-        r=lua_toboolean(L,-1);
       }
     } while (false);
     lua_settop(L,top);
@@ -3180,10 +3398,10 @@ static int funcb2WorldQueryAABB(lua_State* L)
   PPUserDataAssert(m!=NULL);
 	if (s->argCount > 0) {
 		b2AABB aabb;
-
     int callbackidx=0;
-    int n=0;
     float v[10]={0};
+
+    int n=0;
     
     int top=lua_gettop(L);
     for (int i=2;i<=top&&i<7;i++) {
@@ -3201,24 +3419,28 @@ static int funcb2WorldQueryAABB(lua_State* L)
           px=v[n]=lua_tonumber(L,-1);
           n++;
         }
+        lua_pop(L,1);
         lua_getfield(L,i,"y");
         if (!lua_isnil(L, -1)) {
           hash=true;
           py=v[n]=lua_tonumber(L,-1);
           n++;
         }
+        lua_pop(L,1);
         lua_getfield(L,i,"width");
         if (!lua_isnil(L, -1)) {
           hash=true;
           v[n]=px+lua_tonumber(L,-1);
           n++;
         }
+        lua_pop(L,1);
         lua_getfield(L,i,"height");
         if (!lua_isnil(L, -1)) {
           hash=true;
           v[n]=py+lua_tonumber(L,-1);
           n++;
         }
+        lua_pop(L,1);
         if (!hash) {
 #ifdef __LUAJIT__
           int l=(int)lua_objlen(L,i);
@@ -3228,6 +3450,7 @@ static int funcb2WorldQueryAABB(lua_State* L)
           for (int j=0;j<l;j++) {
             lua_rawgeti(L,i,j+1);
             v[n]=lua_tonumber(L,-1);
+            lua_pop(L,1);
             n++;
           }
         }
@@ -3237,6 +3460,7 @@ static int funcb2WorldQueryAABB(lua_State* L)
         n++;
       }
     }
+    lua_settop(L,top);
 
     if (callbackidx > 1) {
       if (v[0]>v[2]) std::swap<float>(v[0],v[2]);
@@ -3249,7 +3473,7 @@ static int funcb2WorldQueryAABB(lua_State* L)
       m->QueryAABB(&callback,aabb);
     }
 	}
-	return 1;
+	return 0;
 }
 
 class RayCastCallback : public b2RayCastCallback
@@ -3261,8 +3485,10 @@ public:
   float32 ReportFixture(b2Fixture* fixture, const b2Vec2& point, const b2Vec2& normal, float32 fraction) {
     int top=lua_gettop(L);
     do {
-      if (lua_isfunction(L,callbackIdx)) {
+      if (lua_isfunction(L,callbackIdx)) 
+      {
         lua_pushvalue(L,callbackIdx);
+
         PPBox2DWorld::findFixture(L,fixture,worldIdx);
 
         lua_createtable(L,0,2);
@@ -3326,24 +3552,28 @@ static int funcb2WorldRayCast(lua_State* L)
           px=v[n]=lua_tonumber(L,-1);
           n++;
         }
+        lua_pop(L,1);
         lua_getfield(L,i,"y");
         if (!lua_isnil(L, -1)) {
           hash=true;
           py=v[n]=lua_tonumber(L,-1);
           n++;
         }
+        lua_pop(L,1);
         lua_getfield(L,i,"width");
         if (!lua_isnil(L, -1)) {
           hash=true;
           v[n]=px+lua_tonumber(L,-1);
           n++;
         }
+        lua_pop(L,1);
         lua_getfield(L,i,"height");
         if (!lua_isnil(L, -1)) {
           hash=true;
           v[n]=py+lua_tonumber(L,-1);
           n++;
         }
+        lua_pop(L,1);
         if (!hash) {
 #ifdef __LUAJIT__
           int l=(int)lua_objlen(L,i);
@@ -3353,6 +3583,7 @@ static int funcb2WorldRayCast(lua_State* L)
           for (int j=0;j<l;j++) {
             lua_rawgeti(L,i,j+1);
             v[n]=lua_tonumber(L,-1);
+            lua_pop(L,1);
             n++;
           }
         }
@@ -3362,6 +3593,7 @@ static int funcb2WorldRayCast(lua_State* L)
         n++;
       }
     }
+    lua_settop(L,top);
 
 #if 1
     if (callbackidx > 1) {
@@ -3397,7 +3629,7 @@ static int funcb2WorldRayCast(lua_State* L)
     }
 #endif
   }
-	return 1;
+	return 0;
 }
 
 static int funcb2WorldClearForces(lua_State* L)
@@ -3431,6 +3663,206 @@ static int funcb2WorldDump(lua_State* L)
   PPUserDataAssert(m!=NULL);
 	m->Dump();
 	return 0;
+}
+
+static int funcb2WorldDrawSpriteShape(lua_State* L)
+{
+  lua_getfield(L,1,"shape");
+  lua_getfield(L,-1,"sprite");
+  
+	PPObject* sp = (PPObject*)PPLuaArg::UserData(L,lua_gettop(L),PPObject::className,false);
+  if (sp) {
+    int spriteIdx = lua_gettop(L);
+    
+    lua_getfield(L,1,"offset");
+    b2Vec2 offset(0,0);
+    offset=getPoint(L,lua_gettop(L),offset);
+    
+    lua_getfield(L,spriteIdx,"pivot");
+    lua_pushvalue(L,spriteIdx);
+    if (lua_pcall(L,1,1,0)!=0) {
+      return luaL_error(L,lua_tostring(L,-1));
+    }
+    b2Vec2 pivot(0,0);
+    pivot=getPoint(L,lua_gettop(L),pivot);
+    
+    b2Vec2 pos = offset-pivot;
+    lua_getfield(L,spriteIdx,"pos");
+    lua_pushvalue(L,spriteIdx);
+    lua_pushnumber(L,pos.x);
+    lua_pushnumber(L,pos.y);
+    if (lua_pcall(L,3,0,0)!=0) {
+      return luaL_error(L,lua_tostring(L,-1));
+    }
+    
+    lua_getfield(L,spriteIdx,"rotate");
+    lua_pushvalue(L,spriteIdx);
+    lua_getfield(L,1,"angle");
+    if (lua_pcall(L,2,0,0)!=0) {
+      return luaL_error(L,lua_tostring(L,-1));
+    }
+
+    lua_getfield(L,spriteIdx,"draw");
+    lua_pushvalue(L,spriteIdx);
+    if (lua_pcall(L,1,0,0)!=0) {
+      return luaL_error(L,lua_tostring(L,-1));
+    }
+    
+  }
+  
+  return 0;
+}
+
+static int funcb2WorldSpriteShape(lua_State* L,b2Shape::Type defaultShape)
+{
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
+	PPBox2DWorld* m = (PPBox2DWorld*)PPLuaArg::UserData(L,PPBox2DWorld::className);
+  PPUserDataAssert(m!=NULL);
+  
+  int topoffset=0;
+
+  b2Shape::Type shapeType = defaultShape;
+  if (!lua_istable(L,2)) {
+    if (lua_type(L,2) == LUA_TSTRING) {
+      std::string name = lua_tostring(L,2);
+      if (name == "circle") {
+        shapeType = b2Shape::e_circle;
+      } else
+      if (name == "polygon") {
+        shapeType = b2Shape::e_polygon;
+      }
+    } else {
+      int type = (int)lua_tointeger(L,2);
+      if (type == b2Shape::e_circle) {
+        shapeType = b2Shape::e_circle;
+      }
+      if (type == b2Shape::e_polygon) {
+        shapeType = b2Shape::e_polygon;
+      }
+    }
+    topoffset=1;
+  }
+
+	PPObject* sp = (PPObject*)PPLuaArg::UserData(L,2+topoffset,PPObject::className,false);
+  if (sp) {
+    int spriteIdx=2+topoffset;
+    int optionIdx=3+topoffset;
+    
+    lua_getfield(L,spriteIdx,"tileSize");
+    lua_pushvalue(L,spriteIdx);
+    if (lua_pcall(L,1,1,0)!=0) {
+      return luaL_error(L,lua_tostring(L,-1));
+    }
+    lua_getfield(L,-1,"width");
+    float width = lua_tonumber(L,-1);
+    lua_getfield(L,-2,"height");
+    float height = lua_tonumber(L,-1);
+
+    lua_getfield(L,spriteIdx,"pivot");
+    lua_pushvalue(L,spriteIdx);
+    lua_pushnumber(L,width/2);
+    lua_pushnumber(L,height/2);
+    if (lua_pcall(L,3,0,0)!=0) {
+      return luaL_error(L,lua_tostring(L,-1));
+    }
+    
+    b2Shape* shape=NULL;
+    
+    if (shapeType == b2Shape::e_polygon) {
+      shape = new b2PolygonShape();
+      PPLuaScript::newObject(L,B2POLYGONSHAPE,shape,funcDeleteShape);
+    } else {
+      b2CircleShape* shape = new b2CircleShape();
+      PPLuaScript::newObject(L,B2CIRCLESHAPE,shape,funcDeleteShape);
+    }
+    int shapeIdx = lua_gettop(L);
+    
+    lua_pushcfunction(L,funcb2WorldDrawSpriteShape);
+    lua_setfield(L,shapeIdx,"draw");
+    
+    lua_pushvalue(L,spriteIdx);
+    lua_setfield(L,shapeIdx,"sprite");
+
+    if (shapeType == b2Shape::e_polygon) {
+      float32 hx=1,hy=1;
+      b2Vec2 center(0,0);
+      float angle=0;
+      if (m->drawScale.x!=0 && m->drawScale.y!=0) {
+        lua_getfield(L,spriteIdx,"size");
+        lua_pushvalue(L,spriteIdx);
+        if (lua_pcall(L,1,1,0)!=0) {
+          return luaL_error(L,lua_tostring(L,-1));
+        }
+        if (lua_type(L,-1)==LUA_TTABLE) {
+          lua_getfield(L,-1,"width");
+          hx=lua_tonumber(L,-1)/m->drawScale.x/2;
+          lua_getfield(L,-2,"height");
+          hy=lua_tonumber(L,-1)/m->drawScale.y/2;
+        }
+      }
+
+      lua_getfield(L,optionIdx,"offset");
+      if (lua_type(L,-1)==LUA_TTABLE) {
+        center = getPoint(L,-1,center);
+      }
+
+      lua_getfield(L,optionIdx,"angle");
+      if (!lua_isnil(L,-1)) {
+        angle = lua_tonumber(L,-1);
+      }
+
+      lua_getfield(L,shapeIdx,"setAsBox");
+      lua_pushvalue(L,shapeIdx);
+      lua_pushnumber(L,hx);
+      lua_pushnumber(L,hy);
+      lua_createtable(L,2,0);
+      lua_pushnumber(L,center.x);
+      lua_setfield(L,-2,"x");
+      lua_pushnumber(L,center.y);
+      lua_setfield(L,-2,"y");
+      lua_pushnumber(L,angle);
+      if (lua_pcall(L,5,0,0)!=0) {
+        return luaL_error(L,lua_tostring(L,-1));
+      }
+    } else {
+      float radius=0;
+      if (m->drawScale.x!=0) {
+        lua_getfield(L,spriteIdx,"size");
+        lua_pushvalue(L,spriteIdx);
+        if (lua_pcall(L,1,1,0)!=0) {
+          return luaL_error(L,lua_tostring(L,-1));
+        }
+        if (lua_type(L,-1)==LUA_TTABLE) {
+          lua_getfield(L,-1,"width");
+          radius=lua_tonumber(L,-1)/m->drawScale.x/2;
+        }
+      }
+      lua_pushnumber(L,radius);
+      lua_setfield(L,shapeIdx,"radius");
+    }
+    
+    lua_pushcfunction(L,setOption);
+    lua_pushvalue(L,optionIdx);
+    lua_pushvalue(L,shapeIdx);
+    if (lua_pcall(L, 2, 0, 0)!=0) {
+      return luaL_error(L,lua_tostring(L,-1));
+    }
+    
+    lua_settop(L,shapeIdx);
+    return 1;
+  }
+  
+  return 0;
+}
+
+static int funcb2WorldBoxSpriteShape(lua_State* L)
+{
+  return funcb2WorldSpriteShape(L,b2Shape::e_polygon);
+}
+
+static int funcb2WorldCircleSpriteShape(lua_State* L)
+{
+  return funcb2WorldSpriteShape(L,b2Shape::e_circle);
 }
 
 #pragma mark -
@@ -3477,8 +3909,7 @@ static int funcb2BodyAccessor(lua_State* L,bool setter=false)
     if (setter) {
       readonly=true;
     } else {
-      PPBox2DBodyUserData* d = (PPBox2DBodyUserData*)m->body->GetUserData();
-      lua_pushinteger(L,d->index);
+      lua_pushinteger(L,m->tableIndex);
     }
     ret = true;
   } else
@@ -3699,237 +4130,239 @@ static int funcb2BodyCreateFixture(lua_State *L)
 	PPBox2DBody* m = (PPBox2DBody*)PPLuaArg::UserData(L,PPBox2DBody::className);
   PPUserDataAssert(m!=NULL);
   if (m->body == NULL) return 0;
-	if (s->argCount > 0) {
+	if (s->argCount > 0 && lua_istable(L,2)) {
 		b2CircleShape circleShape;
 		b2PolygonShape polygonShape;
 		b2EdgeShape edgeShape;
 		b2ChainShape chainShape;
 		b2FixtureDef def;
-    b2Vec2 pivot(0,0);
+    b2Shape* shape=NULL;
+    b2Vec2 offset(0,0);
     int top=lua_gettop(L);
-    lua_getfield(L,2,"type");
-    const char* type = lua_tostring(L,-1);
-    if (type == NULL) return 0;
-    lua_getfield(L,2,"pivot");
+    
+    lua_getfield(L,2,"offset");
     if (!lua_isnil(L,-1)) {
-      lua_getfield(L,-1,"x");
-      pivot.x = lua_tonumber(L,-1);
-      lua_pop(L,1);
-      lua_getfield(L,-1,"y");
-      pivot.y = lua_tonumber(L,-1);
+      offset = getPoint(L,-1,offset);
     }
-    lua_settop(L,top);
-		if (strcmp(type,"circle") == 0) {
-      lua_getfield(L,2,"radius");
-//      lua_setfield(L,1,"radius");
-//      lua_getfield(L,2,"radius");
-      circleShape.m_radius = lua_tonumber(L,-1);
-      lua_getfield(L,2,"position");
-      lua_getfield(L,-1,"x");
-      if (!lua_isnil(L,-1)) {
-        circleShape.m_p.x=lua_tonumber(L,-1);
-      }
-      lua_getfield(L,2,"position");
-      lua_getfield(L,-1,"y");
-      if (!lua_isnil(L,-1)) {
-        circleShape.m_p.y=lua_tonumber(L,-1);
-      }
-//printf("r %f,x %f,y %f\n",circleShape.m_radius,circleShape.m_p.x,circleShape.m_p.y);
-      def.shape = &circleShape;
+    lua_pop(L,1);
+
+    shape = (b2Shape*)PPLuaArg::UserData(L,2,B2SHAPE,false);
+    def.shape=shape;
+    
+    if (shape==NULL) {
+      lua_getfield(L,2,"type");
+      const char* type = lua_tostring(L,-1);
+      if (type == NULL) return 0;
       lua_settop(L,top);
-		} else
-		if (strcmp(type,"edge") == 0) {
-			PPPoint p[2];
-      lua_getfield(L,2,"vertices");
-      int vert = lua_gettop(L);
-			if (lua_istable(L,vert)) {
-#ifdef __LUAJIT__
-				int len = (int)lua_objlen(L,vert);
-#else
-				int len = (int)lua_rawlen(L,vert);
-#endif
-        if (len/2 > 0) {
-          int top = lua_gettop(L);
-          for (int i=0,m=0;i<len&m<2;i+=2,m++) {
-            lua_rawgeti(L,vert,i+1);
-            p[m].x = luaL_optnumber(L,-1,0);
-            lua_rawgeti(L,vert,i+2);
-            p[m].y = luaL_optnumber(L,-1,0);
-            lua_settop(L,top);
-          }
-          edgeShape.Set(b2Vec2(p[0].x,p[0].y),b2Vec2(p[1].x,p[1].y));
-          def.shape = &edgeShape;
-        }
-			}
-      lua_getfield(L,2,"hasVertex0");
-      if (!lua_isnil(L,-1)) {
-        edgeShape.m_hasVertex0 = lua_toboolean(L,-1);
-      }
-      lua_getfield(L,2,"hasVertex3");
-      if (!lua_isnil(L,-1)) {
-        edgeShape.m_hasVertex3 = lua_toboolean(L,-1);
-      }
-      lua_getfield(L,2,"vertex0");
-      if (!lua_isnil(L,-1)) {
-        int top=lua_gettop(L);
+      if (strcmp(type,"circle") == 0) {
+        lua_getfield(L,2,"radius");
+        circleShape.m_radius = lua_tonumber(L,-1);
+        lua_getfield(L,2,"position");
         lua_getfield(L,-1,"x");
         if (!lua_isnil(L,-1)) {
-          edgeShape.m_vertex0.x = lua_tonumber(L,-1);
+          circleShape.m_p.x=lua_tonumber(L,-1);
         }
-        lua_settop(L,top);
+        lua_getfield(L,2,"position");
         lua_getfield(L,-1,"y");
         if (!lua_isnil(L,-1)) {
-          edgeShape.m_vertex0.y = lua_tonumber(L,-1);
+          circleShape.m_p.y=lua_tonumber(L,-1);
         }
+        def.shape = &circleShape;
         lua_settop(L,top);
-      }
-      lua_getfield(L,2,"vertex3");
-      if (!lua_isnil(L,-1)) {
-        int top=lua_gettop(L);
-        lua_getfield(L,-1,"x");
-        if (!lua_isnil(L,-1)) {
-          edgeShape.m_vertex3.x = lua_tonumber(L,-1);
-        }
-        lua_settop(L,top);
-        lua_getfield(L,-1,"y");
-        if (!lua_isnil(L,-1)) {
-          edgeShape.m_vertex3.y = lua_tonumber(L,-1);
-        }
-        lua_settop(L,top);
-      }
-      lua_settop(L,top);
-//		} else
-//		if (strcmp(type,"box") == 0) {
-//			PPPoint p;
-//      lua_getfield(L,2,"vertices");
-//      int vert = lua_gettop(L);
-//			if (lua_istable(L,vert)) {
-//#ifdef __LUAJIT__
-//				int len = (int)lua_objlen(L,vert);
-//#else
-//				int len = (int)lua_rawlen(L,vert);
-//#endif
-//				if (len >= 2) {
-//					lua_rawgeti(L,vert,1);
-//					p.x = luaL_optnumber(L,-1,0);
-//					lua_rawgeti(L,vert,2);
-//					p.y = luaL_optnumber(L,-1,0);
-//					polygonShape.SetAsBox(p.x,p.y);
-//					def.shape = &polygonShape;
-//				}
-//			}
-//      lua_settop(L,top);
-		} else
-		if (strcmp(type,"polygon") == 0) {
-      {
-        bool makeBox=false;
-        int argCount=0;
-        float32 hx,hy;
-        b2Vec2 center;
-        float32 angle;
-        lua_settop(L,top);
-        lua_getfield(L,2,"hx");
-        if (!lua_isnil(L,-1)) {
-          hx = lua_tonumber(L,-1);
-          lua_pop(L,1);
-          lua_getfield(L,2,"hy");
-          if (!lua_isnil(L,-1)) {
-            hy = lua_tonumber(L,-1);
-            makeBox=true;
-          }
-        }
-        lua_pop(L,1);
-        lua_getfield(L,2,"center");
-        if (!lua_isnil(L,-1)) {
-          lua_getfield(L,-1,"x");
-          if (!lua_isnil(L,-1)) {
-            center.x = lua_tonumber(L,-1);
-            lua_pop(L,1);
-            lua_getfield(L,-1,"y");
-            if (!lua_isnil(L,-1)) {
-              center.y = lua_tonumber(L,-1);
-              argCount++;
-            }
-          }
-          lua_pop(L,1);
-        }
-        lua_settop(L,top);
-        lua_getfield(L,2,"angle");
-        if (!lua_isnil(L,-1)) {
-          angle=lua_tonumber(L,-1);
-          argCount++;
-        }
-        
-        if (makeBox) {
-          if (argCount>=2) {
-            polygonShape.SetAsBox(hx,hy,center,angle);
-          } else {
-            polygonShape.SetAsBox(hx,hy);
-          }
-          def.shape = &polygonShape;
-        } else {
-          lua_getfield(L,2,"vertices");
-          int vert = lua_gettop(L);
-          if (lua_istable(L,vert)) {
-#ifdef __LUAJIT__
-            int len = (int)lua_objlen(L,vert);
-#else
-            int len = (int)lua_rawlen(L,vert);
-#endif
-            if (len/2 > 2) {
-              int top = lua_gettop(L);
-              b2Vec2* p = (b2Vec2*)malloc((len/2)*sizeof(b2Vec2));
-              if (p) {
-                for (int i=0,m=0;i<len&m<(len/2);i+=2,m++) {
-                  lua_rawgeti(L,vert,i+1);
-                  p[m].x = luaL_optnumber(L,-1,0);
-                  lua_rawgeti(L,vert,i+2);
-                  p[m].y = luaL_optnumber(L,-1,0);
-                  lua_settop(L,top);
-                }
-                if (len/2>=3) {
-                  if (len/2>8) len=8*2;
-                  polygonShape.Set(p,len/2);
-                }
-                def.shape = &polygonShape;
-                free(p);
-              }
-            } else {
-              return 0;
-            }
-          }
-        }
-      }
-      lua_settop(L,top);
-		} else
-		if (strcmp(type,"chain") == 0) {
-      lua_getfield(L,2,"vertices");
-      int vert = lua_gettop(L);
-			if (lua_istable(L,vert)) {
-#ifdef __LUAJIT__
-				int len = (int)lua_objlen(L,vert);
-#else
-				int len = (int)lua_rawlen(L,vert);
-#endif
-        if (len/2 > 0) {
-          int top = lua_gettop(L);
-          b2Vec2* p = (b2Vec2*)malloc((len/2)*sizeof(b2Vec2));
-          if (p) {
-            for (int i=0,m=0;i<len&m<(len/2);i+=2,m++) {
+      } else
+      if (strcmp(type,"edge") == 0) {
+        PPPoint p[2];
+        lua_getfield(L,2,"vertices");
+        int vert = lua_gettop(L);
+        if (lua_istable(L,vert)) {
+  #ifdef __LUAJIT__
+          int len = (int)lua_objlen(L,vert);
+  #else
+          int len = (int)lua_rawlen(L,vert);
+  #endif
+          if (len/2 > 0) {
+            int top = lua_gettop(L);
+            for (int i=0,m=0;i<len&m<2;i+=2,m++) {
               lua_rawgeti(L,vert,i+1);
               p[m].x = luaL_optnumber(L,-1,0);
               lua_rawgeti(L,vert,i+2);
               p[m].y = luaL_optnumber(L,-1,0);
               lua_settop(L,top);
             }
-            chainShape.CreateChain(p,len/2);
-            def.shape = &chainShape;
-            free(p);
+            edgeShape.Set(b2Vec2(p[0].x,p[0].y),b2Vec2(p[1].x,p[1].y));
+            def.shape = &edgeShape;
           }
         }
-			}
-      lua_settop(L,top);
-		}
+        lua_getfield(L,2,"hasVertex0");
+        if (!lua_isnil(L,-1)) {
+          edgeShape.m_hasVertex0 = lua_toboolean(L,-1);
+        }
+        lua_getfield(L,2,"hasVertex3");
+        if (!lua_isnil(L,-1)) {
+          edgeShape.m_hasVertex3 = lua_toboolean(L,-1);
+        }
+        lua_getfield(L,2,"vertex0");
+        if (!lua_isnil(L,-1)) {
+          int top=lua_gettop(L);
+          lua_getfield(L,-1,"x");
+          if (!lua_isnil(L,-1)) {
+            edgeShape.m_vertex0.x = lua_tonumber(L,-1);
+          }
+          lua_settop(L,top);
+          lua_getfield(L,-1,"y");
+          if (!lua_isnil(L,-1)) {
+            edgeShape.m_vertex0.y = lua_tonumber(L,-1);
+          }
+          lua_settop(L,top);
+        }
+        lua_getfield(L,2,"vertex3");
+        if (!lua_isnil(L,-1)) {
+          int top=lua_gettop(L);
+          lua_getfield(L,-1,"x");
+          if (!lua_isnil(L,-1)) {
+            edgeShape.m_vertex3.x = lua_tonumber(L,-1);
+          }
+          lua_settop(L,top);
+          lua_getfield(L,-1,"y");
+          if (!lua_isnil(L,-1)) {
+            edgeShape.m_vertex3.y = lua_tonumber(L,-1);
+          }
+          lua_settop(L,top);
+        }
+        lua_settop(L,top);
+  //		} else
+  //		if (strcmp(type,"box") == 0) {
+  //			PPPoint p;
+  //      lua_getfield(L,2,"vertices");
+  //      int vert = lua_gettop(L);
+  //			if (lua_istable(L,vert)) {
+  //#ifdef __LUAJIT__
+  //				int len = (int)lua_objlen(L,vert);
+  //#else
+  //				int len = (int)lua_rawlen(L,vert);
+  //#endif
+  //				if (len >= 2) {
+  //					lua_rawgeti(L,vert,1);
+  //					p.x = luaL_optnumber(L,-1,0);
+  //					lua_rawgeti(L,vert,2);
+  //					p.y = luaL_optnumber(L,-1,0);
+  //					polygonShape.SetAsBox(p.x,p.y);
+  //					def.shape = &polygonShape;
+  //				}
+  //			}
+  //      lua_settop(L,top);
+      } else
+      if (strcmp(type,"polygon") == 0) {
+        {
+          bool makeBox=false;
+          int argCount=0;
+          float32 hx,hy;
+          b2Vec2 center;
+          float32 angle;
+          lua_settop(L,top);
+          lua_getfield(L,2,"hx");
+          if (!lua_isnil(L,-1)) {
+            hx = lua_tonumber(L,-1);
+            lua_pop(L,1);
+            lua_getfield(L,2,"hy");
+            if (!lua_isnil(L,-1)) {
+              hy = lua_tonumber(L,-1);
+              makeBox=true;
+            }
+          }
+          lua_pop(L,1);
+          lua_getfield(L,2,"center");
+          if (!lua_isnil(L,-1)) {
+            lua_getfield(L,-1,"x");
+            if (!lua_isnil(L,-1)) {
+              center.x = lua_tonumber(L,-1);
+              lua_pop(L,1);
+              lua_getfield(L,-1,"y");
+              if (!lua_isnil(L,-1)) {
+                center.y = lua_tonumber(L,-1);
+                argCount++;
+              }
+            }
+            lua_pop(L,1);
+          }
+          lua_settop(L,top);
+          lua_getfield(L,2,"angle");
+          if (!lua_isnil(L,-1)) {
+            angle=lua_tonumber(L,-1);
+            argCount++;
+          }
+          
+          if (makeBox) {
+            if (argCount>=2) {
+              polygonShape.SetAsBox(hx,hy,center,angle);
+            } else {
+              polygonShape.SetAsBox(hx,hy);
+            }
+            def.shape = &polygonShape;
+          } else {
+            lua_getfield(L,2,"vertices");
+            int vert = lua_gettop(L);
+            if (lua_istable(L,vert)) {
+  #ifdef __LUAJIT__
+              int len = (int)lua_objlen(L,vert);
+  #else
+              int len = (int)lua_rawlen(L,vert);
+  #endif
+              if (len/2 > 2) {
+                int top = lua_gettop(L);
+                b2Vec2* p = (b2Vec2*)malloc((len/2)*sizeof(b2Vec2));
+                if (p) {
+                  for (int i=0,m=0;i<len&m<(len/2);i+=2,m++) {
+                    lua_rawgeti(L,vert,i+1);
+                    p[m].x = luaL_optnumber(L,-1,0);
+                    lua_rawgeti(L,vert,i+2);
+                    p[m].y = luaL_optnumber(L,-1,0);
+                    lua_settop(L,top);
+                  }
+                  if (len/2>=3) {
+                    if (len/2>8) len=8*2;
+                    polygonShape.Set(p,len/2);
+                  }
+                  def.shape = &polygonShape;
+                  free(p);
+                }
+              } else {
+                return 0;
+              }
+            }
+          }
+        }
+        lua_settop(L,top);
+      } else
+      if (strcmp(type,"chain") == 0) {
+        lua_getfield(L,2,"vertices");
+        int vert = lua_gettop(L);
+        if (lua_istable(L,vert)) {
+  #ifdef __LUAJIT__
+          int len = (int)lua_objlen(L,vert);
+  #else
+          int len = (int)lua_rawlen(L,vert);
+  #endif
+          if (len/2 > 0) {
+            int top = lua_gettop(L);
+            b2Vec2* p = (b2Vec2*)malloc((len/2)*sizeof(b2Vec2));
+            if (p) {
+              for (int i=0,m=0;i<len&m<(len/2);i+=2,m++) {
+                lua_rawgeti(L,vert,i+1);
+                p[m].x = luaL_optnumber(L,-1,0);
+                lua_rawgeti(L,vert,i+2);
+                p[m].y = luaL_optnumber(L,-1,0);
+                lua_settop(L,top);
+              }
+              chainShape.CreateChain(p,len/2);
+              def.shape = &chainShape;
+              free(p);
+            }
+          }
+        }
+        lua_settop(L,top);
+      }
+    }
 		if (def.shape) {
 			if (s->argCount > 0) {
         int n=0;
@@ -3968,8 +4401,8 @@ static int funcb2BodyCreateFixture(lua_State *L)
 
 			b2Fixture* fixture = m->body->CreateFixture(&def);
       m->fixtureEdited=true;
-      PPBox2DFixture* ppfix = new PPBox2DFixture(fixture);
-      ppfix->pivot = pivot;
+      PPBox2DFixture* ppfix = new PPBox2DFixture(fixture,m);
+      ppfix->offset = offset;
       ppfix->worldId = m->worldId;
 			PPLuaScript::newObject(L,B2FIXTURE,ppfix,funcDestroyFixture);
       
@@ -4112,19 +4545,10 @@ static int funcb2BodyTransform(lua_State *L) {
 		m->body->SetTransform(v,angle);
     return 0;
 	}
-	b2Transform t = m->body->GetTransform();
-	lua_createtable(L,0,0);
-	int b = lua_gettop(L);
-	lua_pushnumber(L,t.p.x);
-	lua_setfield(L,b,"x");
-	lua_pushnumber(L,t.p.y);
-	lua_setfield(L,b,"y");
-	lua_pushnumber(L,t.q.s);
-	lua_setfield(L,b,"sin");
-	lua_pushnumber(L,t.q.c);
-	lua_setfield(L,b,"cos");
-	lua_pushnumber(L,t.q.GetAngle());
-	lua_setfield(L,b,"angle");
+	b2Transform bt = m->body->GetTransform();
+  PPBox2DTransform* t=new PPBox2DTransform();
+  t->Set(bt);
+  PPLuaScript::newObject(L,B2TRANSFORM,t,funcDeleteTransform);
 	return 1;
 }
 
@@ -4528,7 +4952,8 @@ static int funcb2BodyFixtureList(lua_State *L) {
 	PPBox2DBody* m = (PPBox2DBody*)PPLuaArg::UserData(L,PPBox2DBody::className);
   PPUserDataAssert(m!=NULL);
 	if (m->body == NULL) return 0;
-  lua_getfield(L,1,FIX_LIST);
+  lua_getfield(L,1,"world");
+  PPBox2DWorld::findFixture(L,m->body->GetFixtureList(),lua_gettop(L));
 	return 1;
 }
 
@@ -4590,6 +5015,113 @@ static int funcb2BodyDump(lua_State* L)
 }
 
 #pragma mark -
+
+static int funcb2JointDef(lua_State* L,b2JointType defaultType)
+{
+  int top=lua_gettop(L);
+  b2JointType type = defaultType;
+  int bodyA=0;
+  int bodyB=0;
+  int n=1;
+  if (top >= n) {
+    if (lua_type(L,1)==LUA_TSTRING) {
+      n++;
+    }
+    if (top >= n) {
+      PPBox2DBody* m = (PPBox2DBody*)PPLuaArg::UserData(L,n,PPBox2DBody::className,false);
+      if (m) {
+        bodyA=n;
+        n++;
+      }
+    }
+    if (top >= n) {
+      PPBox2DBody* m = (PPBox2DBody*)PPLuaArg::UserData(L,n,PPBox2DBody::className,false);
+      if (m) {
+        bodyB=n;
+        n++;
+      }
+    }
+  }
+  lua_createtable(L,3,0);
+  int joint=lua_gettop(L);
+  lua_pushinteger(L,type);
+  lua_setfield(L,joint,"type");
+  if (bodyA>0) {
+    lua_pushvalue(L,bodyA);
+    lua_setfield(L,joint,"bodyA");
+  }
+  if (bodyB>0) {
+    lua_pushvalue(L,bodyB);
+    lua_setfield(L,joint,"bodyB");
+  }
+  if (top >= n) {
+
+    lua_pushcfunction(L,setOption);
+    lua_pushvalue(L,n);
+    lua_pushvalue(L,joint);
+    if (lua_pcall(L, 2, 0, 0)!=0) {
+      return luaL_error(L,lua_tostring(L,-1));
+    }
+
+  }
+  lua_settop(L,joint);
+  return 1;
+}
+
+static int funcb2JointNew(lua_State* L)
+{
+  return funcb2JointDef(L,e_revoluteJoint);
+}
+
+static int funcb2JointDistance(lua_State* L)
+{
+  return funcb2JointDef(L,e_distanceJoint);
+}
+
+static int funcb2JointFriction(lua_State* L)
+{
+  return funcb2JointDef(L,e_frictionJoint);
+}
+
+static int funcb2JointGear(lua_State* L)
+{
+  return funcb2JointDef(L,e_gearJoint);
+}
+
+static int funcb2JointPrismatic(lua_State* L)
+{
+  return funcb2JointDef(L,e_prismaticJoint);
+}
+
+static int funcb2JointPulley(lua_State* L)
+{
+  return funcb2JointDef(L,e_pulleyJoint);
+}
+
+static int funcb2JointRevolute(lua_State* L)
+{
+  return funcb2JointDef(L,e_revoluteJoint);
+}
+
+static int funcb2JointRope(lua_State* L)
+{
+  return funcb2JointDef(L,e_ropeJoint);
+}
+
+static int funcb2JointWeld(lua_State* L)
+{
+  return funcb2JointDef(L,e_weldJoint);
+}
+
+static int funcb2JointWheel(lua_State* L)
+{
+  return funcb2JointDef(L,e_wheelJoint);
+}
+
+static int funcb2JointMouse(lua_State* L)
+{
+  return funcb2JointDef(L,e_mouseJoint);
+}
 
 static int funcb2JointReactionForce(lua_State *L) {
   PPBox2DJoint* m = (PPBox2DJoint*)PPLuaArg::UserData(L,PPBox2DJoint::className);
@@ -4894,8 +5426,7 @@ static int funcb2JointAccessor(lua_State* L,bool setter=false)
       if (setter) {
         readonly=true;
       } else {
-        PPBox2DJointUserData* d = (PPBox2DJointUserData*)m->joint->GetUserData();
-        lua_pushinteger(L,d->index);
+        lua_pushinteger(L,m->tableIndex);
       }
       ret = true;
     } else
@@ -6381,11 +6912,10 @@ static int funcb2FixtureTestPoint(lua_State *L) {
   PPUserDataAssert(m!=NULL);
 	if (m->fixture == NULL) return 0;
 	if (s->argCount > 0) {
-		b2Vec2 v;
-		PPPoint p = s->getPoint(L,0);
-		v.x = p.x;
-		v.y = p.y;
-		lua_pushboolean(L,m->fixture->TestPoint(v));
+    b2Vec2 p;
+    p=getPoint(L,2,p);
+printf("# %f,%f\n",p.x,p.y);
+		lua_pushboolean(L,m->fixture->TestPoint(p));
 		return 1;
 	}
 	return 0;
@@ -6486,23 +7016,7 @@ static int funcb2FixtureAABB(lua_State *L) {
 	if (m->fixture == NULL) return 0;
 	if (s->argCount > 0) {
 		b2AABB aabb = m->fixture->GetAABB((int)s->integer(0));
-		lua_createtable(L,0,0);
-		lua_createtable(L,0,2);
-		lua_pushnumber(L,aabb.lowerBound.x);
-		lua_setfield(L,-2,"x");
-		lua_pushnumber(L,aabb.lowerBound.y);
-		lua_setfield(L,-2,"y");
-		lua_getglobal(L,"pppoint_mt");
-		lua_setmetatable(L,-2);
-		lua_setfield(L,-2,"lowerBound");
-		lua_createtable(L,0,2);
-		lua_pushnumber(L,aabb.upperBound.x);
-		lua_setfield(L,-2,"x");
-		lua_pushnumber(L,aabb.upperBound.y);
-		lua_setfield(L,-2,"y");
-		lua_getglobal(L,"pppoint_mt");
-		lua_setmetatable(L,-2);
-		lua_setfield(L,-2,"upperBound");
+    pushAABB(L,aabb);
 		return 1;
 	}
 	return 0;
@@ -6821,17 +7335,977 @@ static int funcb2ContactEvaluate(lua_State *L) {
 
 #pragma mark -
 
+static int getTransform(lua_State *L,int idx,PPBox2DTransform *t)
+{
+  int n=0;
+  float v[4]={0};
+  int top=lua_gettop(L);
+  for (int i=idx;i<=top&&n<4;i++) {
+    if (lua_type(L,i)==LUA_TTABLE) {
+      lua_getfield(L,i,"x");
+      if (!lua_isnil(L,-1)) {
+        v[n++]=lua_tonumber(L,-1);
+      }
+      if (n>=4) break;
+      lua_getfield(L,i,"y");
+      if (!lua_isnil(L,-1)) {
+        v[n++]=lua_tonumber(L,-1);
+      }
+      if (n>=4) break;
+      lua_getfield(L,i,"angle");
+      if (!lua_isnil(L,-1)) {
+        v[n++]=lua_tonumber(L,-1);
+      }
+      if (n<4) {
+#ifdef __LUAJIT__
+        size_t len = lua_objlen(L,i);
+#else
+        size_t len = lua_rawlen(L,i);
+#endif
+        for (int j=0;j<len;j++) {
+          lua_rawgeti(L,i,j+1);
+          if (!lua_isnil(L,-1)) {
+            v[n++]=lua_tonumber(L,-1);
+            if (n>=4) {
+              break;
+            }
+          }
+        }
+      }
+    } else {
+      v[n++]=lua_tonumber(L,i);
+    }
+  }
+  if (n>=1) {
+    t->t.p.x=v[0];
+  }
+  if (n>=2) {
+    t->t.p.y=v[1];
+  }
+  if (n>=3) {
+    t->t.q.Set(v[2]);
+    t->angle=v[2];
+    t->noangle=false;
+  }
+  return n;
+}
+
+static int funcb2TransformAccessor(lua_State* L,bool setter=false)
+{
+  bool ret = false;
+  bool readonly=false;
+  PPBox2DTransform* m = (PPBox2DTransform*)PPLuaArg::UserData(L,B2TRANSFORM,false);
+  do {
+    if (m == NULL) break;
+    std::string name = lua_tostring(L,2);
+
+    //p
+    if (name == "p") {
+      if (setter) {
+        m->t.p = getPoint(L,3,m->t.p);
+      } else {
+        pushPoint(L,m->t.p);
+      }
+      ret = true;
+    } else
+    //q
+    if (name == "q") {
+      if (setter) {
+        int top=lua_gettop(L);
+        lua_getfield(L,3,"s");
+        if (!lua_isnil(L,-1)) {
+          m->t.q.s=lua_tonumber(L,-1);
+        }
+        lua_getfield(L,3,"c");
+        if (!lua_isnil(L,-1)) {
+          m->t.q.c=lua_tonumber(L,-1);
+        }
+        lua_settop(L,top);
+      } else {
+        lua_createtable(L,0,2);
+        lua_pushnumber(L,m->t.q.s);
+        lua_setfield(L,-2,"s");
+        lua_pushnumber(L,m->t.q.c);
+        lua_setfield(L,-2,"c");
+      }
+      ret = true;
+    } else
+    //angle
+    if (name == "angle") {
+      if (setter) {
+        m->angle = lua_tonumber(L,3);
+        m->t.q.Set(m->angle);
+        m->noangle=false;
+      } else {
+        if (m->noangle) {
+          float y=m->t.q.s;
+          float x=m->t.q.c;
+          if (y==0) {
+            if (x > 0) {
+              m->angle=0;
+            } else {
+              m->angle=M_PI;
+            }
+          } else {
+            m->angle=atan2f(y,x);
+          }
+          m->noangle=false;
+        }
+        lua_pushnumber(L,m->angle);
+      }
+      ret = true;
+    }
+
+  } while (false);
+  if (setter) {
+    if (readonly) {
+      return PPLuaArg::setterReadOnlyError(L,lua_tostring(L,2));
+    }
+    lua_pushboolean(L,ret);
+  } else {
+    if (!ret) {
+      lua_pushnil(L);
+    }
+  }
+  return 1;
+}
+
+static int funcb2TransformSetter(lua_State* L)
+{
+  return funcb2TransformAccessor(L,true);
+}
+
+static int funcb2TransformGetter(lua_State* L)
+{
+  return funcb2TransformAccessor(L);
+}
+
+static int funcDeleteTransform(lua_State *L) {
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
+	PPBox2DTransform* m = (PPBox2DTransform*)PPLuaArg::UserData(L,B2TRANSFORM);
+  PPUserDataAssert(m!=NULL);
+  delete m;
+  return 0;
+}
+
+static int funcb2TransformNew(lua_State *L) {
+  PPBox2DTransform* m = new PPBox2DTransform();
+  if (lua_gettop(L)>0) {
+    getTransform(L,1,m);
+  }
+  PPLuaScript::newObject(L,B2TRANSFORM,m,funcDeleteTransform);
+  return 1;
+}
+
+static int funcb2TransformIdentity(lua_State *L) {
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
+	PPBox2DTransform* m = (PPBox2DTransform*)PPLuaArg::UserData(L,B2TRANSFORM);
+  PPUserDataAssert(m!=NULL);
+  m->t.SetIdentity();
+  return 0;
+}
+
+static int funcb2TransformSet(lua_State *L) {
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
+	PPBox2DTransform* m = (PPBox2DTransform*)PPLuaArg::UserData(L,B2TRANSFORM);
+  PPUserDataAssert(m!=NULL);
+  if (lua_gettop(L)>0) {
+    getTransform(L,2,m);
+  }
+  return 0;
+}
+
+#pragma mark -
+
+static int funcDeleteShape(lua_State* L)
+{
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
+	b2Shape* m = (b2Shape*)PPLuaArg::UserData(L,B2SHAPE);
+  PPUserDataAssert(m!=NULL);
+  delete m;
+  return 0;
+}
+
+static int funcb2ShapeAccessor(lua_State* L,bool setter=false)
+{
+  bool ret = false;
+  bool readonly=false;
+  b2Shape* m = (b2Shape*)PPLuaArg::UserData(L,B2SHAPE,false);
+  do {
+    if (m == NULL) break;
+    std::string name = lua_tostring(L,2);
+
+    //type
+    if (name == "type") {
+      if (setter) {
+        readonly=true;
+      } else {
+        lua_pushinteger(L,m->GetType());
+      }
+      ret = true;
+    } else
+    //typename
+    if (name == "typename") {
+      if (setter) {
+        readonly=true;
+      } else {
+        switch (m->GetType()) {
+        case b2Shape::e_circle:
+          lua_pushstring(L,"circle");
+          break;
+        case b2Shape::e_edge:
+          lua_pushstring(L,"edge");
+          break;
+        case b2Shape::e_polygon:
+          lua_pushstring(L,"polygon");
+          break;
+        case b2Shape::e_chain:
+          lua_pushstring(L,"chain");
+          break;
+        case b2Shape::e_typeCount:
+          lua_pushstring(L,"typeCount");
+          break;
+        }
+      }
+      ret = true;
+    } else
+    //childCount
+    if (name == "childCount") {
+      if (setter) {
+        readonly=true;
+      } else {
+        lua_pushinteger(L,m->GetChildCount());
+      }
+      ret = true;
+    } else
+    //radius
+    if (name == "radius") {
+      if (setter) {
+        m->m_radius=lua_tonumber(L,3);
+      } else {
+        lua_pushnumber(L,m->m_radius);
+      }
+      ret = true;
+    }
+
+  } while (false);
+  if (setter) {
+    if (readonly) {
+      return PPLuaArg::setterReadOnlyError(L,lua_tostring(L,2));
+    }
+    lua_pushboolean(L,ret);
+  } else {
+    if (!ret) {
+      lua_pushnil(L);
+    }
+  }
+  return 1;
+}
+
+static int funcb2ShapeSetter(lua_State* L)
+{
+  return funcb2ShapeAccessor(L,true);
+}
+
+static int funcb2ShapeGetter(lua_State* L)
+{
+  return funcb2ShapeAccessor(L);
+}
+
+//testPoint(transform,point)
+static int funcb2ShapeTestPoint(lua_State* L)
+{
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
+	b2Shape* m = (b2Shape*)PPLuaArg::UserData(L,B2SHAPE);
+  PPUserDataAssert(m!=NULL);
+  if (lua_gettop(L)>2) {
+    PPBox2DTransform* t = (PPBox2DTransform*)PPLuaArg::UserData(L,2,B2TRANSFORM);
+    PPUserDataAssert(t!=NULL);
+    if (t) {
+      b2Vec2 p;
+      p=getPoint(L,3,p);
+      lua_pushboolean(L,m->TestPoint(t->t,p));
+      return 1;
+    }
+  }
+  return 0;
+}
+
+//rayCast(p1,p2,fraction,transform,childindex)
+static int funcb2ShapeRayCast(lua_State* L)
+{
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
+	b2Shape* m = (b2Shape*)PPLuaArg::UserData(L,B2SHAPE);
+  PPUserDataAssert(m!=NULL);
+  int top=lua_gettop(L);
+  if (top>5) {
+    int n=1;
+    int valc=0;
+    float val[10];
+    for (int i=2;i<=top;i++) {
+      if (lua_type(L,i)==LUA_TTABLE) {
+        lua_getfield(L,i,"x");
+        if (lua_isnil(L,-1)) {
+          lua_pop(L,1);
+          lua_rawgeti(L,i,1);
+        }
+        if (!lua_isnil(L,-1)) {
+          val[valc++] = lua_tonumber(L,-1);
+          if (valc>=4) break;
+        }
+        lua_pop(L,1);
+        lua_getfield(L,i,"y");
+        if (lua_isnil(L,-1)) {
+          lua_pop(L,1);
+          lua_rawgeti(L,i,2);
+        }
+        if (!lua_isnil(L,-1)) {
+          val[valc++] = lua_tonumber(L,-1);
+          if (valc>=4) break;
+        }
+        n++;
+      } else {
+        val[valc++] = lua_tonumber(L,i);
+        if (valc>=5) break;
+        n++;
+      }
+    }
+    if (valc>=5) {
+      b2RayCastInput input;
+      input.p1.x=val[0];
+      input.p1.y=val[1];
+      input.p2.x=val[2];
+      input.p2.y=val[3];
+      input.maxFraction=val[4];
+      if (lua_istable(L,n)) {
+        PPBox2DTransform* t = (PPBox2DTransform*)PPLuaArg::UserData(L,n,B2TRANSFORM);
+        PPUserDataAssert(t!=NULL);
+        n++;
+        if (t) {
+          int childIndex=0;
+          if (n<=top) {
+            childIndex=(int)lua_tointeger(L,n);
+          }
+          b2RayCastOutput output;
+          lua_pushboolean(L,m->RayCast(&output,input,t->t,childIndex));
+          pushPoint(L,output.normal);
+          lua_pushnumber(L,output.fraction);
+          return 3;
+        }
+      }
+
+    }
+  }
+  return 0;
+}
+
+static int funcb2ShapeComputeAABB(lua_State* L)
+{
+  int top=lua_gettop(L);
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
+	b2Shape* m = (b2Shape*)PPLuaArg::UserData(L,B2SHAPE);
+  PPUserDataAssert(m!=NULL);
+  PPBox2DTransform* t = (PPBox2DTransform*)PPLuaArg::UserData(L,2,B2TRANSFORM);
+  PPUserDataAssert(t!=NULL);
+  int childIndex=0;
+  if (3<=top) {
+    childIndex=(int)lua_tointeger(L,3);
+  }
+  b2AABB aabb;
+  m->ComputeAABB(&aabb,t->t,childIndex);
+  pushAABB(L,aabb);
+  return 1;
+}
+
+static int funcb2ShapeComputeMass(lua_State* L)
+{
+  int top=lua_gettop(L);
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
+	b2Shape* m = (b2Shape*)PPLuaArg::UserData(L,B2SHAPE);
+  PPUserDataAssert(m!=NULL);
+  if (top>1) {
+    b2MassData massData;
+    m->ComputeMass(&massData,lua_tonumber(L,2));
+    pushMassData(L,massData);
+    return 1;
+  }
+  return 0;
+}
+
+static int funcb2ChainShapeAccessor(lua_State* L,bool setter=false)
+{
+  bool ret = false;
+  bool readonly=false;
+  b2ChainShape* m = (b2ChainShape*)PPLuaArg::UserData(L,B2CHAINSHAPE,false);
+  do {
+    if (m == NULL) break;
+    std::string name = lua_tostring(L,2);
+
+    //vertices
+    if (name == "vertices") {
+      if (setter) {
+        readonly=true;
+      } else {
+        lua_createtable(L,m->m_count,0);
+        for (int i=0;i<m->m_count;i++) {
+          pushPoint(L,m->m_vertices[i]);
+          lua_rawseti(L,-2,i+1);
+        }
+      }
+      ret = true;
+    } else
+    //count
+    if (name == "count") {
+      if (setter) {
+        readonly=true;
+      } else {
+        lua_pushinteger(L,m->m_count);
+      }
+      ret = true;
+    } else
+    //prevVertex
+    if (name == "prevVertex") {
+      if (setter) {
+        m->m_prevVertex=getPoint(L,3,m->m_prevVertex);
+        m->m_hasPrevVertex=true;
+      } else {
+        pushPoint(L,m->m_prevVertex);
+      }
+      ret = true;
+    } else
+    //nextVertex
+    if (name == "nextVertex") {
+      if (setter) {
+        m->m_nextVertex=getPoint(L,3,m->m_nextVertex);
+        m->m_hasNextVertex=true;
+      } else {
+        pushPoint(L,m->m_nextVertex);
+      }
+      ret = true;
+    } else
+    //hasPrevVertex
+    if (name == "hasPrevVertex") {
+      if (setter) {
+        m->m_hasPrevVertex=lua_toboolean(L,3);
+      } else {
+        lua_pushboolean(L,m->m_hasPrevVertex);
+      }
+      ret = true;
+    } else
+    //hasNextVertex
+    if (name == "hasNextVertex") {
+      if (setter) {
+        m->m_hasNextVertex=lua_toboolean(L,3);
+      } else {
+        lua_pushboolean(L,m->m_hasNextVertex);
+      }
+      ret = true;
+    }
+
+  } while (false);
+  if (setter) {
+    if (readonly) {
+      return PPLuaArg::setterReadOnlyError(L,lua_tostring(L,2));
+    }
+    lua_pushboolean(L,ret);
+  } else {
+    if (!ret) {
+      lua_pushnil(L);
+    }
+  }
+  return 1;
+}
+
+static int funcb2ChainShapeSetter(lua_State* L)
+{
+  return funcb2ChainShapeAccessor(L,true);
+}
+
+static int funcb2ChainShapeGetter(lua_State* L)
+{
+  return funcb2ChainShapeAccessor(L);
+}
+
+static int funcb2ChainShapeNew(lua_State* L)
+{
+  b2ChainShape* shape = new b2ChainShape();
+  PPLuaScript::newObject(L,B2CHAINSHAPE,shape,funcDeleteShape);
+  lua_pushcfunction(L,setOption);
+  lua_pushvalue(L,1);
+  lua_pushvalue(L,2);
+  if (lua_pcall(L, 2, 0, 0)!=0) {
+    return luaL_error(L,lua_tostring(L,-1));
+  }
+  return 1;
+}
+
+static int funcb2ChainShapeCreateLoop(lua_State* L)
+{
+  int top=lua_gettop(L);
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
+	b2ChainShape* m = (b2ChainShape*)PPLuaArg::UserData(L,B2CHAINSHAPE);
+  PPUserDataAssert(m!=NULL);
+  {
+    PPBox2DVert vert;
+    vert.parse(L,2,top);
+    if (vert.count>=3) {
+      m->CreateLoop(vert.vertices,vert.count);
+    }
+  }
+  return 0;
+}
+
+static int funcb2ChainShapeCreateChain(lua_State* L)
+{
+  int top=lua_gettop(L);
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
+	b2ChainShape* m = (b2ChainShape*)PPLuaArg::UserData(L,B2CHAINSHAPE);
+  PPUserDataAssert(m!=NULL);
+  {
+    PPBox2DVert vert;
+    vert.parse(L,2,top);
+    if (vert.count>=3) {
+      m->CreateChain(vert.vertices,vert.count);
+    }
+  }
+  return 0;
+}
+
+static int funcb2ChainShapeChildEdge(lua_State* L)
+{
+  int top=lua_gettop(L);
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
+	b2ChainShape* m = (b2ChainShape*)PPLuaArg::UserData(L,B2CHAINSHAPE);
+  PPUserDataAssert(m!=NULL);
+  if (top>=2) {
+    int32 index = (int)lua_tointeger(L,2)-1;
+    if (index >= 0 && index < m->m_count) {
+      b2EdgeShape* edge = new b2EdgeShape();
+      m->GetChildEdge(edge,index);
+      PPLuaScript::newObject(L,B2EDGESHAPE,edge,funcDeleteShape);
+      return 1;
+    } else {
+      lua_pushnil(L);
+      return 1;
+    }
+  }
+  return 0;
+}
+
+static int funcb2CircleShapeAccessor(lua_State* L,bool setter=false)
+{
+  bool ret = false;
+  bool readonly=false;
+  b2CircleShape* m = (b2CircleShape*)PPLuaArg::UserData(L,B2CIRCLESHAPE,false);
+  do {
+    if (m == NULL) break;
+    std::string name = lua_tostring(L,2);
+
+    //p
+    if (name == "p") {
+      if (setter) {
+        m->m_p=getPoint(L,3,m->m_p);
+      } else {
+        pushPoint(L,m->m_p);
+      }
+      ret = true;
+    }
+
+  } while (false);
+  if (setter) {
+    if (readonly) {
+      return PPLuaArg::setterReadOnlyError(L,lua_tostring(L,2));
+    }
+    lua_pushboolean(L,ret);
+  } else {
+    if (!ret) {
+      lua_pushnil(L);
+    }
+  }
+  return 1;
+}
+
+static int funcb2CircleShapeSetter(lua_State* L)
+{
+  return funcb2CircleShapeAccessor(L,true);
+}
+
+static int funcb2CircleShapeGetter(lua_State* L)
+{
+  return funcb2CircleShapeAccessor(L);
+}
+
+static int funcb2CircleShapeNew(lua_State* L)
+{
+  b2CircleShape* shape = new b2CircleShape();
+  PPLuaScript::newObject(L,B2CIRCLESHAPE,shape,funcDeleteShape);
+  lua_pushcfunction(L,setOption);
+  lua_pushvalue(L,1);
+  lua_pushvalue(L,2);
+  if (lua_pcall(L, 2, 0, 0)!=0) {
+    return luaL_error(L,lua_tostring(L,-1));
+  }
+  return 1;
+}
+
+static int funcb2CircleShapeSupport(lua_State* L)
+{
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
+	b2CircleShape* m = (b2CircleShape*)PPLuaArg::UserData(L,B2CIRCLESHAPE);
+  PPUserDataAssert(m!=NULL);
+  lua_pushinteger(L,0);
+  return 1;
+}
+
+static int funcb2CircleShapeSupportVertex(lua_State* L)
+{
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
+	b2CircleShape* m = (b2CircleShape*)PPLuaArg::UserData(L,B2CIRCLESHAPE);
+  PPUserDataAssert(m!=NULL);
+  pushPoint(L,m->m_p);
+  return 1;
+}
+
+static int funcb2CircleShapeVertex(lua_State* L)
+{
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
+	b2CircleShape* m = (b2CircleShape*)PPLuaArg::UserData(L,B2CIRCLESHAPE);
+  PPUserDataAssert(m!=NULL);
+  pushPoint(L,m->m_p);
+  return 1;
+}
+
+static int funcb2EdgeShapeAccessor(lua_State* L,bool setter=false)
+{
+  bool ret = false;
+  bool readonly=false;
+  b2EdgeShape* m = (b2EdgeShape*)PPLuaArg::UserData(L,B2EDGESHAPE,false);
+  do {
+    if (m == NULL) break;
+    std::string name = lua_tostring(L,2);
+
+    //vertex1
+    if (name == "vertex1") {
+      if (setter) {
+        m->m_vertex1=getPoint(L,3,m->m_vertex1);
+      } else {
+        pushPoint(L,m->m_vertex1);
+      }
+      ret = true;
+    } else
+    //vertex2
+    if (name == "vertex2") {
+      if (setter) {
+        m->m_vertex2=getPoint(L,3,m->m_vertex2);
+      } else {
+        pushPoint(L,m->m_vertex2);
+      }
+      ret = true;
+    } else
+    //vertex0
+    if (name == "vertex0") {
+      if (setter) {
+        m->m_vertex0=getPoint(L,3,m->m_vertex0);
+      } else {
+        pushPoint(L,m->m_vertex0);
+      }
+      ret = true;
+    } else
+    //vertex3
+    if (name == "vertex3") {
+      if (setter) {
+        m->m_vertex3=getPoint(L,3,m->m_vertex3);
+      } else {
+        pushPoint(L,m->m_vertex3);
+      }
+      ret = true;
+    } else
+    //hasVertex0
+    if (name == "hasVertex0") {
+      if (setter) {
+        m->m_hasVertex0=lua_toboolean(L,3);
+      } else {
+        lua_pushboolean(L,m->m_hasVertex0);
+      }
+      ret = true;
+    } else
+    //hasVertex3
+    if (name == "hasVertex3") {
+      if (setter) {
+        m->m_hasVertex3=lua_toboolean(L,3);
+      } else {
+        lua_pushboolean(L,m->m_hasVertex3);
+      }
+      ret = true;
+    }
+
+  } while (false);
+  if (setter) {
+    if (readonly) {
+      return PPLuaArg::setterReadOnlyError(L,lua_tostring(L,2));
+    }
+    lua_pushboolean(L,ret);
+  } else {
+    if (!ret) {
+      lua_pushnil(L);
+    }
+  }
+  return 1;
+}
+
+static int funcb2EdgeShapeSetter(lua_State* L)
+{
+  return funcb2EdgeShapeAccessor(L,true);
+}
+
+static int funcb2EdgeShapeGetter(lua_State* L)
+{
+  return funcb2EdgeShapeAccessor(L);
+}
+
+static int funcb2EdgeShapeNew(lua_State* L)
+{
+  b2EdgeShape* shape = new b2EdgeShape();
+  PPLuaScript::newObject(L,B2EDGESHAPE,shape,funcDeleteShape);
+  lua_pushcfunction(L,setOption);
+  lua_pushvalue(L,1);
+  lua_pushvalue(L,2);
+  if (lua_pcall(L, 2, 0, 0)!=0) {
+    return luaL_error(L,lua_tostring(L,-1));
+  }
+  return 1;
+}
+
+static int funcb2EdgeShapeSet(lua_State* L)
+{
+  int top=lua_gettop(L);
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
+	b2EdgeShape* m = (b2EdgeShape*)PPLuaArg::UserData(L,B2EDGESHAPE);
+  PPUserDataAssert(m!=NULL);
+  {
+    PPBox2DVert vert;
+    vert.parse(L,2,top,2);
+    if (vert.count>=2) {
+      m->Set(vert.vertices[0],vert.vertices[1]);
+    }
+  }
+  return 0;
+}
+
+static int funcb2PolygonShapeAccessor(lua_State* L,bool setter=false)
+{
+  bool ret = false;
+  bool readonly=false;
+  b2PolygonShape* m = (b2PolygonShape*)PPLuaArg::UserData(L,B2POLYGONSHAPE,false);
+  do {
+    if (m == NULL) break;
+    std::string name = lua_tostring(L,2);
+
+    //centroid
+    if (name == "centroid") {
+      if (setter) {
+        m->m_centroid=getPoint(L,3,m->m_centroid);
+      } else {
+        pushPoint(L,m->m_centroid);
+      }
+      ret = true;
+    } else
+    //vertices
+    if (name == "vertices") {
+      if (setter) {
+        readonly=true;
+      } else {
+        lua_createtable(L,m->m_count,0);
+        for (int i=0;i<m->m_count;i++) {
+          pushPoint(L,m->m_vertices[i]);
+          lua_rawseti(L,-2,i+1);
+        }
+      }
+      ret = true;
+    } else
+    //normals
+    if (name == "normals") {
+      if (setter) {
+        readonly=true;
+      } else {
+        lua_createtable(L,m->m_count,0);
+        for (int i=0;i<m->m_count;i++) {
+          pushPoint(L,m->m_normals[i]);
+          lua_rawseti(L,-2,i+1);
+        }
+      }
+      ret = true;
+    } else
+    //count
+    if (name == "count") {
+      if (setter) {
+        readonly=true;
+      } else {
+        lua_pushinteger(L,m->m_count);
+      }
+      ret = true;
+    }
+
+  } while (false);
+  if (setter) {
+    if (readonly) {
+      return PPLuaArg::setterReadOnlyError(L,lua_tostring(L,2));
+    }
+    lua_pushboolean(L,ret);
+  } else {
+    if (!ret) {
+      lua_pushnil(L);
+    }
+  }
+  return 1;
+}
+
+static int funcb2PolygonShapeSetter(lua_State* L)
+{
+  return funcb2PolygonShapeAccessor(L,true);
+}
+
+static int funcb2PolygonShapeGetter(lua_State* L)
+{
+  return funcb2PolygonShapeAccessor(L);
+}
+
+static int funcb2PolygonShapeNew(lua_State* L)
+{
+  b2PolygonShape* shape = new b2PolygonShape();
+  PPLuaScript::newObject(L,B2POLYGONSHAPE,shape,funcDeleteShape);
+  lua_pushcfunction(L,setOption);
+  lua_pushvalue(L,1);
+  lua_pushvalue(L,2);
+  if (lua_pcall(L, 2, 0, 0)!=0) {
+    return luaL_error(L,lua_tostring(L,-1));
+  }
+  return 1;
+}
+
+static int funcb2PolygonShapeSet(lua_State* L)
+{
+  int top=lua_gettop(L);
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
+	b2PolygonShape* m = (b2PolygonShape*)PPLuaArg::UserData(L,B2POLYGONSHAPE);
+  PPUserDataAssert(m!=NULL);
+  {
+    PPBox2DVert vert;
+    vert.parse(L,2,top,b2_maxPolygonVertices);
+    m->Set(vert.vertices,vert.count);
+  }
+  return 0;
+}
+
+static int funcb2PolygonShapeSetAsBox(lua_State* L)
+{
+  int top=lua_gettop(L);
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
+	b2PolygonShape* m = (b2PolygonShape*)PPLuaArg::UserData(L,B2POLYGONSHAPE);
+  PPUserDataAssert(m!=NULL);
+  float32 hx=1,hy=1;
+  b2Vec2 center(0,0);
+  float32 angle=0;
+  int idx=2;
+  if (lua_istable(L,idx)) {
+    int n=0;
+    float32 v[2];
+    do {
+      
+      lua_getfield(L,idx,"width");
+      if (!lua_isnil(L,-1)) {
+        v[n++] = lua_tonumber(L,-1);
+      }
+      lua_pop(L,1);
+      lua_getfield(L,idx,"height");
+      if (!lua_isnil(L,-1)) {
+        v[n++] = lua_tonumber(L,-1);
+      }
+      lua_pop(L,1);
+      if (n>=2) break;
+
+      lua_getfield(L,idx,"x");
+      if (!lua_isnil(L,-1)) {
+        v[n++] = lua_tonumber(L,-1);
+      }
+      lua_pop(L,1);
+      lua_getfield(L,idx,"y");
+      if (!lua_isnil(L,-1)) {
+        v[n++] = lua_tonumber(L,-1);
+      }
+      lua_pop(L,1);
+      if (n>=2) break;
+
+      lua_rawgeti(L,idx,1);
+      if (!lua_isnil(L,-1)) {
+        v[n++] = lua_tonumber(L,-1);
+      }
+      lua_pop(L,1);
+      lua_rawgeti(L,idx,2);
+      if (!lua_isnil(L,-1)) {
+        v[n++] = lua_tonumber(L,-1);
+      }
+      lua_pop(L,1);
+
+      idx++;
+    } while (false);
+    if (n>=2) {
+      hx=v[0];
+      hy=v[1];
+    }
+  } else {
+    if (top >= 3) {
+      hx=lua_tonumber(L,2);
+      hy=lua_tonumber(L,3);
+      idx+=2;
+    }
+  }
+  
+  if (top >= idx) {
+    center = getPoint(L,idx,center);
+    idx++;
+    if (top >= idx) {
+      angle = lua_tonumber(L,idx);
+      m->SetAsBox(hx,hy,center,angle);
+    } else {
+      m->SetAsBox(hx,hy);
+    }
+  } else {
+    m->SetAsBox(hx,hy);
+  }
+  
+  return 0;
+}
+
+static int funcb2PolygonShapeVertex(lua_State* L)
+{
+  int top=lua_gettop(L);
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
+	b2PolygonShape* m = (b2PolygonShape*)PPLuaArg::UserData(L,B2POLYGONSHAPE);
+  PPUserDataAssert(m!=NULL);
+  if (top>1) {
+    int index = (int)lua_tointeger(L,2)-1;
+    if (index >= 0 && index < m->m_count) {
+      pushPoint(L,m->GetVertex(index));
+      return 1;
+    } else {
+      lua_pushnil(L);
+      return 1;
+    }
+  }
+  return 0;
+}
+
+#pragma mark -
+
 PPBox2D* PPBox2D::openLibrary(PPLuaScript* s,const char* name,const char* superclass)
 {
-  PPBox2D* box2d = new PPBox2D();
+  //PPBox2D* box2d = new PPBox2D();
 
-  PPBox2D::className=name;
-	s->openModule(PPBox2D::className,box2d,0);
-		s->addCommand("createWorld",funcCreateWorld);
+  //PPBox2D::className=name;
+	s->openModule(B2SETTINGS,NULL,0);
 
-    s->addIntegerValue("staticBody",b2_staticBody);
-    s->addIntegerValue("dynamicBody",b2_dynamicBody);
-    s->addIntegerValue("kinematicBody",b2_kinematicBody);
+    //b2Settings
     s->addIntegerValue("maxManifoldPoints",b2_maxManifoldPoints);
     s->addIntegerValue("maxPolygonVertices",b2_maxPolygonVertices);
     s->addNumberValue("aabbExtension",b2_aabbExtension);
@@ -6854,32 +8328,12 @@ PPBox2D* PPBox2D::openLibrary(PPLuaScript* s,const char* name,const char* superc
     s->addNumberValue("linearSleepTolerance",b2_linearSleepTolerance);
     s->addNumberValue("angularSleepTolerance",b2_angularSleepTolerance);
 
-    s->addIntegerValue("revoluteJoint",e_revoluteJoint);
-    s->addIntegerValue("prismaticJoint",e_prismaticJoint);
-    s->addIntegerValue("distanceJoint",e_distanceJoint);
-    s->addIntegerValue("pulleyJoint",e_pulleyJoint);
-    s->addIntegerValue("mouseJoint",e_mouseJoint);
-    s->addIntegerValue("gearJoint",e_gearJoint);
-    s->addIntegerValue("wheelJoint",e_wheelJoint);
-    s->addIntegerValue("weldJoint",e_weldJoint);
-    s->addIntegerValue("frictionJoint",e_frictionJoint);
-    s->addIntegerValue("ropeJoint",e_ropeJoint);
-    s->addIntegerValue("motorJoint",e_motorJoint);
-    
-    s->addIntegerValue("inactiveLimit",e_inactiveLimit);
-    s->addIntegerValue("atLowerLimit",e_atLowerLimit);
-    s->addIntegerValue("atUpperLimit",e_atUpperLimit);
-    s->addIntegerValue("equalLimits",e_equalLimits);
-    
-    s->addIntegerValue("circleShape",b2Shape::e_circle);
-    s->addIntegerValue("edgeShape",b2Shape::e_edge);
-    s->addIntegerValue("polygonShape",b2Shape::e_polygon);
-    s->addIntegerValue("chainShape",b2Shape::e_chain);
-
 	s->closeModule();
 
   PPBox2DWorld::className=B2WORLD;
 	s->openModule(PPBox2DWorld::className.c_str(),NULL,0);
+		s->addCommand("new",funcCreateWorld);
+
     s->addAccessor(funcb2WorldSetter,funcb2WorldGetter);
     //allowSleep
     //wormStarting
@@ -6894,9 +8348,11 @@ PPBox2D* PPBox2D::openLibrary(PPLuaScript* s,const char* name,const char* superc
     //treeQuality  ROnly
     //locked       ROnly
     //autoClearForces
+    s->addCommand("drawBody",functionb2WorldDrawBody);
     s->addCommand("drawShape",functionb2WorldDrawShape);
     s->addCommand("drawJoint",functionb2WorldDrawJoint);
     s->addCommand("debugDrawShape",functionb2WorldDebugDrawShape);
+    s->addCommand("debugDrawBody",functionb2WorldDebugDrawBody);
     s->addCommand("debugDrawJoint",functionb2WorldDebugDrawJoint);
     s->addCommand("debugDrawAABB",functionb2WorldDebugDrawAABB);
     s->addCommand("debugDrawCOMs",functionb2WorldDebugDrawCOMs);
@@ -6932,6 +8388,11 @@ PPBox2D* PPBox2D::openLibrary(PPLuaScript* s,const char* name,const char* superc
 		s->addCommand("clearForces",funcb2WorldClearForces);
 		s->addCommand("shiftOrigin",funcb2WorldShiftOrigin);
 		s->addCommand("dump",funcb2WorldDump);
+
+		s->addCommand("spriteShape",funcb2WorldBoxSpriteShape);
+		s->addCommand("boxSpriteShape",funcb2WorldBoxSpriteShape);
+		s->addCommand("circleSpriteShape",funcb2WorldCircleSpriteShape);
+
 	s->closeModule();
 
   PPBox2DBody::className=B2BODY;
@@ -6957,7 +8418,7 @@ PPBox2D* PPBox2D::openLibrary(PPLuaScript* s,const char* name,const char* superc
     //world ROnly
 		s->addCommand("createFixture",funcb2BodyCreateFixture);
 		s->addCommand("destroyFixture",funcb2BodyDestroyFixture);
-		s->addCommand("transform",funcb2BodyTransform);                   //要検討
+		s->addCommand("transform",funcb2BodyTransform);
 		s->addCommand("position",funcb2BodyPosition);
 		s->addCommand("pos",funcb2BodyPosition);
 		s->addCommand("move",funcb2BodyMove);
@@ -6985,11 +8446,30 @@ PPBox2D* PPBox2D::openLibrary(PPLuaScript* s,const char* name,const char* superc
 		s->addCommand("fixtureList",funcb2BodyFixtureList);
 		s->addCommand("testPoint",funcb2BodyTestPoint);
 		s->addCommand("dump",funcb2BodyDump);
+
+    //b2Body
+    s->addIntegerValue("staticBody",b2_staticBody);
+    s->addIntegerValue("dynamicBody",b2_dynamicBody);
+    s->addIntegerValue("kinematicBody",b2_kinematicBody);
+
 	s->closeModule();
 
   PPBox2DJoint::className=B2JOINT;
 	s->openModule(PPBox2DJoint::className,NULL,0);
     s->addAccessor(funcb2JointSetter,funcb2JointGetter);
+    
+		s->addCommand("new",funcb2JointNew);
+		s->addCommand("distance",funcb2JointDistance);
+		s->addCommand("friction",funcb2JointFriction);
+		s->addCommand("gear",funcb2JointGear);
+		s->addCommand("prismatic",funcb2JointPrismatic);
+		s->addCommand("pulley",funcb2JointPulley);
+		s->addCommand("revolute",funcb2JointRevolute);
+		s->addCommand("rope",funcb2JointRope);
+		s->addCommand("weld",funcb2JointWeld);
+		s->addCommand("wheel",funcb2JointWheel);
+		s->addCommand("mouse",funcb2JointMouse);
+    
     //type ROnly
     //typename ROnly
     //bodyA ROnly
@@ -7004,6 +8484,25 @@ PPBox2D* PPBox2D::openLibrary(PPLuaScript* s,const char* name,const char* superc
 		s->addCommand("isActive",funcb2JointActive);                      
 		s->addCommand("dump",funcb2JointDump);
 		s->addCommand("shiftOrigin",funcb2JointShiftOrigin);
+
+    //b2Joint
+    s->addIntegerValue("revoluteJoint",e_revoluteJoint);
+    s->addIntegerValue("prismaticJoint",e_prismaticJoint);
+    s->addIntegerValue("distanceJoint",e_distanceJoint);
+    s->addIntegerValue("pulleyJoint",e_pulleyJoint);
+    s->addIntegerValue("mouseJoint",e_mouseJoint);
+    s->addIntegerValue("gearJoint",e_gearJoint);
+    s->addIntegerValue("wheelJoint",e_wheelJoint);
+    s->addIntegerValue("weldJoint",e_weldJoint);
+    s->addIntegerValue("frictionJoint",e_frictionJoint);
+    s->addIntegerValue("ropeJoint",e_ropeJoint);
+    s->addIntegerValue("motorJoint",e_motorJoint);
+    
+    s->addIntegerValue("inactiveLimit",e_inactiveLimit);
+    s->addIntegerValue("atLowerLimit",e_atLowerLimit);
+    s->addIntegerValue("atUpperLimit",e_atUpperLimit);
+    s->addIntegerValue("equalLimits",e_equalLimits);
+    
 	s->closeModule();
 
 	//motor
@@ -7199,8 +8698,93 @@ PPBox2D* PPBox2D::openLibrary(PPLuaScript* s,const char* name,const char* superc
 		s->addCommand("resetRestitution",funcb2ContactResetRestitution);
 		s->addCommand("evaluate",funcb2ContactEvaluate);                //要検討
   s->closeModule();
+  
+  PPBox2DTransform::className=B2TRANSFORM;
+  s->openModule(PPBox2DTransform::className,NULL,0);
+    s->addAccessor(funcb2TransformSetter,funcb2TransformGetter);
+		s->addCommand("new",funcb2TransformNew);
+		s->addCommand("identity",funcb2TransformIdentity);
+		s->addCommand("set",funcb2TransformSet);
+  s->closeModule();
 
-  return box2d;
+  //b2Shape
+  s->openModule(B2SHAPE,NULL,0);
+    s->addAccessor(funcb2ShapeSetter,funcb2ShapeGetter);
+    
+		s->addCommand("circle",funcb2CircleShapeNew);
+		s->addCommand("edge",funcb2EdgeShapeNew);
+		s->addCommand("polygon",funcb2PolygonShapeNew);
+		s->addCommand("chain",funcb2ChainShapeNew);
+
+    //type ROnly
+    //typename ROnly
+    //childCount ROnly
+    //radius
+		s->addCommand("testPoint",funcb2ShapeTestPoint);
+		s->addCommand("rayCast",funcb2ShapeRayCast);
+		s->addCommand("computeAABB",funcb2ShapeComputeAABB);
+		s->addCommand("computeMass",funcb2ShapeComputeMass);
+
+    //b2Shape
+    s->addIntegerValue("circleShape",b2Shape::e_circle);
+    s->addIntegerValue("edgeShape",b2Shape::e_edge);
+    s->addIntegerValue("polygonShape",b2Shape::e_polygon);
+    s->addIntegerValue("chainShape",b2Shape::e_chain);
+
+  s->closeModule();
+  
+  //b2ChainShape
+  s->openModule(B2CHAINSHAPE,NULL,0,B2SHAPE);
+    s->addAccessor(funcb2ChainShapeSetter,funcb2ChainShapeGetter);
+    //vertices ROnly
+    //count ROnly
+    //prevVertex
+    //nextVertex
+    //hasPrevVertex
+    //hasNextVertex
+		s->addCommand("new",funcb2ChainShapeNew);
+		s->addCommand("createLoop",funcb2ChainShapeCreateLoop);
+		s->addCommand("createChain",funcb2ChainShapeCreateChain);
+		s->addCommand("childEdge",funcb2ChainShapeChildEdge);
+  s->closeModule();
+  
+  //b2CircleShape
+  s->openModule(B2CIRCLESHAPE,NULL,0,B2SHAPE);
+    s->addAccessor(funcb2CircleShapeSetter,funcb2CircleShapeGetter);
+    //p
+		s->addCommand("new",funcb2CircleShapeNew);
+		s->addCommand("support",funcb2CircleShapeSupport);
+		s->addCommand("supportVertex",funcb2CircleShapeSupportVertex);
+		s->addCommand("vertex",funcb2CircleShapeVertex);
+  s->closeModule();
+  
+  //b2EdgeShape
+  s->openModule(B2EDGESHAPE,NULL,0,B2SHAPE);
+    s->addAccessor(funcb2EdgeShapeSetter,funcb2EdgeShapeGetter);
+    //vertex1
+    //vertex2
+    //vertex0
+    //vertex3
+    //hasVertex0
+    //hasVertex3
+		s->addCommand("new",funcb2EdgeShapeNew);
+		s->addCommand("set",funcb2EdgeShapeSet);
+  s->closeModule();
+
+  //b2PolygonShape
+  s->openModule(B2POLYGONSHAPE,NULL,0,B2SHAPE);
+    s->addAccessor(funcb2PolygonShapeSetter,funcb2PolygonShapeGetter);
+    //centroid
+    //vertices
+    //normals
+    //count
+		s->addCommand("new",funcb2PolygonShapeNew);
+		s->addCommand("set",funcb2PolygonShapeSet);
+		s->addCommand("setAsBox",funcb2PolygonShapeSetAsBox);
+		s->addCommand("vertex",funcb2PolygonShapeVertex);
+  s->closeModule();
+
+  return NULL;
 }
 
 /*-----------------------------------------------------------------------------------------------

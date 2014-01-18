@@ -519,9 +519,9 @@ void PPOffscreenTexture::paint(PPPoint pos,PPColor col,PPColor borderColor)
 	update = true;
 }
 
-void PPOffscreenTexture::circle(PPPoint pos,float r,PPColor col,float start,float end)
+void PPOffscreenTexture::circle(PPPoint pos,float rx,float ry,PPColor col,float start,float end)
 {
-	if (r <= 0) return;
+	if (rx <= 0 || ry <= 0) return;
 	while (start < 0) {
 		start += 360;
 		end += 360;
@@ -530,53 +530,117 @@ void PPOffscreenTexture::circle(PPPoint pos,float r,PPColor col,float start,floa
 		start -= 360;
 		end -= 360;
 	}
-	int count = 0;
-	{
-		int x = r;
-		int y = 0;
-		int F = -2 * r + 3;
-		while (x >= y) {
-			if ( F >= 0 ) {
-				x--;
-				F -= 4 * x;
-			}
-			y++;
-			F += 4 * y + 2;
-			count ++;
-		}
-	}
-	int sq = start*count*8/360;
-	int eq = end  *count*8/360;
-	int c[16];
-	int d[8] = { 1,-1,-1, 1,-1, 1, 1,-1};
-	int t[8] = { 0, 4, 8, 4, 2, 2, 6, 6};
-	for (int i=0;i<16;i++) {
-		c[i] = t[i%8]*count+8*count*(i/8);
-	}
-	{
-		int x = r;
-		int y = 0;
-		int F = -2 * r + 3;
-		while (x >= y) {
-			if ((sq <= c[0] && c[0] <= eq) || (sq <= c[ 8] && c[ 8] <= eq)) pset(PPPoint(pos.x+x,pos.y+y),col);
-			if ((sq <= c[1] && c[1] <= eq) || (sq <= c[ 9] && c[ 9] <= eq)) pset(PPPoint(pos.x-x,pos.y+y),col);
-			if ((sq <= c[2] && c[2] <= eq) || (sq <= c[10] && c[10] <= eq)) pset(PPPoint(pos.x+x,pos.y-y),col);
-			if ((sq <= c[3] && c[3] <= eq) || (sq <= c[11] && c[11] <= eq)) pset(PPPoint(pos.x-x,pos.y-y),col);
-			if ((sq <= c[4] && c[4] <= eq) || (sq <= c[12] && c[12] <= eq)) pset(PPPoint(pos.x+y,pos.y+x),col);
-			if ((sq <= c[5] && c[5] <= eq) || (sq <= c[13] && c[13] <= eq)) pset(PPPoint(pos.x-y,pos.y+x),col);
-			if ((sq <= c[6] && c[6] <= eq) || (sq <= c[14] && c[14] <= eq)) pset(PPPoint(pos.x+y,pos.y-x),col);
-			if ((sq <= c[7] && c[7] <= eq) || (sq <= c[15] && c[15] <= eq)) pset(PPPoint(pos.x-y,pos.y-x),col);
-			if ( F >= 0 ) {
-				x--;
-				F -= 4 * x;
-			}
-			y++;
-			F += 4 * y + 2;
-			for (int i=0;i<16;i++) {
-				c[i] += d[i%8];
-			}
-		}
-	}
+  if (rx == ry) {
+    int count = 0;
+    {
+      int x = rx;
+      int y = 0;
+      int F = -2 * rx + 3;
+      while (x >= y) {
+        if ( F >= 0 ) {
+          x--;
+          F -= 4 * x;
+        }
+        y++;
+        F += 4 * y + 2;
+        count ++;
+      }
+    }
+    int sq = start*count*8/360;
+    int eq = end  *count*8/360;
+    int c[16];
+    int d[8] = { 1,-1,-1, 1,-1, 1, 1,-1};
+    int t[8] = { 0, 4, 8, 4, 2, 2, 6, 6};
+    for (int i=0;i<16;i++) {
+      c[i] = t[i%8]*count+8*count*(i/8);
+    }
+    {
+      int x = rx;
+      int y = 0;
+      int F = -2 * rx + 3;
+      while (x >= y) {
+        if ((sq <= c[0] && c[0] <= eq) || (sq <= c[ 8] && c[ 8] <= eq)) pset(PPPoint(pos.x+x,pos.y+y),col);
+        if ((sq <= c[1] && c[1] <= eq) || (sq <= c[ 9] && c[ 9] <= eq)) pset(PPPoint(pos.x-x,pos.y+y),col);
+        if ((sq <= c[2] && c[2] <= eq) || (sq <= c[10] && c[10] <= eq)) pset(PPPoint(pos.x+x,pos.y-y),col);
+        if ((sq <= c[3] && c[3] <= eq) || (sq <= c[11] && c[11] <= eq)) pset(PPPoint(pos.x-x,pos.y-y),col);
+        if ((sq <= c[4] && c[4] <= eq) || (sq <= c[12] && c[12] <= eq)) pset(PPPoint(pos.x+y,pos.y+x),col);
+        if ((sq <= c[5] && c[5] <= eq) || (sq <= c[13] && c[13] <= eq)) pset(PPPoint(pos.x-y,pos.y+x),col);
+        if ((sq <= c[6] && c[6] <= eq) || (sq <= c[14] && c[14] <= eq)) pset(PPPoint(pos.x+y,pos.y-x),col);
+        if ((sq <= c[7] && c[7] <= eq) || (sq <= c[15] && c[15] <= eq)) pset(PPPoint(pos.x-y,pos.y-x),col);
+        if ( F >= 0 ) {
+          x--;
+          F -= 4 * x;
+        }
+        y++;
+        F += 4 * y + 2;
+        for (int i=0;i<16;i++) {
+          c[i] += d[i%8];
+        }
+      }
+    }
+  } else {
+
+		float b=floorf(ry/rx);
+		b=(rx/(ry-b))*(rx/(ry-b));
+		if (b==0) return;
+		float rd=rx;
+		int count=0;
+
+    {
+      float x=floorf(rx);
+      float y=0;
+      float F=-2*rd+1+2*b;
+      float H=-4*rd+2+  b;
+      while (x>=0) {
+        if (F>=0) {
+          x=x-1;
+          F=F-4*x;
+          H=H-4*x-2;
+        }
+        if (H<0) {
+          y=y+1;
+          F=F+4*b*y+2*b;
+          H=H+4*b*y;
+        }
+        count=count+1;
+      }
+    }
+		float sq=start*count*4/360;
+		float eq=end  *count*4/360;
+    float c[8];
+    int d[4] = { 1,-1,-1, 1};
+    int t[4] = { 0, 2, 4, 2};
+    for (int i=0;i<8;i++) {
+      c[i] = t[i%4]*count+4*count*(i/4);
+    }
+    {
+      float x=floorf(rx);
+      float y=0;
+      float F=-2*rd+1+2*b;
+      float H=-4*rd+2+  b;
+      while (x>=0) {
+        if ((sq <= c[0] && c[0] <= eq) || (sq <= c[0+4] && c[0+4] <= eq)) pset(PPPoint(pos.x+x,pos.y+y),col);
+        if ((sq <= c[1] && c[1] <= eq) || (sq <= c[1+4] && c[1+4] <= eq)) pset(PPPoint(pos.x-x,pos.y+y),col);
+        if ((sq <= c[2] && c[2] <= eq) || (sq <= c[2+4] && c[2+4] <= eq)) pset(PPPoint(pos.x+x,pos.y-y),col);
+        if ((sq <= c[3] && c[3] <= eq) || (sq <= c[3+4] && c[3+4] <= eq)) pset(PPPoint(pos.x-x,pos.y-y),col);
+        if (F>=0) {
+          x=x-1;
+          F=F-4*x;
+          H=H-4*x-2;
+        }
+        if (H<0) {
+          y=y+1;
+          F=F+4*b*y+2*b;
+          H=H+4*b*y;
+        }
+        for (int i=0;i<8;i++) {
+          c[i]=c[i]+d[i%4];
+        }
+      }
+    }
+
+    
+  }
 	update = true;
 }
 
@@ -885,7 +949,8 @@ static int funcCircle(lua_State *L)
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
 	if (m->pixel()) {
 		int n=0;
-		float r,start=0,end=360;
+    PPPoint r;
+		float start=0,end=360;
 		PPPoint pos = PPPointZero;
 		if (s->argCount > n && s->isTable(L,n)) {
 			pos = s->getPoint(L,n);
@@ -897,24 +962,28 @@ static int funcCircle(lua_State *L)
 		n ++;
 		PPColor col = PPColor::white();
 		if (n < s->argCount) {
-			r = s->number(n);   //半径
+      if (lua_istable(L,n+2)) {
+        r = s->getPoint(L,n);
+      } else {
+        r.x = s->number(n);   //半径
+        r.y = r.x;
+      }
 			n++;
 			if (n < s->argCount) {
-				col = s->getColor(L,n);
-				if (!s->isTable(L,n)) {
-					n +=3;
-				}
-				n++;
+        col = s->getColor(L,n);
+        if (!s->isTable(L,n)) {
+          n +=3;
+        }
+        n++;
 				if (n < s->argCount) {
 					start = s->number(n);
 					n++;
 					if (n < s->argCount) {
 						end = s->number(n);
-						n++;
 					}
 				}
 			}
-			m->circle(pos,r,col,start,end);
+			m->circle(pos,r.x,r.y,col,start,end);
 		}
 	}
 	return 0;

@@ -58,6 +58,13 @@
 
 static PPGameMap* gameMap=NULL;
 
+static int funcPPHitCheck(lua_State *L);
+
+enum {
+  WORK_MEM_HIT1=0,
+  WORK_MEM_HIT2,
+};
+
 static unsigned char colorTable[][4] = {
 	{0x00,0x00,0x00,0xff},	//0
 	{0x00,0x00,0xa0,0xff},	//1
@@ -241,6 +248,11 @@ QBGame::QBGame() : __tarray(NULL),__normalFont(NULL),__halfFont(NULL),__miniFont
 	
 	QBSound* snd = QBSound::sharedSound();
 	if (snd) snd->Reset();
+
+  for (int i=0;i<10;i++) {
+    workmem[i]=NULL;
+    workmemsize[i]=0;
+  }
 }
 
 QBGame::~QBGame()
@@ -254,6 +266,13 @@ QBGame::~QBGame()
 #ifndef NO_COCOSDENSHION
 	CocosDenshion::SimpleAudioEngine::sharedEngine()->end();
 #endif
+  for (int i=0;i<10;i++) {
+    if (workmem[i]) {
+      free(workmem[i]);
+    }
+    workmem[i]=NULL;
+    workmemsize[i]=0;
+  }
 }
 
 PPTextureArray* QBGame::texture()
@@ -628,8 +647,8 @@ int QBGame::putFont(PPFont* basefont,float x,float y,const char* str)
 				int t = tile->tile[x+y*tile->gwidth()];
 				if (t!=0) {
 					poly.sprite(tx,ty,t,0);
-          if (projector->textureManager->checkBind(font->texture)) 
-          {
+          //if (projector->textureManager->checkBind(font->texture)) 
+          if (poly._texture>=0) {
             projector->DrawPoly(&poly);
           }
 					tx += font->tileWidth();//*scale().x;
@@ -769,6 +788,21 @@ void QBGame::Box(float x1,float y1,float x2,float y2,int color)
 	poly.scale.y = scale_value.y;
 	poly.box(x1,y1,x1+x2,y1+y2);
 	projector->DrawPoly(&poly);
+}
+
+void QBGame::StartPoint()
+{
+  projector->StartPoint();
+}
+
+void QBGame::SetPoint(float x,float y)
+{
+  projector->SetPoint(x,y,colortable[colorIndex]);
+}
+
+void QBGame::ClosePoint(int type)
+{
+  projector->ClosePoint(type);
 }
 
 //bool QBGame::LoadMap(const char* mapname)
@@ -1378,6 +1412,205 @@ static int funcLine(lua_State* L)
 //	}
 #endif
 	return 0;
+}
+
+static int funcCircle(lua_State* L)
+{
+  int top=lua_gettop(L);
+	QBGame* m = (QBGame*)PPLuaArg::World(L);
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
+
+  int type=QBLINE_LOOP_TAG;
+  PPPoint center;
+  PPPoint radius(1,1);
+  float st=0;
+  float ed=360;
+	PPColor c= m->color();
+	PPColor nc = c;
+  int n=PPLuaArg::getPPPoint(L,2,center);
+  if (n>=2) {
+    int n=3;
+    if (!lua_istable(L,2)) {
+      n++;
+    }
+    PPLuaArg::getPPPoint(L,n,radius);
+    if (!lua_istable(L,n)) {
+      radius.y=radius.x;
+    }
+    n++;
+    if (top >= n) {
+      nc = s->getColor(L,n-2);
+      if (!s->isTable(L,n-2)) {
+        n +=3;
+      }
+      n++;
+      if (top >= n) {
+        st = lua_tonumber(L,n);
+        n++;
+        if (top >= n) {
+          ed = lua_tonumber(L,n);
+        }
+      }
+    }
+  }
+
+  m->color(nc);
+  m->StartPoint();
+
+	while (st < 0) {
+		st += 360;
+		ed += 360;
+	}
+	while (st >= 360) {
+		st -= 360;
+		ed -= 360;
+	}
+  
+  if (st > 0 || ed < 360) type=QBLINE_STRIP_TAG;
+  
+  st = st*M_PI*2/360;
+  ed = ed*M_PI*2/360;
+
+  {
+    float k_segments = 16.0f;
+    float r=radius.x;
+    if (radius.y>r) r=radius.y;
+    k_segments = floorf(r/4);
+    if (k_segments < 16) k_segments=16;
+    if (k_segments > 100) k_segments=100;
+    const float k_increment = 2.0f * M_PI / k_segments;
+    float theta = st;
+    float px,py;
+    for (int i = 0; i < k_segments; ++i)
+    {
+      px=radius.x*cosf(theta)+center.x;
+      py=radius.y*sinf(theta)+center.y;
+      m->SetPoint(px,py);
+      if (theta > ed) break;
+      theta += k_increment;
+      if (theta > ed) theta = ed;
+    }
+  }
+
+  m->ClosePoint(type);
+  m->color(c);
+
+  return 0;
+}
+
+static int funcTriangle(lua_State* L,int type)
+{
+  int top=lua_gettop(L);
+	QBGame* m = (QBGame*)PPLuaArg::World(L);
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
+
+	PPColor c= m->color();
+	PPColor nc = c;
+
+  if (top>1) {
+
+    float v[2];
+    int vn=0;
+    {
+      if (lua_istable(L,top)) {
+        nc = s->getColor(L,3-2,nc);
+      }
+
+      m->color(nc);
+      m->StartPoint();
+      
+      vn=0;
+      
+      //for (int i=2;i<=top;i++) 
+      {
+        int i=2;
+        if (lua_istable(L,i)) {
+          vn=0;
+          lua_getfield(L,i,"x");
+          if (!lua_isnil(L,-1)) {
+            v[vn++] = lua_tonumber(L,-1);
+          }
+          lua_pop(L,1);
+          lua_getfield(L,i,"y");
+          if (!lua_isnil(L,-1)) {
+            v[vn++] = lua_tonumber(L,-1);
+          }
+          lua_pop(L,1);
+
+#ifdef __LUAJIT__
+          int n=(int)lua_objlen(L,i);
+#else
+          int n=(int)lua_rawlen(L,i);
+#endif
+        
+          for (int j=1;j<=n;j++) {
+            
+            lua_rawgeti(L,i,j);
+            
+            if (lua_istable(L,-1)) {
+              vn=0;
+              lua_getfield(L,-1,"x");
+              if (!lua_isnil(L,-1)) {
+                v[vn++] = lua_tonumber(L,-1);
+              }
+              lua_pop(L,1);
+              lua_getfield(L,-1,"y");
+              if (!lua_isnil(L,-1)) {
+                v[vn++] = lua_tonumber(L,-1);
+              }
+              lua_pop(L,1);
+              if (vn < 2) {
+                lua_rawgeti(L,-1,1);
+                if (!lua_isnil(L,-1)) {
+                  v[vn++] = lua_tonumber(L,-1);
+                }
+                lua_pop(L,1);
+                lua_rawgeti(L,-1,2);
+                if (!lua_isnil(L,-1)) {
+                  v[vn++] = lua_tonumber(L,-1);
+                }
+                lua_pop(L,1);
+              }
+              if (vn>=2) {
+                m->SetPoint(v[0],v[1]);
+                vn=0;
+              }
+            } else {
+              v[vn++] = lua_tonumber(L,-1);
+              if (vn>=2) {
+                m->SetPoint(v[0],v[1]);
+                vn=0;
+              }
+            }
+
+            lua_pop(L,1);
+          }
+
+        } else {
+          v[vn++] = lua_tonumber(L,i);
+        }
+        
+        if (vn>=2) {
+          m->SetPoint(v[0],v[1]);
+          vn=0;
+        }
+      }
+
+      m->ClosePoint(type);
+      m->color(c);
+    }
+  }
+  return 0;
+}
+
+static int funcTriangleFan(lua_State* L)
+{
+  return funcTriangle(L,QBTRIANGLE_FAN_TAG);
+}
+
+static int funcTriangleStrip(lua_State* L)
+{
+  return funcTriangle(L,QBTRIANGLE_STRIP_TAG);
 }
 
 static int funcTouch(lua_State* L)
@@ -2292,6 +2525,8 @@ static int funcDocumentPath(lua_State* L)
 
 void QBGame::openGameLibrary(PPLuaScript* script,const char* name)
 {
+	script->addCommand("pphitcheck",funcPPHitCheck);
+
 	script->openModule(name,this);
 		script->addCommand("start",funcStep);
 		script->addCommand("platform",funcPlatform);
@@ -2336,6 +2571,9 @@ void QBGame::openViewLibrary(PPLuaScript* script,const char* name)
 		script->addCommand("fill",funcFill);
 		script->addCommand("box",funcBox);
 		script->addCommand("line",funcLine);
+		script->addCommand("circle",funcCircle);
+		script->addCommand("triangleFan",funcTriangleFan);
+		script->addCommand("triangleStrip",funcTriangleStrip);
 //		script->addCommand("windowSize",funcWinRect);
 //		script->addCommand("viewPort",funcViewPort);
 		script->addCommand("layout",funcLayout);
@@ -3300,6 +3538,188 @@ void QBGame::drawPattern(PPPoint pos,unsigned short gid,void* userdata)
 
 void QBGame::disableIO()
 {
+}
+
+static lua_Number getNumber(lua_State* L,int stack,int index,const char* field)
+{
+	lua_getfield(L,stack,field);
+	if (lua_isnil(L,-1)) {
+		lua_rawgeti(L,stack,index);
+		if (lua_isnil(L,-1)) {
+			return 0;
+		}
+	}
+	return lua_tonumber(L,-1);
+}
+
+void* QBGame::workMemory(int index,size_t size)
+{
+  if (index>=0 && index<10) {
+    if (workmem[index]==NULL) {
+      workmem[index]=malloc(size);
+      workmemsize[index]=size;
+      return workmem[index];
+    }
+    if (workmemsize[index]<size) {
+      workmem[index]=realloc(workmem[index],size);
+      workmemsize[index]=size;
+    }
+    return workmem[index];
+  }
+  return NULL;
+}
+
+static int funcPPHitCheck(lua_State *L)
+{
+	QBGame* m = (QBGame*)PPLuaArg::World(L);
+  if (m==NULL) return 0;
+	int top=lua_gettop(L);
+	if (lua_isfunction(L,3)) {
+		if (top >= 2) {
+      if (lua_type(L,1)!=LUA_TTABLE) return 0;
+      if (lua_type(L,2)!=LUA_TTABLE) return 0;
+
+			int n[2];
+			PPObjectHit* hit[2];
+#ifdef __LUAJIT__
+			n[0] = (int)lua_objlen(L,1);
+			n[1] = (int)lua_objlen(L,2);
+#else
+			n[0] = (int)lua_rawlen(L,1);
+			n[1] = (int)lua_rawlen(L,2);
+#endif
+			lua_settop(L,top);
+			
+			if (n[0] > 0 && n[1] > 0) {
+				hit[0] = (PPObjectHit*)m->workMemory(WORK_MEM_HIT1,n[0]*sizeof(PPObjectHit));
+				hit[1] = (PPObjectHit*)m->workMemory(WORK_MEM_HIT2,n[1]*sizeof(PPObjectHit));
+        
+				for (int i=0;i<2;i++) {
+					for (int j=0;j<n[i];j++) {
+						int top=lua_gettop(L);
+						lua_rawgeti(L,1+i,j+1);
+            int table=lua_gettop(L);
+
+            PPObject* m = (PPObject*)PPLuaArg::UserData(L,top+1,PPObject::className,false);
+            if (m) {
+
+              hit[i][j]=m->hit;
+              hit[i][j].index = j+1;
+              if (m->hit.type == 1) {
+                PPRect r=hit[i][j].rect;
+                hit[i][j].rect = r+m->pos;
+                hit[i][j].pos = hit[i][j].rect.center();
+                hit[i][j].center = PPPoint(0,0);
+                hit[i][j].length=sqrt(r.width*r.width/4+r.height*r.height/4);
+              } else {
+                hit[i][j].pos = m->pos;
+              }
+
+            } else {
+
+              hit[i][j].index = j+1;
+              hit[i][j].mask = 0;
+              hit[i][j].length = 0;
+              hit[i][j].type = 0;
+              hit[i][j].center = PPPoint(0,0);
+              
+              lua_settop(L,table);
+              
+              {
+                lua_getfield(L,table,"hitmask");
+                if (!lua_isnil(L,-1)) {
+                  hit[i][j].mask = (int)lua_tointeger(L,-1);
+                }
+                lua_pop(L,1);
+              }
+              if (hit[i][j].mask != 0) {
+                lua_getfield(L,table,"hitlength");
+                if (!lua_isnil(L,-1)) {
+                  hit[i][j].length = lua_tonumber(L,-1);
+                }
+                lua_pop(L,1);
+              }
+              if (hit[i][j].mask != 0) {
+                lua_getfield(L,table,"hitcenter");
+                if (lua_istable(L,-1)) {
+                  int center=lua_gettop(L);
+                  hit[i][j].center.x = getNumber(L,center,1,"x");
+                  hit[i][j].center.y = getNumber(L,center,2,"y");
+                }
+                {
+                  lua_getfield(L,table,"x");
+                  hit[i][j].pos.x = lua_tonumber(L,-1);
+                  lua_getfield(L,table,"y");
+                  hit[i][j].pos.y = lua_tonumber(L,-1);
+                }
+                lua_settop(L,table);
+              }
+              if (hit[i][j].mask != 0) {
+                lua_getfield(L,table,"hitpos");
+                if (lua_istable(L,-1)) {
+                  int center=lua_gettop(L);
+                  hit[i][j].pos.x = getNumber(L,center,1,"x");
+                  hit[i][j].pos.y = getNumber(L,center,2,"y");
+                  lua_settop(L,table);
+                }
+              }
+              if (hit[i][j].mask != 0) {
+                lua_getfield(L,table,"hitrect");
+                if (lua_istable(L,-1)) {
+                  int s=lua_gettop(L);
+                  PPRect r;
+                  r.x = getNumber(L,s,1,"x");
+                  r.y = getNumber(L,s,2,"y");
+                  r.width = getNumber(L,s,3,"width");
+                  r.height = getNumber(L,s,4,"height");
+                  hit[i][j].rect = PPRect(hit[i][j].pos.x+r.x,hit[i][j].pos.y+r.y,r.width,r.height);
+                  hit[i][j].pos.x += r.x+r.width/2;
+                  hit[i][j].pos.y += r.y+r.height/2;
+                  hit[i][j].length=sqrt(r.width*r.width/4+r.height*r.height/4);
+                  hit[i][j].type = 1;
+                }
+              }
+            }
+						lua_settop(L,top);
+					}
+				}
+				
+				for (int i=0;i<n[0];i++) {
+					PPObjectHit* a = &hit[0][i];
+					if (a->mask != 0 && a->length > 0) {
+						for (int j=0;j<n[1];j++) {
+							PPObjectHit* b = &hit[1][j];
+							if (b->mask != 0 && b->length > 0) {
+								if (a->mask & b->mask) {
+									bool hitcheck = false;
+									if (b->type && a->type) {
+										if (b->rect.hitCheck(a->rect)) {
+											hitcheck = true;
+										}
+									} else
+                  if ((b->pos+b->center).length(a->pos+a->center) < a->length+b->length) {
+                    hitcheck = true;
+                  }
+									if (hitcheck) {
+										lua_pushvalue(L,3);
+										lua_rawgeti(L,1,a->index);
+										lua_rawgeti(L,2,b->index);
+										lua_call(L,2,0);
+										lua_settop(L,top);
+									}
+								}
+							}
+						}
+					}
+				}
+				
+//				free(hit[0]);
+//				free(hit[1]);
+        
+			}
+		}
+	}
+	return 0;
 }
 
 /*-----------------------------------------------------------------------------------------------

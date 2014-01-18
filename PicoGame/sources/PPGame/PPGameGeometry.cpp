@@ -120,9 +120,15 @@ PPPoint PPRect::min()
 {
   return PPPoint(x,y);
 }
+
 PPPoint PPRect::max()
 {
   return PPPoint(x+width,y+height);
+}
+
+PPPoint PPRect::center()
+{
+  return PPPoint(x+width/2,y+height/2);
 }
 
 #pragma mark -

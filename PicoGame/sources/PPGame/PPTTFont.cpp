@@ -473,7 +473,7 @@ void PPTTFont::idle()
 	if (f->type == 0) return;
 	if (!base->world()->projector->textureManager->checkBind(texture)) {
 		base->world()->projector->textureManager->setTexture(texture,base->pixel,base->width,base->height,base->bytePerRow,option);
-//		_updated = true;
+    base->world()->projector->textureManager->bindTexture(texture);
 	}
 	//よく使うものを上に
 	for (int j=0;j<newFontCount;j++) {
