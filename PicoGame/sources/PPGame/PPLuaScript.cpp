@@ -46,12 +46,12 @@ extern "C" {
 #define PICO_CLASSNAME "__classname"
 
 static int error_handler(lua_State* L) {
-  int top=lua_gettop(L);
-  printf("top = %d\n",top);
-
-  std::string err = lua_tostring(L,-1);
+  //int top=lua_gettop(L);
+  //printf("top = %d\n",top);
 
 #if 1   //lua_getinfoではうまく取れないときがあるので、エラーメッセージから取り出す方式に変更
+  std::string err = lua_tostring(L,-1);
+
   std::string err_path = "";
   std::string err_name = "";
   std::string err_line = "-1";
@@ -89,6 +89,8 @@ static int error_handler(lua_State* L) {
   script->errorReason = err_reason;
   lua_pushstring(L,err.c_str());
 #else
+  std::string err;
+
   lua_Debug d;
   int level = 0;
   while (lua_getstack(L, level, &d)) {
@@ -98,7 +100,7 @@ static int error_handler(lua_State* L) {
       PPLuaArg* script = PPLuaArg::ErrorTarget(L);
       script->errorLine = d.currentline;
       script->errorMessage = err;
-      script->errorSrc = d.short_src;
+      script->errorPath = d.short_src;
       lua_pushstring(L,err.c_str());
       break;
     }
@@ -828,12 +830,11 @@ bool PPLuaScript::load(const char* scriptfile)
   int nRet;
   nRet = luaL_loadfile(L,scriptfile);
 	if (nRet != 0) {
-    errorMessage = lua_tostring(L,-1);
+    error_handler(L);
     printf("%s\n",errorMessage.c_str());
     lua_pop(L, 1);
     r = false;
   } else {
-
     nRet = lua_pcall(L,0,LUA_MULTRET,-2);
     //lua_gc(L, LUA_GCCOLLECT, 0);
     if (nRet != 0)
@@ -928,16 +929,26 @@ bool PPLuaScript::checkProcess()
 
 bool PPLuaScript::execString(const char* script)
 {
+  bool r=true;
   lua_pushcfunction(L,error_handler);
-  int error = (luaL_loadstring(L,script) || lua_pcall(L,0,LUA_MULTRET,-2));
-	//lua_gc(L, LUA_GCCOLLECT, 0);
-	if (error)
-	{
+  int nRet;
+  nRet = luaL_loadstring(L,script);
+	if (nRet != 0) {
+    error_handler(L);
     printf("%s\n",errorMessage.c_str());
     lua_pop(L, 1);
-		return false;
-	}
-	return true;
+    r = false;
+  } else {
+    nRet = lua_pcall(L,0,LUA_MULTRET,-2);
+    //lua_gc(L, LUA_GCCOLLECT, 0);
+    if (nRet != 0)
+    {
+      printf("%s\n",errorMessage.c_str());
+      lua_pop(L, 1);
+      r = false;
+    }
+  }
+  return r;
 }
 
 bool PPLuaScript::isFunction(const char* function_name)
@@ -1073,6 +1084,13 @@ void* PPLuaArg::UserData(lua_State* L,int idx,const char* classname,bool nullche
   std::string err;
 	int top = lua_gettop(L);
 	void* userdata = NULL;
+#ifdef __LUAJIT__
+	if (lua_type(L,idx) == LUA_TUSERDATA) {
+    void** obj=(void**)lua_topointer(L,idx);
+    void* userdata = *obj;
+    return userdata;
+  }
+#endif
 	if (lua_type(L,idx) == LUA_TTABLE) {
 		lua_getmetatable(L,idx);
     if (!isKindOfClass(L,classname)) {
@@ -1501,14 +1519,24 @@ static int funcPPPointDiv(lua_State* L)
   int r=PPLuaArg::getPPPoint(L,2,p);
   if (r<2) {
     if (p.x == 0) {
-      return luaL_error(L,"divide by zero");
-//      return s->returnPoint(L,PPPoint(0,0));
+      return s->returnPoint(L,PPPoint(NAN,NAN));
     }
     return s->returnPoint(L,PPPoint(m.x/p.x,m.y/p.x));
   }
   if (p.x == 0 || p.y == 0) {
-    return luaL_error(L,"divide by zero");
-//    return s->returnPoint(L,PPPoint(0,0));
+    float x=m.x;
+    float y=m.y;
+    if (p.x == 0) {
+      x=NAN;
+    } else {
+      x/=p.x;
+    }
+    if (p.y == 0) {
+      y=NAN;
+    } else {
+      y/=p.y;
+    }
+    return s->returnPoint(L,PPPoint(x,y));
   }
   return s->returnPoint(L,m/p);
 }
@@ -1554,7 +1582,7 @@ static int funcPPRectMin(lua_State* L)
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->initarg(L);
   PPRect r;
   getMyRect(L,r);
-  return s->returnPoint(L,r.min());
+  return s->returnPoint(L,r.rect_min());
 }
 
 static int funcPPRectMax(lua_State* L)
@@ -1563,7 +1591,7 @@ static int funcPPRectMax(lua_State* L)
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->initarg(L);
   PPRect r;
   getMyRect(L,r);
-  return s->returnPoint(L,r.max());
+  return s->returnPoint(L,r.rect_max());
 }
 
 static int funcPPRectCenter(lua_State* L)
@@ -1645,9 +1673,11 @@ static int funcPPRectPosition(lua_State* L)
     lua_setfield(L,1,"x");
     lua_pushnumber(L,p.y);
     lua_setfield(L,1,"y");
+    r.x=p.x;
+    r.y=p.y;
     //return 0;
   }
-  return s->returnPoint(L,PPPoint(r.x,r.y));
+  return s->returnRect(L,PPRect(r.x,r.y,r.width,r.height));
 }
 
 static int funcPPRectSize(lua_State* L)
@@ -1663,7 +1693,9 @@ static int funcPPRectSize(lua_State* L)
     lua_setfield(L,1,"width");
     lua_pushnumber(L,h);
     lua_setfield(L,1,"height");
-    return 0;
+    r.width = w;
+    r.height = h;
+    //return 0;
   }
   return s->returnRect(L,PPRect(0,0,r.width,r.height));
 }
@@ -1686,7 +1718,7 @@ static int funcPPRectScale(lua_State* L)
     lua_setfield(L,1,"width");
     lua_pushnumber(L,r.height);
     lua_setfield(L,1,"height");
-    return 0;
+    //return 0;
   }
   return s->returnRect(L,r);
 }
@@ -1759,10 +1791,10 @@ static int funcPPRectUnion(lua_State* L)
   getMyRect(L,r);
   PPRect t;
   PPLuaArg::getPPRect(L,2,t);
-  PPPoint min1=r.min();
-  PPPoint max1=r.max();
-  PPPoint min2=t.min();
-  PPPoint max2=t.max();
+  PPPoint min1=r.rect_min();
+  PPPoint max1=r.rect_max();
+  PPPoint min2=t.rect_min();
+  PPPoint max2=t.rect_max();
   if (min1.x > min2.x) { min1.x = min2.x; }
   if (min1.y > min2.y) { min1.y = min2.y; }
   if (max1.x < max2.x) { max1.x = max2.x; }
@@ -1790,7 +1822,7 @@ static int funcPPRectAdd(lua_State* L)
       m.x=m.x+t.x;
       m.y=m.y+t.x;
     } else {
-      m=m+t.min();
+      m=m+t.rect_min();
     }
   }
   return s->returnRect(L,m);
@@ -1808,7 +1840,7 @@ static int funcPPRectSub(lua_State* L)
       m.x=m.x-t.x;
       m.y=m.y-t.x;
     } else {
-      m=m-t.min();
+      m=m-t.rect_min();
     }
   }
   return s->returnRect(L,m);
@@ -1824,7 +1856,7 @@ static int funcPPRectDiv(lua_State* L)
   if (r>0) {
     if (r<2) {
       if (t.x == 0) {
-        return luaL_error(L,"divide by zero");
+        return s->returnRect(L,PPRect(NAN,NAN,NAN,NAN));
       }
       m.x=m.x/t.x;
       m.y=m.y/t.x;
@@ -1832,7 +1864,25 @@ static int funcPPRectDiv(lua_State* L)
       m.height=m.height/t.x;
     } else {
       if (t.x == 0 || t.y == 0) {
-        return luaL_error(L,"divide by zero");
+        float x=m.x;
+        float y=m.y;
+        float w=m.width;
+        float h=m.height;
+        if (t.x == 0) {
+          x=NAN;
+          w=NAN;
+        } else {
+          x/=t.x;
+          w/=t.x;
+        }
+        if (t.y == 0) {
+          y=NAN;
+          h=NAN;
+        } else {
+          y/=t.y;
+          h/=t.y;
+        }
+        return s->returnRect(L,PPRect(x,y,w,h));
       }
       m.x=m.x/t.x;
       m.y=m.y/t.y;

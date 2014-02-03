@@ -35,6 +35,9 @@
 		6B0F401A164E02E300BEEABD /* PPGameStart.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC244715B285930051C16B /* PPGameStart.cpp */; };
 		6B110B54165C76BC00202C89 /* PicoGame.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B110B53165C76BC00202C89 /* PicoGame.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6B1A6327186A6F0A00411291 /* PPImageFontData.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B1A6326186A6F0A00411291 /* PPImageFontData.h */; };
+		6B244728189F346400D62EB4 /* libVorbis.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B244727189F346400D62EB4 /* libVorbis.a */; };
+		6B244729189F346400D62EB4 /* libVorbis.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B244727189F346400D62EB4 /* libVorbis.a */; };
+		6B24472A189F34DA00D62EB4 /* QBStreamSound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6B30B85A18686FBF00B524B2 /* QBStreamSound.cpp */; };
 		6B30B85D18686FBF00B524B2 /* QBStreamSound.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B30B85B18686FBF00B524B2 /* QBStreamSound.h */; };
 		6B30B9BD186948CE00B524B2 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B30B9BC186948CE00B524B2 /* Foundation.framework */; };
 		6B30B9BF186948CE00B524B2 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B30B9BE186948CE00B524B2 /* CoreGraphics.framework */; };
@@ -115,7 +118,7 @@
 		6B30BA531869502C00B524B2 /* PPScriptGameEngine.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6B30BA4B1869502C00B524B2 /* PPScriptGameEngine.mm */; };
 		6B30BA541869502C00B524B2 /* StartViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B30BA4D1869502C00B524B2 /* StartViewController.m */; };
 		6B30BA56186950CF00B524B2 /* GameData in Resources */ = {isa = PBXBuildFile; fileRef = 6B30BA55186950CF00B524B2 /* GameData */; };
-		6B6BC6971879423B00365A7A /* Lua.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BAC25AB15B2875C0051C16B /* Lua.framework */; };
+		6B69625A189E228C007A79FE /* QBStreamSound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6B30B85A18686FBF00B524B2 /* QBStreamSound.cpp */; };
 		6B6BC698187943E600365A7A /* PPGameTexture.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BAC24F815B285930051C16B /* PPGameTexture.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6BAC252A15B285930051C16B /* PPScriptGame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC244915B285930051C16B /* PPScriptGame.cpp */; };
 		6BAC253415B285930051C16B /* PPGame.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC245E15B285930051C16B /* PPGame.mm */; };
@@ -226,6 +229,7 @@
 		6B05BE7C18695FF400211F11 /* JpString.h */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.c.h; path = JpString.h; sourceTree = "<group>"; };
 		6B110B53165C76BC00202C89 /* PicoGame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PicoGame.h; sourceTree = "<group>"; };
 		6B1A6326186A6F0A00411291 /* PPImageFontData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PPImageFontData.h; path = ../PPImage/PPImageFontData.h; sourceTree = "<group>"; };
+		6B244727189F346400D62EB4 /* libVorbis.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libVorbis.a; sourceTree = "<group>"; };
 		6B30B85A18686FBF00B524B2 /* QBStreamSound.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = QBStreamSound.cpp; sourceTree = "<group>"; };
 		6B30B85B18686FBF00B524B2 /* QBStreamSound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QBStreamSound.h; sourceTree = "<group>"; };
 		6B30B9BB186948CE00B524B2 /* PicoGameApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PicoGameApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -438,6 +442,7 @@
 				6B30BA3B18694DD800B524B2 /* MediaPlayer.framework in Frameworks */,
 				6B30BA3518694DD800B524B2 /* GameController.framework in Frameworks */,
 				6B30BA3318694DD800B524B2 /* AVFoundation.framework in Frameworks */,
+				6B244729189F346400D62EB4 /* libVorbis.a in Frameworks */,
 				6B30BA3418694DD800B524B2 /* OpenAL.framework in Frameworks */,
 				6B30BA3718694DD800B524B2 /* OpenGLES.framework in Frameworks */,
 				6B30BA3618694DD800B524B2 /* UIKit.framework in Frameworks */,
@@ -467,7 +472,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6B6BC6971879423B00365A7A /* Lua.framework in Frameworks */,
+				6B244728189F346400D62EB4 /* libVorbis.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -539,6 +544,7 @@
 				6B30BA2E18694DD800B524B2 /* SystemConfiguration.framework */,
 				6B30BA2F18694DD800B524B2 /* MediaPlayer.framework */,
 				6B30BA3018694DD800B524B2 /* CoreMotion.framework */,
+				6B244727189F346400D62EB4 /* libVorbis.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1084,6 +1090,7 @@
 				6B30BA19186949E200B524B2 /* PPParticle.cpp in Sources */,
 				6B30B9FD1869492F00B524B2 /* iCadeReaderView.m in Sources */,
 				6B30BA15186949E200B524B2 /* PPLuaScript.cpp in Sources */,
+				6B24472A189F34DA00D62EB4 /* QBStreamSound.cpp in Sources */,
 				6B30B9FC1869491100B524B2 /* QBSoundMac.cpp in Sources */,
 				6B30BA21186949E200B524B2 /* PPWorld.cpp in Sources */,
 				6B30BA07186949E200B524B2 /* QBSound.cpp in Sources */,
@@ -1159,6 +1166,7 @@
 				6BAC259215B285930051C16B /* PPTMXMap.cpp in Sources */,
 				6BAC259315B285930051C16B /* PPTTFont.cpp in Sources */,
 				6BAC259415B285930051C16B /* PPUIScrollView.cpp in Sources */,
+				6B69625A189E228C007A79FE /* QBStreamSound.cpp in Sources */,
 				6BAC259515B285930051C16B /* PPUIText.cpp in Sources */,
 				6BAC259615B285930051C16B /* PPVertualKey.cpp in Sources */,
 				6BAC259715B285930051C16B /* PPWorld.cpp in Sources */,
@@ -1249,6 +1257,10 @@
 				);
 				INFOPLIST_FILE = "PicoGameApp/PicoGameApp-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/yamagame/Developer/GameDev/PicoPicoGameEngine/PicoGame/iOS/PicoGame/PicoGameApp,
+				);
 				MACOSX_DEPLOYMENT_TARGET = "";
 				OTHER_LDFLAGS = (
 					"-lz",
@@ -1308,6 +1320,10 @@
 				);
 				INFOPLIST_FILE = "PicoGameApp/PicoGameApp-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/yamagame/Developer/GameDev/PicoPicoGameEngine/PicoGame/iOS/PicoGame/PicoGameApp,
+				);
 				MACOSX_DEPLOYMENT_TARGET = "";
 				OTHER_LDFLAGS = (
 					"-lz",
@@ -1368,6 +1384,10 @@
 				);
 				INFOPLIST_FILE = "PicoGameApp/PicoGameApp-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/yamagame/Developer/GameDev/PicoPicoGameEngine/PicoGame/iOS/PicoGame/PicoGameApp,
+				);
 				MACOSX_DEPLOYMENT_TARGET = "";
 				OTHER_LDFLAGS = (
 					"-lz",
@@ -1506,6 +1526,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = __USE_OGG_VORBIS__;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -1553,7 +1574,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/yamagame/Developer/GameDev/PicoPicoGameEngine/Vorbis/iOS/Vorbis/Products,
+					"$(SRCROOT)/../../../Vorbis/iOS/Vorbis/Products",
 				);
 				LINK_WITH_STANDARD_LIBRARIES = NO;
 				MACH_O_TYPE = mh_object;
@@ -1609,6 +1630,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
+					__USE_OGG_VORBIS__,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -1639,6 +1661,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = __USE_OGG_VORBIS__;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -1683,7 +1706,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/yamagame/Developer/GameDev/PicoPicoGameEngine/Vorbis/iOS/Vorbis/Products,
+					"$(SRCROOT)/../../../Vorbis/iOS/Vorbis/Products",
 				);
 				LINK_WITH_STANDARD_LIBRARIES = NO;
 				MACH_O_TYPE = mh_object;
@@ -1725,7 +1748,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/yamagame/Developer/GameDev/PicoPicoGameEngine/Vorbis/iOS/Vorbis/Products,
+					"$(SRCROOT)/../../../Vorbis/iOS/Vorbis/Products",
 				);
 				LINK_WITH_STANDARD_LIBRARIES = NO;
 				MACH_O_TYPE = mh_object;

@@ -277,7 +277,13 @@ void PPOffscreenTexture::stepIdle()
 
 PPSize PPOffscreenTexture::size()
 {
-	return imageSize*scale();
+	return imageSize*poly.scale;
+//	return imageSize*scale();
+}
+
+PPSize PPOffscreenTexture::realSize()
+{
+	return imageSize;//*scale();
 }
 
 void PPOffscreenTexture::pset(PPPoint pos,PPColor col)

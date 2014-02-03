@@ -14,6 +14,7 @@
 #import "PPGame.h"
 #import "QBGame.h"
 #import <GameController/GameController.h>
+#import "QBSoundMac.h"
 
 #ifndef NO_COCOSDENSHION
 #include <CocosDenshion/SimpleAudioEngine.h>
@@ -372,6 +373,10 @@
 #ifndef NO_COCOSDENSHION
 	CocosDenshion::SimpleAudioEngine::sharedEngine()->end();
 #endif
+	QBSoundMac* snd = (QBSoundMac*)QBSound::sharedSound();
+	if (snd) {
+		snd->stopAll();
+	}
 	[self.game reloadData];
 	[self startAnimation];
 }

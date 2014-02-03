@@ -112,9 +112,18 @@ const char* PPGameResourcePath(const char* name)
 //	getApplicationPath(buf,1024);
 //	sprintf(fpath,"%s\\Resources\\%s",buf,name);
 //	return fpath;
+
 	__tempPath = __watchDataPath;
+
+	if (name[0] == 0) {
+		return __tempPath.c_str();
+	}
+
 	__tempPath += name;
-	return __tempPath.c_str();
+  if (PathFileExists(__tempPath.c_str())) {
+    return __tempPath.c_str();
+  }
+  return "";
 }
 
 const char* PPGameDocumentPath(const char* dbfile)
@@ -593,6 +602,11 @@ const char* PPGameDataPath(const char* name)
 const char* PPGameDataSubPath(const char* name)
 {
   return PPGameDataPath(name);
+}
+
+bool PPGameControllerAvailable()
+{
+  return false;
 }
 
 void PPGameControllerStartDiscoverty()

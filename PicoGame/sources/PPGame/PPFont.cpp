@@ -145,18 +145,28 @@ PPFont::PPFont(PPWorld* world,const char* name,int size,int width,int height,int
     } else {
       unsigned long datasize;
       unsigned char* data;
-      data = ccGetFileData(name,"r",&datasize);
-      p = p+name;
-      if (data) {
-        std::string p = ccGetWriteablePath();
-        {
-          FILE* fp = fopen(p.c_str(),"w");
-          if (fp) {
-            fwrite(data, datasize,1,fp);
-            fclose(fp);
+      p = ccGetWriteablePath();
+      p = p + name;
+      
+      bool fileExist = false;
+//      FILE* fp=fopen(p.c_str(),"r");
+//      if (fp) {
+//        fileExist = true;
+//        fclose(fp);
+//      }
+      
+      if (!fileExist) {
+        data = ccGetFileData(name,"r",&datasize);
+        if (data) {
+          {
+            FILE* fp = fopen(p.c_str(),"w");
+            if (fp) {
+              fwrite(data, datasize,1,fp);
+              fclose(fp);
+            }
           }
+          delete data;
         }
-        free(data);
       }
     }
     ttfont = new PPTTFont(world,p.c_str(),size,width,height,tilenum);

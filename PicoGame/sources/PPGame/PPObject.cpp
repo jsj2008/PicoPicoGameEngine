@@ -331,6 +331,10 @@ PPSize PPObject::size()
 	return animation.size()*tileSize()*poly.scale;
 }
 
+PPSize PPObject::realSize()
+{
+	return animation.size()*tileSize();
+}
 
 void PPObject::pushTextureInfo(lua_State* L,int tex)
 {
@@ -509,6 +513,16 @@ static int funcDraw(lua_State* L)
 		if (centerx) flag |= PP_CENTER_X;
 		if (centery) flag |= PP_CENTER_Y;
 		m->pos = g->layout(m->size(),m->pos,flag,layoutarea);
+
+    PPSize sz = m->size();
+    PPPoint og = m->origin;
+    sz.width /= 2;
+    sz.height /= 2;
+    sz.width -= og.x;
+    sz.height -= og.y;
+    m->pos.x += sz.width -m->realSize().width /2+og.x;
+    m->pos.y += sz.height-m->realSize().height/2+og.y;
+
 		m->draw();
 		m->pos = op;
 	} else {
@@ -539,9 +553,6 @@ static int funcPosition(lua_State* L)
 	PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className);
   PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-	if (m==NULL) {
-		return luaL_argerror(L,1,"invalid argument.");
-	}
 	if (s->argCount > 0) {
 		if (s->isTable(L,0)) {
 			m->pos = PPPoint(s->tableNumber(L,0,1,"x",m->pos.x),s->tableNumber(L,0,2,"y",m->pos.y));
@@ -603,6 +614,14 @@ static int funcSize(lua_State* L)
   PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
 	return s->returnSize(L,m->size());
+}
+
+static int funcRealSize(lua_State* L)
+{
+	PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className);
+  PPUserDataAssert(m!=NULL);
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
+	return s->returnSize(L,m->realSize());
 }
 
 static int funcTileSize(lua_State* L)
@@ -767,6 +786,16 @@ static PPRect calcAABB(lua_State* L,PPLuaArg* s,PPObject* m)
 		if (centerx) flag |= PP_CENTER_X;
 		if (centery) flag |= PP_CENTER_Y;
 		p = g->layout(m->size(),m->pos,flag,layoutarea);
+
+    PPSize sz = m->size();
+    PPPoint og = m->origin;
+    sz.width /= 2;
+    sz.height /= 2;
+    sz.width -= og.x;
+    sz.height -= og.y;
+    p.x += sz.width -m->realSize().width /2+og.x;
+    p.y += sz.height-m->realSize().height/2+og.y;
+
 	} else {
 	}
 
@@ -1400,6 +1429,24 @@ static int funcGetter(lua_State* L)
     }
     return 1;
   } else
+  if (name == "width") {
+    PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className,false);
+    if (m) {
+      lua_pushnumber(L, m->size().width);
+    } else {
+      lua_pushnumber(L,0);
+    }
+    return 1;
+  } else
+  if (name == "height") {
+    PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className,false);
+    if (m) {
+      lua_pushnumber(L, m->size().height);
+    } else {
+      lua_pushnumber(L,0);
+    }
+    return 1;
+  } else
   if (name == "alive") {
     PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className,false);
     if (m) {
@@ -1528,6 +1575,7 @@ PPObject* PPObject::registClass(PPLuaScript* script,const char* name,PPObject* o
 		script->addCommand("aabb",funcAABB);
 //		script->addCommand("worldPos",funcFrame);
 		script->addCommand("size",funcSize);
+		script->addCommand("realSize",funcRealSize);
 		script->addCommand("layout",funcLayout);
 		script->addCommand("texture",funcTexture);
 		script->addCommand("enable",funcEnable);

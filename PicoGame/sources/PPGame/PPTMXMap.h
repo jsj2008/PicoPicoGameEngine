@@ -260,6 +260,7 @@ public:
 	virtual void drawSelf(PPPoint _pos);
 
 	virtual PPSize size();
+	virtual PPSize realSize();
 
 	int curLayer;
 	

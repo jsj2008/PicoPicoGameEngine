@@ -39,6 +39,77 @@
 		6B1A6329186A723500411291 /* PPImageFontData.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B1A6328186A723500411291 /* PPImageFontData.h */; };
 		6B362905187FBCCC00A73BF1 /* PPScriptDebugEngine.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6B362904187FBCCC00A73BF1 /* PPScriptDebugEngine.mm */; };
 		6B362908187FD24400A73BF1 /* DebugPicoGame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6B362906187FD24400A73BF1 /* DebugPicoGame.cpp */; };
+		6B36290D188B48BB00A73BF1 /* PPScriptGame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC244915B285930051C16B /* PPScriptGame.cpp */; };
+		6B36290E188B48BB00A73BF1 /* PPParticle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC250915B285930051C16B /* PPParticle.cpp */; };
+		6B36290F188B48BB00A73BF1 /* PPGameTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC24F715B285930051C16B /* PPGameTexture.cpp */; };
+		6B362910188B48BB00A73BF1 /* PPGameGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC24E515B285930051C16B /* PPGameGeometry.cpp */; };
+		6B362911188B48BB00A73BF1 /* PPFontTable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC24DF15B285930051C16B /* PPFontTable.cpp */; };
+		6B362912188B48BB00A73BF1 /* PPGameMapData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC24E815B285930051C16B /* PPGameMapData.cpp */; };
+		6B362913188B48BB00A73BF1 /* PPImageFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC24FA15B285930051C16B /* PPImageFont.cpp */; };
+		6B362914188B48BB00A73BF1 /* PPFlMMLObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC24D915B285930051C16B /* PPFlMMLObject.cpp */; };
+		6B362915188B48BB00A73BF1 /* QBGame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC252115B285930051C16B /* QBGame.cpp */; };
+		6B362916188B48BB00A73BF1 /* PPBox2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC24D515B285930051C16B /* PPBox2D.cpp */; };
+		6B362917188B48BB00A73BF1 /* PPVertualKey.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC251D15B285930051C16B /* PPVertualKey.cpp */; };
+		6B362918188B48BB00A73BF1 /* MainViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6BFF3AB71861204200339F7B /* MainViewController.mm */; };
+		6B362919188B48BB00A73BF1 /* QBSound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC252315B285930051C16B /* QBSound.cpp */; };
+		6B36291A188B48BB00A73BF1 /* PPGameView_App.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC24AC15B285930051C16B /* PPGameView_App.mm */; };
+		6B36291B188B48BB00A73BF1 /* PPGameMap.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC246115B285930051C16B /* PPGameMap.mm */; };
+		6B36291C188B48BB00A73BF1 /* PPUIText.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC251B15B285930051C16B /* PPUIText.cpp */; };
+		6B36291D188B48BB00A73BF1 /* PPLuaScript.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC24FD15B285930051C16B /* PPLuaScript.cpp */; };
+		6B36291E188B48BB00A73BF1 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6BFF3B101861268000339F7B /* main.mm */; };
+		6B36291F188B48BB00A73BF1 /* PPGameStart.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC244715B285930051C16B /* PPGameStart.cpp */; };
+		6B362920188B48BB00A73BF1 /* PPGameRunlength.c in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC24EE15B285930051C16B /* PPGameRunlength.c */; };
+		6B362921188B48BB00A73BF1 /* PPNormalFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC250315B285930051C16B /* PPNormalFont.cpp */; };
+		6B362922188B48BB00A73BF1 /* PPGameSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC24F215B285930051C16B /* PPGameSprite.cpp */; };
+		6B362923188B48BB00A73BF1 /* PPGameStick.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC24F415B285930051C16B /* PPGameStick.cpp */; };
+		6B362924188B48BB00A73BF1 /* PPReadError.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC250B15B285930051C16B /* PPReadError.cpp */; };
+		6B362925188B48BB00A73BF1 /* QBStreamSound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6B4B70F41867D2D4007EF3C3 /* QBStreamSound.cpp */; };
+		6B362926188B48BB00A73BF1 /* PPFlMMLSeq.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC24DB15B285930051C16B /* PPFlMMLSeq.cpp */; };
+		6B362927188B48BB00A73BF1 /* DebugPicoGame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6B362906187FD24400A73BF1 /* DebugPicoGame.cpp */; };
+		6B362928188B48BB00A73BF1 /* PPJoyReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC24AD15B285930051C16B /* PPJoyReader.cpp */; };
+		6B362929188B48BB00A73BF1 /* PPObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC250515B285930051C16B /* PPObject.cpp */; };
+		6B36292A188B48BB00A73BF1 /* PPFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC24DD15B285930051C16B /* PPFont.cpp */; };
+		6B36292B188B48BB00A73BF1 /* PPWorld.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC251F15B285930051C16B /* PPWorld.cpp */; };
+		6B36292C188B48BB00A73BF1 /* PPScriptDebugEngine.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6B362904187FBCCC00A73BF1 /* PPScriptDebugEngine.mm */; };
+		6B36292D188B48BB00A73BF1 /* PPGamePoly.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC24EC15B285930051C16B /* PPGamePoly.cpp */; };
+		6B36292E188B48BB00A73BF1 /* PPGameUtil.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC247F15B285930051C16B /* PPGameUtil.mm */; };
+		6B36292F188B48BB00A73BF1 /* QBSoundMac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC248B15B285930051C16B /* QBSoundMac.cpp */; };
+		6B362930188B48BB00A73BF1 /* PPGamePreference.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC246315B285930051C16B /* PPGamePreference.mm */; };
+		6B362931188B48BB00A73BF1 /* PPGame.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC245E15B285930051C16B /* PPGame.mm */; };
+		6B362932188B48BB00A73BF1 /* PPTMXMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC251515B285930051C16B /* PPTMXMap.cpp */; };
+		6B362933188B48BB00A73BF1 /* PPOffscreenTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC250715B285930051C16B /* PPOffscreenTexture.cpp */; };
+		6B362934188B48BB00A73BF1 /* PPTTFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC251715B285930051C16B /* PPTTFont.cpp */; };
+		6B362935188B48BB00A73BF1 /* PPSensor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC251115B285930051C16B /* PPSensor.cpp */; };
+		6B362936188B48BB00A73BF1 /* PPGameSound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC24F015B285930051C16B /* PPGameSound.cpp */; };
+		6B362937188B48BB00A73BF1 /* PPUIScrollView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC251915B285930051C16B /* PPUIScrollView.cpp */; };
+		6B362938188B48BB00A73BF1 /* PPGameMapEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC24EA15B285930051C16B /* PPGameMapEvent.cpp */; };
+		6B362939188B48BB00A73BF1 /* PPGameController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC24AA15B285930051C16B /* PPGameController.mm */; };
+		6B36293A188B48BB00A73BF1 /* PPTTFont-OSX.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6BFF2F58164D2EF400767B64 /* PPTTFont-OSX.mm */; };
+		6B36293B188B48BB00A73BF1 /* PPSEMMLObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC250F15B285930051C16B /* PPSEMMLObject.cpp */; };
+		6B36293D188B48BB00A73BF1 /* GameController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B05BE7D1869628E00211F11 /* GameController.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		6B36293E188B48BB00A73BF1 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B05BE7E1869628E00211F11 /* GameKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		6B36293F188B48BB00A73BF1 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BFF3AC8186123D300339F7B /* OpenAL.framework */; };
+		6B362940188B48BB00A73BF1 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BFF3AC61861215100339F7B /* Carbon.framework */; };
+		6B362941188B48BB00A73BF1 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BFF3AC41861214B00339F7B /* QuartzCore.framework */; };
+		6B362942188B48BB00A73BF1 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BFF3AC21861213B00339F7B /* CoreData.framework */; };
+		6B362943188B48BB00A73BF1 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BFF3AC01861213400339F7B /* AppKit.framework */; };
+		6B362944188B48BB00A73BF1 /* Vorbis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B4B70F01867C5A9007EF3C3 /* Vorbis.framework */; };
+		6B362945188B48BB00A73BF1 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BFF3ABD1861212500339F7B /* OpenGL.framework */; };
+		6B362946188B48BB00A73BF1 /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BFF3ABB1861211E00339F7B /* AudioUnit.framework */; };
+		6B362947188B48BB00A73BF1 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BFF3AB91861211500339F7B /* IOKit.framework */; };
+		6B362948188B48BB00A73BF1 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B89308015B80F5D00402E76 /* AudioToolbox.framework */; };
+		6B362949188B48BB00A73BF1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B89307D15B80E4400402E76 /* Foundation.framework */; };
+		6B36294A188B48BB00A73BF1 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BFF3A0A18611BF600339F7B /* CoreGraphics.framework */; };
+		6B36294B188B48BB00A73BF1 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B89307C15B80E4400402E76 /* Cocoa.framework */; };
+		6B36294C188B48BB00A73BF1 /* Box2D.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BFF3A6918611C9C00339F7B /* Box2D.framework */; };
+		6B36294D188B48BB00A73BF1 /* CocosDenshion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BFF3A6B18611CAE00339F7B /* CocosDenshion.framework */; };
+		6B36294E188B48BB00A73BF1 /* FlMML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BFF3A6D18611CB900339F7B /* FlMML.framework */; };
+		6B36294F188B48BB00A73BF1 /* freetype.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BFF3A6F18611CC300339F7B /* freetype.framework */; };
+		6B362952188B48BB00A73BF1 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6BFF3B0D1861268000339F7B /* InfoPlist.strings */; };
+		6B362953188B48BB00A73BF1 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 6BFF3B131861268000339F7B /* Credits.rtf */; };
+		6B362954188B48BB00A73BF1 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6BFF3B48186127ED00339F7B /* MainMenu.xib */; };
+		6B362955188B48BB00A73BF1 /* PPIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 6BFF3AB41861201500339F7B /* PPIcon.icns */; };
+		6B36295D188B497C00A73BF1 /* LuaJIT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B36295C188B497C00A73BF1 /* LuaJIT.framework */; };
 		6B4B70F11867C5A9007EF3C3 /* Vorbis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B4B70F01867C5A9007EF3C3 /* Vorbis.framework */; };
 		6B4B70F61867D2D4007EF3C3 /* QBStreamSound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6B4B70F41867D2D4007EF3C3 /* QBStreamSound.cpp */; };
 		6B4B70F71867D2D4007EF3C3 /* QBStreamSound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6B4B70F41867D2D4007EF3C3 /* QBStreamSound.cpp */; };
@@ -222,6 +293,9 @@
 		6B362904187FBCCC00A73BF1 /* PPScriptDebugEngine.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PPScriptDebugEngine.mm; sourceTree = "<group>"; };
 		6B362906187FD24400A73BF1 /* DebugPicoGame.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DebugPicoGame.cpp; sourceTree = "<group>"; };
 		6B362907187FD24400A73BF1 /* DebugPicoGame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DebugPicoGame.h; sourceTree = "<group>"; };
+		6B36295A188B48BB00A73BF1 /* PicoGameAppJIT.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PicoGameAppJIT.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6B36295B188B48BB00A73BF1 /* PicoGameAppJIT-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "PicoGameAppJIT-Info.plist"; path = "/Users/yamagame/Developer/GameDev/PicoPicoGameEngine/PicoGame/OSX/PicoGame/PicoGameAppJIT-Info.plist"; sourceTree = "<absolute>"; };
+		6B36295C188B497C00A73BF1 /* LuaJIT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LuaJIT.framework; path = ../../../../LuaJIT/OSX/LuaJIT/Products/LuaJIT.framework; sourceTree = "<group>"; };
 		6B4060A7183319160049E023 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = linux/main.cpp; sourceTree = "<group>"; };
 		6B4060A8183319160049E023 /* pcm.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = pcm.cpp; path = linux/pcm.cpp; sourceTree = "<group>"; };
 		6B4060A9183319160049E023 /* pcm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = pcm.h; path = linux/pcm.h; sourceTree = "<group>"; };
@@ -431,6 +505,33 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		6B36293C188B48BB00A73BF1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6B36293D188B48BB00A73BF1 /* GameController.framework in Frameworks */,
+				6B36293E188B48BB00A73BF1 /* GameKit.framework in Frameworks */,
+				6B36293F188B48BB00A73BF1 /* OpenAL.framework in Frameworks */,
+				6B362940188B48BB00A73BF1 /* Carbon.framework in Frameworks */,
+				6B362941188B48BB00A73BF1 /* QuartzCore.framework in Frameworks */,
+				6B36295D188B497C00A73BF1 /* LuaJIT.framework in Frameworks */,
+				6B362942188B48BB00A73BF1 /* CoreData.framework in Frameworks */,
+				6B362943188B48BB00A73BF1 /* AppKit.framework in Frameworks */,
+				6B362944188B48BB00A73BF1 /* Vorbis.framework in Frameworks */,
+				6B362945188B48BB00A73BF1 /* OpenGL.framework in Frameworks */,
+				6B362946188B48BB00A73BF1 /* AudioUnit.framework in Frameworks */,
+				6B362947188B48BB00A73BF1 /* IOKit.framework in Frameworks */,
+				6B362948188B48BB00A73BF1 /* AudioToolbox.framework in Frameworks */,
+				6B362949188B48BB00A73BF1 /* Foundation.framework in Frameworks */,
+				6B36294A188B48BB00A73BF1 /* CoreGraphics.framework in Frameworks */,
+				6B36294B188B48BB00A73BF1 /* Cocoa.framework in Frameworks */,
+				6B36294C188B48BB00A73BF1 /* Box2D.framework in Frameworks */,
+				6B36294D188B48BB00A73BF1 /* CocosDenshion.framework in Frameworks */,
+				6B36294E188B48BB00A73BF1 /* FlMML.framework in Frameworks */,
+				6B36294F188B48BB00A73BF1 /* freetype.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		6BAC242E15B284FA0051C16B /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -511,6 +612,7 @@
 				6BAC243115B284FA0051C16B /* PicoGame.framework */,
 				6BFF3B081861268000339F7B /* PicoGameApp.app */,
 				6BFF3B221861268000339F7B /* PicoGameAppTests.xctest */,
+				6B36295A188B48BB00A73BF1 /* PicoGameAppJIT.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -806,6 +908,7 @@
 				6BFF3A6D18611CB900339F7B /* FlMML.framework */,
 				6BFF3A6F18611CC300339F7B /* freetype.framework */,
 				6BFF3A7118611CCD00339F7B /* Lua.framework */,
+				6B36295C188B497C00A73BF1 /* LuaJIT.framework */,
 				6B4B70F01867C5A9007EF3C3 /* Vorbis.framework */,
 			);
 			name = Frameworks;
@@ -842,6 +945,7 @@
 			children = (
 				6BFF3AB41861201500339F7B /* PPIcon.icns */,
 				6BFF3B0C1861268000339F7B /* PicoGameApp-Info.plist */,
+				6B36295B188B48BB00A73BF1 /* PicoGameAppJIT-Info.plist */,
 				6BFF3B0D1861268000339F7B /* InfoPlist.strings */,
 				6BFF3B101861268000339F7B /* main.mm */,
 				6BFF3B121861268000339F7B /* PicoGameApp-Prefix.pch */,
@@ -931,6 +1035,23 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		6B36290B188B48BB00A73BF1 /* PicoGameAppJIT */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6B362956188B48BB00A73BF1 /* Build configuration list for PBXNativeTarget "PicoGameAppJIT" */;
+			buildPhases = (
+				6B36290C188B48BB00A73BF1 /* Sources */,
+				6B36293C188B48BB00A73BF1 /* Frameworks */,
+				6B362951188B48BB00A73BF1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PicoGameAppJIT;
+			productName = PicoGameApp;
+			productReference = 6B36295A188B48BB00A73BF1 /* PicoGameAppJIT.app */;
+			productType = "com.apple.product-type.application";
+		};
 		6BAC243015B284FA0051C16B /* PicoGame */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6BAC244315B284FA0051C16B /* Build configuration list for PBXNativeTarget "PicoGame" */;
@@ -1014,12 +1135,24 @@
 				6BAC25C015B290070051C16B /* Universal */,
 				6B876AD0182E619C003D651B /* UniversalLuaJIT */,
 				6BFF3B071861268000339F7B /* PicoGameApp */,
+				6B36290B188B48BB00A73BF1 /* PicoGameAppJIT */,
 				6BFF3B211861268000339F7B /* PicoGameAppTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		6B362951188B48BB00A73BF1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6B362952188B48BB00A73BF1 /* InfoPlist.strings in Resources */,
+				6B362953188B48BB00A73BF1 /* Credits.rtf in Resources */,
+				6B362954188B48BB00A73BF1 /* MainMenu.xib in Resources */,
+				6B362955188B48BB00A73BF1 /* PPIcon.icns in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		6BAC242F15B284FA0051C16B /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1079,6 +1212,60 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		6B36290C188B48BB00A73BF1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6B36290D188B48BB00A73BF1 /* PPScriptGame.cpp in Sources */,
+				6B36290E188B48BB00A73BF1 /* PPParticle.cpp in Sources */,
+				6B36290F188B48BB00A73BF1 /* PPGameTexture.cpp in Sources */,
+				6B362910188B48BB00A73BF1 /* PPGameGeometry.cpp in Sources */,
+				6B362911188B48BB00A73BF1 /* PPFontTable.cpp in Sources */,
+				6B362912188B48BB00A73BF1 /* PPGameMapData.cpp in Sources */,
+				6B362913188B48BB00A73BF1 /* PPImageFont.cpp in Sources */,
+				6B362914188B48BB00A73BF1 /* PPFlMMLObject.cpp in Sources */,
+				6B362915188B48BB00A73BF1 /* QBGame.cpp in Sources */,
+				6B362916188B48BB00A73BF1 /* PPBox2D.cpp in Sources */,
+				6B362917188B48BB00A73BF1 /* PPVertualKey.cpp in Sources */,
+				6B362918188B48BB00A73BF1 /* MainViewController.mm in Sources */,
+				6B362919188B48BB00A73BF1 /* QBSound.cpp in Sources */,
+				6B36291A188B48BB00A73BF1 /* PPGameView_App.mm in Sources */,
+				6B36291B188B48BB00A73BF1 /* PPGameMap.mm in Sources */,
+				6B36291C188B48BB00A73BF1 /* PPUIText.cpp in Sources */,
+				6B36291D188B48BB00A73BF1 /* PPLuaScript.cpp in Sources */,
+				6B36291E188B48BB00A73BF1 /* main.mm in Sources */,
+				6B36291F188B48BB00A73BF1 /* PPGameStart.cpp in Sources */,
+				6B362920188B48BB00A73BF1 /* PPGameRunlength.c in Sources */,
+				6B362921188B48BB00A73BF1 /* PPNormalFont.cpp in Sources */,
+				6B362922188B48BB00A73BF1 /* PPGameSprite.cpp in Sources */,
+				6B362923188B48BB00A73BF1 /* PPGameStick.cpp in Sources */,
+				6B362924188B48BB00A73BF1 /* PPReadError.cpp in Sources */,
+				6B362925188B48BB00A73BF1 /* QBStreamSound.cpp in Sources */,
+				6B362926188B48BB00A73BF1 /* PPFlMMLSeq.cpp in Sources */,
+				6B362927188B48BB00A73BF1 /* DebugPicoGame.cpp in Sources */,
+				6B362928188B48BB00A73BF1 /* PPJoyReader.cpp in Sources */,
+				6B362929188B48BB00A73BF1 /* PPObject.cpp in Sources */,
+				6B36292A188B48BB00A73BF1 /* PPFont.cpp in Sources */,
+				6B36292B188B48BB00A73BF1 /* PPWorld.cpp in Sources */,
+				6B36292C188B48BB00A73BF1 /* PPScriptDebugEngine.mm in Sources */,
+				6B36292D188B48BB00A73BF1 /* PPGamePoly.cpp in Sources */,
+				6B36292E188B48BB00A73BF1 /* PPGameUtil.mm in Sources */,
+				6B36292F188B48BB00A73BF1 /* QBSoundMac.cpp in Sources */,
+				6B362930188B48BB00A73BF1 /* PPGamePreference.mm in Sources */,
+				6B362931188B48BB00A73BF1 /* PPGame.mm in Sources */,
+				6B362932188B48BB00A73BF1 /* PPTMXMap.cpp in Sources */,
+				6B362933188B48BB00A73BF1 /* PPOffscreenTexture.cpp in Sources */,
+				6B362934188B48BB00A73BF1 /* PPTTFont.cpp in Sources */,
+				6B362935188B48BB00A73BF1 /* PPSensor.cpp in Sources */,
+				6B362936188B48BB00A73BF1 /* PPGameSound.cpp in Sources */,
+				6B362937188B48BB00A73BF1 /* PPUIScrollView.cpp in Sources */,
+				6B362938188B48BB00A73BF1 /* PPGameMapEvent.cpp in Sources */,
+				6B362939188B48BB00A73BF1 /* PPGameController.mm in Sources */,
+				6B36293A188B48BB00A73BF1 /* PPTTFont-OSX.mm in Sources */,
+				6B36293B188B48BB00A73BF1 /* PPSEMMLObject.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		6BAC242D15B284FA0051C16B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1229,6 +1416,191 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		6B362957188B48BB00A73BF1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "compiler-default";
+				CLANG_ENABLE_OBJC_ARC = NO;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../../../Box2D/OSX/Box2D/Products",
+					"$(SRCROOT)/../../../CocosDenshion/OSX/CocosDenshion/Products",
+					"$(SRCROOT)/../../../FlMML/OSX/FlMML/Products",
+					"$(SRCROOT)/../../../freetype/OSX/freetype/Products",
+					"$(SRCROOT)/../../../Vorbis/OSX/Vorbis/Products",
+					"$(SRCROOT)/../../../LuaJIT/OSX/LuaJIT/Products",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "PicoGameApp/PicoGameApp-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					__USE_OGG_VORBIS__,
+					__LUAJIT__,
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"$(SDKROOT)/usr/include/libxml2/",
+					../../../freetype/sources/freetype,
+					../../../freetype/sources,
+					"../../../Vorbis/sources/libogg-1.3.1/include",
+					"$(SRCROOT)/../../../LuaJIT/OSX/LuaJIT/Products/LuaJIT.framework/Headers",
+				);
+				INFOPLIST_FILE = "PicoGameAppJIT-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = (
+					"-lz",
+					"-lxml2",
+					"-pagezero_size",
+					10000,
+					"-image_base",
+					10000000,
+				);
+				PRODUCT_NAME = PicoGameAppJIT;
+				WARNING_CFLAGS = "-Wunused-variable";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		6B362958188B48BB00A73BF1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "compiler-default";
+				CLANG_ENABLE_OBJC_ARC = NO;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = NO;
+				ENABLE_NS_ASSERTIONS = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../../../Box2D/OSX/Box2D/Products",
+					"$(SRCROOT)/../../../CocosDenshion/OSX/CocosDenshion/Products",
+					"$(SRCROOT)/../../../FlMML/OSX/FlMML/Products",
+					"$(SRCROOT)/../../../freetype/OSX/freetype/Products",
+					"$(SRCROOT)/../../../Vorbis/OSX/Vorbis/Products",
+					"$(SRCROOT)/../../../LuaJIT/OSX/LuaJIT/Products",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "PicoGameApp/PicoGameApp-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					__USE_OGG_VORBIS__,
+					__LUAJIT__,
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"$(SDKROOT)/usr/include/libxml2/",
+					../../../freetype/sources/freetype,
+					../../../freetype/sources,
+					"../../../Vorbis/sources/libogg-1.3.1/include",
+					"$(SRCROOT)/../../../LuaJIT/OSX/LuaJIT/Products/LuaJIT.framework/Headers",
+				);
+				INFOPLIST_FILE = "PicoGameAppJIT-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = (
+					"-lz",
+					"-lxml2",
+					"-pagezero_size",
+					10000,
+					"-image_base",
+					10000000,
+				);
+				PRODUCT_NAME = PicoGameAppJIT;
+				WARNING_CFLAGS = "-Wunused-variable";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		6B362959188B48BB00A73BF1 /* ReleaseLuaJIT */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "compiler-default";
+				CLANG_ENABLE_OBJC_ARC = NO;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = NO;
+				ENABLE_NS_ASSERTIONS = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../../../Box2D/OSX/Box2D/Products",
+					"$(SRCROOT)/../../../CocosDenshion/OSX/CocosDenshion/Products",
+					"$(SRCROOT)/../../../FlMML/OSX/FlMML/Products",
+					"$(SRCROOT)/../../../freetype/OSX/freetype/Products",
+					"$(SRCROOT)/../../../Vorbis/OSX/Vorbis/Products",
+					"$(SRCROOT)/../../../LuaJIT/OSX/LuaJIT/Products",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "PicoGameApp/PicoGameApp-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					__USE_OGG_VORBIS__,
+					__LUAJIT__,
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"$(SDKROOT)/usr/include/libxml2/",
+					../../../freetype/sources/freetype,
+					../../../freetype/sources,
+					"../../../Vorbis/sources/libogg-1.3.1/include",
+					"$(SRCROOT)/../../../LuaJIT/OSX/LuaJIT/Products/LuaJIT.framework/Headers",
+				);
+				INFOPLIST_FILE = "PicoGameAppJIT-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = (
+					"-lz",
+					"-lxml2",
+					"-pagezero_size",
+					10000,
+					"-image_base",
+					10000000,
+				);
+				PRODUCT_NAME = PicoGameAppJIT;
+				WARNING_CFLAGS = "-Wunused-variable";
+				WRAPPER_EXTENSION = app;
+			};
+			name = ReleaseLuaJIT;
+		};
 		6B876AD3182E619C003D651B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1755,6 +2127,16 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		6B362956188B48BB00A73BF1 /* Build configuration list for PBXNativeTarget "PicoGameAppJIT" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6B362957188B48BB00A73BF1 /* Debug */,
+				6B362958188B48BB00A73BF1 /* Release */,
+				6B362959188B48BB00A73BF1 /* ReleaseLuaJIT */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		6B876AD2182E619C003D651B /* Build configuration list for PBXAggregateTarget "UniversalLuaJIT" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

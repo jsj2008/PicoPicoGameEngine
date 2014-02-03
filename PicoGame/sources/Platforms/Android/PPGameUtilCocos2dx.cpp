@@ -164,6 +164,11 @@ void PPAdjustUVMap(QB3DModel* model,const char* layout)
 }
 */
 
+bool PPGameControllerAvailable()
+{
+  return false;
+}
+
 void PPGameControllerStartDiscoverty()
 {
 }

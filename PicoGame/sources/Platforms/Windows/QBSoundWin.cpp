@@ -16,6 +16,56 @@
 #include <map>
 #include "QBStreamSound.h"
 
+class EffectBuffer {
+public:
+	signed short* pcmbuffer;
+	unsigned long pcmsize;
+	int pcmchannel;
+  std::string fname;
+
+  EffectBuffer() : pcmbuffer(NULL) {
+    
+  }
+  virtual ~EffectBuffer() {
+    if (pcmbuffer) free(pcmbuffer);
+//printf("unload effect %s\n",fname.c_str());
+  }
+
+  bool load(const char* filename) {
+    fname=filename;
+    int ret=-1;
+		FILE* fp = fopen(filename,"r");
+    if (fp) {
+      do {
+        fseek(fp,0,SEEK_END);
+        size_t size = ftell(fp);
+        if (size==0) {
+          fclose(fp);
+          return -1;
+        }
+        fseek(fp,0,SEEK_SET);
+        pcmbuffer = (signed short*)malloc(size);
+        if (pcmbuffer) {
+          pcmsize = size;
+          fread(pcmbuffer,size,1,fp);
+          ret=0;
+        }
+      } while (0);
+      fclose(fp);
+    }
+//printf("load effect %s\n",filename);
+    return ret;
+  }
+};
+
+typedef map<unsigned int, EffectBuffer *> EffectList;
+
+static EffectList& sharedList()
+{
+    static EffectList s_List;
+    return s_List;
+}
+
 typedef map<unsigned int,QBStreamSound*> PlayerList;
 static PlayerList streamTrack;
 static int soundID = 1;
@@ -277,8 +327,8 @@ int QBSoundWin::Init()
 	DWORD dwID;
 	InitializeCriticalSection(&mMutex);
 	//DeleteCriticalSection(&mCriticalSection);
-  mThreadEnd = false;
 #ifdef __USE_OGG_VORBIS__
+  mThreadEnd = false;
   CreateThread(NULL , 0 , LoaderThreadProc , (LPVOID)this , 0 , &dwID);
 #endif
 	return 0;
@@ -293,13 +343,44 @@ int QBSoundWin::play(const char *note,int track,bool loop)
 int QBSoundWin::Exit()
 {
 	QBSoundLocker locker(&mMutex);
+#ifdef __USE_OGG_VORBIS__
   mThreadEnd=true;
+#endif
 	return 0;
+}
+
+void QBSoundWin::stopAll()
+{
+//printf("stopAll\n");
+	QBSoundLocker locker(&mMutex);
+#ifdef __USE_OGG_VORBIS__
+  {
+    PlayerList::iterator it = streamTrack.begin();
+    while(it != streamTrack.end()) {
+      delete (*it).second;
+      ++it;
+    }
+    streamTrack.clear();
+  }
+  {
+    EffectList::iterator it = sharedList().begin();
+    while(it != sharedList().end())
+    {
+      delete (*it).second;
+      ++it;
+    }
+    sharedList().clear();
+  }
+#endif
+	return QBSound::stopAll();
 }
 
 int QBSoundWin::Reset()
 {
 	QBSoundLocker locker(&mMutex);
+//#ifdef __USE_OGG_VORBIS__
+//  mThreadEnd=true;
+//#endif
 	return QBSound::Reset();
 }
 
@@ -468,7 +549,7 @@ static QBStreamSound* findPlayer(int track)
   } else {
     player = new QBStreamSound();
     streamTrack.insert(make_pair(track,player));
-printf("findPlayer\n");
+//printf("findPlayer\n");
   }
   return player;
 }
@@ -483,6 +564,12 @@ void QBSoundWin::streamLoopPlay(const char* filename,long long looppoint,int tra
 {
 	QBSoundLocker locker(&mMutex,"streamPlay");
   findPlayer(track)->play(filename,looppoint);
+}
+
+void QBSoundWin::streamReset()
+{
+	QBSoundLocker locker(&mMutex,"streamReset");
+  streamTrack.clear();
 }
 
 void QBSoundWin::streamStop(int track)
@@ -544,50 +631,6 @@ bool QBSoundWin::streamTest(const char* filename)
 
 #pragma mark -
 
-class EffectBuffer {
-public:
-	signed short* pcmbuffer;
-	unsigned long pcmsize;
-	int pcmchannel;
-  std::string fname;
-
-  EffectBuffer() : pcmbuffer(NULL) {
-    
-  }
-  virtual ~EffectBuffer() {
-    if (pcmbuffer) free(pcmbuffer);
-printf("unload effect %s\n",fname.c_str());
-  }
-
-  bool load(const char* filename) {
-    fname=filename;
-    int ret=-1;
-		FILE* fp = fopen(filename,"r");
-    if (fp) {
-      do {
-        fseek(fp,0,SEEK_END);
-        size_t size = ftell(fp);
-        if (size==0) {
-          fclose(fp);
-          return -1;
-        }
-        fseek(fp,0,SEEK_SET);
-        pcmbuffer = (signed short*)malloc(size);
-        if (pcmbuffer) {
-          pcmsize = size;
-          fread(pcmbuffer,size,1,fp);
-          ret=0;
-        }
-      } while (0);
-      fclose(fp);
-    }
-printf("load effect %s\n",filename);
-    return ret;
-  }
-};
-
-typedef map<unsigned int, EffectBuffer *> EffectList;
-
 static unsigned int _Hash(const char *key)
 {
     size_t len = strlen(key);
@@ -600,12 +643,6 @@ static unsigned int _Hash(const char *key)
         hash ^= (unsigned int) (unsigned char) toupper(*key);
     }
     return (hash);
-}
-
-static EffectList& sharedList()
-{
-    static EffectList s_List;
-    return s_List;
 }
 
 void QBSoundWin::preloadEffect(const char* filename)

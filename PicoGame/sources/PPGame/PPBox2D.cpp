@@ -24,6 +24,7 @@
 #define CONTACT_LIST "__contactList"
 #define WORLD_LIST "__worldList"
 #define FIX_SHAPE "__shape"
+#define SHAPE_SPRITE "sprite"
 
 #define B2CONTACT "b2Contact"
 #define B2FIXTURE "b2Fixture"
@@ -51,6 +52,10 @@
 #define B2CIRCLESHAPE "b2CircleShape"
 #define B2EDGESHAPE "b2EdgeShape"
 #define B2POLYGONSHAPE "b2PolygonShape"
+#define B2SPRITESHAPE "b2SpriteShape"
+
+#define ARG_ERROR "invalid argument."
+#define ARG_MISSING "missing arguments."
 
 /*-----------------------------------------------------------------------------------------------
 	外部に公開しないプログラム
@@ -626,11 +631,12 @@ public:
 	}
 	virtual ~PPBox2DWorld();
   
+  virtual void drawABody(lua_State* L,int idx=1);
   virtual void drawBody(lua_State* L,int idx=1);
   virtual void drawShape(b2Shape* shape,b2Transform* transform);
+  virtual void drawAJoint(lua_State* L,int idx=1);
   virtual void drawJoint(lua_State* L,int idx=1);
 
-  virtual void drawABody(lua_State* L,int idx=1);
   virtual void debugDrawBody(PPBox2DBody* body);
   virtual void debugDrawShape(b2Fixture* fixture, const b2Transform& xf, const b2Color& color);
   
@@ -1047,22 +1053,6 @@ void ppContactListener::PostSolve(b2Contact* contact, const b2ContactImpulse* im
   }
 }
 
-//bool ppContactFilter::ShouldCollide(b2Fixture* fixtureA, b2Fixture* fixtureB) {
-//  lua_State* L = world->L;
-//  if (lua_gettop(L)>=5) {
-//    if (lua_istable(L,5)) {
-//      lua_getfield(L,5,"shouldCollide");
-//      if (lua_isfunction(L,-1)) {
-//        world->findFixture(L,fixtureA,1);
-//        world->findFixture(L,fixtureB,1);
-//        if(lua_pcall(L, 2, 1, 0) != 0) {
-//        }
-//      }
-//    }
-//  }
-//  return true;
-//}
-
 bool PPBox2DWorld::findFixture(lua_State* L,b2Fixture* fixture,int worldIdx)
 {
   if (fixture==NULL) {
@@ -1355,7 +1345,7 @@ void PPBox2DWorld::drawABody(lua_State* L,int bodyidx)
               b2Fixture* f=fix->fixture;
               if (f) {
                 lua_getfield(L,fixidx,"draw");
-                if (!lua_isnil(L,-1)) {
+                if (lua_isfunction(L,-1)) {
                   const b2Transform& xf = b->GetTransform();
 
                   lua_createtable(L, 0, 5);
@@ -1434,8 +1424,88 @@ void PPBox2DWorld::drawShape(b2Shape* shape,b2Transform* transform)
 {
 }
 
+void PPBox2DWorld::drawAJoint(lua_State* L,int jointidx)
+{
+  if (!lua_isnil(L,jointidx)) {
+    int top=lua_gettop(L);
+    PPBox2DJoint* joint = (PPBox2DJoint*)PPLuaArg::UserData(L,jointidx,PPBox2DJoint::className,false);
+    if (joint) {
+      if (joint->joint) {
+        lua_getfield(L,jointidx,"draw");
+        if (lua_isfunction(L,-1)) {
+          b2Joint* j=joint->joint;
+
+          b2Body* bodyA = j->GetBodyA();
+          b2Body* bodyB = j->GetBodyB();
+          const b2Transform& xf1 = bodyA->GetTransform();
+          const b2Transform& xf2 = bodyB->GetTransform();
+          b2Vec2 x1 = xf1.p;
+          b2Vec2 x2 = xf2.p;
+          b2Vec2 p1 = j->GetAnchorA();
+          b2Vec2 p2 = j->GetAnchorB();
+          
+          lua_createtable(L, 0, 5);
+          
+          pushPoint(L,p1);
+          lua_setfield(L,-2,"anchorA");
+          pushPoint(L,p2);
+          lua_setfield(L,-2,"anchorB");
+          pushPoint(L,x1);
+          lua_setfield(L,-2,"bodyA");
+          pushPoint(L,x2);
+          lua_setfield(L,-2,"bodyB");
+
+          switch (j->GetType())
+          {
+          case e_distanceJoint:
+            break;
+
+          case e_pulleyJoint:
+            {
+              b2PulleyJoint* pulley = (b2PulleyJoint*)joint;
+              b2Vec2 s1 = pulley->GetGroundAnchorA();
+              b2Vec2 s2 = pulley->GetGroundAnchorB();
+              pushPoint(L,s1);
+              lua_setfield(L,-2,"groundAnchorA");
+              pushPoint(L,s2);
+              lua_setfield(L,-2,"groundAnchorB");
+            }
+            break;
+
+          case e_mouseJoint:
+            break;
+
+          default:
+            break;
+          }
+          
+          lua_pushvalue(L,jointidx);
+          
+          if (lua_pcall(L, 2, 0, 0)!=0) {
+            
+          }
+        }
+      }
+    }
+    lua_settop(L,top);
+  }
+}
+
 void PPBox2DWorld::drawJoint(lua_State* L,int idx)
 {
+  lua_getfield(L,idx,JOINT_LIST);
+  if (!lua_isnil(L,-1)) {
+#ifdef __LUAJIT__
+    size_t len = lua_objlen(L,-1);
+#else
+    size_t len = lua_rawlen(L,-1);
+#endif
+    for (int i=0;i<len;i++) {
+      lua_rawgeti(L,-1,i+1);
+      drawAJoint(L,lua_gettop(L));
+      lua_pop(L,1);
+    }
+  }
 }
 
 void PPBox2DWorld::debugDrawShape(b2Fixture* fixture, const b2Transform& xf, const b2Color& color)
@@ -1994,7 +2064,7 @@ static int functionb2WorldDrawShape(lua_State* L)
       lua_pop(L,1);
 
       lua_getfield(L,shapeidx,"draw");
-      if (!lua_isnil(L,-1)) {
+      if (lua_isfunction(L,-1)) {
         const b2Transform& xf = transform->t;
 
         lua_createtable(L, 0, 5);
@@ -2401,6 +2471,8 @@ static int funcb2WorldCreateBody(lua_State *L)
   bool pushDefInfo=false;
   b2BodyDef def;
   int n=0;
+  
+  def.type = b2_staticBody;
   if (lua_type(L,2)==LUA_TSTRING) {
     std::string type = lua_tostring(L,2);
     if (type == "static") {
@@ -3164,131 +3236,24 @@ static int funcb2WorldJointTable(lua_State *L) {
 	return 1;
 }
 
-//static int funcb2WorldContactList(lua_State *L) {
-//  PPBox2DWorld* m = (PPBox2DWorld*)PPLuaArg::UserData(L,PPBox2DWorld::className);
-//  PPUserDataAssert(m!=NULL);
-//  if (m->GetContactList()) {
-//    lua_getfield(L,1,CONTACT_LIST);
-//    if (lua_isnil(L,-1)) {
-//      PPBox2DContact* ppcontact = new PPBox2DContact(m->GetContactList());
-//      ppcontact->worldId = m->worldId;
-//      PPLuaScript::newObject(L,B2CONTACT,ppcontact,funcDeleteContact);
-//      lua_setfield(L,1,CONTACT_LIST);
-//      lua_getfield(L,1,CONTACT_LIST);
-//      m->contactTop = ppcontact;
-//    }
-//  } else {
-//    lua_pushnil(L);
-//  }
-//	return 1;
-//}
-
-//static int funcb2WorldAllowSleeping(lua_State *L) {
-//  PPBox2DWorld* m = (PPBox2DWorld*)PPLuaArg::UserData(L);
-//	if (m == NULL) return 0;
-//
-//	if (lua_gettop(L) > 1) {
-//		m->SetAllowSleeping(lua_toboolean(L,2));
-//    return 0;
-//	}
-//
-//	lua_pushboolean(L,m->GetAllowSleeping());
-//	return 1;
-//}
-
-//static int funcb2WorldWarmStarting(lua_State *L) {
-//	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPBox2DWorld* m = (PPBox2DWorld*)s->userdata;
-//	if (m == NULL) return 0;
-//	if (s->argCount > 0) {
-//		m->SetWarmStarting(s->boolean(0));
-//    return 0;
-//	}
-//	lua_pushboolean(L,m->GetWarmStarting());
-//	return 1;
-//}
-
-//static int funcb2WorldContinuousPhysics(lua_State *L) {
-//	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPBox2DWorld* m = (PPBox2DWorld*)s->userdata;
-//	if (m == NULL) return 0;
-//
-//	if (s->argCount > 0) {
-//		m->SetContinuousPhysics(s->boolean(0));
-//    return 0;
-//	}
-//	lua_pushboolean(L,m->GetContinuousPhysics());
-//	return 1;
-//}
-
-//static int funcb2WorldSubStepping(lua_State *L) {
-//	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPBox2DWorld* m = (PPBox2DWorld*)s->userdata;
-//	if (m == NULL) return 0;
-//
-//	if (s->argCount > 0) {
-//		m->SetSubStepping(s->boolean(0));
-//    return 0;
-//	}
-//	lua_pushboolean(L,m->GetSubStepping());
-//	return 1;
-//}
-
-//static int funcb2WorldProxyCount(lua_State *L) {
-//	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPBox2DWorld* m = (PPBox2DWorld*)s->userdata;
-//	if (m == NULL) return 0;
-//	lua_pushinteger(L,m->GetProxyCount());
-//	return 1;
-//}
-
-//static int funcb2WorldBodyCount(lua_State *L) {
-//	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPBox2DWorld* m = (PPBox2DWorld*)s->userdata;
-//	if (m == NULL) return 0;
-//	lua_pushinteger(L,m->GetBodyCount());
-//	return 1;
-//}
-
-//static int funcb2WorldJointCount(lua_State *L) {
-//	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPBox2DWorld* m = (PPBox2DWorld*)s->userdata;
-//	if (m == NULL) return 0;
-//	lua_pushinteger(L,m->GetJointCount());
-//	return 1;
-//}
-
-//static int funcb2WorldContactCount(lua_State *L) {
-//	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPBox2DWorld* m = (PPBox2DWorld*)s->userdata;
-//	if (m == NULL) return 0;
-//	lua_pushinteger(L,m->GetContactCount());
-//	return 1;
-//}
-
-//static int funcb2WorldTreeHeight(lua_State *L) {
-//	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPBox2DWorld* m = (PPBox2DWorld*)s->userdata;
-//	if (m == NULL) return 0;
-//	lua_pushinteger(L,m->GetTreeHeight());
-//	return 1;
-//}
-
-//static int funcb2WorldTreeBalance(lua_State *L) {
-//	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPBox2DWorld* m = (PPBox2DWorld*)s->userdata;
-//	if (m == NULL) return 0;
-//	lua_pushinteger(L,m->GetTreeBalance());
-//	return 1;
-//}
-
-//static int funcb2WorldTreeQuality(lua_State *L) {
-//	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPBox2DWorld* m = (PPBox2DWorld*)s->userdata;
-//	if (m == NULL) return 0;
-//	lua_pushnumber(L,m->GetTreeQuality());
-//	return 1;
-//}
+static int funcb2WorldContactList(lua_State *L) {
+#if 1
+  lua_pushnil(L);
+#else
+  PPBox2DWorld* m = (PPBox2DWorld*)PPLuaArg::UserData(L,PPBox2DWorld::className);
+  PPUserDataAssert(m!=NULL);
+  if (m->GetContactList()) {
+    if (lua_isnil(L,-1)) {
+      PPBox2DContact* ppcontact = new PPBox2DContact(m->GetContactList());
+      ppcontact->worldId = m->worldId;
+      PPLuaScript::newObject(L,B2CONTACT,ppcontact,funcDeleteContact);
+    }
+  } else {
+    lua_pushnil(L);
+  }
+#endif
+	return 1;
+}
 
 static int funcb2WorldGravity(lua_State *L) {
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
@@ -3306,33 +3271,6 @@ static int funcb2WorldGravity(lua_State *L) {
 	g = m->GetGravity();
 	return s->returnPoint(L,PPPoint(g.x,g.y));
 }
-
-//static int funcb2WorldIsLocked(lua_State *L) {
-//	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPBox2DWorld* m = (PPBox2DWorld*)s->userdata;
-//	if (m == NULL) return 0;
-//	lua_pushboolean(L,m->IsLocked());
-//	return 1;
-//}
-
-//static int funcb2WorldAutoClearForces(lua_State *L) {
-//	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPBox2DWorld* m = (PPBox2DWorld*)s->userdata;
-//	if (m == NULL) return 0;
-//	if (s->argCount > 0) {
-//		m->SetAutoClearForces(s->boolean(0));
-//    return 0;
-//	}
-//	lua_pushboolean(L,m->GetAutoClearForces());
-//	return 1;
-//}
-
-//static int funcb2WorldGetContactManager(lua_State *L) {
-//	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPBox2DWorld* m = (PPBox2DWorld*)s->userdata;
-//	if (m == NULL) return 0;
-//	return 0;
-//}
 
 static int funcb2WorldGetProfile(lua_State *L) {
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
@@ -3595,7 +3533,6 @@ static int funcb2WorldRayCast(lua_State* L)
     }
     lua_settop(L,top);
 
-#if 1
     if (callbackidx > 1) {
       point1.x=v[0];
       point1.y=v[1];
@@ -3604,30 +3541,6 @@ static int funcb2WorldRayCast(lua_State* L)
       RayCastCallback callback(L,1,callbackidx);
       m->RayCast(&callback,point1,point2);
     }
-#else
-    lua_getfield(L,2,"x");
-    if (!lua_isnil(L, -1)) {
-      point1.x=lua_tonumber(L,-1);
-    }
-    lua_getfield(L,2,"y");
-    if (!lua_isnil(L, -1)) {
-      point1.y=lua_tonumber(L,-1);
-    }
-    lua_getfield(L,3,"x");
-    if (!lua_isnil(L, -1)) {
-      point2.x=lua_tonumber(L,-1);
-    }
-    lua_getfield(L,3,"y");
-    if (!lua_isnil(L, -1)) {
-      point2.y=lua_tonumber(L,-1);
-    }
-    if (s->argCount > 2) {
-      if (lua_isfunction(L,4)) {
-        RayCastCallback callback(L,1,4);
-        m->RayCast(&callback,point1,point2);
-      }
-    }
-#endif
   }
 	return 0;
 }
@@ -3668,7 +3581,7 @@ static int funcb2WorldDump(lua_State* L)
 static int funcb2WorldDrawSpriteShape(lua_State* L)
 {
   lua_getfield(L,1,"shape");
-  lua_getfield(L,-1,"sprite");
+  lua_getfield(L,-1,SHAPE_SPRITE);
   
 	PPObject* sp = (PPObject*)PPLuaArg::UserData(L,lua_gettop(L),PPObject::className,false);
   if (sp) {
@@ -3678,191 +3591,47 @@ static int funcb2WorldDrawSpriteShape(lua_State* L)
     b2Vec2 offset(0,0);
     offset=getPoint(L,lua_gettop(L),offset);
     
-    lua_getfield(L,spriteIdx,"pivot");
-    lua_pushvalue(L,spriteIdx);
-    if (lua_pcall(L,1,1,0)!=0) {
-      return luaL_error(L,lua_tostring(L,-1));
-    }
     b2Vec2 pivot(0,0);
-    pivot=getPoint(L,lua_gettop(L),pivot);
+    lua_getfield(L,spriteIdx,"pivot");
+    if (lua_isfunction(L,-1)) {
+      lua_pushvalue(L,spriteIdx);
+      if (lua_pcall(L,1,1,0)!=0) {
+        return luaL_error(L,lua_tostring(L,-1));
+      }
+      pivot=getPoint(L,lua_gettop(L),pivot);
+    }
     
     b2Vec2 pos = offset-pivot;
     lua_getfield(L,spriteIdx,"pos");
-    lua_pushvalue(L,spriteIdx);
-    lua_pushnumber(L,pos.x);
-    lua_pushnumber(L,pos.y);
-    if (lua_pcall(L,3,0,0)!=0) {
-      return luaL_error(L,lua_tostring(L,-1));
+    if (lua_isfunction(L,-1)) {
+      lua_pushvalue(L,spriteIdx);
+      lua_pushnumber(L,pos.x);
+      lua_pushnumber(L,pos.y);
+      if (lua_pcall(L,3,0,0)!=0) {
+        return luaL_error(L,lua_tostring(L,-1));
+      }
     }
     
     lua_getfield(L,spriteIdx,"rotate");
-    lua_pushvalue(L,spriteIdx);
-    lua_getfield(L,1,"angle");
-    if (lua_pcall(L,2,0,0)!=0) {
-      return luaL_error(L,lua_tostring(L,-1));
+    if (lua_isfunction(L,-1)) {
+      lua_pushvalue(L,spriteIdx);
+      lua_getfield(L,1,"angle");
+      if (lua_pcall(L,2,0,0)!=0) {
+        return luaL_error(L,lua_tostring(L,-1));
+      }
     }
 
     lua_getfield(L,spriteIdx,"draw");
-    lua_pushvalue(L,spriteIdx);
-    if (lua_pcall(L,1,0,0)!=0) {
-      return luaL_error(L,lua_tostring(L,-1));
-    }
-    
-  }
-  
-  return 0;
-}
-
-static int funcb2WorldSpriteShape(lua_State* L,b2Shape::Type defaultShape)
-{
-	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-	PPBox2DWorld* m = (PPBox2DWorld*)PPLuaArg::UserData(L,PPBox2DWorld::className);
-  PPUserDataAssert(m!=NULL);
-  
-  int topoffset=0;
-
-  b2Shape::Type shapeType = defaultShape;
-  if (!lua_istable(L,2)) {
-    if (lua_type(L,2) == LUA_TSTRING) {
-      std::string name = lua_tostring(L,2);
-      if (name == "circle") {
-        shapeType = b2Shape::e_circle;
-      } else
-      if (name == "polygon") {
-        shapeType = b2Shape::e_polygon;
-      }
-    } else {
-      int type = (int)lua_tointeger(L,2);
-      if (type == b2Shape::e_circle) {
-        shapeType = b2Shape::e_circle;
-      }
-      if (type == b2Shape::e_polygon) {
-        shapeType = b2Shape::e_polygon;
-      }
-    }
-    topoffset=1;
-  }
-
-	PPObject* sp = (PPObject*)PPLuaArg::UserData(L,2+topoffset,PPObject::className,false);
-  if (sp) {
-    int spriteIdx=2+topoffset;
-    int optionIdx=3+topoffset;
-    
-    lua_getfield(L,spriteIdx,"tileSize");
-    lua_pushvalue(L,spriteIdx);
-    if (lua_pcall(L,1,1,0)!=0) {
-      return luaL_error(L,lua_tostring(L,-1));
-    }
-    lua_getfield(L,-1,"width");
-    float width = lua_tonumber(L,-1);
-    lua_getfield(L,-2,"height");
-    float height = lua_tonumber(L,-1);
-
-    lua_getfield(L,spriteIdx,"pivot");
-    lua_pushvalue(L,spriteIdx);
-    lua_pushnumber(L,width/2);
-    lua_pushnumber(L,height/2);
-    if (lua_pcall(L,3,0,0)!=0) {
-      return luaL_error(L,lua_tostring(L,-1));
-    }
-    
-    b2Shape* shape=NULL;
-    
-    if (shapeType == b2Shape::e_polygon) {
-      shape = new b2PolygonShape();
-      PPLuaScript::newObject(L,B2POLYGONSHAPE,shape,funcDeleteShape);
-    } else {
-      b2CircleShape* shape = new b2CircleShape();
-      PPLuaScript::newObject(L,B2CIRCLESHAPE,shape,funcDeleteShape);
-    }
-    int shapeIdx = lua_gettop(L);
-    
-    lua_pushcfunction(L,funcb2WorldDrawSpriteShape);
-    lua_setfield(L,shapeIdx,"draw");
-    
-    lua_pushvalue(L,spriteIdx);
-    lua_setfield(L,shapeIdx,"sprite");
-
-    if (shapeType == b2Shape::e_polygon) {
-      float32 hx=1,hy=1;
-      b2Vec2 center(0,0);
-      float angle=0;
-      if (m->drawScale.x!=0 && m->drawScale.y!=0) {
-        lua_getfield(L,spriteIdx,"size");
-        lua_pushvalue(L,spriteIdx);
-        if (lua_pcall(L,1,1,0)!=0) {
-          return luaL_error(L,lua_tostring(L,-1));
-        }
-        if (lua_type(L,-1)==LUA_TTABLE) {
-          lua_getfield(L,-1,"width");
-          hx=lua_tonumber(L,-1)/m->drawScale.x/2;
-          lua_getfield(L,-2,"height");
-          hy=lua_tonumber(L,-1)/m->drawScale.y/2;
-        }
-      }
-
-      lua_getfield(L,optionIdx,"offset");
-      if (lua_type(L,-1)==LUA_TTABLE) {
-        center = getPoint(L,-1,center);
-      }
-
-      lua_getfield(L,optionIdx,"angle");
-      if (!lua_isnil(L,-1)) {
-        angle = lua_tonumber(L,-1);
-      }
-
-      lua_getfield(L,shapeIdx,"setAsBox");
-      lua_pushvalue(L,shapeIdx);
-      lua_pushnumber(L,hx);
-      lua_pushnumber(L,hy);
-      lua_createtable(L,2,0);
-      lua_pushnumber(L,center.x);
-      lua_setfield(L,-2,"x");
-      lua_pushnumber(L,center.y);
-      lua_setfield(L,-2,"y");
-      lua_pushnumber(L,angle);
-      if (lua_pcall(L,5,0,0)!=0) {
+    if (lua_isfunction(L,-1)) {
+      lua_pushvalue(L,spriteIdx);
+      if (lua_pcall(L,1,0,0)!=0) {
         return luaL_error(L,lua_tostring(L,-1));
       }
-    } else {
-      float radius=0;
-      if (m->drawScale.x!=0) {
-        lua_getfield(L,spriteIdx,"size");
-        lua_pushvalue(L,spriteIdx);
-        if (lua_pcall(L,1,1,0)!=0) {
-          return luaL_error(L,lua_tostring(L,-1));
-        }
-        if (lua_type(L,-1)==LUA_TTABLE) {
-          lua_getfield(L,-1,"width");
-          radius=lua_tonumber(L,-1)/m->drawScale.x/2;
-        }
-      }
-      lua_pushnumber(L,radius);
-      lua_setfield(L,shapeIdx,"radius");
     }
     
-    lua_pushcfunction(L,setOption);
-    lua_pushvalue(L,optionIdx);
-    lua_pushvalue(L,shapeIdx);
-    if (lua_pcall(L, 2, 0, 0)!=0) {
-      return luaL_error(L,lua_tostring(L,-1));
-    }
-    
-    lua_settop(L,shapeIdx);
-    return 1;
   }
   
   return 0;
-}
-
-static int funcb2WorldBoxSpriteShape(lua_State* L)
-{
-  return funcb2WorldSpriteShape(L,b2Shape::e_polygon);
-}
-
-static int funcb2WorldCircleSpriteShape(lua_State* L)
-{
-  return funcb2WorldSpriteShape(L,b2Shape::e_circle);
 }
 
 #pragma mark -
@@ -5213,11 +4982,7 @@ static int funcb2PrismaticJointLimits(lua_State* L) {
   PPUserDataAssert(m!=NULL);
   if (m->joint == NULL) return 0;
   b2PrismaticJoint* joint = (b2PrismaticJoint*)m->joint;
-	if (lua_gettop(L)>2) {
-		joint->SetLimits(lua_tonumber(L,2),lua_tonumber(L,3));
-  } else {
-    //error
-  }
+	joint->SetLimits(lua_tonumber(L,2),lua_tonumber(L,3));
 	return 0;
 }
 
@@ -5226,11 +4991,7 @@ static int funcb2RevoluteJointLimits(lua_State* L) {
   PPUserDataAssert(m!=NULL);
   if (m->joint == NULL) return 0;
   b2RevoluteJoint* joint = (b2RevoluteJoint*)m->joint;
-	if (lua_gettop(L)>2) {
-		joint->SetLimits(lua_tonumber(L,2),lua_tonumber(L,3));
-  } else {
-    //error
-  }
+  joint->SetLimits(lua_tonumber(L,2),lua_tonumber(L,3));
 	return 0;
 }
 
@@ -5239,11 +5000,7 @@ static int funcb2RevoluteJointMotorTorque(lua_State* L) {
   PPUserDataAssert(m!=NULL);
   if (m->joint == NULL) return 0;
   b2RevoluteJoint* joint = (b2RevoluteJoint*)m->joint;
-  if (lua_gettop(L)>1) {
-   lua_pushnumber(L,joint->GetMotorTorque(lua_tonumber(L,2)));
-  } else {
-    //error
-  }
+  lua_pushnumber(L,joint->GetMotorTorque(lua_tonumber(L,2)));
 	return 1;
 }
 
@@ -5252,11 +5009,7 @@ static int funcb2WheelJointMotorTorque(lua_State* L) {
   PPUserDataAssert(m!=NULL);
   if (m->joint == NULL) return 0;
   b2WheelJoint* joint = (b2WheelJoint*)m->joint;
-  if (lua_gettop(L)>1) {
-   lua_pushnumber(L,joint->GetMotorTorque(lua_tonumber(L,2)));
-  } else {
-    //error
-  }
+  lua_pushnumber(L,joint->GetMotorTorque(lua_tonumber(L,2)));
 	return 1;
 }
 
@@ -5265,11 +5018,7 @@ static int funcb2PrismaticJointMotorForce(lua_State* L) {
   PPUserDataAssert(m!=NULL);
   if (m->joint == NULL) return 0;
   b2PrismaticJoint* joint = (b2PrismaticJoint*)m->joint;
-	if (lua_gettop(L)>2) {
-		lua_pushnumber(L,joint->GetMotorForce(lua_tonumber(L,2)));
-  } else {
-    //error
-  }
+	lua_pushnumber(L,joint->GetMotorForce(lua_tonumber(L,2)));
 	return 1;
 }
 
@@ -5278,15 +5027,13 @@ static int funcb2JointShiftOrigin(lua_State *L) {
 	PPBox2DJoint* m = (PPBox2DJoint*)PPLuaArg::UserData(L,PPBox2DJoint::className);
   PPUserDataAssert(m!=NULL);
   if (m->joint == NULL) return 0;
+  b2Vec2 g(0,0);
   if (lua_gettop(L) > 1) {
-    b2Vec2 g;
-		PPPoint p = s->getPoint(L,0);
+    PPPoint p = s->getPoint(L,0);
 		g.x = p.x;
 		g.y = p.y;
-    m->joint->ShiftOrigin(g);
-  } else {
-    //error
   }
+  m->joint->ShiftOrigin(g);
 	return 0;
 }
 
@@ -5327,15 +5074,13 @@ static int funcb2MouseJointShiftOrigin(lua_State *L) {
 	PPBox2DJoint* m = (PPBox2DJoint*)PPLuaArg::UserData(L,PPBox2DJoint::className);
   PPUserDataAssert(m!=NULL);
   if (m->joint == NULL) return 0;
+  b2Vec2 g(0,0);
   if (lua_gettop(L) > 1) {
-    b2Vec2 g;
 		PPPoint p = s->getPoint(L,0);
 		g.x = p.x;
 		g.y = p.y;
-    m->joint->ShiftOrigin(g);
-  } else {
-    //error
   }
+  m->joint->ShiftOrigin(g);
 	return 0;
 }
 
@@ -5344,15 +5089,13 @@ static int funcb2PulleyJointShiftOrigin(lua_State *L) {
 	PPBox2DJoint* m = (PPBox2DJoint*)PPLuaArg::UserData(L,PPBox2DJoint::className);
   PPUserDataAssert(m!=NULL);
   if (m->joint == NULL) return 0;
+  b2Vec2 g(0,0);
   if (lua_gettop(L) > 1) {
-    b2Vec2 g;
 		PPPoint p = s->getPoint(L,0);
 		g.x = p.x;
 		g.y = p.y;
-    m->joint->ShiftOrigin(g);
-  } else {
-    //error
   }
+  m->joint->ShiftOrigin(g);
 	return 0;
 }
 
@@ -6914,7 +6657,6 @@ static int funcb2FixtureTestPoint(lua_State *L) {
 	if (s->argCount > 0) {
     b2Vec2 p;
     p=getPoint(L,2,p);
-printf("# %f,%f\n",p.x,p.y);
 		lua_pushboolean(L,m->fixture->TestPoint(p));
 		return 1;
 	}
@@ -7182,27 +6924,8 @@ static int funcDeleteContact(lua_State *L)
   
   delete m;
 
-//printf("delete Contact\n");
-
   return 0;
 }
-
-static int funcb2ContactManifold(lua_State *L) {
-  return 0;
-}
-
-static int funcb2ContactWorldManifold(lua_State *L) {
-  return 0;
-}
-
-//static int funcb2ContactIsTouching(lua_State *L) {
-//	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPBox2DContact* m = (PPBox2DContact*)s->userdata;
-//	if (m == NULL) return 0;
-//	if (m->contact == NULL) return 0;
-//  lua_pushboolean(L,m->contact->IsTouching());
-//  return 1;
-//}
 
 static int funcb2ContactEnabled(lua_State *L) {
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
@@ -7217,78 +6940,6 @@ static int funcb2ContactEnabled(lua_State *L) {
   return 1;
 }
 
-//static int funcb2ContactNext(lua_State *L) {
-//	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPBox2DContact* m = (PPBox2DContact*)s->userdata;
-//	if (m == NULL) return 0;
-//	if (m->contact == NULL) return 0;
-//  
-//  PPBox2DContact* contact = new PPBox2DContact(m->contact->GetNext());
-//  contact->prev = m;
-//  m->next = contact;
-//  contact->worldId = m->worldId;
-//  PPLuaScript::newObject(L,B2CONTACT,contact,funcDeleteContact);
-//  lua_getfield(L,1,"world");
-//  lua_setfield(L,-2,"world");
-//  
-//  return 1;
-//}
-
-//static int funcb2ContactFixtureA(lua_State *L) {
-//	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPBox2DContact* m = (PPBox2DContact*)s->userdata;
-//	if (m == NULL) return 0;
-//	if (m->contact == NULL) return 0;
-//  
-//  lua_getfield(L,1,"world");
-//  PPBox2DWorld::findFixture(L,m->contact->GetFixtureA(),lua_gettop(L));
-//  
-//  return 1;
-//}
-
-//static int funcb2ContactFixtureB(lua_State *L) {
-//	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPBox2DContact* m = (PPBox2DContact*)s->userdata;
-//	if (m == NULL) return 0;
-//	if (m->contact == NULL) return 0;
-//  
-//  lua_getfield(L,1,"world");
-//  PPBox2DWorld::findFixture(L,m->contact->GetFixtureB(),lua_gettop(L));
-//  
-//  return 1;
-//}
-
-//static int funcb2ContactChildIndexA(lua_State *L) {
-//	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPBox2DContact* m = (PPBox2DContact*)s->userdata;
-//	if (m == NULL) return 0;
-//	if (m->contact == NULL) return 0;
-//  lua_pushinteger(L,m->contact->GetChildIndexA());
-//  return 1;
-//}
-
-//static int funcb2ContactChildIndexB(lua_State *L) {
-//	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPBox2DContact* m = (PPBox2DContact*)s->userdata;
-//	if (m == NULL) return 0;
-//	if (m->contact == NULL) return 0;
-//  lua_pushinteger(L,m->contact->GetChildIndexB());
-//  return 1;
-//}
-
-//static int funcb2ContactFriction(lua_State *L) {
-//	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPBox2DContact* m = (PPBox2DContact*)s->userdata;
-//	if (m == NULL) return 0;
-//	if (m->contact == NULL) return 0;
-//  if (lua_gettop(L)>1) {
-//    m->contact->SetFriction(lua_tonumber(L,2));
-//    return 0;
-//  }
-//  lua_pushnumber(L,m->contact->GetFriction());
-//  return 1;
-//}
-//
 static int funcb2ContactResetFriction(lua_State *L) {
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
 	PPBox2DContact* m = (PPBox2DContact*)PPLuaArg::UserData(L,PPBox2DContact::className);
@@ -7298,38 +6949,12 @@ static int funcb2ContactResetFriction(lua_State *L) {
   return 0;
 }
 
-//static int funcb2ContactRestitution(lua_State *L) {
-//	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPBox2DContact* m = (PPBox2DContact*)s->userdata;
-//	if (m == NULL) return 0;
-//	if (m->contact == NULL) return 0;
-//  if (lua_gettop(L)>1) {
-//    m->contact->SetRestitution(lua_tonumber(L,2));
-//    return 0;
-//  }
-//  lua_pushnumber(L,m->contact->GetRestitution());
-//  return 1;
-//}
-
 static int funcb2ContactResetRestitution(lua_State *L) {
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
 	PPBox2DContact* m = (PPBox2DContact*)PPLuaArg::UserData(L,PPBox2DContact::className);
   PPUserDataAssert(m!=NULL);
 	if (m->contact == NULL) return 0;
   m->contact->ResetRestitution();
-  return 0;
-}
-
-//static int funcb2ContactTangentSpeed(lua_State *L) {
-//	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-//	PPBox2DContact* m = (PPBox2DContact*)s->userdata;
-//	if (m == NULL) return 0;
-//	if (m->contact == NULL) return 0;
-//  lua_pushnumber(L,m->contact->GetTangentSpeed());
-//  return 1;
-//}
-
-static int funcb2ContactEvaluate(lua_State *L) {
   return 0;
 }
 
@@ -7692,9 +7317,13 @@ static int funcb2ShapeRayCast(lua_State* L)
           lua_pushnumber(L,output.fraction);
           return 3;
         }
+      } else {
+        return luaL_argerror(L,n,ARG_ERROR);
       }
 
     }
+  } else {
+    return luaL_argerror(L,lua_gettop(L)+1,ARG_MISSING);
   }
   return 0;
 }
@@ -7723,13 +7352,14 @@ static int funcb2ShapeComputeMass(lua_State* L)
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
 	b2Shape* m = (b2Shape*)PPLuaArg::UserData(L,B2SHAPE);
   PPUserDataAssert(m!=NULL);
+  float v=0;
   if (top>1) {
-    b2MassData massData;
-    m->ComputeMass(&massData,lua_tonumber(L,2));
-    pushMassData(L,massData);
-    return 1;
+    v=lua_tonumber(L,2);
   }
-  return 0;
+  b2MassData massData;
+  m->ComputeMass(&massData,v);
+  pushMassData(L,massData);
+  return 1;
 }
 
 static int funcb2ChainShapeAccessor(lua_State* L,bool setter=false)
@@ -7877,19 +7507,18 @@ static int funcb2ChainShapeChildEdge(lua_State* L)
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
 	b2ChainShape* m = (b2ChainShape*)PPLuaArg::UserData(L,B2CHAINSHAPE);
   PPUserDataAssert(m!=NULL);
+  int index=0;
   if (top>=2) {
-    int32 index = (int)lua_tointeger(L,2)-1;
-    if (index >= 0 && index < m->m_count) {
-      b2EdgeShape* edge = new b2EdgeShape();
-      m->GetChildEdge(edge,index);
-      PPLuaScript::newObject(L,B2EDGESHAPE,edge,funcDeleteShape);
-      return 1;
-    } else {
-      lua_pushnil(L);
-      return 1;
-    }
+    index = (int)lua_tointeger(L,2)-1;
   }
-  return 0;
+  if (index >= 0 && index < m->m_count) {
+    b2EdgeShape* edge = new b2EdgeShape();
+    m->GetChildEdge(edge,index);
+    PPLuaScript::newObject(L,B2EDGESHAPE,edge,funcDeleteShape);
+  } else {
+    lua_pushnil(L);
+  }
+  return 1;
 }
 
 static int funcb2CircleShapeAccessor(lua_State* L,bool setter=false)
@@ -8234,7 +7863,10 @@ static int funcb2PolygonShapeSetAsBox(lua_State* L)
         v[n++] = lua_tonumber(L,-1);
       }
       lua_pop(L,1);
-      if (n>=2) break;
+      if (n>=2) {
+        idx++;
+        break;
+      }
 
       lua_rawgeti(L,idx,1);
       if (!lua_isnil(L,-1)) {
@@ -8268,7 +7900,7 @@ static int funcb2PolygonShapeSetAsBox(lua_State* L)
       angle = lua_tonumber(L,idx);
       m->SetAsBox(hx,hy,center,angle);
     } else {
-      m->SetAsBox(hx,hy);
+      m->SetAsBox(hx,hy,center,0);
     }
   } else {
     m->SetAsBox(hx,hy);
@@ -8283,17 +7915,218 @@ static int funcb2PolygonShapeVertex(lua_State* L)
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
 	b2PolygonShape* m = (b2PolygonShape*)PPLuaArg::UserData(L,B2POLYGONSHAPE);
   PPUserDataAssert(m!=NULL);
+  int index=0;
   if (top>1) {
-    int index = (int)lua_tointeger(L,2)-1;
-    if (index >= 0 && index < m->m_count) {
-      pushPoint(L,m->GetVertex(index));
-      return 1;
-    } else {
-      lua_pushnil(L);
-      return 1;
+    index = (int)lua_tointeger(L,2)-1;
+  }
+  if (index >= 0 && index < m->m_count) {
+    pushPoint(L,m->GetVertex(index));
+  } else {
+    lua_pushnil(L);
+  }
+  return 1;
+}
+
+static int funcb2ShapeSpriteCommon(lua_State* L,lua_CFunction fn)
+{
+  int shapeIdx=1;
+  int spriteIdx=2;
+  int optionIdx=3;
+  if (lua_gettop(L)>=spriteIdx) {
+
+    luaL_checktype(L,spriteIdx,LUA_TTABLE);
+//    PPObject* sp = (PPObject*)PPLuaArg::UserData(L,spriteIdx,PPObject::className,false);
+//    if (sp) 
+    {
+      float scx=1,scy=1;
+      float width=10,height=10;
+
+      lua_pushcfunction(L,funcb2WorldDrawSpriteShape);
+      lua_setfield(L,shapeIdx,"draw");
+      
+      lua_pushvalue(L,spriteIdx);
+      lua_setfield(L,shapeIdx,SHAPE_SPRITE);
+
+      lua_getfield(L,spriteIdx,"size");
+      if (lua_isfunction(L,-1)) {
+        lua_pushvalue(L,spriteIdx);
+        if (lua_pcall(L,1,1,0)!=0) {
+          return luaL_error(L,lua_tostring(L,-1));
+        }
+        lua_getfield(L,-1,"width");
+        width = lua_tonumber(L,-1);
+        lua_getfield(L,-2,"height");
+        height = lua_tonumber(L,-1);
+      }
+
+      lua_getfield(L,spriteIdx,"scale");
+      if (lua_isfunction(L,-1)) {
+        lua_pushvalue(L,spriteIdx);
+        if (lua_pcall(L,1,1,0)!=0) {
+          return luaL_error(L,lua_tostring(L,-1));
+        }
+        lua_getfield(L,-1,"x");
+        scx = lua_tonumber(L,-1);
+        lua_getfield(L,-2,"y");
+        scy = lua_tonumber(L,-1);
+      }
+
+      lua_getfield(L,spriteIdx,"pivot");
+      if (lua_isfunction(L,-1)) {
+        lua_pushvalue(L,spriteIdx);
+        lua_pushnumber(L,width/scx/2);
+        lua_pushnumber(L,height/scy/2);
+        if (lua_pcall(L,3,0,0)!=0) {
+          return luaL_error(L,lua_tostring(L,-1));
+        }
+      }
+      
+      if (fn) {
+        if (fn(L)!=0) return luaL_error(L,lua_tostring(L,-1));
+      }
+
+      if (lua_gettop(L)>=optionIdx) {
+        lua_pushcfunction(L,setOption);
+        lua_pushvalue(L,optionIdx);
+        lua_pushvalue(L,shapeIdx);
+        if (lua_pcall(L, 2, 0, 0)!=0) {
+          return luaL_error(L,lua_tostring(L,-1));
+        }
+      }
+//    } else {
+//      return luaL_argerror(L,spriteIdx,ARG_ERROR);
+    }
+
+    return 0;
+  }
+  lua_getfield(L,shapeIdx,SHAPE_SPRITE);
+  return 1;
+}
+
+static int funcb2ShapeSprite(lua_State* L)
+{
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
+	b2Shape* m = (b2Shape*)PPLuaArg::UserData(L,B2SHAPE);
+  PPUserDataAssert(m!=NULL);
+  return funcb2ShapeSpriteCommon(L,NULL);
+}
+
+static int funcb2PolygonShapeSpriteSub(lua_State* L)
+{
+  int shapeIdx=1;
+  int spriteIdx=2;
+  int optionIdx=3;
+  b2Vec2 drawScale(10,10);
+
+  float32 hx=1,hy=1;
+  b2Vec2 center(0,0);
+  float angle=0;
+
+  lua_getfield(L,optionIdx,"drawScale");
+  if (lua_type(L,-1)==LUA_TTABLE) {
+    drawScale = getPoint(L,-1,drawScale);
+  }
+
+  if (drawScale.x!=0 && drawScale.y!=0) {
+    lua_getfield(L,spriteIdx,"size");
+    if (lua_isfunction(L,-1)) {
+      lua_pushvalue(L,spriteIdx);
+      if (lua_pcall(L,1,1,0)!=0) {
+        return luaL_error(L,lua_tostring(L,-1));
+      }
+      if (lua_type(L,-1)==LUA_TTABLE) {
+        lua_getfield(L,-1,"width");
+        if (!lua_isnil(L,-1)) {
+          hx=lua_tonumber(L,-1)/drawScale.x/2;
+          lua_getfield(L,-2,"height");
+          hy=lua_tonumber(L,-1)/drawScale.y/2;
+        }
+      }
     }
   }
+
+  lua_getfield(L,optionIdx,"offset");
+  if (!lua_isnil(L,-1)) {
+    if (lua_type(L,-1)==LUA_TTABLE) {
+      center = getPoint(L,-1,center);
+    }
+  }
+
+  lua_getfield(L,optionIdx,"angle");
+  if (!lua_isnil(L,-1)) {
+    if (!lua_isnil(L,-1)) {
+      angle = lua_tonumber(L,-1);
+    }
+  }
+
+  lua_getfield(L,shapeIdx,"setAsBox");
+  if (lua_isfunction(L,-1)) {
+    lua_pushvalue(L,shapeIdx);
+    lua_pushnumber(L,hx);
+    lua_pushnumber(L,hy);
+    lua_createtable(L,2,0);
+    lua_pushnumber(L,center.x);
+    lua_setfield(L,-2,"x");
+    lua_pushnumber(L,center.y);
+    lua_setfield(L,-2,"y");
+    lua_pushnumber(L,angle);
+    if (lua_pcall(L,5,0,0)!=0) {
+      return luaL_error(L,lua_tostring(L,-1));
+    }
+  }
+
   return 0;
+}
+
+static int funcb2PolygonShapeSprite(lua_State* L)
+{
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
+	b2PolygonShape* m = (b2PolygonShape*)PPLuaArg::UserData(L,B2POLYGONSHAPE);
+  PPUserDataAssert(m!=NULL);
+  return funcb2ShapeSpriteCommon(L,funcb2PolygonShapeSpriteSub);
+}
+
+static int funcb2CircleShapeSpriteSub(lua_State* L)
+{
+  int shapeIdx=1;
+  int spriteIdx=2;
+  int optionIdx=3;
+  b2Vec2 drawScale(10,10);
+
+  lua_getfield(L,optionIdx,"drawScale");
+  if (lua_type(L,-1)==LUA_TTABLE) {
+    drawScale = getPoint(L,-1,drawScale);
+  }
+
+  float radius=0;
+  if (drawScale.x!=0) {
+    lua_getfield(L,spriteIdx,"size");
+    if (lua_isfunction(L,-1)) {
+      lua_pushvalue(L,spriteIdx);
+      if (lua_pcall(L,1,1,0)!=0) {
+        return luaL_error(L,lua_tostring(L,-1));
+      }
+      if (lua_type(L,-1)==LUA_TTABLE) {
+        lua_getfield(L,-1,"width");
+        radius=lua_tonumber(L,-1)/drawScale.x/2;
+        lua_getfield(L,-2,"height");
+        float y=lua_tonumber(L,-1)/drawScale.y/2;
+        if (y>radius) radius=y;
+      }
+    }
+  }
+  lua_pushnumber(L,radius);
+  lua_setfield(L,shapeIdx,"radius");
+    
+  return 0;
+}
+
+static int funcb2CircleShapeSprite(lua_State* L)
+{
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
+	b2CircleShape* m = (b2CircleShape*)PPLuaArg::UserData(L,B2CIRCLESHAPE);
+  PPUserDataAssert(m!=NULL);
+  return funcb2ShapeSpriteCommon(L,funcb2CircleShapeSpriteSub);
 }
 
 #pragma mark -
@@ -8348,9 +8181,11 @@ PPBox2D* PPBox2D::openLibrary(PPLuaScript* s,const char* name,const char* superc
     //treeQuality  ROnly
     //locked       ROnly
     //autoClearForces
+
     s->addCommand("drawBody",functionb2WorldDrawBody);
     s->addCommand("drawShape",functionb2WorldDrawShape);
     s->addCommand("drawJoint",functionb2WorldDrawJoint);
+
     s->addCommand("debugDrawShape",functionb2WorldDebugDrawShape);
     s->addCommand("debugDrawBody",functionb2WorldDebugDrawBody);
     s->addCommand("debugDrawJoint",functionb2WorldDebugDrawJoint);
@@ -8364,24 +8199,10 @@ PPBox2D* PPBox2D::openLibrary(PPLuaScript* s,const char* name,const char* superc
 		s->addCommand("step",funcb2WorldStep);
 		s->addCommand("bodyList",funcb2WorldBodyList);
 		s->addCommand("jointList",funcb2WorldJointList);
+		s->addCommand("contactList",funcb2WorldContactList);
 		s->addCommand("bodyTable",funcb2WorldBodyTable);
 		s->addCommand("jointTable",funcb2WorldJointTable);
-//		s->addCommand("contactList",funcb2WorldContactList);              //要検討
-//		s->addCommand("allowSleeping",funcb2WorldAllowSleeping);          //allowSleep
-//		s->addCommand("warmStarting",funcb2WorldWarmStarting);            //wormStarting
-//		s->addCommand("continuousPhysics",funcb2WorldContinuousPhysics);  //continuousPhysics
-//		s->addCommand("subStepping",funcb2WorldSubStepping);              //subStepping
-//		s->addCommand("proxyCount",funcb2WorldProxyCount);                //proxyCount   ROnly
-//		s->addCommand("bodyCount",funcb2WorldBodyCount);                  //bodyCount    ROnly
-//		s->addCommand("jointCount",funcb2WorldJointCount);                //jointCount   ROnly
-//		s->addCommand("contactCount",funcb2WorldContactCount);            //contactCount ROnly
-//		s->addCommand("treeHeight",funcb2WorldTreeHeight);                //treeHeight   ROnly
-//		s->addCommand("treeBalance",funcb2WorldTreeBalance);              //treeBalance  ROnly
-//		s->addCommand("treeQuality",funcb2WorldTreeQuality);              //treeQuality  ROnly
 		s->addCommand("gravity",funcb2WorldGravity);
-//		s->addCommand("isLocked",funcb2WorldIsLocked);                    //locked       ROnly
-//		s->addCommand("autoClearForces",funcb2WorldAutoClearForces);      //autoClearForces
-		//s->addCommand("contactManager",funcb2WorldGetContactManager);
 		s->addCommand("getProfile",funcb2WorldGetProfile);
 		s->addCommand("queryAABB",funcb2WorldQueryAABB);
 		s->addCommand("rayCast",funcb2WorldRayCast);
@@ -8389,9 +8210,10 @@ PPBox2D* PPBox2D::openLibrary(PPLuaScript* s,const char* name,const char* superc
 		s->addCommand("shiftOrigin",funcb2WorldShiftOrigin);
 		s->addCommand("dump",funcb2WorldDump);
 
-		s->addCommand("spriteShape",funcb2WorldBoxSpriteShape);
-		s->addCommand("boxSpriteShape",funcb2WorldBoxSpriteShape);
-		s->addCommand("circleSpriteShape",funcb2WorldCircleSpriteShape);
+//		s->addCommand("spriteShape",funcb2WorldBoxSpriteShape);
+//		s->addCommand("boxSpriteShape",funcb2WorldBoxSpriteShape);
+//		s->addCommand("circleSpriteShape",funcb2WorldCircleSpriteShape);
+//    s->addCommand("drawSpriteShape",funcb2WorldDrawSpriteShape);
 
 	s->closeModule();
 
@@ -8691,12 +8513,12 @@ PPBox2D* PPBox2D::openLibrary(PPLuaScript* s,const char* name,const char* superc
     //friction
     //restitution
     //tangentSpeed
-		s->addCommand("manifold",funcb2ContactManifold);                //要検討
-		s->addCommand("worldManifold",funcb2ContactWorldManifold);      //要検討
+//		s->addCommand("manifold",funcb2ContactManifold);                //要検討
+//		s->addCommand("worldManifold",funcb2ContactWorldManifold);      //要検討
 		s->addCommand("isEnabled",funcb2ContactEnabled);
 		s->addCommand("resetFriction",funcb2ContactResetFriction);
 		s->addCommand("resetRestitution",funcb2ContactResetRestitution);
-		s->addCommand("evaluate",funcb2ContactEvaluate);                //要検討
+//		s->addCommand("evaluate",funcb2ContactEvaluate);                //要検討
   s->closeModule();
   
   PPBox2DTransform::className=B2TRANSFORM;
@@ -8730,7 +8552,8 @@ PPBox2D* PPBox2D::openLibrary(PPLuaScript* s,const char* name,const char* superc
     s->addIntegerValue("edgeShape",b2Shape::e_edge);
     s->addIntegerValue("polygonShape",b2Shape::e_polygon);
     s->addIntegerValue("chainShape",b2Shape::e_chain);
-
+    
+    s->addCommand("setSprite",funcb2ShapeSprite);
   s->closeModule();
   
   //b2ChainShape
@@ -8756,6 +8579,8 @@ PPBox2D* PPBox2D::openLibrary(PPLuaScript* s,const char* name,const char* superc
 		s->addCommand("support",funcb2CircleShapeSupport);
 		s->addCommand("supportVertex",funcb2CircleShapeSupportVertex);
 		s->addCommand("vertex",funcb2CircleShapeVertex);
+
+    s->addCommand("setSprite",funcb2CircleShapeSprite);
   s->closeModule();
   
   //b2EdgeShape
@@ -8782,6 +8607,8 @@ PPBox2D* PPBox2D::openLibrary(PPLuaScript* s,const char* name,const char* superc
 		s->addCommand("set",funcb2PolygonShapeSet);
 		s->addCommand("setAsBox",funcb2PolygonShapeSetAsBox);
 		s->addCommand("vertex",funcb2PolygonShapeVertex);
+
+    s->addCommand("setSprite",funcb2PolygonShapeSprite);
   s->closeModule();
 
   return NULL;

@@ -124,6 +124,7 @@ public:
   virtual void streamPreload(const char* filename,int track=0) {}
   virtual void streamLoopPlay(const char* filename,long long looppoint=0,int track=0) {}
   virtual void streamPlay(const char* filename,int track=0) {}
+  virtual void streamReset() {}
   virtual void streamStop(int track=0) {}
   virtual void streamPause(int track=0) {}
   virtual void streamResume(int track=0) {}

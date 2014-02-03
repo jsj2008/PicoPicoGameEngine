@@ -78,7 +78,7 @@ JNIEXPORT void JNICALL Java_com_picopicoengine_PicoGameJNI_init(JNIEnv * env, jo
   }
   win_width = width;
   win_height = height;
-LOGI("PicoGameJNI_init %d,%d",win_width,win_height);
+//LOGI("PicoGameJNI_init %d,%d",win_width,win_height);
   glViewport(0, 0, win_width, win_height);
 }
 

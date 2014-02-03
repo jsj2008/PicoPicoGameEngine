@@ -18,9 +18,9 @@ PPTTFontTile* PPTTFont::imageSystemFont(const char* string)
 static std::string sFontFile="";
 
 static const char* fontFiles[] = {
-  "Roboto-Bold.ttf",
-  "DroidSansJapanese.ttf",
+  "MTLmr3m.ttf",
   "DroidSansFallback.ttf",
+  "Roboto-Bold.ttf",
   "DroidSans.ttf",
   NULL
 };

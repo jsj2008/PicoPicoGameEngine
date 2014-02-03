@@ -22,6 +22,7 @@
 
 /* Begin PBXBuildFile section */
 		6B30B96518688FC200B524B2 /* Vorbis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B30B96418688FC200B524B2 /* Vorbis.framework */; };
+		6B36290A188B3CCE00A73BF1 /* GameController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B362909188B3CCE00A73BF1 /* GameController.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		6B8930A115B813D700402E76 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B8930A015B813D700402E76 /* Cocoa.framework */; };
 		6B8930AB15B813D700402E76 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6B8930A915B813D700402E76 /* InfoPlist.strings */; };
 		6B8930AD15B813D700402E76 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B8930AC15B813D700402E76 /* main.m */; };
@@ -62,6 +63,7 @@
 
 /* Begin PBXFileReference section */
 		6B30B96418688FC200B524B2 /* Vorbis.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Vorbis.framework; path = ../../../Vorbis/OSX/Vorbis/Products/Vorbis.framework; sourceTree = "<group>"; };
+		6B362909188B3CCE00A73BF1 /* GameController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameController.framework; path = System/Library/Frameworks/GameController.framework; sourceTree = SDKROOT; };
 		6B89309C15B813D700402E76 /* PicoGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PicoGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B8930A015B813D700402E76 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		6B8930A315B813D700402E76 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -126,6 +128,7 @@
 				6B8930D815B8164800402E76 /* OpenAL.framework in Frameworks */,
 				6B8930D915B8165000402E76 /* AppKit.framework in Frameworks */,
 				6B8930DA15B8165200402E76 /* CoreData.framework in Frameworks */,
+				6B36290A188B3CCE00A73BF1 /* GameController.framework in Frameworks */,
 				6B8930DB15B8165400402E76 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -163,6 +166,7 @@
 		6B8930A215B813D700402E76 /* Other Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6B362909188B3CCE00A73BF1 /* GameController.framework */,
 				6B8930D415B814EC00402E76 /* OpenAL.framework */,
 				6B8930D215B814DE00402E76 /* IOKit.framework */,
 				6B8930D615B8155600402E76 /* AudioUnit.framework */,

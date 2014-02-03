@@ -323,6 +323,15 @@ const char* PPGameDataSubPath(const char* name)
   return PPGameDataPath(name);
 }
 
+bool PPGameControllerAvailable()
+{
+#if __USE_GAME_CONTROLLER__
+  return true;
+#else
+  return false;
+#endif
+}
+
 void PPGameControllerStartDiscoverty()
 {
 #if __USE_GAME_CONTROLLER__
@@ -412,13 +421,13 @@ int PPGameControllerInfo(void* script,int index)
 {
   lua_State* L = (lua_State*)script;
 #if __USE_GAME_CONTROLLER__
-  int info=lua_gettop(L);
   if ([GCController class]!=nil) {
     NSArray* controllers = [GCController controllers];
     if (controllers.count > index && index >= 0) {
       GCController* gc = [controllers objectAtIndex:index];
 
       lua_createtable(L,0,0);
+      int info=lua_gettop(L);
 
       pushValue(L,info,[gc.vendorName UTF8String],"vendorName");
       pushValue(L,info,gc.attachedToDevice,"attachedToDevice");

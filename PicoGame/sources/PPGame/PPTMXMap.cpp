@@ -73,7 +73,7 @@ void PPTMXLayer::preCalc(PPObject* obj,int x,int y,int index,PPPoint* outpos)
 	PPGamePoly poly = obj->poly;
 	PPPoint os = obj->poly.origin*obj->poly.scale;
 	PPPoint op = obj->autoLayout(obj->pos)+os;
-	PPPoint ts = origin*obj->poly.scale-origin;
+	PPPoint ts = PPPointZero; //origin*obj->poly.scale-origin;
 	op.x = floorf(op.x);
 	op.y = floorf(op.y);
 
@@ -99,7 +99,7 @@ void PPTMXLayer::draw(PPObject* obj,PPRect drawArea)
 		PPGamePoly poly = obj->poly;
 		PPPoint os = obj->poly.origin*obj->poly.scale;
 		PPPoint op = obj->autoLayout(obj->pos)+os;
-		PPPoint ts = origin*obj->poly.scale-origin;
+		PPPoint ts = PPPointZero;//origin*obj->poly.scale-origin;
 		op.x = floorf(op.x);
 		op.y = floorf(op.y);
 
@@ -629,6 +629,13 @@ PPSize PPTMXMap::size()
 	}
 #endif
 	PPSize rs = mapSize*tileSize()*poly.scale;
+	return rs;
+}
+
+PPSize PPTMXMap::realSize()
+{
+	PPSize mapSize=drawArea.size();
+	PPSize rs = mapSize*tileSize();
 	return rs;
 }
 
@@ -2147,12 +2154,17 @@ static int funcScroll(lua_State* L)
 	return 0;
 }
 
-static int funcAABB(lua_State* L)
+static PPRect calcAABB(lua_State* L,PPLuaArg* s,PPTMXMap* m)
 {
-	PPTMXMap* m = (PPTMXMap*)PPLuaArg::UserData(L,PPTMXMap::className);
-  PPUserDataAssert(m!=NULL);
-	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
+//	PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className);
+//	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
+
+	PPSize mapSize=m->drawArea.size();
+	PPSize rs = mapSize*m->tileSize();
+
 	QBGame* g = (QBGame*)m->world();//s->userdata;
+	
+	int top=lua_gettop(L);
 
 #if 0   //setter & getter test
 	lua_getfield(L, 1, "x");
@@ -2165,7 +2177,6 @@ static int funcAABB(lua_State* L)
 	
 	lua_getfield(L,1,"autolayout");
 	if (lua_toboolean(L,-1)) {
-//		PPPoint op = m->pos;
 		bool centerx;
 		bool centery;
 		PPRect layoutarea;
@@ -2182,24 +2193,27 @@ static int funcAABB(lua_State* L)
 		if (centerx) flag |= PP_CENTER_X;
 		if (centery) flag |= PP_CENTER_Y;
 		p = g->layout(m->size(),m->pos,flag,layoutarea);
-	}	
 
-	PPGamePoly poly = m->poly;
-	PPRect size = m->drawArea;
-	PPSize scale = m->tileSize()*m->poly.scale;
-	size.x*=scale.width;
-	size.y*=scale.height;
-	size.width*=scale.width;
-	size.height*=scale.height;
+    PPSize sz = m->size();
+    PPPoint og = m->origin;
+    sz.width /= 2;
+    sz.height /= 2;
+    sz.width -= og.x;
+    sz.height -= og.y;
+    p.x += sz.width -m->realSize().width /2+og.x;
+    p.y += sz.height-m->realSize().height/2+og.y;
+	} else {
+	}
 
-	poly.pos = PPPointZero;
-	poly.scale.x = 1;
-	poly.scale.y = 1;
-	poly.origin = m->origin*m->poly.scale;//PPPoint(size.width/2,size.height/2);
-	
+	m->poly.pos = p;
+  
+  PPPoint org = m->poly.origin;
+	m->poly.origin = p+m->origin;
+
 	PPPoint delta=PPPointZero;
 	PPPoint o[4];
-	m->world()->projector->CalcPolyPoint(&poly,&size,&delta,o);
+	PPRect r(0,0,rs.width,rs.height);
+	m->world()->projector->CalcPolyPoint(&m->poly,&r,&delta,o);
 
 	float minx,miny,maxx,maxy;
 	minx = o[0].x;
@@ -2213,7 +2227,19 @@ static int funcAABB(lua_State* L)
 		if (maxy < o[i].y) maxy = o[i].y;
 	}
 	
-	return s->returnRect(L,PPRect(minx+p.x,miny+p.y,maxx-minx,maxy-miny));
+	lua_settop(L,top);
+  
+  m->poly.origin = org;
+	
+	return PPRect(minx,miny,maxx-minx,maxy-miny);
+}
+
+static int funcAABB(lua_State* L)
+{
+	PPTMXMap* m = (PPTMXMap*)PPLuaArg::UserData(L,PPTMXMap::className);
+  PPUserDataAssert(m!=NULL);
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
+	return s->returnRect(L,calcAABB(L,s,m));
 }
 
 static int funcCheck(lua_State* L)
@@ -2290,6 +2316,7 @@ PPObject* PPTMXMap::registClass(PPLuaScript* s,const char* name,PPObject* obj,co
 		s->addCommand("reset",funcReset);
 		s->addCommand("mapSize",funcMapSize);
 		s->addCommand("area",funcMapArea);
+		s->addCommand("clip",funcMapArea);
 		s->addCommand("addLayer",funcAddLayer);
 
 		s->addCommand("layerList",funcLayerList);

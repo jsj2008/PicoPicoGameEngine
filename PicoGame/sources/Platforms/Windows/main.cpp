@@ -23,6 +23,9 @@
 #include "PPGameWinScene.h"
 #include "PPGameUtil.h"
 #include "JpString.h"
+#include <CocosDenshion/SimpleAudioEngine.h>
+
+#define VERSION_STRING "PicoPicoGameEngine Simulator Ver. 1.1\n"
 
 static int screenWidth = 640;
 static int screenHeight = 480;
@@ -227,6 +230,11 @@ printf("%s\n",dropFileName);
 
 	if (reloadData) {
 		if (scene) {
+      CocosDenshion::SimpleAudioEngine::sharedEngine()->end();
+      QBSoundWin* snd = (QBSoundWin*)QBSound::sharedSound();
+      if (snd) {
+        snd->stopAll();
+      }
 			if (scene->game) {
 				scene->game->reloadData();
 			}
@@ -599,6 +607,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 		DragAcceptFiles(hWnd,TRUE);
 	}
 	
+  printf(VERSION_STRING);
+  fflush(stdout);
+  
 	//winGameWindow = hWnd;
 	
 	//DragAcceptFiles(hWnd,TRUE);

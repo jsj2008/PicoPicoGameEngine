@@ -34,6 +34,7 @@ public:
 
 	virtual void drawSelf(PPPoint pos);
 	virtual PPSize size();
+	virtual PPSize realSize();
 
 	virtual void openFrameBuffer();
 	virtual void closeFrameBuffer();

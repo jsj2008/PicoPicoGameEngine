@@ -372,6 +372,7 @@ public:
 	virtual void setLayout(unsigned long flag=0);
 	virtual unsigned long layout();
 	virtual PPSize size();
+	virtual PPSize realSize();
 
 	virtual PPRect viewPort() {
 		return world()->viewPort();

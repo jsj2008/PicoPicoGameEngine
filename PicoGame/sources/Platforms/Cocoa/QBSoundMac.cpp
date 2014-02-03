@@ -20,6 +20,51 @@
 #include <map>
 #include "QBStreamSound.h"
 
+class EffectBuffer {
+public:
+	signed short* pcmbuffer;
+	unsigned long pcmsize;
+	int pcmchannel;
+  std::string fname;
+
+  EffectBuffer() : pcmbuffer(NULL) {
+    
+  }
+  virtual ~EffectBuffer() {
+    if (pcmbuffer) free(pcmbuffer);
+//printf("unload effect %s\n",fname.c_str());
+  }
+
+  bool load(const char* filename) {
+    fname=filename;
+    int ret=-1;
+		FILE* fp = fopen(filename,"r");
+    if (fp) {
+      do {
+        fseek(fp,0,SEEK_END);
+        size_t size = ftell(fp);
+        if (size==0) {
+          fclose(fp);
+          return -1;
+        }
+        fseek(fp,0,SEEK_SET);
+        pcmbuffer = (signed short*)malloc(size);
+        if (pcmbuffer) {
+          pcmsize = size;
+          fread(pcmbuffer,size,1,fp);
+          ret=0;
+        }
+      } while (0);
+      fclose(fp);
+    }
+//printf("load effect %s\n",filename);
+    return ret;
+  }
+};
+
+typedef map<unsigned int, EffectBuffer *> EffectList;
+static EffectList effectTrack;
+
 typedef map<unsigned int,QBStreamSound*> PlayerList;
 static PlayerList streamTrack;
 static int soundID = 1;
@@ -137,14 +182,20 @@ QBSoundMac::QBSoundMac(int maxChannel) : mGraph(NULL),QBSound(maxChannel)
 int QBSoundMac::Exit()
 {
 	QBSoundLocker locker(&mMutex,"Exit");
+#ifdef __USE_OGG_VORBIS__
 	mThreadEnd = true;
 	pthread_join(mLoaderThread,NULL);
+#endif
 	return 0;
 }
 
 int QBSoundMac::Reset()
 {
 	QBSoundLocker locker(&mMutex,"reset");
+//#ifdef __USE_OGG_VORBIS__
+//	mThreadEnd = true;
+//	pthread_join(mLoaderThread,NULL);
+//#endif
 	return QBSound::Reset();
 }
 
@@ -303,8 +354,26 @@ void QBSoundMac::stopAUGraph()
 
 void QBSoundMac::stopAll()
 {
-//printf("stopAll\n");
 	QBSoundLocker locker(&mMutex,"stopAll");
+#ifdef __USE_OGG_VORBIS__
+  {
+    PlayerList::iterator it = streamTrack.begin();
+    while(it != streamTrack.end()) {
+      delete (*it).second;
+      ++it;
+    }
+    streamTrack.clear();
+  }
+  {
+    EffectList::iterator it = effectTrack.begin();
+    while(it != effectTrack.end())
+    {
+      delete (*it).second;
+      ++it;
+    }
+    effectTrack.clear();
+  }
+#endif
 	return QBSound::stopAll();
 }
 
@@ -506,6 +575,16 @@ static QBStreamSound* findPlayer(int track)
   return player;
 }
 
+void QBSoundMac::streamReset()
+{
+	QBSoundLocker locker(&mMutex,"streamReset");
+  streamTrack.clear();
+//  PlayerList::iterator it = streamTrack.begin();
+//  while(it != streamTrack.end()) {
+//    ++it;
+//  }
+}
+
 void QBSoundMac::streamPlay(const char* filename,int track)
 {
 	QBSoundLocker locker(&mMutex,"streamPlay");
@@ -577,50 +656,6 @@ bool QBSoundMac::streamTest(const char* filename)
 
 #pragma mark -
 
-class EffectBuffer {
-public:
-	signed short* pcmbuffer;
-	unsigned long pcmsize;
-	int pcmchannel;
-  std::string fname;
-
-  EffectBuffer() : pcmbuffer(NULL) {
-    
-  }
-  virtual ~EffectBuffer() {
-    if (pcmbuffer) free(pcmbuffer);
-printf("unload effect %s\n",fname.c_str());
-  }
-
-  bool load(const char* filename) {
-    fname=filename;
-    int ret=-1;
-		FILE* fp = fopen(filename,"r");
-    if (fp) {
-      do {
-        fseek(fp,0,SEEK_END);
-        size_t size = ftell(fp);
-        if (size==0) {
-          fclose(fp);
-          return -1;
-        }
-        fseek(fp,0,SEEK_SET);
-        pcmbuffer = (signed short*)malloc(size);
-        if (pcmbuffer) {
-          pcmsize = size;
-          fread(pcmbuffer,size,1,fp);
-          ret=0;
-        }
-      } while (0);
-      fclose(fp);
-    }
-printf("load effect %s\n",filename);
-    return ret;
-  }
-};
-
-typedef map<unsigned int, EffectBuffer *> EffectList;
-
 static unsigned int _Hash(const char *key)
 {
     size_t len = strlen(key);
@@ -635,12 +670,6 @@ static unsigned int _Hash(const char *key)
     return (hash);
 }
 
-static EffectList& sharedList()
-{
-    static EffectList s_List;
-    return s_List;
-}
-
 void QBSoundMac::preloadEffect(const char* filename)
 {
 	QBSoundLocker locker(&mMutex,"preloadEffect");
@@ -649,13 +678,13 @@ void QBSoundMac::preloadEffect(const char* filename)
   
     unsigned int nRet = _Hash(filename);
     
-    if (sharedList().end() != sharedList().find(nRet)) break;
+    if (effectTrack.end() != effectTrack.find(nRet)) break;
     
-    sharedList().insert(make_pair(nRet,new EffectBuffer()));
-    EffectBuffer* buffer = sharedList()[nRet];
+    effectTrack.insert(make_pair(nRet,new EffectBuffer()));
+    EffectBuffer* buffer = effectTrack[nRet];
     
     if (buffer->load(filename)!=0) {
-      sharedList().erase(nRet);
+      effectTrack.erase(nRet);
     }
 
   } while (0);
@@ -672,19 +701,19 @@ unsigned int QBSoundMac::playEffect(const char* filename,bool bLoop,float pitch,
     
       unsigned int nRet = _Hash(filename);
       
-      if (sharedList().end() != sharedList().find(nRet)) break;
+      if (effectTrack.end() != effectTrack.find(nRet)) break;
       
-      sharedList().insert(make_pair(nRet,new EffectBuffer()));
-      EffectBuffer* buffer = sharedList()[nRet];
+      effectTrack.insert(make_pair(nRet,new EffectBuffer()));
+      EffectBuffer* buffer = effectTrack[nRet];
       
       if (buffer->load(filename)!=0) {
-        sharedList().erase(nRet);
+        effectTrack.erase(nRet);
       }
 
     } while (0);
 
-    EffectList::iterator p = sharedList().find(nRet);
-    if (p != sharedList().end())
+    EffectList::iterator p = effectTrack.find(nRet);
+    if (p != effectTrack.end())
     {
       EffectBuffer* effect = p->second;
       findPlayer(soundID)->setVolume(gain);
@@ -713,12 +742,12 @@ void QBSoundMac::unloadEffect(const char* filename)
   if (filename) {
     unsigned int nRet = _Hash(filename);
 
-    EffectList::iterator p = sharedList().find(nRet);
-    if (p != sharedList().end())
+    EffectList::iterator p = effectTrack.find(nRet);
+    if (p != effectTrack.end())
     {
       delete p->second;
       p->second = NULL;
-      sharedList().erase(nRet);
+      effectTrack.erase(nRet);
     }
   }
 }

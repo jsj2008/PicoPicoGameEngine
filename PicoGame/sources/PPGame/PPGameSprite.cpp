@@ -359,17 +359,7 @@ int PPGameSprite::Draw(PPGamePoly* poly)
 		if (tex) {
 			if (/*tex->sizew > 0 && */tex->width > 0) {
 				int tw = tex->width;
-#ifdef __TILE_SIZE__
 				return DrawCore(poly,poly->tilePosition(pat,tw),poly->texTileSize,PPPointZero);
-#else
-//				int px = (pat % (tw/tex->sizew))*tex->sizew;
-//				int py = (pat / (tw/tex->sizew))*tex->sizeh;
-//				int pw = tex->sizew;
-//				int ph = tex->sizeh;
-//				int dx = 0;
-//				int dy = 0;
-//				return DrawCore(poly,PPPoint(px,py),PPSize(pw,ph),PPPoint(dx,dy));
-#endif
 			} else {
 printf("error texture %d\n",tex->index);
 			}

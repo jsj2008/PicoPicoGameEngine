@@ -27,7 +27,7 @@ LOCAL_C_INCLUDES := $(CW_ENGINE_PATH)/Cocos2dx/sources/cocos2d-1.0.1-x-0.9.2/coc
                     $(CW_ENGINE_PATH)/FlMML/sources/FlMML/other \
                     $(CW_ENGINE_PATH)/FlMML/include/flmml \
                     $(CW_ENGINE_PATH)/FlMML/include/other \
-                    $(CW_ENGINE_PATH)/Lua5.2/sources/lua5.2/ \
+                    $(CW_ENGINE_PATH)/Lua5.2/sources/lua/ \
                     $(CW_ENGINE_PATH)/freetype/sources/ \
                     $(CW_ENGINE_PATH)/freetype/sources/freetype-2.4.10/ \
                     $(CW_ENGINE_PATH)/freetype/sources/freetype-2.4.10/include/

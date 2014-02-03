@@ -248,8 +248,8 @@ public:
 		return false;
 	}
   
-  PPPoint min();
-  PPPoint max();
+  PPPoint rect_min();
+  PPPoint rect_max();
   PPPoint center();
 	
 	PPSize size();

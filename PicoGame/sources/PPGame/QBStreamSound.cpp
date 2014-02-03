@@ -89,14 +89,14 @@ static int qbsound_close(FILE *stream)
 
 QBStreamSound::QBStreamSound()
 {
-//printf("malloc qbstreamsound\n");
+//  printf("malloc qbstreamsound\n");
   streamopenov = false;
   reset();
 }
 
 QBStreamSound::~QBStreamSound()
 {
-//printf("delete qbstreamsound\n");
+//  printf("delete qbstreamsound\n");
 }
 
 int QBStreamSound::streamOpen()

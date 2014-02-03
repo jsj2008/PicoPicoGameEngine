@@ -116,12 +116,12 @@ void PPRect::operator = (PPSize a)
 	height = a.height;
 }
 
-PPPoint PPRect::min()
+PPPoint PPRect::rect_min()
 {
   return PPPoint(x,y);
 }
 
-PPPoint PPRect::max()
+PPPoint PPRect::rect_max()
 {
   return PPPoint(x+width,y+height);
 }

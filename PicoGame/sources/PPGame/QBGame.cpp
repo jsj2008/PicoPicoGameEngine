@@ -2267,7 +2267,11 @@ static int funcPlatform(lua_State* L)
 #ifdef WIN32
 	lua_pushstring(L,"windows");
 #elif TARGET_OS_IPHONE
+#if TARGET_IPHONE_SIMULATOR
+	lua_pushstring(L,"ios_simulator");
+#else
 	lua_pushstring(L,"ios");
+#endif
 #else
 	lua_pushstring(L,"mac");
 #endif
@@ -3315,9 +3319,49 @@ void QBGame::openAudioEngineSEMML(PPLuaScript* s,const char* name)
 	s->closeModule();
 }
 
+static int funcb2GameControllerAccessor(lua_State* L,bool setter=false)
+{
+  bool ret = false;
+  bool readonly=false;
+  do {
+  std::string name = lua_tostring(L,2);
+  //available
+  if (name == "available") {
+    if (setter) {
+      readonly=true;
+    } else {
+      lua_pushboolean(L,PPGameControllerAvailable());
+    }
+    ret = true;
+  }
+  } while (false);
+  if (setter) {
+    if (readonly) {
+      return luaL_error(L,"%s is read only.",lua_tostring(L,2));
+    }
+    lua_pushboolean(L,ret);
+  } else {
+    if (!ret) {
+      lua_pushnil(L);
+    }
+  }
+  return 1;
+}
+
+static int funcb2GameControllerSetter(lua_State* L)
+{
+  return funcb2GameControllerAccessor(L,true);
+}
+
+static int funcb2GameControllerGetter(lua_State* L)
+{
+  return funcb2GameControllerAccessor(L);
+}
+
 void QBGame::openGameController(PPLuaScript* s,const char* name)
 {
 	s->openModule(name,this,0);
+    s->addAccessor(funcb2GameControllerSetter,funcb2GameControllerGetter);
 		s->addCommand("startDiscovery",funcGetKeyStartDiscovery);
 		s->addCommand("stopDiscovery",funcGetKeyStopDiscovery);
 		s->addCommand("count",functionGetKeyControllers);
@@ -3514,9 +3558,58 @@ static int funcSpeechIsPlaying(lua_State* L)
 }
 #endif
 
+static int funcb2TextToSpeechAccessor(lua_State* L,bool setter=false)
+{
+  bool ret = false;
+  bool readonly=false;
+  do {
+  std::string name = lua_tostring(L,2);
+  //available
+  if (name == "available") {
+    if (setter) {
+      readonly=true;
+    } else {
+#if TARGET_OS_IPHONE
+      PPTextToSpeech* speech = PPTextToSpeech::sharedSpeech();
+      if (speech) {
+        lua_pushboolean(L,true);
+      } else {
+        lua_pushboolean(L,false);
+      }
+#else
+      lua_pushboolean(L,false);
+#endif
+    }
+    ret = true;
+  }
+  } while (false);
+  if (setter) {
+    if (readonly) {
+      return luaL_error(L,"%s is read only.",lua_tostring(L,2));
+    }
+    lua_pushboolean(L,ret);
+  } else {
+    if (!ret) {
+      lua_pushnil(L);
+    }
+  }
+  return 1;
+}
+
+static int funcb2TextToSpeechSetter(lua_State* L)
+{
+  return funcb2TextToSpeechAccessor(L,true);
+}
+
+static int funcb2TextToSpeechGetter(lua_State* L)
+{
+  return funcb2TextToSpeechAccessor(L);
+}
+
 void QBGame::openTextToSpeech(PPLuaScript* script,const char* name)
 {
 	script->openModule(name,this);
+    script->addAccessor(funcb2TextToSpeechSetter,funcb2TextToSpeechGetter);
 		script->addCommand("reset",funcSpeechReset);
 		script->addCommand("stop",funcSpeechStop);
 		script->addCommand("voice",funcSpeechVoice);

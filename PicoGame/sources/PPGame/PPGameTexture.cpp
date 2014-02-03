@@ -1024,21 +1024,33 @@ void PPGameTextureManager::pushTextureInfo(lua_State* L,int tex)
 
 	{
 		PPSize ts = getTextureSize(tex);
-		lua_createtable(L, 0, 2);
+		lua_createtable(L, 0, 4);
+		lua_pushinteger(L,0);
+		lua_setfield(L, -2, "x");
+		lua_pushinteger(L,0);
+		lua_setfield(L, -2, "y");
 		lua_pushinteger(L,ts.width);
 		lua_setfield(L, -2, "width");
 		lua_pushinteger(L,ts.height);
 		lua_setfield(L, -2, "height");
+		lua_getglobal(L,"pprect_mt");
+		lua_setmetatable(L,-2);
 	}
 	lua_setfield(L,-2,"size");
 
 	{
 		PPSize ts = getImageSize(tex);
-		lua_createtable(L, 0, 2);
+		lua_createtable(L, 0, 4);
+		lua_pushinteger(L,0);
+		lua_setfield(L, -2, "x");
+		lua_pushinteger(L,0);
+		lua_setfield(L, -2, "y");
 		lua_pushinteger(L,ts.width);
 		lua_setfield(L, -2, "width");
 		lua_pushinteger(L,ts.height);
 		lua_setfield(L, -2, "height");
+		lua_getglobal(L,"pprect_mt");
+		lua_setmetatable(L,-2);
 	}
 	lua_setfield(L,-2,"imageSize");
 }

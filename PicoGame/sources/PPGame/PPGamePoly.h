@@ -17,8 +17,6 @@
 #include "PPGameGeometry.h"
 #include <stdlib.h>
 
-#define __TILE_SIZE__
-
 /*-----------------------------------------------------------------------------------------------
 	クラス
 -----------------------------------------------------------------------------------------------*/
@@ -75,13 +73,10 @@ public:
 	float rotate;
 	PPColor color;
 
-#ifdef __TILE_SIZE__
 	PPPoint texOffset;
 	PPSize texTileSize;
 	PPSize texTileStride;
 	PPPoint tilePosition(int pat,int tw);
-//	PPSize tileSize();
-#endif
 
 	void init();
 	void reset();

@@ -135,18 +135,15 @@ void PPGamePoly::reset()
 	scale = PPPoint(1,1);
 	origin = PPPointZero;
 	color = PPColor::white();
-#ifdef __TILE_SIZE__
 	texOffset = PPPointZero;
 	texTileSize = PPSize(32,32);
 	texTileStride = PPSize(0,0);
-#endif
 	pat = 0;
 	rotate = 0;
 	flags = 0;
 	blend.set(PPGameBlend_None);
 }
 
-#ifdef __TILE_SIZE__
 PPPoint PPGamePoly::tilePosition(int pat,int tw)
 {
 	int w = texTileSize.width +texTileStride.width;
@@ -156,7 +153,6 @@ PPPoint PPGamePoly::tilePosition(int pat,int tw)
 	if (t == 0) t = 1;
 	return PPPoint((pat % t)*w+texOffset.x,(pat / t)*h+texOffset.y);
 }
-#endif
 
 void PPGamePoly::initTexture(int texid)
 {

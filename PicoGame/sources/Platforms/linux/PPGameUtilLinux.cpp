@@ -517,6 +517,11 @@ const char* PPGameDataPath(const char* name)
 	return PPGameResourcePath(name);
 }
 
+bool PPGameControllerAvailable()
+{
+  return false;
+}
+
 void PPGameControllerStartDiscoverty()
 {
 }

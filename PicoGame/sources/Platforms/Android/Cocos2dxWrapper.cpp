@@ -54,8 +54,17 @@ const char* ccPPGameResourcePath(const char* name)
 {
 LOGD("PPGameResourcePath %s(1)",name);
 	const char* r = cocos2d::CCFileUtils::fullPathFromRelativePath(name);
+	if (name) {
+		if (name[0] == 0) return r;
+	}
+	unsigned long size;
+	void* ptr = cocos2d::CCFileUtils::getFileData(r, "r", &size);
+	if (ptr) {
+		delete ptr;
+		return r;
+	}
 LOGD("PPGameResourcePath %s(2)",name);
-	return r;
+	return "";
 }
 
 unsigned char* ccPPGame_GetData(const char* key,int* dataSize)

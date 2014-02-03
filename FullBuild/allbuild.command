@@ -18,11 +18,11 @@ ndk-build
 cd ..
 
 cd "iOS"
-build.command
+./build.command
 cd ..
 
 cd "OSX"
-build.command
+./build.command
 cd ..
 
 cd "Win32"
