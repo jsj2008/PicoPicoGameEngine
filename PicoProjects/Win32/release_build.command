@@ -10,6 +10,9 @@ mkdir -p PicoPicoGamesWinJIT
 cp -r ./Windows/* ./PicoPicoGamesWin
 cp -r ./Windows/* ./PicoPicoGamesWinJIT
 
+cp -r ../Readme/* ./PicoPicoGamesWin
+cp -r ../Readme/* ./PicoPicoGamesWinJIT
+
 cp ../../FullBuild/Win32/PicoGame/picogame.exe ./PicoPicoGamesWin/PicoPicoGames.exe
 cp ../../FullBuild/Win32/PicoGameLuaJIT/picogame.exe ./PicoPicoGamesWinJIT/PicoPicoGamesJIT.exe
 

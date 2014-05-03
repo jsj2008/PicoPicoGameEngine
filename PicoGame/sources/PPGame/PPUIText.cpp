@@ -13,6 +13,9 @@
 #include "QBGame.h"
 #include "PPNormalFont.h"
 
+#define LENGTH(x) rawlength(x)
+//#define LENGTH(x) strlen(x)
+
 PPUIText::PPUIText(PPWorld* world) : PPUIScrollView(world)
 {
 #ifdef _OBJMEM_DEBUG_
@@ -104,21 +107,22 @@ void PPUIText::stepIdle()
 						calcContentsRect();
 					} else {
 						p = PPGetCharBytesUTF8(&message.c_str()[p]);
-						char* s=(char*)calloc(1,p+1);
-						if (s) {
-							memcpy(s,&message.c_str()[messagePtr],p);
-							s[p] = 0;
-							std::string tt=s;
-							str += tt;
-							messagePtr += p;
-							if (!(s[0] >= 0 && s[0] < 0x20)) {
-								updateString = true;
-							}
-							free(s);
-							if (autoScroll) runScroll = true;
-	//						calcContentsRect(false);
-							calcContentsRect();
-						}
+            if (p==0) p=1;
+            char* s=(char*)calloc(1,p+1);
+            if (s) {
+              memcpy(s,&message.c_str()[messagePtr],p);
+              s[p] = 0;
+              std::string tt=s;
+              str += tt;
+              messagePtr += p;
+              if (!(s[0] >= 0 && s[0] < 0x20)) {
+                updateString = true;
+              }
+              free(s);
+              if (autoScroll) runScroll = true;
+  //						calcContentsRect(false);
+              calcContentsRect();
+            }
 					}
 				}
 			}
@@ -166,6 +170,7 @@ void PPUIText::calcContentsRect(bool updateLineStr)
 	for (i=0;i<strlen(sptr);) {
 		char s[8];
 		int n = PPGetCharBytesUTF8(&sptr[i]);
+    if (n==0) n=1;
 		strncpy(s,&sptr[i],n);
 		s[n] = 0;
 		if (s[0] == '\r' || s[0] == '\n') {
@@ -185,7 +190,7 @@ void PPUIText::calcContentsRect(bool updateLineStr)
 
 			maxLine++;
 		} else {
-			if (tpos.x+length(s)*poly.scale.x > colPos[maxLine % column].x+lineWidth/column-(marginLeft+marginRight)) {
+			if (tpos.x+LENGTH(s)*poly.scale.x > colPos[maxLine % column].x+lineWidth/column-(marginLeft+marginRight)) {
 				if (updateLineStr) {
 					if (linearray==NULL) linearray = new std::vector<std::string*>;
 					linearray->push_back(new std::string(linestr));
@@ -197,7 +202,7 @@ void PPUIText::calcContentsRect(bool updateLineStr)
 				if (maxy < tpos.y+lineh) maxy = tpos.y+lineh;
 
 			}
-			tpos.x += length(s)*poly.scale.x;
+			tpos.x += LENGTH(s)*poly.scale.x;
 			if (updateLineStr) {
 				linestr+=s;
 			}
@@ -227,7 +232,7 @@ void PPUIText::calcContentsRect(bool updateLineStr)
 	}
 }
 
-PPRect PPUIText::getLineRect(int _line)
+PPRect PPUIText::getLineRect(int _line,PPRect* outRect,int maxout)
 {
 	int line=0;
 	if (_line < 0 || _line >= maxLine) return PPRectZero;
@@ -238,10 +243,18 @@ PPRect PPUIText::getLineRect(int _line)
 	r.x = tpos.x;
 	r.y = tpos.y;
 	if (_line >= 0) {
+    if (outRect) {
+      if (line<maxout) {
+        outRect[line] = tpos;
+        outRect[line].x += _contentsRect.x;
+        outRect[line].y += _contentsRect.y;
+      }
+    }
 		char* sptr = (char*)str.c_str();
 		for (int i=0;i<strlen(sptr);) {
 			char s[8];
 			int n = PPGetCharBytesUTF8(&sptr[i]);
+      if (n==0) n=1;
 			strncpy(s,&sptr[i],n);
 			s[n] = 0;
 			if (s[0] == '\r' || s[0] == '\n') {
@@ -250,17 +263,32 @@ PPRect PPUIText::getLineRect(int _line)
 				if (line == _line) {
 					r = tpos;
 				}
+        if (outRect) {
+          if (line<maxout) {
+            outRect[line] = tpos;
+            outRect[line].x += _contentsRect.x;
+            outRect[line].y += _contentsRect.y;
+          }
+        }
 			} else {
-				if (tpos.x+length(s)*poly.scale.x > colPos[line % column].x+lineWidth/column-(marginLeft+marginRight)) {
+        int len=LENGTH(s);
+				if (tpos.x+len*poly.scale.x > colPos[line % column].x+lineWidth/column-(marginLeft+marginRight)) {
 
 					tpos.x = colPos[line % column].x;
 					tpos.y += lineHeight*poly.scale.y;
 
 				}
-				tpos.x += length(s)*poly.scale.x;
+				tpos.x += len*poly.scale.x;
 				if (line == _line) {
 					if (r.width < tpos.x-r.x) r.width = tpos.x-r.x;
 					r.height = tpos.y+lineHeight*poly.scale.y-r.y;
+          if (outRect) {
+            if (line<maxout) {
+              outRect[line] = r;
+              outRect[line].x += _contentsRect.x;
+              outRect[line].y += _contentsRect.y;
+            }
+          }
 				}
 			}
 			if (line > _line) {
@@ -289,6 +317,7 @@ PPRect PPUIText::getCurRect(int _line)
 		for (int i=0;i<strlen(sptr);) {
 			char s[8];
 			int n = PPGetCharBytesUTF8(&sptr[i]);
+      if (n==0) n=1;
 			strncpy(s,&sptr[i],n);
 			s[n] = 0;
 			if (s[0] == '\r' || s[0] == '\n') {
@@ -298,13 +327,14 @@ PPRect PPUIText::getCurRect(int _line)
 					r = tpos;
 				}
 			} else {
-				if (tpos.x+length(s)*poly.scale.x > colPos[line % column].x+lineWidth/column-(marginLeft+marginRight)) {
+        int len=LENGTH(s);
+				if (tpos.x+len*poly.scale.x > colPos[line % column].x+lineWidth/column-(marginLeft+marginRight)) {
 
 					tpos.x = colPos[line % column].x;
 					tpos.y += lineHeight*poly.scale.y;
 
 				}
-				tpos.x += length(s)*poly.scale.x;
+				tpos.x += len*poly.scale.x;
 				if (line == _line) {
 //					if (r.width < tpos.x-r.x) r.width = tpos.x-r.x;
 //					r.height = tpos.y+lineHeight*poly.scale.y-r.y;
@@ -358,6 +388,7 @@ void PPUIText::drawSelf(PPPoint _pos)
 	for (int i=0;i<strlen(sptr);) {
 		char s[8];
 		int n = PPGetCharBytesUTF8(&sptr[i]);
+    if (n==0) n=1;
 		strncpy(s,&sptr[i],n);
 		s[n] = 0;
 		if (s[0] == '\r' || s[0] == '\n') {
@@ -369,7 +400,8 @@ void PPUIText::drawSelf(PPPoint _pos)
 
 			line++;
 		} else {
-			if (tpos.x+length(s)*poly.scale.x  > colPos[line % column].x+lineWidth/column-(marginLeft+marginRight)) {
+      int len=LENGTH(s);
+			if (tpos.x+len*poly.scale.x  > colPos[line % column].x+lineWidth/column-(marginLeft+marginRight)) {
 
 				tpos.x = colPos[line % column].x;
 				tpos.y += lineHeight*poly.scale.y;
@@ -391,7 +423,7 @@ void PPUIText::drawSelf(PPPoint _pos)
 				}
 			}
 
-			tpos.x += length(s)*poly.scale.x;
+			tpos.x += len*poly.scale.x;
 		}
 		i += n;
 	}
@@ -583,8 +615,28 @@ static int funcLineRect(lua_State* L)
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
 	PPRect r = PPRect(0,0,0,0);
 	if (s->argCount > 0) {
-		int i = (int)s->integer(0);
-		r = m->getLineRect(i-1);
+    if (s->argCount > 1) {
+      int f1 = (int)s->integer(0)-1;
+      int f2 = (int)s->integer(1)-1;
+      if (f1>=0 && f2>=0) {
+        PPRect* outRect = new PPRect[f2+1];
+        if (outRect) {
+          m->getLineRect(f2,outRect,f2+1);
+          lua_createtable(L,f2-f1+1,0);
+          int j=1;
+          for (int i=f1;i<=f2;i++) {
+            s->returnRect(L,outRect[i]);
+            lua_rawseti(L,-2,j);
+            j++;
+          }
+          delete outRect;
+          return 1;
+        }
+      }
+    } else {
+      int i = (int)s->integer(0);
+      r = m->getLineRect(i-1);
+    }
 	}
 	return s->returnRect(L,r);
 }
@@ -666,7 +718,7 @@ static int funcSetSpeed(lua_State* L)
 		return 0;
 	}
 	lua_pushinteger(L,m->messageSpeed);
-	return 0;
+	return 1;
 }
 
 static int funcAdd(lua_State* L)

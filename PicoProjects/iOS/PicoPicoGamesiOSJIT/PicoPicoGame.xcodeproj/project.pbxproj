@@ -343,7 +343,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					./library,
-					/Users/yamagame/Developer/GameDev/PicoPicoGameEngine/PicoProjects/iOS/iOS/library,
 				);
 				OTHER_LDFLAGS = (
 					"-lz",
@@ -370,7 +369,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					./library,
-					/Users/yamagame/Developer/GameDev/PicoPicoGameEngine/PicoProjects/iOS/iOS/library,
 				);
 				OTHER_LDFLAGS = (
 					"-lz",

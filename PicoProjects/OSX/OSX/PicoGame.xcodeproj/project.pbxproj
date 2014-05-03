@@ -70,9 +70,6 @@
 		6BC2FCED1879325F00359E40 /* libpicoengine.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B9D03791857561F002CE536 /* libpicoengine.a */; };
 		6BD86A7C18337405009E6D63 /* PicoGame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BBE10E518333BCD0059EDF8 /* PicoGame.cpp */; };
 		6BD86A7D18337406009E6D63 /* PicoGame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6BBE10E518333BCD0059EDF8 /* PicoGame.cpp */; };
-		6BF2ABEB1857FE3800414672 /* PPImageFont.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BF2ABEA1857FE3800414672 /* PPImageFont.png */; };
-		6BF2ABEC1857FE3800414672 /* PPImageFont.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BF2ABEA1857FE3800414672 /* PPImageFont.png */; };
-		6BF2ABED1857FE3800414672 /* PPImageFont.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BF2ABEA1857FE3800414672 /* PPImageFont.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -109,7 +106,6 @@
 		6BBE10E518333BCD0059EDF8 /* PicoGame.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PicoGame.cpp; sourceTree = "<group>"; };
 		6BBE10E618333BCD0059EDF8 /* PicoGame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PicoGame.h; sourceTree = "<group>"; };
 		6BC2FCE9187839B200359E40 /* GameController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameController.framework; path = System/Library/Frameworks/GameController.framework; sourceTree = SDKROOT; };
-		6BF2ABEA1857FE3800414672 /* PPImageFont.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PPImageFont.png; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -260,7 +256,6 @@
 				6B8930AC15B813D700402E76 /* main.m */,
 				6B8930AE15B813D700402E76 /* PicoGame-Prefix.pch */,
 				6B8930AF15B813D700402E76 /* Credits.rtf */,
-				6BF2ABEA1857FE3800414672 /* PPImageFont.png */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -354,7 +349,6 @@
 				6B70CDCA15F03E190074710A /* InfoPlist.strings in Resources */,
 				6B70CDCB15F03E190074710A /* Credits.rtf in Resources */,
 				6B70CDCC15F03E190074710A /* MainMenu.xib in Resources */,
-				6BF2ABEB1857FE3800414672 /* PPImageFont.png in Resources */,
 				6B70CDDA15F03E190074710A /* PPIcon.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -366,7 +360,6 @@
 				6B876AFD182E78D8003D651B /* InfoPlist.strings in Resources */,
 				6B876AFE182E78D8003D651B /* Credits.rtf in Resources */,
 				6B876AFF182E78D8003D651B /* MainMenu.xib in Resources */,
-				6BF2ABEC1857FE3800414672 /* PPImageFont.png in Resources */,
 				6B876B00182E78D8003D651B /* PPIcon.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -378,7 +371,6 @@
 				6B876B841831B0B9003D651B /* InfoPlist.strings in Resources */,
 				6B876B851831B0B9003D651B /* Credits.rtf in Resources */,
 				6B876B861831B0B9003D651B /* MainMenu.xib in Resources */,
-				6BF2ABED1857FE3800414672 /* PPImageFont.png in Resources */,
 				6B876B871831B0B9003D651B /* PPIcon.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

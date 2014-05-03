@@ -317,6 +317,10 @@ public:
 
   static std::string className;
 
+  void StartPoint();
+  void SetPoint(float x,float y,unsigned char* rgba);
+  void ClosePoint(int type);
+
 private:
 	int Line(PPGamePoly* poly);
 	int Fill(PPGamePoly* poly);
@@ -326,6 +330,8 @@ private:
 	int DrawCore(PPGamePoly* poly,PPPoint pos,PPSize size,PPPoint delta);
 	
 	PPWorld* target;
+  
+  int point_count;
   
 };
 

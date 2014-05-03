@@ -38,6 +38,25 @@ extern "C" {
 }
 #endif
 
+struct PPObjectHit {
+  PPObjectHit() {
+    index = 0;
+    mask = 0;
+    type = 0;
+    pos = PPPointZero;
+    center = PPPointZero;
+    rect = PPRectZero;
+    length = 0;
+  }
+	int index;
+	int mask;
+	unsigned long type;
+	PPPoint pos;
+	PPPoint center;
+	PPRect rect;
+	lua_Number length;
+};
+
 class PPObject : public PPStep {
 public:
 //	friend class PPArray;
@@ -156,6 +175,8 @@ public:
 	virtual void resetTouchStep() {
 		touchStep = 0;
 	}
+  
+  PPObjectHit hit;
 
 protected:
 	PPPoint touchPos;
@@ -302,6 +323,9 @@ public:
 		va_start(args,format);
 		return world()->length(format,args);
 	}
+	virtual float rawlength(const char* str) {
+		return world()->rawLength(str);
+	}
 	virtual void color(PPColor color) {
 		world()->color(color);
 	}
@@ -351,6 +375,7 @@ public:
 	virtual void setLayout(unsigned long flag=0);
 	virtual unsigned long layout();
 	virtual PPSize size();
+	virtual PPSize realSize();
 
 	virtual PPRect viewPort() {
 		return world()->viewPort();
@@ -383,7 +408,7 @@ public:
 		return rpos;
 	}
 	
-	virtual void openLibrary(PPLuaScript* script,const char* name,const char* superclass=NULL);
+	static void openLibrary(PPLuaScript* script,const char* name,const char* superclass=NULL);
 
 	static std::string className;
 	static PPObject* registClass(PPLuaScript* script,const char* name=NULL,const char* superclass=NULL);

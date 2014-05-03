@@ -373,8 +373,19 @@ public:
 	int curTexture;
 
 	PPFPS fps;
-	
+  
+	int systemTextureID;
+  
+  void* workMemory(int index,size_t size);
+  
+  void StartPoint();
+  void SetPoint(float x,float y);
+  void ClosePoint(int type);
+  
 protected:
+
+  void* workmem[10];
+  size_t workmemsize[10];
 
 	int touchX[QBGAME_MAX_TOUCH];
 	int touchY[QBGAME_MAX_TOUCH];

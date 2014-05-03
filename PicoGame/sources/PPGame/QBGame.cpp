@@ -52,6 +52,8 @@
 #include "PPTextToSpeech.h"
 #endif
 
+#define PICOPICO_VERSION "1.1.2"
+
 //enum {
 //	QBCHAR_FONT
 //};
@@ -424,7 +426,10 @@ int QBGame::rawLength(const char* str)
 				ConvertCharUTF8toUTF32(&str[n],&len);
 				for (int i=0;i<len;i++) s[i] = str[n+i];
 				x += calcLength(curFont,s);
-				n += getCharBytesUTF8(&str[n]);
+
+        int v = getCharBytesUTF8(&str[n]);
+        if (v==0) v=1;
+				n += v;
 			}
 			poly.blend = o;
 		} else {
@@ -578,7 +583,10 @@ void QBGame::rawPrint(const char* str)
 				}
 
 				p.x += putFont(curFont,p.x,p.y,s);
-				n += getCharBytesUTF8(&str[n]);
+        
+        int v=getCharBytesUTF8(&str[n]);
+        if (v==0) v=1;
+				n += v;
 			}
 			poly.blend = o;
 		} else {
@@ -2550,6 +2558,7 @@ void QBGame::openGameLibrary(PPLuaScript* script,const char* name)
 		script->addCommand("documentPath",funcDocumentPath);
     //script->addCommand("preferencePath",funcPreferncePath);
 		//script->addCommand("regexReplace",funcRegexReplace);
+    script->addStringValue("version",PICOPICO_VERSION);
 	script->closeModule();
 }
 

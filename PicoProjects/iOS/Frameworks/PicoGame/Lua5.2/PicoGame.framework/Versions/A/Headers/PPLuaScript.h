@@ -28,68 +28,7 @@ extern "C" {
 
 #define PPGAMEINSTNACE "__ppgame_ins__"
 
-#define LUA_GETINT(name,class,value) \
-static int name(lua_State* L)\
-{\
-	PPLuaScript* s = PPLuaScript::sharedScript(L);\
-	class* m = (class*)s->userdata;\
-	lua_pushinteger(L,value);\
-	return 1;\
-}
-
-#define LUA_SETINT(name,class,value) \
-static int name(lua_State* L)\
-{\
-	PPLuaScript* s = PPLuaScript::sharedScript(L);\
-	class* m = (class*)s->userdata;\
-	value = atoi(s->args(0));\
-	return 0;\
-}
-
-#define LUA_GETBOOL(name,class,value) \
-static int name(lua_State* L)\
-{\
-	PPLuaScript* s = PPLuaScript::sharedScript(L);\
-	class* m = (class*)s->userdata;\
-	lua_pushboolean(L,value);\
-	return 1;\
-}
-
-#define LUA_SETBOOL(name,class,value) \
-static int name(lua_State* L)\
-{\
-	PPLuaScript* s = PPLuaScript::sharedScript(L);\
-	class* m = (class*)s->userdata;\
-	value = atoi(s->args(0));\
-	return 0;\
-}
-
-#define LUA_GETNUMBER(name,class,value) \
-static int name(lua_State* L)\
-{\
-	PPLuaScript* s = PPLuaScript::sharedScript(L);\
-	class* m = (class*)s->userdata;\
-	lua_pushnumber(L,value);\
-	return 1;\
-}
-
-#define LUA_SETNUMBER(name,class,value) \
-static int name(lua_State* L)\
-{\
-	PPLuaScript* s = PPLuaScript::sharedScript(L);\
-	class* m = (class*)s->userdata;\
-	value = atof(s->args(0));\
-	return 0;\
-}
-
-#define LUA_GETSTRING(name,class,value) \
-static int name(lua_State* L)\
-{\
-	PPLuaScript* s = PPLuaScript::sharedScript(L);\
-	class* m = (class*)s->userdata;\
-	lua_pushstring(L,value);\
-	return 1;\
-}
+#define PPUserDataAssert(t) if (!(t)) {return luaL_error(L,lua_tostring(L,-1));}
 
 /*-----------------------------------------------------------------------------------------------
 	クラス
@@ -110,6 +49,9 @@ public:
 	static PPWorld* World(lua_State* L);
 
 	static void* UserData(lua_State* L,std::string &classname,bool nullcheck=true);
+  static void* UserData(lua_State* L,int idx,std::string &classname,bool nullcheck=true);
+	static void* UserData(lua_State* L,const char* classname,bool nullcheck=true);
+  static void* UserData(lua_State* L,int idx,const char* classname,bool nullcheck=true);
 	
 	static PPLuaArg* ErrorTarget(lua_State* L) {
 		return (PPLuaArg*)World(L)->userdata;
@@ -256,8 +198,8 @@ fflush(stdout);
 		lua_setfield(L,-2,"width");
 		lua_pushnumber(L,s.height);
 		lua_setfield(L,-2,"height");
-		lua_pushboolean(L,0);
-		lua_setfield(L,-2,"hit");
+//		lua_pushboolean(L,0);
+//		lua_setfield(L,-2,"hit");
 		lua_getglobal(L,"pprect_mt");
 		lua_setmetatable(L,-2);
 		return 1;
@@ -277,8 +219,8 @@ fflush(stdout);
 		lua_setfield(L,-2,"width");
 		lua_pushnumber(L,r.height);
 		lua_setfield(L,-2,"height");
-		lua_pushboolean(L,0);
-		lua_setfield(L,-2,"hit");
+//		lua_pushboolean(L,0);
+//		lua_setfield(L,-2,"hit");
 		lua_getglobal(L,"pprect_mt");
 		lua_setmetatable(L,-2);
 		return 1;
@@ -319,6 +261,12 @@ fflush(stdout);
 	virtual const char* word(int line);
 	virtual const char* args(int index);
 
+  static int setterReadOnlyError(lua_State* L,const char* name);
+
+  static int getPPPoint(lua_State *L,int idx,PPPoint &p);
+  static int getPPSize(lua_State *L,int idx,float &w,float &h);
+  static int getPPRect(lua_State *L,int idx,PPRect &r);
+  
 private:
 	PPWorld* target;
   lua_State* Lua;
@@ -347,6 +295,7 @@ public:
 	virtual void addMetaTable(const char* name,lua_CFunction func);
   virtual void addAccessor(lua_CFunction getter,lua_CFunction setter);
   virtual void makeReadOnlyMetatable();
+  virtual void setupGeometryCommand();
 	virtual void addYieldCommand(const char* name,lua_CFunction func) {
 		addCommand(name,func);
 	}
@@ -372,8 +321,6 @@ public:
 	bool alive;
 
 	void drawDisplayList(const char* ppgraph);
-
-  static int setterReadOnlyError(lua_State* L,std::string name);
 };
 
 #endif

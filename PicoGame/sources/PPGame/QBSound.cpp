@@ -496,8 +496,13 @@ static void atmark(PSGTrack* track)
 		nextPtr(track,1);
 		if (getChar(track)=='s'){
 			// Note Shift
-			nextPtr(track,1);
-			track->m_noteShift+=getNum(track);
+      int sign = 1;
+      nextPtr(track,1);
+      if (getChar(track) == '-') {
+        nextPtr(track,1);
+        sign = -1;
+      }
+			track->m_noteShift+=getNum(track)*sign;
 		}
 		else {
 			// Noise frequency
@@ -829,6 +834,7 @@ Loop:
 				nextPtr(track,1);
 				goto Loop;
 			case 'n':
+        nextPtr(track,1);
 				if (getChar(track) == 's') {
 					int sign = 1;
 					nextPtr(track,1);

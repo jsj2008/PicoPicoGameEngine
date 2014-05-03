@@ -20,7 +20,6 @@
 		NSString* sp = [[NSBundle mainBundle] pathForResource:[self.mainLuaName stringByDeletingPathExtension] ofType:[self.mainLuaName pathExtension]];
 		if (sp) {
 			g->luaScriptPath = [sp fileSystemRepresentation];
-NSLog(@"%@",sp);
 		}
 		game = g;
 	}

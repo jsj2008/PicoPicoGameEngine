@@ -39,7 +39,7 @@ public:
 	virtual void stepIdle();
 	
 	virtual void calcContentsRect(bool updateLineStr=true);
-	virtual PPRect getLineRect(int line);
+	virtual PPRect getLineRect(int line,PPRect* outRect=NULL,int maxout=0);
 	virtual PPRect getCurRect(int line);
 
 	virtual void touchDown(PPPoint pos);

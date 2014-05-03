@@ -34,6 +34,7 @@ public:
 
 	virtual void drawSelf(PPPoint pos);
 	virtual PPSize size();
+	virtual PPSize realSize();
 
 	virtual void openFrameBuffer();
 	virtual void closeFrameBuffer();
@@ -48,7 +49,7 @@ public:
 	virtual void fill(PPRect rect,PPColor col);
 	virtual void paint(PPPoint pos,PPColor col,PPColor borderColor);
 	virtual void paint(PPPoint pos,PPColor col);
-	virtual void circle(PPPoint pos,float r,PPColor col,float start,float end);
+	virtual void circle(PPPoint pos,float rx,float ry,PPColor col,float start,float end);
 	virtual void hflip();
 	virtual void vflip();
 	

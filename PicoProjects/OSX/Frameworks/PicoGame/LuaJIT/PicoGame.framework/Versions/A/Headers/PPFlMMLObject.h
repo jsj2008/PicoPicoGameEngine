@@ -25,9 +25,11 @@ public:
 	PPFlMMLObject(PPWorld* world);
 	virtual ~PPFlMMLObject();
 	
-	virtual void openLibrary(PPLuaScript* script,const char* name,const char* superclass=NULL);
+	static void openLibrary(PPLuaScript* script,const char* name,const char* superclass=NULL);
 	
 	int noteNo;
+
+  static std::string className;
 };
 
 #endif

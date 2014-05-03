@@ -301,7 +301,9 @@ PPTTFontTile* PPTTFont::image(const char* string)
 
 			if (max.x < pen.x/64) max.x = pen.x/64;
 
-			n += getCharBytesUTF8(&string[n]);
+      int v=getCharBytesUTF8(&string[n]);
+      if (v==0) v=1;
+			n += v;
 		}
 
 		int width  = (int)max.x;//-min.x;
@@ -365,7 +367,10 @@ PPTTFontTile* PPTTFont::image(const char* string)
 			if (n == 0) {
 				ntile->bearingX = (int)(f->face->glyph->metrics.horiBearingX>>6);
 			}
-			n += getCharBytesUTF8(&string[n]);
+      
+      int v=getCharBytesUTF8(&string[n]);
+      if (v==0) v=1;
+			n += v;
 		}
 		
 		ntile->advanceX = (int)(pen.x>>6);//+min.x;

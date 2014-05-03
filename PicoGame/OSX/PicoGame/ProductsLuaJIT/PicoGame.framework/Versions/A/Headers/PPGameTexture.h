@@ -128,6 +128,7 @@ public:
 	int countTexture();
 	int releaseAllTexture();
 	int deleteTexture(int textureid);
+  int deleteTextureWithName(const char* name,int startTextureId=0);
 	void deleteTextureForDevelop(int textureid);
 	int loadTexture(const char* filename,PPGameTextureOption option);
 	int loadTexture(int i);

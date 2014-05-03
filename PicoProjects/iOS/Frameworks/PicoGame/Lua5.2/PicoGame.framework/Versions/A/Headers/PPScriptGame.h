@@ -52,8 +52,6 @@ public:
 	PPUIText* textObject;
   PPBox2D* box2d;
   
-	int systemTextureID;
-	
 	std::string luaScriptPath;
 private:
   bool disableIOFlag;

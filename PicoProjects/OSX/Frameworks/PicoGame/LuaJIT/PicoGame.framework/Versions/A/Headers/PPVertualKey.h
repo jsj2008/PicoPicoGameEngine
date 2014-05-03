@@ -50,6 +50,8 @@ public:
 	virtual int calcDir(int div);
 
 	virtual void openLibrary(PPLuaScript* script,const char* name,const char* superclass=NULL);
+  
+  static std::string className;
 };
 
 #endif

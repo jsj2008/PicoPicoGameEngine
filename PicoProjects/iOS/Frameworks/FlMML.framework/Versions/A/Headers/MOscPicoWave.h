@@ -26,7 +26,7 @@ typedef struct _MOscPicoWaveTrack {
 
 class MOscPicoWave : public MOscMod {
 public:
-	static const int MAX_WAVE=6;
+	static const int MAX_WAVE=7;
 protected:
 	static int s_init;
 	int m_waveNo;
@@ -115,6 +115,9 @@ public:
 		if (track.type == 5) {
 			track.noise = (2.0*S_PI/(1000+powf(((10000-track.f)/10000),10)*2000000));
 		}
+		if (track.type == 6) {
+			track.noise = (2.0*S_PI/(1000+powf(((10000-track.f*2)/10000),10)*2000000));
+		}
 		signed long s = get_level(&track);
 		if (s >= 0x7fff) s =  0x7fff;
 		if (s < -0x7fff) s = -0x7fff;
@@ -142,6 +145,7 @@ public:
 
 		switch (track->type) {
 		case 5:
+		case 6:
 			//track->w += (2.0*S_PI/(1000));//(2.0*S_PI*track->f/44100.0)/powf(10,track->f/100);
 			//track->w += (2.0*S_PI/(2000000));//(2.0*S_PI*track->f/44100.0)/powf(10,track->f/100);
 			track->w += track->noise;//(2.0*S_PI/(1000+powf(((10000-track->f)/10000),10)*2000000));//(2.0*S_PI*track->f/44100.0)/powf(10,track->f/100);
@@ -173,7 +177,11 @@ public:
 			break;
 		case 5:
 			//s += (signed short)(track->v*((w>S_PI?1:-1)*(((((float)noise_lut[(int)(w/(2*S_PI)*NOISE_LONG)])/256.0)-1)*1.0)));			//矩形波(PSG的)
-			s += (signed short)(track->v*1.5*(((((float)noise_lut[(int)(w/(2*S_PI)*(NOISE_LONG))])/128.0)-1)));	//ノイズ
+      s += (signed short)(track->v*1.5*(((((float)noise_lut[(int)(w/(2*S_PI)*(NOISE_LONG))])/128.0)-1)));	//ノイズ
+			break;
+		case 6:
+			//s += (signed short)(track->v*((w>S_PI?1:-1)*(((((float)noise_lut[(int)(w/(2*S_PI)*NOISE_LONG)])/256.0)-1)*1.0)));			//矩形波(PSG的)
+      s += (signed short)(track->v*(((((float)noise_lut[(int)(w/(2*S_PI)*(NOISE_LONG))])/160.0)-1))); //ノイズ
 			break;
 		}
 		track->lastlevel = s;

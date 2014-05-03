@@ -1054,8 +1054,8 @@ static bool isKindOfClass(lua_State* L,const char* classname)
       if (lua_isnil(L,-1)) {
         break;
       }
-      std::string name = lua_tostring(L,-1);
-      if (name == classname) {
+      const char* name = lua_tostring(L,-1);
+      if (strcmp(name,classname)==0) {
         collectclass = true;
         break;
       }
@@ -1081,7 +1081,6 @@ void* PPLuaArg::UserData(lua_State* L,const char* classname,bool nullcheck)
 
 void* PPLuaArg::UserData(lua_State* L,int idx,const char* classname,bool nullcheck)
 {
-  std::string err;
 	int top = lua_gettop(L);
 	void* userdata = NULL;
 #ifdef __LUAJIT__
@@ -1099,6 +1098,7 @@ void* PPLuaArg::UserData(lua_State* L,int idx,const char* classname,bool nullche
         lua_Debug ar;
         lua_getstack(L,0,&ar);
         lua_getinfo(L, "Snl", &ar);
+        std::string err;
         err = "illegal instance method '";
         err += ar.name;
         err += "' call.";
@@ -1473,6 +1473,25 @@ static int funcPPPointMove(lua_State* L)
   lua_setfield(L,1,"x");
   lua_pushnumber(L,m.y);
   lua_setfield(L,1,"y");
+  return s->returnPoint(L,m);
+}
+
+static int funcPPPointPosition(lua_State* L)
+{
+  PPAssert(1,LUA_TTABLE);
+	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->initarg(L);
+  PPPoint m;
+  getMyPoint(L,1,m);
+	PPPoint p;
+  int q=PPLuaArg::getPPPoint(L,2,p);
+  if (q>0) {
+    lua_pushnumber(L,p.x);
+    lua_setfield(L,1,"x");
+    lua_pushnumber(L,p.y);
+    lua_setfield(L,1,"y");
+    m.x=p.x;
+    m.y=p.y;
+  }
   return s->returnPoint(L,m);
 }
 
@@ -1925,6 +1944,8 @@ void PPLuaScript::setupGeometryCommand()
   lua_setfield(L,-2,"length");
   lua_pushcfunction(L,funcPPPointMove);
   lua_setfield(L,-2,"move");
+  lua_pushcfunction(L,funcPPPointPosition);
+  lua_setfield(L,-2,"pos");
   lua_setglobal(L,"pppointImp");
 
   lua_createtable(L,0,6);

@@ -61,6 +61,7 @@ void PPGameSetDataSubPath(const char* datapath);
 const char* PPGameDataPath(const char* name);
 const char* PPGameDataSubPath(const char* name);
 
+bool PPGameControllerAvailable();
 void PPGameControllerStartDiscoverty();
 void PPGameControllerStopDiscoverty();
 int PPGameControllerCount();

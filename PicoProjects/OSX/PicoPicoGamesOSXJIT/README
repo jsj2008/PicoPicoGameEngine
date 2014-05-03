@@ -1,21 +1,8 @@
-PicoPicoGameEngine Simulator Ver. 1.0.16
+PicoPicoGameEngine Ver. 1.1.2
 
-luaスクリプトを書いてゲームを作る事ができるシミュレータです。
-ピコピコゲームエンジンについては下記を参照してください。
+PicoPicoGameEngine is an Open Source, multi-platform game engine for iOS, Android, Mac and Windows.
+PicoPicoGameEngine and Simulator are licensed under the MIT License.
 
-http://yamagame.secret.jp/picopicoengine/
+To learn more about PicoPicoGameEngine and PicoPicoGameEngine Simulator, there is a documentation on the web at http://picopicoengine.com/
 
-Windows版
-
-  動作確認はWindowsXPとWindows8 Proで行っています。
-  標準の文字を表示するには、Resourcesフォルダに PPImageFont.png が入ってる必要があります。
-  Control+Rでスクリプトのリロードが行えます。
-
-MacOSX版
-
-  動作確認は OSX 10.9 Marvericks で行っています。
-
-
-本ソフトウエアは無保証です。本ソフトウエアによって生じた、いかなる損害についても保証いたしません。 自己の責任の範囲で使用してください。
-
-2014/01/01 H.Yamaguchi
+2014/05/03 Copyright 2014 YAMAGAME

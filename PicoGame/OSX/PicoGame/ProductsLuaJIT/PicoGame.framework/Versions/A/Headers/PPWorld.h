@@ -144,6 +144,7 @@ public:
 	virtual void put(PPPoint p,int gid,int group,int texture)=0;
 	virtual PPRect viewPort()=0;
 	virtual void font(const char* name=NULL)=0;
+	virtual int rawLength(const char* str)=0;
 	virtual int length(const char* format,...)=0;
 	virtual int length(const char* format,va_list args)=0;
 	//virtual void setTexture(int fontID,unsigned char* pixel,int width,int height,int bytesPerRow)=0;

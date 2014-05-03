@@ -900,26 +900,10 @@ static int funcMove(lua_State* L)
 	PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className);
   PPUserDataAssert(m!=NULL);
 	PPLuaArg arg(NULL);PPLuaArg* s=&arg;s->init(L);
-
-#if 0   //setter & getter test
-	lua_getfield(L, 1, "x");
-	m->pos.x = lua_tonumber(L, -1);
-	lua_getfield(L, 1, "y");
-	m->pos.y = lua_tonumber(L, -1);
-#endif
-
 	if (s->argCount > 0) {
 		PPPoint p = s->getPoint(L,0);
 		m->pos += p;
 	}
-
-#if 0   //setter & getter test
-	lua_pushnumber(L, m->pos.x);
-	lua_setfield(L, 1, "x");
-	lua_pushnumber(L, m->pos.y);
-	lua_setfield(L, 1, "y");
-#endif
-	
 	return 0;
 }
 
@@ -1329,8 +1313,8 @@ static int funcDelete(lua_State *L)
 
 static int funcSetter(lua_State* L)
 {
-  std::string name = lua_tostring(L,2);
-  if (name == "x") {
+  const char* name = lua_tostring(L,2);
+  if (strcmp(name,"x")==0) {
     PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className,false);
     if (lua_type(L,3)==LUA_TNUMBER) {
       m->pos.x = lua_tonumber(L,3);
@@ -1338,7 +1322,7 @@ static int funcSetter(lua_State* L)
       return 1;
     }
   } else
-  if (name == "y") {
+  if (strcmp(name,"y")==0) {
     PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className,false);
     if (lua_type(L,3)==LUA_TNUMBER) {
       m->pos.y = lua_tonumber(L,3);
@@ -1346,7 +1330,7 @@ static int funcSetter(lua_State* L)
       return 1;
     }
   } else
-  if (name == "alive") {
+  if (strcmp(name,"alive")==0) {
     PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className,false);
     if (lua_type(L,3)==LUA_TBOOLEAN) {
       m->setAlive(lua_toboolean(L,3));
@@ -1354,7 +1338,7 @@ static int funcSetter(lua_State* L)
       return 1;
     }
   } else
-  if (name == "visible") {
+  if (strcmp(name,"visible")==0) {
     PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className,false);
     if (lua_type(L,3)==LUA_TBOOLEAN) {
       if (lua_toboolean(L,3)) {
@@ -1366,19 +1350,19 @@ static int funcSetter(lua_State* L)
       return 1;
     }
   } else
-  if (name == "hitlength") {
+  if (strcmp(name,"hitlength")==0) {
     PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className,false);
     m->hit.length=lua_tonumber(L,3);
     lua_pushboolean(L,true);
     return 1;
   } else
-  if (name == "hitmask") {
+  if (strcmp(name,"hitmask")==0) {
     PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className,false);
     m->hit.mask=(int)lua_tointeger(L,3);
     lua_pushboolean(L,true);
     return 1;
   } else
-  if (name == "hitrect") {
+  if (strcmp(name,"hitrect")==0) {
     PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className,false);
     PPRect r;
     PPLuaArg::getPPRect(L,3,r);
@@ -1387,7 +1371,7 @@ static int funcSetter(lua_State* L)
     lua_pushboolean(L,true);
     return 1;
   } else
-  if (name == "hitcenter") {
+  if (strcmp(name,"hitcenter")==0) {
     PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className,false);
     PPPoint p;
     PPLuaArg::getPPPoint(L,3,p);
@@ -1410,8 +1394,8 @@ static int funcSetter(lua_State* L)
 
 static int funcGetter(lua_State* L)
 {
-  std::string name = lua_tostring(L,2);
-  if (name == "x") {
+  const char* name = lua_tostring(L,2);
+  if (strcmp(name,"x")==0) {
     PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className,false);
     if (m) {
       lua_pushnumber(L, m->pos.x);
@@ -1420,7 +1404,7 @@ static int funcGetter(lua_State* L)
     }
     return 1;
   } else
-  if (name == "y") {
+  if (strcmp(name,"y")==0) {
     PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className,false);
     if (m) {
       lua_pushnumber(L, m->pos.y);
@@ -1429,7 +1413,7 @@ static int funcGetter(lua_State* L)
     }
     return 1;
   } else
-  if (name == "width") {
+  if (strcmp(name,"width")==0) {
     PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className,false);
     if (m) {
       lua_pushnumber(L, m->size().width);
@@ -1438,7 +1422,7 @@ static int funcGetter(lua_State* L)
     }
     return 1;
   } else
-  if (name == "height") {
+  if (strcmp(name,"height")==0) {
     PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className,false);
     if (m) {
       lua_pushnumber(L, m->size().height);
@@ -1447,7 +1431,7 @@ static int funcGetter(lua_State* L)
     }
     return 1;
   } else
-  if (name == "alive") {
+  if (strcmp(name,"alive")==0) {
     PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className,false);
     if (m) {
       lua_pushboolean(L,m->isAlive());
@@ -1456,7 +1440,7 @@ static int funcGetter(lua_State* L)
     }
     return 1;
   } else
-  if (name == "visible") {
+  if (strcmp(name,"visible")==0) {
     PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className,false);
     if (m) {
       lua_pushboolean(L,m->isVisible());
@@ -1465,23 +1449,23 @@ static int funcGetter(lua_State* L)
     }
     return 1;
   } else
-  if (name == "hitlength") {
+  if (strcmp(name,"hitlength")==0) {
     PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className,false);
     lua_pushnumber(L,m->hit.length);
     return 1;
   } else
-  if (name == "hitmask") {
+  if (strcmp(name,"hitmask")==0) {
     PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className,false);
     lua_pushinteger(L,m->hit.mask);
     return 1;
   } else
-  if (name == "hitrect") {
+  if (strcmp(name,"hitrect")==0) {
     PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className,false);
     PPLuaArg s(NULL);
     s.returnRect(L,m->hit.rect);
     return 1;
   } else
-  if (name == "hitcenter") {
+  if (strcmp(name,"hitcenter")==0) {
     PPObject* m = (PPObject*)PPLuaArg::UserData(L,PPObject::className,false);
     PPLuaArg s(NULL);
     s.returnPoint(L,m->hit.center);

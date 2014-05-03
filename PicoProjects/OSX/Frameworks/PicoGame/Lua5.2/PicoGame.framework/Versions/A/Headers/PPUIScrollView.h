@@ -41,6 +41,9 @@ public:
 	virtual PPSize size() {
 		return _frameSize;
 	}
+	virtual PPSize realSize() {
+		return _frameSize;
+	}
 	
 	virtual bool tapCheck() {
 		for (int i=0;i<world()->touchCount();i++) {

@@ -25,7 +25,7 @@
 #include "JpString.h"
 #include <CocosDenshion/SimpleAudioEngine.h>
 
-#define VERSION_STRING "PicoPicoGameEngine Simulator Ver. 1.1\n"
+#define VERSION_STRING "PicoPicoGameEngine Simulator Ver. 1.1.2\n"
 
 static int screenWidth = 640;
 static int screenHeight = 480;

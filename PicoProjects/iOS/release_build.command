@@ -33,6 +33,9 @@ cp ../../FullBuild/iOS/libpicoenginejit.a ./iOSJIT/library
 cp -r ./iOS/* ./PicoPicoGamesiOS
 cp -r ./iOSJIT/* ./PicoPicoGamesiOSJIT
 
+cp -r ../Readme/* ./PicoPicoGamesiOS
+cp -r ../Readme/* ./PicoPicoGamesiOSJIT
+
 rm -r ./PicoPicoGamesiOS/PicoPicoGame.xcodeproj/project.xcworkspace
 rm -r ./PicoPicoGamesiOS/PicoPicoGame.xcodeproj/xcuserdata
 

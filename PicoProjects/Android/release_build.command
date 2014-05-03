@@ -10,6 +10,9 @@ mkdir -p PicoPicoGamesAndroidJIT
 cp -r ./Android/* ./PicoPicoGamesAndroid
 cp -r ./Android/* ./PicoPicoGamesAndroidJIT
 
+cp -r ../Readme/* ./PicoPicoGamesAndroid
+cp -r ../Readme/* ./PicoPicoGamesAndroidJIT
+
 cp -r ../../FullBuild/Android2/libs/* ./PicoPicoGamesAndroid/libs
 cp -r ../../FullBuild/AndroidJIT/libs/* ./PicoPicoGamesAndroidJIT/libs
 

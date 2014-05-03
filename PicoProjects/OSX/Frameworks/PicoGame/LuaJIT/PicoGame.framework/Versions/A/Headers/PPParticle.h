@@ -79,8 +79,8 @@ public:
 	PPPoint sourcePosition, sourcePositionVariance;			
 	float angle, angleVariance;								
 	float speed, speedVariance;	
-    float radialAcceleration, tangentialAcceleration;
-    float radialAccelVariance, tangentialAccelVariance;
+  float radialAcceleration, tangentialAcceleration;
+  float radialAccelVariance, tangentialAccelVariance;
 	PPPoint gravity;	
 	float particleLifeSpan, particleLifeSpanVariance;			
 	PPFColor startColor, startColorVariance;						
@@ -93,8 +93,8 @@ public:
 	float emitCounter;	
 	float elapsedTime;
 	float duration;
-    float rotationStart, rotationStartVariance;
-    float rotationEnd, rotationEndVariance;
+  float rotationStart, rotationStartVariance;
+  float rotationEnd, rotationEndVariance;
 	
 	std::string textureName;
 	std::string particleName;

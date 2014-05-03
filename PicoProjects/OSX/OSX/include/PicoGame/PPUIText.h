@@ -39,7 +39,7 @@ public:
 	virtual void stepIdle();
 	
 	virtual void calcContentsRect(bool updateLineStr=true);
-	virtual PPRect getLineRect(int line);
+	virtual PPRect getLineRect(int line,PPRect* outRect=NULL,int maxout=0);
 	virtual PPRect getCurRect(int line);
 
 	virtual void touchDown(PPPoint pos);
@@ -115,9 +115,10 @@ public:
 
 	virtual void openLibrary(PPLuaScript* script,const char* name,const char* superclass=NULL);
 
-	static std::string className;
 	static PPObject* registClass(PPLuaScript* script,const char* name=NULL,const char* superclass=NULL);
 	static PPObject* registClass(PPLuaScript* script,const char* name,PPObject* obj,const char* superclass=NULL);
+  
+  static std::string classname;
 };
 
 #endif

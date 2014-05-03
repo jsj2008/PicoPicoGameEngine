@@ -29,10 +29,12 @@ public:
 
 	virtual void stepIdle();
 
-	virtual void openLibrary(PPLuaScript* script,const char* name,const char* superclass=NULL);
+	static void openLibrary(PPLuaScript* script,const char* name,const char* superclass=NULL);
 	
 	bool play;
 	std::string semml;
+  
+  static std::string className;
 };
 
 #endif

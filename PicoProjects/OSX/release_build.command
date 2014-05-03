@@ -25,6 +25,9 @@ mkdir -p PicoPicoGamesOSXJIT
 cp -r ./OSXAPP/* ./PicoPicoGamesOSX
 cp -r ./OSXAPP/* ./PicoPicoGamesOSXJIT
 
+cp -r ../Readme/* ./PicoPicoGamesOSX
+cp -r ../Readme/* ./PicoPicoGamesOSXJIT
+
 CpMac -r ./OSX/Build/Release/PicoPicoGames.app ./PicoPicoGamesOSX
 CpMac -r ./OSX/Build/Release/PicoPicoGamesJIT.app ./PicoPicoGamesOSXJIT
 rm -r ./PicoPicoGamesOSX/PicoPicoGames.app/Contents/Resources/GameData

@@ -17,7 +17,10 @@
 #define QBCHAR_TAG (-4)
 #define QBVIEW_TAG (-5)
 #define QBBOX_TAG (-6)
-//#define QBPOLY_TAG (-5)
+#define QBLINE_LOOP_TAG (-7)
+#define QBLINE_STRIP_TAG (-8)
+#define QBTRIANGLE_STRIP_TAG (-9)
+#define QBTRIANGLE_FAN_TAG (-10)
 
 typedef struct _PPGameImage {
 	short* pat;

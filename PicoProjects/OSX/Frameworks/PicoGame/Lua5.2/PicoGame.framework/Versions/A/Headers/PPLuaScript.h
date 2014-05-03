@@ -26,85 +26,19 @@ extern "C" {
 }
 #endif
 
-#define USERMETA
 #define PPGAMEINSTNACE "__ppgame_ins__"
 
-#define LUA_GETINT(name,class,value) \
-static int name(lua_State* L)\
-{\
-	PPLuaScript* s = PPLuaScript::sharedScript(L);\
-	class* m = (class*)s->userdata;\
-	lua_pushinteger(L,value);\
-	return 1;\
-}
-
-#define LUA_SETINT(name,class,value) \
-static int name(lua_State* L)\
-{\
-	PPLuaScript* s = PPLuaScript::sharedScript(L);\
-	class* m = (class*)s->userdata;\
-	value = atoi(s->args(0));\
-	return 0;\
-}
-
-#define LUA_GETBOOL(name,class,value) \
-static int name(lua_State* L)\
-{\
-	PPLuaScript* s = PPLuaScript::sharedScript(L);\
-	class* m = (class*)s->userdata;\
-	lua_pushboolean(L,value);\
-	return 1;\
-}
-
-#define LUA_SETBOOL(name,class,value) \
-static int name(lua_State* L)\
-{\
-	PPLuaScript* s = PPLuaScript::sharedScript(L);\
-	class* m = (class*)s->userdata;\
-	value = atoi(s->args(0));\
-	return 0;\
-}
-
-#define LUA_GETNUMBER(name,class,value) \
-static int name(lua_State* L)\
-{\
-	PPLuaScript* s = PPLuaScript::sharedScript(L);\
-	class* m = (class*)s->userdata;\
-	lua_pushnumber(L,value);\
-	return 1;\
-}
-
-#define LUA_SETNUMBER(name,class,value) \
-static int name(lua_State* L)\
-{\
-	PPLuaScript* s = PPLuaScript::sharedScript(L);\
-	class* m = (class*)s->userdata;\
-	value = atof(s->args(0));\
-	return 0;\
-}
-
-#define LUA_GETSTRING(name,class,value) \
-static int name(lua_State* L)\
-{\
-	PPLuaScript* s = PPLuaScript::sharedScript(L);\
-	class* m = (class*)s->userdata;\
-	lua_pushstring(L,value);\
-	return 1;\
-}
-
-//#define PPLuaScript_sharedScript(L) (PPLuaScript::SharedScript(this->world(),L))
+#define PPUserDataAssert(t) if (!(t)) {return luaL_error(L,lua_tostring(L,-1));}
 
 /*-----------------------------------------------------------------------------------------------
 	クラス
 -----------------------------------------------------------------------------------------------*/
 
 class PPLuaArg {
-	enum {
-		MAX_ARG = 16
-	};
 
 public:
-	PPLuaArg(PPWorld* world) : argCount(0),errorMessage("")/*,flags(NULL)*/,errorLine(-1),timeoutCount(0) {
+
+	PPLuaArg(PPWorld* world) : Lua(NULL),argCount(0),errorMessage(""),errorLine(-1),timeoutCount(0) {
 		target=world;
 	}
 
@@ -114,23 +48,15 @@ public:
 
 	static PPWorld* World(lua_State* L);
 
-	static void* UserData(lua_State* L);
+	static void* UserData(lua_State* L,std::string &classname,bool nullcheck=true);
+  static void* UserData(lua_State* L,int idx,std::string &classname,bool nullcheck=true);
+	static void* UserData(lua_State* L,const char* classname,bool nullcheck=true);
+  static void* UserData(lua_State* L,int idx,const char* classname,bool nullcheck=true);
 	
 	static PPLuaArg* ErrorTarget(lua_State* L) {
 		return (PPLuaArg*)World(L)->userdata;
 	}
 	
-//	static PPLuaScript* sharedScript(lua_State* L) {
-//		script->userdata = NULL;
-//		if (L) script->callScriptFunc(L);
-//		return script;
-//	}
-//	
-//	static PPLuaScript* sharedScript() {
-//		script->userdata = NULL;
-//		return script;
-//	}
-
 	static void* DeleteObject(lua_State* L) {
 #ifdef _OBJMEM_DEBUG_
 printf("DeleteObject %d\n",lua_gettop(L));
@@ -190,19 +116,19 @@ fflush(stdout);
 
 	virtual lua_Number number(int index,lua_Number def=0) {
 		if (index < argCount) {
-			return _number[index];
+      return lua_tonumber(Lua,index+argShift);
 		}
 		return def;
 	}
 	virtual lua_Integer integer(int index,lua_Integer def=0) {
 		if (index < argCount) {
-			return _integer[index];
+      return lua_tointeger(Lua,index+argShift);
 		}
 		return def;
 	}
 	virtual bool boolean(int index,bool def=false) {
 		if (index < argCount) {
-			return _boolean[index];
+      return lua_toboolean(Lua,index+argShift);
 		}
 		return def;
 	}
@@ -241,26 +167,11 @@ fflush(stdout);
 		return def;
 	}
 
-	void* init(lua_State* L);
-	void* initarg(lua_State* L);
-
-	void resetWord();
-	void addWord(const char* str);
+	void init(lua_State* L);
+	void initarg(lua_State* L);
 
 	int argCount;
-
-	void* userdata;
-	void* userData(lua_State* L) {
-		if (userdata) return userdata;
-		if (lua_type(L,1) == LUA_TTABLE) {
-			lua_getmetatable(L,1);
-			lua_getfield(L,-1,PPGAMEINSTNACE);
-			userdata = lua_touserdata(L,-1);
-		}
-		return userdata;
-	}
-
-	std::string _str[MAX_ARG];
+  int argShift;
 
 	virtual int returnPoint(lua_State* L,PPPoint p) {
 		lua_createtable(L,0,2);
@@ -287,8 +198,8 @@ fflush(stdout);
 		lua_setfield(L,-2,"width");
 		lua_pushnumber(L,s.height);
 		lua_setfield(L,-2,"height");
-		lua_pushboolean(L,0);
-		lua_setfield(L,-2,"hit");
+//		lua_pushboolean(L,0);
+//		lua_setfield(L,-2,"hit");
 		lua_getglobal(L,"pprect_mt");
 		lua_setmetatable(L,-2);
 		return 1;
@@ -308,8 +219,8 @@ fflush(stdout);
 		lua_setfield(L,-2,"width");
 		lua_pushnumber(L,r.height);
 		lua_setfield(L,-2,"height");
-		lua_pushboolean(L,0);
-		lua_setfield(L,-2,"hit");
+//		lua_pushboolean(L,0);
+//		lua_setfield(L,-2,"hit");
 		lua_getglobal(L,"pprect_mt");
 		lua_setmetatable(L,-2);
 		return 1;
@@ -336,30 +247,33 @@ fflush(stdout);
 		returnColor(L,c);
 	}
 
-	virtual const char* word(int line);
-	virtual const char* args(int index);
-	
 	virtual PPGameTextureOption getTextureOption(lua_State* L,int index,PPGameTextureOption option);
 	
 	std::string errorMessage;
 	int errorLine;
-	std::string errorSrc;
+	std::string errorPath;
+	std::string errorName;
+	std::string errorReason;
 	int timeoutCount;
 
 	void resetTimeout();
 	
+	virtual const char* word(int line);
+	virtual const char* args(int index);
+
+  static int setterReadOnlyError(lua_State* L,const char* name);
+
+  static int getPPPoint(lua_State *L,int idx,PPPoint &p);
+  static int getPPSize(lua_State *L,int idx,float &w,float &h);
+  static int getPPRect(lua_State *L,int idx,PPRect &r);
+  
 private:
-	lua_Number _number[MAX_ARG];
-	lua_Integer _integer[MAX_ARG];
-	int _boolean[MAX_ARG];
 	PPWorld* target;
+  lua_State* Lua;
 };
 
 class PPLuaScript : public PPLuaArg {
 public:
-	enum {
-		MAX_ARG = 16
-	};
 	
 	PPLuaScript(PPWorld* world);
 	virtual ~PPLuaScript();
@@ -371,6 +285,7 @@ public:
 	virtual bool load(const char* scriptfile);
 	virtual void dumpStack(lua_State* L);
 	
+	virtual void openModule(std::string name,void* userdata=NULL,lua_CFunction gc=NULL,const char* superclass=NULL);
 	virtual void openModule(const char* name,void* userdata=NULL,lua_CFunction gc=NULL,const char* superclass=NULL);
 	virtual void addNumberValue(const char* name,float value);
 	virtual void addIntegerValue(const char* name,int value);
@@ -379,24 +294,13 @@ public:
 	virtual void addCommand(const char* name,lua_CFunction func);
 	virtual void addMetaTable(const char* name,lua_CFunction func);
   virtual void addAccessor(lua_CFunction getter,lua_CFunction setter);
+  virtual void makeReadOnlyMetatable();
+  virtual void setupGeometryCommand();
 	virtual void addYieldCommand(const char* name,lua_CFunction func) {
 		addCommand(name,func);
 	}
 	virtual void closeModule();
-	
-	virtual void makeObjectTable(PPObject** object,int num,const char* name) {
-		char cmd[256];
-		sprintf(cmd,"%s = {}\n",name);
-		execString(cmd);
-		for (int i=0;i<num;i++) {
-			sprintf(cmd,"_%s%d",name,i+1);
-			object[i]->openLibrary(this,cmd);
-			sprintf(cmd,"%s[%d]=_%s%d\n",name,i+1,name,i+1);
-			execString(cmd);
-		}
-		sprintf(cmd,"%s.count = %d\n",name,num);
-		execString(cmd);
-	}
+	virtual void makeObjectTable(PPObject** object,int num,const char* valuename,const char* classname);
 	
 	virtual int getErrorLine();
 	
@@ -417,8 +321,6 @@ public:
 	bool alive;
 
 	void drawDisplayList(const char* ppgraph);
-
-  static int setterReadOnlyError(lua_State* L,std::string name);
 };
 
 #endif
